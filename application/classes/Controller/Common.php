@@ -4,14 +4,30 @@ abstract class Controller_Common extends Controller_Template {
  
     public $template = 'layout';
     public $title = array();
- 
+    public $tpl = '';
+
     public function before()
     {
+        $controller = $this->request->controller();
+        $action = $this->request->action();
+
         if(!Auth::instance()->logged_in()){
+            if(!in_array($action, ['login', 'logout']) && $_SERVER['REQUEST_URI'] != '/'){
+                $this->redirect('/');
+            }
             $this->template = 'not_auth';
+        }else{
+            if($controller == 'Index' && $action == 'index') {
+                $this->redirect('/clients');
+            }
         }
 
         parent::before();
+
+        //рендерим шаблон страницы
+        if(!in_array($controller, ['Index'])) {
+            $this->tpl = View::factory('/pages/' . strtolower($controller) . '/' . $action);
+        }
 
         $config = Kohana::$config->load('main');
         foreach($config as $k=>$v){
@@ -35,6 +51,7 @@ abstract class Controller_Common extends Controller_Template {
     
     public function after(){
         View::set_global('title', implode(" :: ",$this->title));
+        $this->template->content = $this->tpl;
         parent::after();
     }
     

@@ -4,9 +4,7 @@ class Controller_Index extends Controller_Common {
 
 	public function action_index()
 	{
-		$content = View::factory('/pages/index');
 
-		$this->template->content = $content;
 	}
 
 	/**
@@ -21,8 +19,10 @@ class Controller_Index extends Controller_Common {
 		}
 
 		if(Auth::instance()->login($post['login'], $post['password'], FALSE)){
-			$this->redirect('/cabinet');
+			$this->redirect('/clients');
 		}
+
+        $this->redirect('/');
 	}
 
 	public function action_logout()

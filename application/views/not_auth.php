@@ -35,7 +35,7 @@
 	<div class="content">
 		<h1>Авторизация</h1>
 		<div class="block">
-			<form method="post" action="/index/login">
+			<form method="post" action="/login">
 				<input type="text" placeholder="Логин" name="login" class="input_big">
 				<input type="password" placeholder="Пароль" name="password" class="input_big">
 				<button class="btn">Войти</button>

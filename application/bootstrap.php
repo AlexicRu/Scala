@@ -146,6 +146,12 @@ Cookie::$salt = 'edrge5rg1e5rg4e98rg4sd648er4gerg';
  * defaults for the URI.
  */
 
+Route::set('auth', '<action>', array('action' => '^(login|logout)$'))
+	->defaults(array(
+		'controller' => 'index',
+		'action'     => 'index',
+	));
+
 Route::set('default', '(<controller>(/<action>(/<id>)))')
 	->defaults(array(
 		'controller' => 'index',

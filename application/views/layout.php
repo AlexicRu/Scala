@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 
-	<title>СКАЛА</title>
+	<title><?=$title?></title>
 
 	<script src="http://yastatic.net/jquery/2.1.3/jquery.min.js"></script>
 
@@ -28,7 +28,7 @@
 		<a href="#"><span class="icon-menu"></span></a>
 	</div>
 	<div class="search">
-		<button class="icon-find"></button><input type="text" placeholder="Поиск...">
+		<form action="/clients"><button class="icon-find"></button><input type="text" name="search" placeholder="Поиск..."></form>
 	</div>
 	<div class="personal">
 		<div class="avatar" style="background-image: url(/img/pic/01.png)"></div> Константинов Сергей Николавевич
@@ -40,7 +40,7 @@
 		<a href="#"><span class="icon-gear"></span></a>
 	</div>
 	<div class="logout">
-		<a href="/index/logout/"><span class="icon-exit"></span></a>
+		<a href="/logout"><span class="icon-exit"></span></a>
 	</div>
 </header>
 
