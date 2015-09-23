@@ -24,30 +24,23 @@
 	<div class="logo">
 		<a href="/"><img src="/img/logo.png"></a>
 	</div>
-	<div class="hamburger">
+	<!--div class="hamburger">
 		<a href="#"><span class="icon-menu"></span></a>
-	</div>
-	<div class="search">
-		<button class="icon-find"></button><input type="text" placeholder="Поиск...">
-	</div>
-	<div class="personal">
-		<div class="avatar" style="background-image: url(/img/pic/01.png)"></div> Константинов Сергей Николавевич
-	</div>
-	<div class="mail">
-		<a href="#"><span class="icon-mail"><span>6</span></span></a>
-	</div>
-	<div class="settings">
-		<a href="#"><span class="icon-gear"></span></a>
-	</div>
-	<div class="logout">
-		<a href="#"><span class="icon-exit"></span></a>
-	</div>
+	</div-->
+	<div>&nbsp;</div>
 </header>
 
 <div class="wrapper">
-	<?=$menu?>
+	<?/*=$menu*/?>
 	<div class="content">
-		<?=$content?>
+		<h1>Авторизация</h1>
+		<div class="block">
+			<form method="post" action="/index/login">
+				<input type="text" placeholder="Логин" name="login" class="input_big">
+				<input type="password" placeholder="Пароль" name="password" class="input_big">
+				<button class="btn">Войти</button>
+			</form>
+		</div>
 	</div>
 </div>
 <!--[if (lt IE 9)]>

@@ -47,4 +47,5 @@ tmp/
 application/cache/
 application/logs/
 application/config/database.php
+application/config/auth.php
 

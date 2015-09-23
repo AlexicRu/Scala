@@ -40,7 +40,7 @@
 		<a href="#"><span class="icon-gear"></span></a>
 	</div>
 	<div class="logout">
-		<a href="#"><span class="icon-exit"></span></a>
+		<a href="/index/logout/"><span class="icon-exit"></span></a>
 	</div>
 </header>
 

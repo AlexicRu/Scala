@@ -7,12 +7,12 @@ abstract class Controller_Common extends Controller_Template {
  
     public function before()
     {
-        parent::before();
-
         if(!Auth::instance()->logged_in()){
             $this->template = 'not_auth';
         }
-       
+
+        parent::before();
+
         $config = Kohana::$config->load('main');
         foreach($config as $k=>$v){
             if($k == 'title')

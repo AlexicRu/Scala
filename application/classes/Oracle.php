@@ -15,11 +15,7 @@ class Oracle{
 		{
 			$config = Kohana::$config->load('database');
 
-            if(Access::check(4, true)){
-                self::$_conn = oci_connect($config['name1'], $config['password1'], $config['db'], 'UTF8');
-            }else{
-                self::$_conn = oci_connect($config['name'], $config['password'], $config['db'], 'UTF8');
-            }
+            self::$_conn = oci_connect($config['name'], $config['password'], $config['db'], 'UTF8');
 
 			if (!self::$_conn) {
 				$e = oci_error();
