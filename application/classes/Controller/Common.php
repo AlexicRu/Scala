@@ -24,29 +24,32 @@ abstract class Controller_Common extends Controller_Template {
 
         parent::before();
 
-        //рендерим шаблон страницы
-        if(!in_array($controller, ['Index'])) {
-            $this->tpl = View::factory('/pages/' . strtolower($controller) . '/' . $action);
+        View::set_global('user', Auth_Oracle::instance()->get_user());
+
+        if(!$this->request->is_ajax()) {
+            //рендерим шаблон страницы
+            if (!in_array($controller, ['Index'])) {
+                $this->tpl = View::factory('/pages/' . strtolower($controller) . '/' . $action);
+            }
+
+            $config = Kohana::$config->load('main');
+            foreach ($config as $k => $v) {
+                if ($k == 'title')
+                    $this->title[] = $v;
+                else
+                    View::set_global($k, $v);
+            }
+
+            $this->template->content = '';
+            $this->template->styles = [];
+            $this->template->scripts = [];
+
+            $menu = Kohana::$config->load('menu');
+            $content = View::factory('/includes/menu')
+                ->bind('menu', $menu);;
+
+            View::set_global('menu', $content);
         }
-
-        $config = Kohana::$config->load('main');
-        foreach($config as $k=>$v){
-            if($k == 'title')
-                $this->title[] = $v;
-            else
-                View::set_global($k, $v);
-        }        
-       
-        $this->template->content = '';
-        $this->template->styles = [];
-        $this->template->scripts = [];
-
-        $menu = Kohana::$config->load('menu');
-        $content = View::factory('/includes/menu')
-            ->bind('menu', $menu);
-        ;
-
-        View::set_global('menu', $content);
     }
     
     public function after(){
@@ -55,10 +58,13 @@ abstract class Controller_Common extends Controller_Template {
         parent::after();
     }
     
-    protected function display_json($data){
+    protected function json($data){
         header('Content-Type: application/json');
-        echo json_encode($data);    
+        echo json_encode($data);
         exit;
     }
- 
+
+    protected function jsonResult($result, $data = []){
+        self::json(['success' => $result, 'data' => $data]);
+    }
 } // End Common

@@ -5,11 +5,7 @@
 
 	<title>СКАЛА</title>
 
-	<script src="http://yastatic.net/jquery/2.1.3/jquery.min.js"></script>
-
 	<link href="/style.css" rel="stylesheet">
-
-	<script src="/js/site.js"></script>
 
 	<!--[if lt IE 9]>
 	<style>

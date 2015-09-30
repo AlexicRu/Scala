@@ -207,6 +207,7 @@ aside a {
   font-family: SegoeUISemiBold, Tahoma;
   padding: 9px 0 13px 55px;
   width: 210px;
+  transition: all 0.3s ease;
 }
 aside a:hover,
 aside a.act {
@@ -303,6 +304,15 @@ a.btn:hover {
 .btn.btn_red:hover {
   background: #b54848;
   border-color: #b54848;
+  color: white;
+}
+.btn.btn_green {
+  color: #76b548;
+  border-color: rgba(118, 181, 72, 0.3);
+}
+.btn.btn_green:hover {
+  background: #76b548;
+  border-color: #76b548;
   color: white;
 }
 .btn [class^="icon-"] {
@@ -681,4 +691,7 @@ table td {
   position: absolute;
   top: 3px;
   right: -20px;
+}
+textarea {
+  min-height: 100px;
 }

@@ -9,8 +9,10 @@
 	<script src="http://yastatic.net/jquery-ui/1.11.2/jquery-ui.min.js"></script>
 
 	<link href="/style.css" rel="stylesheet">
+	<link href="/js/plugins/jGrowl/jGrowl.css" rel="stylesheet">
 
-	<script src="/js/site.js"></script>
+	<script src="/js/plugins/jGrowl/jGrowl.js"></script>
+	<script src="/js/plugins/site.js"></script>
 
 	<!--[if lt IE 9]>
 	<style>

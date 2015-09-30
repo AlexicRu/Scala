@@ -1,7 +1,7 @@
 <h1>Список клиентов <span class="btn">+ Добавить клиента</span></h1>
 <?
 if(!empty($_REQUEST['search'])){?>
-    <h3>Результаты поиска <span class="fr">Для просмотра полного списка договоров отключите поиск</span></h3>
+    <h3>Результаты поиска</h3>
 <?}
 
 if(!empty($clients)){
@@ -18,7 +18,7 @@ if(!empty($clients)){
                 </div>
             <?}?>
 
-            <h2><?=$client['CLIENT_NAME']?></h2>
+            <h2><a href="/clients/client/<?=$client['CLIENT_ID']?>"><?=$client['CLIENT_NAME']?></a></h2>
             <?if(!empty($client['LONG_NAME'])){?>
                 <h3><?=$client['LONG_NAME']?></h3>
             <?}?>

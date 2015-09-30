@@ -15,7 +15,7 @@ class Auth_Oracle extends Auth {
     {
         if ( ! is_array($user))
         {
-            $db = Oracle::getInstance();
+            $db = Oracle::init();
 
             $user = $db->row("select * from ".Oracle::$prefix."V_WEB_MANAGERS where LOGIN = '".strtoupper($user)."'");
             $user['role'] = $user['ROLE_ID'];
@@ -50,7 +50,7 @@ class Auth_Oracle extends Auth {
     {
         if ( ! is_array($user))
         {
-            $db = Oracle::getInstance();
+            $db = Oracle::init();
 
             $user = $db->row("select * from ".Oracle::$prefix."V_WEB_MANAGERS where LOGIN = '".strtoupper($user)."'");
         }
@@ -121,7 +121,7 @@ class Auth_Oracle extends Auth {
      */
     protected function complete_login($user)
     {
-        $db = Oracle::getInstance();
+        $db = Oracle::init();
 
         $user['clients'] = $db->column("select CLIENT_ID from ".Oracle::$prefix."V_WEB_MANAGER_CLIENTS where MANAGER_ID = ".$user['MANAGER_ID'], 'CLIENT_ID');
 
@@ -134,7 +134,7 @@ class Auth_Oracle extends Auth {
     public function regenerate_session()
     {
         $user = Auth::instance()->get_user();
-        $db = Oracle::getInstance();
+        $db = Oracle::init();
 
         $user['clients'] = $db->column("select CLIENT_ID from ".Oracle::$prefix."V_WEB_MANAGER_CLIENTS where MANAGER_ID = ".$user['MANAGER_ID'], 'CLIENT_ID');
 
@@ -147,7 +147,7 @@ class Auth_Oracle extends Auth {
 	public function regenerate_user_profile()
 	{
 		$user = Auth::instance()->get_user();
-        $db = Oracle::getInstance();
+        $db = Oracle::init();
 
 		$user = $db->row("select * from ".Oracle::$prefix."V_WEB_MANAGERS where MANAGER_ID = ".$user['MANAGER_ID']);
         $user['role'] = $user['ACCESS_TYPE'];

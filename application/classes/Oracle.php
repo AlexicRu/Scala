@@ -11,7 +11,7 @@ class Oracle{
     }
 	protected function __clone() {}
 
-	static public function getInstance() {
+	static public function init() {
 		if(is_null(self::$_instance))
 		{
 			$config = Kohana::$config->load('database');
@@ -56,7 +56,7 @@ class Oracle{
 				oci_bind_by_name($res, ':'.$key, $param);
 			}
 		}
-		
+
 		oci_execute($res, OCI_DEFAULT);
 		return $params;
 	}
