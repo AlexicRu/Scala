@@ -107,10 +107,13 @@
     <a href="#" class="btn btn_gray btn_min_width" toggle="block1">Информация о компании</a>
 </div>
 
-<select name="contracts_list" class="select_big">
-    <?foreach($contracts as $contract){?>
+<select name="contracts_list" class="select_big" <?=(empty($contracts) ? 'disabled' :'')?>>
+    <?if(empty($contracts)){?>
+        <option>Нет договоров</option>
+    <?}else{
+    foreach($contracts as $contract){?>
         <option value="<?=$contract['CONTRACT_ID']?>">Договор: <?=$contract['CONTRACT_NAME']?> от <?=$contract['DATE_BEGIN']?> <?if($contract['DATE_END'] != '31.12.2099'){?>до <?=$contract['DATE_END']?><?}?></option>
-    <?}?>
+    <?}}?>
 </select>
 
 &nbsp;&nbsp;&nbsp;<span class="btn">+ Создать договор</span>
