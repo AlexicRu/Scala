@@ -9,8 +9,15 @@ class Controller_Clients extends Controller_Common {
 		$this->title[] = 'Список клиентов';
 	}
 
+	/**
+	 * титульная страница со списком клиентов
+	 */
 	public function action_index()
 	{
+		$search = $this->request->post('search');
 
+		$clients = Model_Client::getClientsList($search);
+
+		$this->tpl->bind('clients', $clients);
 	}
 }

@@ -2,8 +2,6 @@
 
 class Auth_Oracle extends Auth {
 
-    private static $_prefix = 's_dev.';
-
     /**
      * Do username/password check here
      *
@@ -19,7 +17,7 @@ class Auth_Oracle extends Auth {
         {
             $db = Oracle::getInstance();
 
-            $user = $db->row("select * from ".self::$_prefix."V_WEB_MANAGERS where LOGIN = '".strtoupper($user)."'");
+            $user = $db->row("select * from ".Oracle::$prefix."V_WEB_MANAGERS where LOGIN = '".strtoupper($user)."'");
             $user['role'] = $user['ROLE_ID'];
         }
 
@@ -54,7 +52,7 @@ class Auth_Oracle extends Auth {
         {
             $db = Oracle::getInstance();
 
-            $user = $db->row("select * from ".self::$_prefix."V_WEB_MANAGERS where LOGIN = '".strtoupper($user)."'");
+            $user = $db->row("select * from ".Oracle::$prefix."V_WEB_MANAGERS where LOGIN = '".strtoupper($user)."'");
         }
 
         return $user['PASSWORD'];
@@ -125,7 +123,7 @@ class Auth_Oracle extends Auth {
     {
         $db = Oracle::getInstance();
 
-        $user['clients'] = $db->column("select CLIENT_ID from ".self::$_prefix."V_WEB_MANAGER_CLIENTS where MANAGER_ID = ".$user['MANAGER_ID'], 'CLIENT_ID');
+        $user['clients'] = $db->column("select CLIENT_ID from ".Oracle::$prefix."V_WEB_MANAGER_CLIENTS where MANAGER_ID = ".$user['MANAGER_ID'], 'CLIENT_ID');
 
         parent::complete_login($user);
     }
@@ -138,7 +136,7 @@ class Auth_Oracle extends Auth {
         $user = Auth::instance()->get_user();
         $db = Oracle::getInstance();
 
-        $user['clients'] = $db->column("select CLIENT_ID from ".self::$_prefix."V_WEB_MANAGER_CLIENTS where MANAGER_ID = ".$user['MANAGER_ID'], 'CLIENT_ID');
+        $user['clients'] = $db->column("select CLIENT_ID from ".Oracle::$prefix."V_WEB_MANAGER_CLIENTS where MANAGER_ID = ".$user['MANAGER_ID'], 'CLIENT_ID');
 
         parent::complete_login($user);
     }
@@ -151,7 +149,7 @@ class Auth_Oracle extends Auth {
 		$user = Auth::instance()->get_user();
         $db = Oracle::getInstance();
 
-		$user = $db->row("select * from ".self::$_prefix."V_WEB_MANAGERS where MANAGER_ID = ".$user['MANAGER_ID']);
+		$user = $db->row("select * from ".Oracle::$prefix."V_WEB_MANAGERS where MANAGER_ID = ".$user['MANAGER_ID']);
         $user['role'] = $user['ACCESS_TYPE'];
 
         self::complete_login($user);

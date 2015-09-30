@@ -1,6 +1,6 @@
-@import "/fonts/icons/style.css";
-@import "/fonts/SegoeUILight/style.css";
-@import "/fonts/SegoeUISemiBold/style.css";
+@import "fonts/icons/style.css";
+@import "fonts/SegoeUILight/style.css";
+@import "fonts/SegoeUISemiBold/style.css";
 * {
   box-sizing: border-box;
 }
@@ -388,13 +388,16 @@ a.btn:hover {
 }
 .label.label_big {
   font-size: 24px;
-  padding: 7px 19px 10px;
+  padding: 5px 19px 8px;
 }
 .label.label_small {
   font-size: 12px;
 }
 .fr {
   float: right;
+}
+.fr + .fr {
+  margin-right: 20px;
 }
 .back_link {
   margin-bottom: 15px;

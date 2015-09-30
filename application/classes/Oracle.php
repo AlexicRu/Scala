@@ -1,6 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 class Oracle{
+	public static $prefix = 's_dev.';
 	private static $_conn = null;
 	private static $_instance = null;
 
@@ -100,5 +101,37 @@ class Oracle{
 			return array_pop($r[0]);
 		}
 		return false;
-	}	
+	}
+
+	/**
+	 * создаем древовидную структуру, где ключом является одно из полей
+	 *
+	 * @param $sql
+	 * @param $field
+	 * @param $noArray
+	 */
+	public static function tree($sql, $field, $noArray = false)
+	{
+		$result = self::query($sql);
+
+		$return = [];
+
+		if(!empty($result)){
+			$check = reset($result);
+
+			if(!isset($check[$field])){
+				return $return;
+			}
+
+			foreach($result as $row){
+				if($noArray) {
+					$return[$row[$field]] = $row;
+				}else{
+					$return[$row[$field]][] = $row;
+				}
+			}
+		}
+
+		return $return;
+	}
 }

@@ -6,6 +6,7 @@
 	<title><?=$title?></title>
 
 	<script src="http://yastatic.net/jquery/2.1.3/jquery.min.js"></script>
+	<script src="http://yastatic.net/jquery-ui/1.11.2/jquery-ui.min.js"></script>
 
 	<link href="/style.css" rel="stylesheet">
 
@@ -28,7 +29,7 @@
 		<a href="#"><span class="icon-menu"></span></a>
 	</div>
 	<div class="search">
-		<form action="/clients"><button class="icon-find"></button><input type="text" name="search" placeholder="Поиск..."></form>
+		<form action="/clients" method="post"><button class="icon-find"></button><input type="text" name="search" placeholder="Поиск..." value="<?=(!empty($_REQUEST['search']) ? $_REQUEST['search'] : '')?>"></form>
 	</div>
 	<div class="personal">
 		<div class="avatar" style="background-image: url(/img/pic/01.png)"></div> Константинов Сергей Николавевич

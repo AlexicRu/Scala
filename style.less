@@ -1,0 +1,431 @@
+@import "fonts/icons/style.css";
+@import "fonts/SegoeUILight/style.css";
+@import "fonts/SegoeUISemiBold/style.css";
+
+@color: #000;
+@color1: #0e86ad;
+@color2: #fff;
+@color3: #999999;
+
+@SegoeUILight: SegoeUILight, Tahoma;
+@SegoeUISemiBold: SegoeUISemiBold, Tahoma;
+
+*{
+  box-sizing: border-box;
+}
+
+html, body {
+	font-family: @SegoeUILight;
+	margin:0;
+	padding:0;
+	height:100%;
+	background: #f1f2f3;
+	color: @color;
+	font-size: 16px;
+}
+img{border:0;}
+h1, .h1{font-size: 24px; font-weight: normal; margin: 0 0 25px; padding: 0; color: #999; text-transform: uppercase;
+  .btn{
+    margin-top: -4px; vertical-align: top;  float: right;
+  }
+}
+h2, .h2{font-size: 30px; font-weight: normal; margin: 0 0 10px; padding: 0; color: #000;}
+h3, .h3{font-size: 16px; font-weight: normal; margin: 0 0 5px; padding: 0; color: #999;}
+
+b, strong{
+  font-weight: normal; font-family: SegoeUISemiBold;
+  &[class^="f"]{
+    margin-bottom: 8px; display: inline-block;
+  }
+}
+
+input, textarea, a, button, select{
+  outline: none;
+}
+
+a{
+  color: @color1; text-decoration: none;
+  &:hover{
+    color:@color1; text-decoration: underline;
+  }
+  &.red{
+    &:hover{
+      color: #b54848;
+    }
+  }
+}
+
+.clr{clear:both;}
+
+.transition(@param: all, @time: 0.3s, @type:ease){
+  transition: @param @time @type;
+}
+
+.col{vertical-align: top; display: inline-block;}
+
+.bad_browser{
+  padding:200px;
+  text-align:center;
+  display:none;
+}
+
+.content{
+  position: fixed; width: 100%; height: 100%; z-index: 1; top:0; left:0; padding: 92px 30px 30px 240px; overflow-y: auto;
+  .transition();
+}
+header{
+  position: fixed; height: 70px; top:0; left:0; z-index: 99; width: 100%; background: white; border-bottom: 1px solid #d8d9da; display: table;
+  >div{
+    display: table-cell; vertical-align: middle;
+  }
+}
+.logo{
+  text-align: center; width: 210px;
+}
+.hamburger, .mail, .settings, .logout{
+  width: 70px; text-align: center; font-size: 20px;
+  a{
+    display: table-cell; width: 70px; height: 70px; color:#7e7e7e; text-decoration: none; vertical-align: middle;
+    .transition();
+    &:hover{
+      background: #f6f6f6;
+    }
+  }
+}
+.hamburger{
+  border-left: 1px solid #d8d9da; border-right:1px solid #d8d9da; font-size: 22px;
+}
+.search{
+  white-space: nowrap;
+  button{
+    width: 45px; height: 70px; border: 0; background: none; cursor: pointer; font-size: 16px; color:#7e7e7e;
+  }
+  input[type=text]{
+    height: 70px; width: 80%; border: none; font-size: 18px; font-family: @SegoeUILight;
+  }
+}
+.personal{
+  width: 220px; color: black; padding-left: 60px; padding-right: 10px; font-size: 16px;
+  .avatar{
+    float: left; margin-left: -60px;
+  }
+}
+.avatar{
+  width: 44px; height: 44px; display: inline-block; border-radius: 50%; background: no-repeat center; background-size: cover;
+}
+aside{
+  vertical-align: top; position: fixed; width: 210px; background: #0e1d29; overflow: hidden; z-index: 2; height: 100%; padding-top: 85px;
+  .transition();
+  a{
+    display: block; vertical-align: middle; font-size: 18px; color: white; text-decoration: none; font-family: @SegoeUISemiBold; padding: 9px 0 13px 55px; width: 210px;
+    &:hover, &.act{
+      background: #0e86ad; color: white; text-decoration: none;
+      span{
+        color: white;
+      }
+    }
+    [class^="icon-"]{
+      font-size:20px; width: 35px; display: inline-block; padding-top: 3px; float: left; margin-left: -37px; color: rgba(255,255,255,.5);
+    }
+  }
+}
+.wrapper{
+  &.menu_collapsed{
+    aside{
+      width: 55px;
+    }
+    .content{
+      padding-left: 85px;
+    }
+  }
+}
+.mail{
+  .icon-mail{
+    position: relative;
+    span{
+       position: absolute; background: #b82f2f; color: white; font-size: 14px; height: 20px; border-radius: 10px; top:-10px; right: -10px; padding: 2px 5px; display: inline-block;
+    }
+  }
+}
+a.btn, a.btn:hover{
+  text-decoration: none;
+}
+.btn{
+  font-size: 16px; color: #0e86ad; border:1px solid rgba(14,134,173,0.3); border-radius: 5px; text-transform: none; padding: 10px 20px 13px; display: inline-block; background: transparent; cursor: pointer; font-family: SegoeUILight;  text-align: center;
+  .transition();
+  &:hover, &.btn_reverse, &.active{
+    color: white; background: #0e86ad; border-color:#0e86ad;
+    .icon-pdf, .icon-exel1, .icon-exel2{
+      color: white;
+    }
+  }
+  &.btn_gray{
+    color:#999999; border-color:rgba(0,0,0,0.3);
+    &:hover{
+      background: #999999; border-color:#999999; color: white;
+    }
+  }
+  &.btn_min_width{
+    min-width: 275px;
+  }
+  &.btn_red{
+    color: #b54848; border-color: rgba(181,72,72,.3);
+    &:hover{
+      background: #b54848; border-color:#b54848; color: white;
+    }
+  }
+  [class^="icon-"]{
+    vertical-align: middle; margin-right: 5px;
+    &.icon_big{
+      font-size: 150%;
+      line-height: 70%;
+      margin-left: -5px;
+    }
+  }
+  .icon-pdf{
+    color: #e11e1e;
+  }
+  .icon-exel1, .icon-exel2 {
+    color:#248b13;
+  }
+  &.btn_small{
+    border-color: transparent; padding: 5px 10px;
+  }
+}
+.block{
+  background: white; border: 1px solid rgba(0,0,0,.1); padding: 20px 30px; margin: 20px 0;
+  h2,.h2{
+    color:#0e86ad; font-size: 24px;
+  }
+  .table_out{
+    margin: 0 -30px -20px;
+    .table{
+      border: 0;
+    }
+  }
+}
+.table{
+  border: 1px solid rgba(0,0,0,.1); border-top:0; border-collapse: collapse; width: 100%; font-size: 18px;
+  td,th{
+    padding: 15px 30px; border-top:1px solid rgba(0,0,0,.1);
+  }
+}
+.gray{
+  color: #999999;
+}
+.label{
+  font-size: 16px; color: #999; display: inline-block; border-radius: 5px; padding: 1px 10px 4px; background: none; border: 1px solid rgba(0,0,0,0.1);
+  &.label_success{
+    background: #76b548; color: white; border-color: transparent;
+  }
+  &.label_error{
+    background: #b54848; color: white; border-color: transparent;
+  }
+  &.label_warning{
+    background: #d8bd69; color: white; border-color: transparent;
+  }
+  &.label_info{
+    background: #0e86ad; color: white; border-color: transparent;
+  }
+  &.label_big{
+    font-size: 24px; padding: 5px 19px 8px;
+  }
+  &.label_small{
+    font-size: 12px;
+  }
+}
+.fr{
+  float: right;
+  +.fr{
+    margin-right: 20px;
+  }
+}
+.back_link{
+  margin-bottom: 15px; display: inline-block;
+}
+input[type=text].input_big, input[type=password].input_big, input[type=number].input_big, select.select_big, textarea.textarea_big{
+  height: 46px; background: white; font-family: SegoeUILight; border: 1px solid #d8d9da; border-radius: 5px; color: black; font-size: 18px; vertical-align: top; padding-left: 15px; padding-right: 15px;
+}
+input[type=text], input[type=password], input[type=number], select, textarea{
+  height: 34px; background: white; font-family: SegoeUILight; border: 1px solid #d8d9da; border-radius: 5px; color: black; font-size: 16px; vertical-align: top; padding-left: 10px; padding-right: 10px;
+}
+.more_info{
+  margin-bottom: 30px;
+}
+.f18{
+  font-size: 18px;
+}
+.tabs_block{ padding-top: 20px;}
+.tabs{}
+.tabs_content{
+  background: white; border: 1px solid rgba(0,0,0,.1); padding: 20px;
+  &.tabs_content_no_padding{
+    padding: 0;
+  }
+}
+a.tab, .tab{
+  font-size: 24px; color:#999999; height: 62px; padding: 12px 20px 0; background: #e9ebed; border: 1px solid transparent; margin-right: 1px; display: inline-block;
+  &.active{
+    color: black; background: white; border-color: rgba(0,0,0,.1); position: relative;
+    &:hover{
+      color: black; background: white; border-color: rgba(0,0,0,.1);
+    }
+    &:after{
+      content: ""; position: absolute; bottom:-2px; left: 0; display: block; width: 100%; height: 2px; line-height: 0; background: white;
+    }
+    i{
+      color:#999;
+    }
+  }
+  &:hover{
+     background: #e1e3e5; text-decoration: none; color: #999;
+  }
+  i{
+    vertical-align: middle; margin-right: 10px;
+  }
+}
+.red{
+  color: #b54848;
+}
+.tc_top_line{
+  font-size: 24px; padding:  25px 20px 0; border-bottom: 1px solid rgba(0,0,0,.1); height: 90px;
+  .fr{
+    margin-top: -5px;
+  }
+}
+.input_with_icon{
+  font-size: 16px; color:#7e7e7e; position: relative;
+  input[type=text]{
+    padding-left: 40px;
+  }
+  [class^="icon-"]{
+    position: absolute; top:15px; left:15px;
+  }
+}
+.tabs_vertical_block{
+  background: #f6f6f6; display: table; width: 100%;
+}
+.tabs_v{
+  width: 365px; display: table-cell; vertical-align: top;
+}
+.tabs_v_content{
+   background: white; padding: 20px; display: table-cell; vertical-align: top;
+}
+.tab_v{
+  padding: 13px 20px 15px 60px; border-bottom:  1px solid rgba(0,0,0,.1); position: relative; cursor: pointer; min-height: 70px; display: table; width: 100%;
+  .transition();
+
+  >div{
+    display: table-cell; vertical-align: middle;
+  }
+  &.preload{
+    border-bottom: none; cursor: default;
+  }
+  [class^="icon-"]{
+    position: absolute; top:25px; left:25px;
+  }
+  .label{
+    position: absolute; right: 20px; top:23px;
+  }
+  &.onestr{
+    [class^="icon-"]{
+      margin-top: 5px;
+    }
+  }
+  &:hover:not(.preload){
+    background: #e9ebed;
+  }
+  a{
+    text-decoration: none;
+  }
+  &.active{
+    color:white; background: #0e86ad;
+    &:hover{
+      background: #0e86ad;
+    }
+    .gray{
+      color: rgba(255,255,255,.5);
+    }
+    [class^="icon-"],a{
+      color: white;
+    }
+  }
+}
+.tab_v_content{
+  display: none;
+  &.active{
+    display: block;
+  }
+}
+.line_inner{
+  background: #f4f4f4; padding: 10px 15px; margin-top: 8px;
+}
+.line_inner + .line_inner{
+  margin-top: 2px;
+}
+table{
+  td{
+    padding: 8px;
+  }
+}
+.right{
+  text-align: right;
+}
+.as_table{
+  display: table; width: 100%;
+  .col{
+    display: table-cell; padding: 20px
+  }
+}
+.dn{
+  display: none;
+}
+.ui-datepicker{
+  display: block;
+  background: #0e86ad;
+  border-radius: 0 0 10px 10px;
+  color: white;
+  padding: 5px 10px;
+  font-size: 14px;
+  a{
+    color: white;
+  }
+  table{
+    td{
+      padding: 5px;
+    }
+  }
+}
+.ui-datepicker-title{
+  text-align: center;
+}
+.ui-datepicker-next{
+  float: right;
+}
+.ui-datepicker-current-day{
+  border:1px solid white; border-radius:5px;
+}
+.ui-datepicker-trigger{
+  position: absolute; top:12px; right: 10px;
+}
+.f20{
+  font-size: 20px;
+}
+.datepicker_out{
+  display: inline-block; position: relative;
+}
+.white_block{
+  background: white; padding: 15px 20px 20px;
+}
+.as_white{
+  padding: 15px 20px 20px;
+}
+.f24{
+  font-size: 24px;
+}
+.del{
+  position: relative; display: inline-block; margin-right: 20px;
+  .icon-cancel{
+    position: absolute; top:3px; right: -20px;
+  }
+}
