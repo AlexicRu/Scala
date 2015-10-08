@@ -702,3 +702,11 @@ table td {
 textarea {
   min-height: 100px;
 }
+.block_loading {
+  min-height: 200px;
+  background: #ededed url(/img/load.gif) no-repeat center center;
+}
+.error_block {
+  padding: 10px;
+  text-align: center;
+}

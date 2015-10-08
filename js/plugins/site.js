@@ -12,7 +12,7 @@ $(function(){
         return false;
     });
 
-    $("[toggle]").on('click', function(){
+    $(document).on('click', "[toggle]", function(){
         $("[toggle_block='"+ $(this).attr('toggle') +"']").toggle();
     });
 
@@ -23,12 +23,6 @@ $(function(){
         dateFormat: "dd.mm.yy",
         buttonImage: "img/icon_calendar.png",
         showOn: "button",
-        buttonImageOnly: true,
-    });
-
-    $(".btn_toggle").on('click', function(){
-        var btn = $(this);
-        btn.parent().find('.btn').removeClass('active');
-        btn.addClass('active');
+        buttonImageOnly: true
     });
 });

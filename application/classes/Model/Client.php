@@ -16,7 +16,7 @@ class Model_Client extends Model
 
 		if(!is_null($search)){
 			$search = mb_strtoupper($search);
-			$sql .= "where upper(client_name) like '%{$search}%' or upper(long_name) like '%{$search}%' or upper(contract_name) like '%{$search}%'";
+			$sql .= "where upper(client_name) like '%{$search}%' or upper(long_name) like '%{$search}%' or upper(contract_name) like '%{$search}%' or exists (select 1 from cards c where c.contract_id = v.contract_id and c.card_id like '%{$search}%')";
 		}
 
 		$result = $db->tree($sql, 'CLIENT_ID');

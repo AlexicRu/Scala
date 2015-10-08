@@ -56,4 +56,27 @@ class Controller_Clients extends Controller_Common {
 		}
 		$this->jsonResult(true, $result);
 	}
+
+	/**
+	 * грузим данные по контракту
+	 */
+	public function action_contract()
+	{
+		$contractId = $this->request->param('id');
+
+		$contract = Model_Contract::getContract($contractId);
+
+		if(empty($contract)){
+			$this->html('<div class="error_block">Ошибка</div>');
+		}
+
+		$balance = Model_Contract::getContractBalance($contractId);
+
+		$content = View::factory('/ajax/clients/contract')
+			->bind('contract', $contract)
+			->bind('balance', $balance)
+		;
+
+		$this->html($content);
+	}
 }

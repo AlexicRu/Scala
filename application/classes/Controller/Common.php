@@ -46,7 +46,7 @@ abstract class Controller_Common extends Controller_Template {
 
             $menu = Kohana::$config->load('menu');
             $content = View::factory('/includes/menu')
-                ->bind('menu', $menu);;
+                ->bind('menu', $menu);
 
             View::set_global('menu', $content);
         }
@@ -57,7 +57,12 @@ abstract class Controller_Common extends Controller_Template {
         $this->template->content = $this->tpl;
         parent::after();
     }
-    
+
+    protected function html($data){
+        echo $data;
+        exit;
+    }
+
     protected function json($data){
         header('Content-Type: application/json');
         echo json_encode($data);

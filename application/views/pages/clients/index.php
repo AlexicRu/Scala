@@ -31,7 +31,7 @@ if(!empty($clients)){
                             <tr>
                                 <td><span class="label <?=Status::$statusContractClasses[$contract['CONTRACT_STATE']]?>"><?=Status::$statusContractNames[$contract['CONTRACT_STATE']]?></span></td>
                                 <td><?=$contract['CONTRACT_NAME']?></td>
-                                <td><span class="gray">Счет:</span> <?=$contract['BALANCE']?> &#x20bd;</td>
+                                <td><span class="gray">Счет:</span> <?=number_format($contract['BALANCE'], 2, ',', ' ')?> &#x20bd;</td>
                                 <td><span class="gray">Карты:</span> <?=$contract['ALL_CARDS']?></td>
                             </tr>
                         <?}?>
