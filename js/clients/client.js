@@ -52,4 +52,24 @@ $(function(){
             }
         });
     });
+
+    loadContract('contract');
+
+    $('[name=contracts_list]').on('change', function(){
+        loadContract('contract');
+    });
+
+    $(document).on('click', '[ajax_tab]', function(){
+        loadContract($(this).attr('ajax_tab'));
+    });
 });
+
+function loadContract(tab)
+{
+    $('.ajax_contract_block').empty().addClass('block_loading');
+    var contractId = $('[name=contracts_list]').val();
+
+    $.post('/clients/contract/' + contractId, {tab:tab}, function(data){
+        $('.ajax_contract_block').html(data).removeClass('block_loading');
+    });
+}

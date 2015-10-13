@@ -63,6 +63,7 @@ class Controller_Clients extends Controller_Common {
 	public function action_contract()
 	{
 		$contractId = $this->request->param('id');
+		$tab = $this->request->post('tab');
 
 		$contract = Model_Contract::getContract($contractId);
 
@@ -72,11 +73,43 @@ class Controller_Clients extends Controller_Common {
 
 		$balance = Model_Contract::getContractBalance($contractId);
 
-		$content = View::factory('/ajax/clients/contract')
-			->bind('contract', $contract)
+		switch($tab) {
+			case 'contract':
+				$content = View::factory('/ajax/clients/contract/contract')->bind('contract', $contract);
+				break;
+			case 'cards':
+				$content = View::factory('/ajax/clients/contract/cards');
+				break;
+			case 'account':
+				$content = View::factory('/ajax/clients/contract/account');
+				break;
+			case 'reports':
+				$content = View::factory('/ajax/clients/contract/reports');
+				break;
+		}
+
+		$html = View::factory('/ajax/clients/contract/_tabs')
+			->bind('content', $content)
 			->bind('balance', $balance)
+			->bind('tab', $tab)
 		;
 
-		$this->html($content);
+		$this->html($html);
+	}
+
+	/**
+	 * редактирование контракта
+	 */
+	public function action_contract_edit()
+	{
+		$contractId = $this->request->param('id');
+		$params = $this->request->post('params');
+
+		$result = Model_Contract::editContract($contractId, $params);
+
+		if(empty($result)){
+			$this->jsonResult(false);
+		}
+		$this->jsonResult(true, $result);
 	}
 }

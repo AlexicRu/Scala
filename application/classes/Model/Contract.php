@@ -93,4 +93,74 @@ class Model_Contract extends Model
 
 		return $balance;
 	}
+
+	/**
+	 * редактируем данные по контракту
+	 *
+	 * @param $contractId
+	 * @param $params
+	 * todo переделать
+	 */
+	public function editContract($contractId, $params)
+	{
+		if(
+			empty($contractId) ||
+			empty($params['NAME']) ||
+			empty($params['Y_ADDRESS']) ||
+			empty($params['PHONE']) ||
+			empty($params['EMAIL']) ||
+			empty($params['INN']) ||
+			empty($params['KPP'])
+		){
+			return false;
+		}
+
+		$db = Oracle::init();
+
+		$proc = 'begin '.Oracle::$prefix.'web_pack.client_edit(
+			:p_client_id,
+			:p_name,
+			:p_long_name,
+			:p_inn,
+			:p_kpp,
+			:p_ogrn,
+			:p_okpo,
+			:p_y_address,
+			:p_f_address,
+			:p_p_address,
+			:p_email,
+			:p_phone,
+			:p_comments,
+			:p_manager_id,
+			:p_error_code
+        ); end;';
+
+		$user = Auth::instance()->get_user();
+
+		$data = [
+			'p_client_id' 	=> $clientId,
+			'p_name' 		=> $params['NAME'],
+			'p_long_name' 	=> $params['LONG_NAME'],
+			'p_inn' 		=> $params['INN'],
+			'p_kpp' 		=> $params['KPP'],
+			'p_ogrn' 		=> $params['OGRN'],
+			'p_okpo' 		=> $params['OKPO'],
+			'p_y_address' 	=> $params['Y_ADDRESS'],
+			'p_f_address' 	=> $params['F_ADDRESS'],
+			'p_p_address' 	=> $params['P_ADDRESS'],
+			'p_email' 		=> $params['EMAIL'],
+			'p_phone' 		=> $params['PHONE'],
+			'p_comments' 	=> $params['COMMENTS'],
+			'p_manager_id' 	=> $user['MANAGER_ID'],
+			'p_error_code' 	=> 'out',
+		];
+
+		$res = $db->ora_proced($proc, $data);
+
+		if(empty($res['p_error_code'])){
+			return true;
+		}
+
+		return false;
+	}
 }

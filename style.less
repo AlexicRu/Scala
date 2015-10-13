@@ -258,6 +258,10 @@ input[type=text].input_big, input[type=password].input_big, input[type=number].i
 }
 input[type=text], input[type=password], input[type=number], select, textarea{
   height: 34px; background: white; font-family: SegoeUILight; border: 1px solid #d8d9da; border-radius: 5px; color: black; font-size: 16px; vertical-align: top; padding-left: 10px; padding-right: 10px;
+
+  &.input_w_small{
+    width: 140px;
+  }
 }
 .more_info{
   margin-bottom: 30px;
@@ -443,7 +447,7 @@ textarea{
   min-height: 100px;
 }
 .block_loading{
-  min-height: 200px; background: #ededed url(/img/load.gif) no-repeat center center;
+  min-height: 200px; background: #ededed url(/img/load.gif) no-repeat center center;  margin: 10px 0;
 }
 .error_block{
   padding: 10px; text-align: center;

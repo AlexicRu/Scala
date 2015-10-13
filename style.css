@@ -452,6 +452,13 @@ textarea {
   padding-left: 10px;
   padding-right: 10px;
 }
+input[type=text].input_w_small,
+input[type=password].input_w_small,
+input[type=number].input_w_small,
+select.input_w_small,
+textarea.input_w_small {
+  width: 140px;
+}
 .more_info {
   margin-bottom: 30px;
 }
@@ -705,6 +712,7 @@ textarea {
 .block_loading {
   min-height: 200px;
   background: #ededed url(/img/load.gif) no-repeat center center;
+  margin: 10px 0;
 }
 .error_block {
   padding: 10px;

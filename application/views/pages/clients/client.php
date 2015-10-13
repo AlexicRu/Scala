@@ -1,5 +1,4 @@
 <script src="/js/clients/client.js"></script>
-<script src="/js/clients/contract.js"></script>
 
 <a href="/clients" class="back_link">&larr; Вернуться назад</a>
 

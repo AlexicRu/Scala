@@ -17,12 +17,17 @@ $(function(){
     });
 
     $('.datepicker').each(function(){
-        $(this).wrap('<span class="datepicker_out" />');
+        renderDatePicker(elem);
     });
-    $('.datepicker').datepicker({
+});
+
+function renderDatePicker(elem)
+{
+    elem.wrap('<span class="datepicker_out" />');
+    elem.datepicker({
         dateFormat: "dd.mm.yy",
-        buttonImage: "img/icon_calendar.png",
+        buttonImage: "/img/icon_calendar.png",
         showOn: "button",
         buttonImageOnly: true
     });
-});
+}
