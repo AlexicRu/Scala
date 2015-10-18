@@ -72,6 +72,9 @@ button:disabled,
 select:disabled {
   opacity: 0.6;
 }
+select {
+  max-width: 250px;
+}
 a {
   color: #0e86ad;
   text-decoration: none;

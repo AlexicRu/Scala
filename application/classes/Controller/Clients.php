@@ -75,10 +75,21 @@ class Controller_Clients extends Controller_Common {
 
 		switch($tab) {
 			case 'contract':
-				$content = View::factory('/ajax/clients/contract/contract')->bind('contract', $contract);
+				$contractSettings = Model_Contract::getContractSettings($contractId);
+                $contractTariffs = Model_Contract::getTariffs();
+
+				$content = View::factory('/ajax/clients/contract/contract')
+					->bind('contract', $contract)
+					->bind('contractSettings', $contractSettings)
+					->bind('contractTariffs', $contractTariffs)
+				;
 				break;
 			case 'cards':
-				$content = View::factory('/ajax/clients/contract/cards');
+                $cards = Model_Card::getCards($contractId);
+
+				$content = View::factory('/ajax/clients/contract/cards')
+                    ->bind('cards', $cards)
+                ;
 				break;
 			case 'account':
 				$content = View::factory('/ajax/clients/contract/account');

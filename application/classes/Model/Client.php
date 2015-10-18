@@ -9,9 +9,12 @@ class Model_Client extends Model
 	{
 		$db = Oracle::init();
 
+		$user = Auth::instance()->get_user();
+
 		$sql = "
-			select client_id, client_name, long_name, contract_id, contract_name, date_begin, date_end, balance, cards_in_work, all_cards, client_state, contract_state
+			select *
 			from ".Oracle::$prefix."v_web_clients_title
+			where manager_id = {$user['MANAGER_ID']}
 		";
 
 		if(!is_null($search)){

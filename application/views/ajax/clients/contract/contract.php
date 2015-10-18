@@ -1,13 +1,22 @@
 <div class="tc_top_line">
-    <span toggle_block="block2">0676К/14 от 01.01.2014 г. до 22.02.2015 г. &nbsp; <span class="label label_success">Статус</span></span>
-                <span toggle_block="block2" class="dn gray">
-                    <input type="text" value="0676К/14" class="input_big input_w_small">
-                    от
-                    <input type="text" value="01.01.2014" class="input_big input_w_small datepicker" readonly>
-                    до
-                    <input type="text" value="22.02.2015" class="input_big input_w_small datepicker" readonly>
-                    <select class="select_big"><option>1</option></select>
-                </span>
+    <span toggle_block="block2">
+        <?=$contract['CONTRACT_NAME']?> от <?=$contract['DATE_BEGIN']?> <?if($contract['DATE_END'] != '31.12.2099'){?>до <?=$contract['DATE_END']?><?}?> &nbsp;
+        <span class="label <?=Status::$statusContractClasses[$contract['STATE_ID']]?>"><?=Status::$statusContractNames[$contract['STATE_ID']]?></span>
+    </span>
+    <span toggle_block="block2" class="dn gray">
+        <input type="text" name="CONTRACT_NAME" value="<?=$contract['CONTRACT_NAME']?>" class="input_big input_w_small">
+        от
+        <input type="text" name="DATE_BEGIN" value="<?=$contract['DATE_BEGIN']?>" class="input_big input_w_small datepicker" readonly>
+        до
+        <input type="text" name="DATE_END" value="<?=$contract['DATE_END']?>" class="input_big input_w_small datepicker" readonly>
+        <select class="select_big" name="STATE_ID">
+            <?
+            foreach(Status::$statusContractNames as $id => $name){
+                ?><option value="<?=$id?>" <?if($id == $contract['STATE_ID']){echo 'selected';}?>><?=$name?></option><?
+            }
+            ?>
+        </select>
+    </span>
 
     <div class="fr" toggle_block="block2"><button class="btn" toggle="block2"><i class="icon-pen"></i> Редактировать</button></div>
     <div class="fr dn" toggle_block="block2">
@@ -22,29 +31,45 @@
             <tr>
                 <td class="gray right" width="160">Схема оплаты:</td>
                 <td>
-                    <span toggle_block="block2"><?=Model_Contract::$paymentSchemes[$contract['scheme']]?></span>
-                    <span toggle_block="block2" class="dn"><select><option>1</option></select></span>
+                    <span toggle_block="block2"><?=Model_Contract::$paymentSchemes[$contractSettings['scheme']]?></span>
+                    <span toggle_block="block2" class="dn">
+                        <select name="scheme">
+                            <?
+                            foreach(Model_Contract::$paymentSchemes as $id => $name){
+                                ?><option value="<?=$id?>" <?if($id == $contractSettings['scheme']){echo 'selected';}?>><?=$name?></option><?
+                            }
+                            ?>
+                        </select>
+                    </span>
                 </td>
             </tr>
             <tr>
                 <td class="gray right">Переодичность выставления счетов:</td>
                 <td>
                     <?
-                        if($contract['INVOICE_PERIOD_TYPE'] == Model_Contract::INVOICE_PERIOD_TYPE_DAY){
-                            $period = Text::plural($contract['INVOICE_PERIOD_VALUE'], ['день', 'дня', 'дней']);
+                        if($contractSettings['INVOICE_PERIOD_TYPE'] == Model_Contract::INVOICE_PERIOD_TYPE_DAY){
+                            $period = Text::plural($contractSettings['INVOICE_PERIOD_VALUE'], ['день', 'дня', 'дней']);
                         }else{
-                            $period = Text::plural($contract['INVOICE_PERIOD_VALUE'], ['месяц', 'месяца', 'месяцев']);
+                            $period = Text::plural($contractSettings['INVOICE_PERIOD_VALUE'], ['месяц', 'месяца', 'месяцев']);
                         }
                     ?>
-                    <span toggle_block="block2">Каждый месяц</span>
-                    <span toggle_block="block2" class="dn"><select><option>1</option></select></span>
+                    <span toggle_block="block2"><?=$contractSettings['INVOICE_PERIOD_VALUE'].' '.$period?></span>
+                    <span toggle_block="block2" class="dn">
+                        <select name="INVOICE_PERIOD_TYPE">
+                            <?
+                            foreach(Model_Contract::$invoicePeriods as $id => $value){
+                                ?><option value="<?=$id?>" <?if($contractSettings['INVOICE_PERIOD_TYPE'] == $id){echo 'selected';}?>><?=$value?></option><?
+                            }
+                            ?>
+                        </select>
+                        <input type="text" name="INVOICE_PERIOD_VALUE" value="<?=$contractSettings['INVOICE_PERIOD_VALUE']?>">
+                    </span>
                 </td>
             </tr>
             <tr>
                 <td class="gray right">Валюта:</td>
                 <td>
-                    <span toggle_block="block2">Российский Рубль – ₽</span>
-                    <span toggle_block="block2" class="dn"><select><option>1</option></select></span>
+                    Российский Рубль – ₽
                 </td>
             </tr>
         </table>
@@ -54,24 +79,24 @@
             <tr>
                 <td class="gray right" width="160">Блокировка:</td>
                 <td>
-                    <span toggle_block="block2"><?=(!empty($contract['AUTOBLOCK_FLAG']) ? $contract['AUTOBLOCK_LIMIT'] : '<span class="gray">Отсутствует</span>')?></span>
-                    <span toggle_block="block2" class="dn"><input type="text"></span>
+                    <span toggle_block="block2"><?=$contractSettings['AUTOBLOCK_LIMIT']?></span>
+                    <span toggle_block="block2" class="dn"><input type="text" name="AUTOBLOCK_LIMIT" value="<?=$contractSettings['AUTOBLOCK_LIMIT']?>" <?if ($contractSettings['scheme'] != Model_Contract::PAYMENT_SCHEME_LIMIT){echo 'disabled';}?>></span>
                     ₽
                 </td>
             </tr>
             <tr>
                 <td class="gray right">Пени:</td>
                 <td>
-                    <span toggle_block="block2"><?=(!empty($contract['PENALTIES_FLAG']) ? $contract['PENALTIES'] : '<span class="gray">Отсутствует</span>')?></span>
-                    <span toggle_block="block2" class="dn"><input type="text"></span>
+                    <span toggle_block="block2"><?=$contractSettings['PENALTIES']?></span>
+                    <span toggle_block="block2" class="dn"><input type="text" name="PENALTIES" value="<?=$contractSettings['PENALTIES']?>"></span>
                     %
                 </td>
             </tr>
             <tr>
                 <td class="gray right">Овердрафт:</td>
                 <td>
-                    <span toggle_block="block2"><?=$contract['OVERDRAFT']?></span>
-                    <span toggle_block="block2" class="dn"><input type="text"></span>
+                    <span toggle_block="block2"><?=$contractSettings['OVERDRAFT']?></span>
+                    <span toggle_block="block2" class="dn"><input type="text" name="OVERDRAFT" value="<?=$contractSettings['OVERDRAFT']?>"></span>
                     ₽
                 </td>
             </tr>
@@ -82,15 +107,27 @@
             <tr>
                 <td class="gray right">Online тариф:</td>
                 <td>
-                    <span toggle_block="block2"><?=$contract['TARIF_NAME_ONLINE']?></span>
-                    <span toggle_block="block2" class="dn"><select><option>1</option></select></span>
+                    <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_ONLINE']?></span>
+                    <span toggle_block="block2" class="dn">
+                        <select name="TARIF_ONLINE">
+                            <?foreach($contractTariffs as $tariff){?>
+                                <option value="<?=$tariff['ID']?>" <?if($tariff['ID'] == $contractSettings['TARIF_ONLINE']){echo 'selected';}?>><?=$tariff['TARIF_NAME']?></option>
+                            <?}?>
+                        </select>
+                    </span>
                 </td>
             </tr>
             <tr>
                 <td class="gray right">Offline тариф:</td>
                 <td>
-                    <span toggle_block="block2"><?=$contract['TARIF_NAME_OFFLINE']?></span>
-                    <span toggle_block="block2" class="dn"><select><option>1</option></select></span>
+                    <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_OFFLINE']?></span>
+                    <span toggle_block="block2" class="dn">
+                        <select name="TARIF_OFFLINE">
+                            <?foreach($contractTariffs as $id => $value){?>
+                                <option value="<?=$tariff['ID']?>" <?if($tariff['ID'] == $contractSettings['TARIF_OFFLINE']){echo 'selected';}?>><?=$tariff['TARIF_NAME']?></option>
+                            <?}?>
+                        </select>
+                    </span>
                 </td>
             </tr>
         </table>
@@ -99,14 +136,47 @@
 
 <script>
     $(function(){
+        $("select[name=scheme]").on('change', function(){
+            var t = $(this);
+
+            if(t.val() == 1){ //безлимит
+                $("[name=AUTOBLOCK_LIMIT]").val(0).prop('disabled', true);
+            }else if(t.val() == 2){ //предоплата
+                $("[name=AUTOBLOCK_LIMIT]").val(0).prop('disabled', true);
+            }else{ //порог отключения
+                $("[name=AUTOBLOCK_LIMIT]").prop('disabled', false);
+            }
+        });
+
         $(".btn_contract_save").on('click', function(){
             var params = {
-
+                contract:{
+                    CONTRACT_NAME:  $("[name=CONTRACT_NAME]").val(),
+                    DATE_BEGIN:     $("[name=DATE_BEGIN]").val(),
+                    DATE_END:       $("[name=DATE_END]").val(),
+                    STATE_ID:       $("[name=STATE_ID]").val()
+                },
+                settings:{
+                    TARIF_ONLINE:           $("[name=TARIF_ONLINE]").val(),
+                    TARIF_OFFLINE:          $("[name=TARIF_OFFLINE]").val(),
+                    AUTOBLOCK_LIMIT:        $("[name=AUTOBLOCK_LIMIT]").val(),
+                    PENALTIES:              $("[name=PENALTIES]").val(),
+                    OVERDRAFT:              $("[name=OVERDRAFT]").val(),
+                    INVOICE_PERIOD_TYPE:    $("[name=INVOICE_PERIOD_TYPE]").val(),
+                    INVOICE_PERIOD_VALUE:   $("[name=INVOICE_PERIOD_VALUE]").val(),
+                    scheme:                 $("[name=scheme]").val()
+                }
             };
 
-            $.post('/clients/contract_edit/<?=$contract['CONTRACT_ID']?>', {params:params}, function(data){
+            if(params.contract.CONTRACT_NAME == ''){
+                $.jGrowl('Введите название', { header: 'Ошибка!' });
+                return false;
+            }
+
+            $.post('/clients/contract_edit/<?=$contractSettings['CONTRACT_ID']?>', {params:params}, function(data){
                 if(data.success){
                     $.jGrowl('Контракт обновлен', { header: 'Успех!' });
+                    loadContract('contract');
                 }else{
                     $.jGrowl('Сохранение не удалось', { header: 'Ошибка!' });
                 }

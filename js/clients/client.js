@@ -60,7 +60,11 @@ $(function(){
     });
 
     $(document).on('click', '[ajax_tab]', function(){
-        loadContract($(this).attr('ajax_tab'));
+        var t = $(this);
+        if(t.hasClass('active')){
+            return false;
+        }
+        loadContract(t.attr('ajax_tab'));
     });
 });
 
@@ -71,5 +75,8 @@ function loadContract(tab)
 
     $.post('/clients/contract/' + contractId, {tab:tab}, function(data){
         $('.ajax_contract_block').html(data).removeClass('block_loading');
+        $('.ajax_contract_block .datepicker').each(function () {
+            renderDatePicker($(this));
+        });
     });
 }

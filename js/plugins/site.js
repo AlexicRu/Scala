@@ -17,7 +17,7 @@ $(function(){
     });
 
     $('.datepicker').each(function(){
-        renderDatePicker(elem);
+        renderDatePicker($(this));
     });
 });
 
