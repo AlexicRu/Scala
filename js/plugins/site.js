@@ -3,7 +3,7 @@ $(function(){
         $('.wrapper').toggleClass('menu_collapsed');
     });
 
-    $("[tab]").on('click', function(){
+    $(document).on('click', "[tab]", function(){
         var t = $(this);
         var block = t.closest('.tabs_switcher');
         $('[tab_content], [tab]', block).removeClass('active');

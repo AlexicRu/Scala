@@ -479,7 +479,6 @@ textarea.input_w_small {
 .tabs_content.tabs_content_no_padding {
   padding: 0;
 }
-a.tab,
 .tab {
   font-size: 24px;
   color: #999999;
@@ -489,21 +488,19 @@ a.tab,
   border: 1px solid transparent;
   margin-right: 1px;
   display: inline-block;
+  cursor: pointer;
 }
-a.tab.active,
 .tab.active {
   color: black;
   background: white;
   border-color: rgba(0, 0, 0, 0.1);
   position: relative;
 }
-a.tab.active:hover,
 .tab.active:hover {
   color: black;
   background: white;
   border-color: rgba(0, 0, 0, 0.1);
 }
-a.tab.active:after,
 .tab.active:after {
   content: "";
   position: absolute;
@@ -515,17 +512,14 @@ a.tab.active:after,
   line-height: 0;
   background: white;
 }
-a.tab.active i,
 .tab.active i {
   color: #999;
 }
-a.tab:hover,
 .tab:hover {
   background: #e1e3e5;
   text-decoration: none;
   color: #999;
 }
-a.tab i,
 .tab i {
   vertical-align: middle;
   margin-right: 10px;

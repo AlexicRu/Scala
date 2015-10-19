@@ -64,6 +64,7 @@ class Controller_Clients extends Controller_Common {
 	{
 		$contractId = $this->request->param('id');
 		$tab = $this->request->post('tab');
+		$query = $this->request->post('query');
 
 		$contract = Model_Contract::getContract($contractId);
 
@@ -85,14 +86,17 @@ class Controller_Clients extends Controller_Common {
 				;
 				break;
 			case 'cards':
-                $cards = Model_Card::getCards($contractId);
+                $cards = Model_Card::getCards($contractId, false, $query);
 
 				$content = View::factory('/ajax/clients/contract/cards')
                     ->bind('cards', $cards)
+                    ->bind('query', $query)
                 ;
 				break;
 			case 'account':
-				$content = View::factory('/ajax/clients/contract/account');
+				$content = View::factory('/ajax/clients/contract/account')
+                    ->bind('balance', $balance)
+                ;
 				break;
 			case 'reports':
 				$content = View::factory('/ajax/clients/contract/reports');
@@ -123,4 +127,27 @@ class Controller_Clients extends Controller_Common {
 		}
 		$this->jsonResult(true, $result);
 	}
+
+    /**
+     * грузим данные по контракту
+     */
+    public function action_card()
+    {
+        $cardId = $this->request->param('id');
+
+        $card = Model_Card::getCard($cardId);
+
+        if(empty($card)){
+            $this->html('<div class="error_block">Ошибка</div>');
+        }
+
+        $oilRestrictions = Model_Card::getOilRestrictions($cardId);
+
+        $html = View::factory('/ajax/clients/card')
+            ->bind('card', $card)
+            ->bind('oilRestrictions', $oilRestrictions)
+        ;
+
+        $this->html($html);
+    }
 }

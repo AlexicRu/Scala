@@ -69,7 +69,7 @@
             <tr>
                 <td class="gray right">Валюта:</td>
                 <td>
-                    Российский Рубль – ₽
+                    Российский Рубль – &#x20bd;
                 </td>
             </tr>
         </table>
@@ -81,7 +81,7 @@
                 <td>
                     <span toggle_block="block2"><?=$contractSettings['AUTOBLOCK_LIMIT']?></span>
                     <span toggle_block="block2" class="dn"><input type="text" name="AUTOBLOCK_LIMIT" value="<?=$contractSettings['AUTOBLOCK_LIMIT']?>" <?if ($contractSettings['scheme'] != Model_Contract::PAYMENT_SCHEME_LIMIT){echo 'disabled';}?>></span>
-                    ₽
+                    &#x20bd;
                 </td>
             </tr>
             <tr>
@@ -97,7 +97,7 @@
                 <td>
                     <span toggle_block="block2"><?=$contractSettings['OVERDRAFT']?></span>
                     <span toggle_block="block2" class="dn"><input type="text" name="OVERDRAFT" value="<?=$contractSettings['OVERDRAFT']?>"></span>
-                    ₽
+                    &#x20bd;
                 </td>
             </tr>
         </table>

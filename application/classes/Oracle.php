@@ -134,4 +134,14 @@ class Oracle{
 
 		return $return;
 	}
+
+	/**
+	 * экранируем
+	 *
+	 * @param $val
+	 */
+	public static function quote($val)
+	{
+		return addslashes(trim($val));
+	}
 }

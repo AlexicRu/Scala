@@ -68,12 +68,12 @@ $(function(){
     });
 });
 
-function loadContract(tab)
+function loadContract(tab, query)
 {
     $('.ajax_contract_block').empty().addClass('block_loading');
     var contractId = $('[name=contracts_list]').val();
 
-    $.post('/clients/contract/' + contractId, {tab:tab}, function(data){
+    $.post('/clients/contract/' + contractId, {tab:tab, query:query}, function(data){
         $('.ajax_contract_block').html(data).removeClass('block_loading');
         $('.ajax_contract_block .datepicker').each(function () {
             renderDatePicker($(this));

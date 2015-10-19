@@ -1,76 +1,68 @@
-<?print_r($cards)?>
+<?
+$cntWork = 0;
+$cntDisable = 0;
+
+foreach($cards as $card){
+    if($card['CARD_STATE'] != Model_Card::CARD_STATE_BLOCKED){
+        $cntWork++;
+    }else{
+        $cntDisable++;
+    }
+}
+?>
+
 <div class="tc_top_line">
-    <span class="gray">Всего карт:</span> 4 &nbsp;&nbsp;&nbsp;
-    <span class="gray">В работе:</span> 1 &nbsp;&nbsp;&nbsp;
-    <span class="red">Заблокировано: 1</span>
-    <div class="fr input_with_icon"><i class="icon-find"></i><input type="text" class="input_big" placeholder="Поиск..."></div>
+    <span class="gray">Всего карт:</span> <?=count($cards)?> &nbsp;&nbsp;&nbsp;
+    <span class="gray">В работе:</span> <?=$cntWork?> &nbsp;&nbsp;&nbsp;
+    <span class="red">Заблокировано: <?=$cntDisable?></span>
+    <div class="fr input_with_icon"><i class="icon-find"></i><input type="text" class="input_big cards_search" placeholder="Поиск..." value="<?=$query?>"></div>
 </div>
-<div class="tabs_vertical_block tabs_switcher">
+<div class="tabs_vertical_block tabs_switcher tabs_cards">
     <div class="tabs_v">
-        <div class="tab_v" tab="1"><div>
+        <div class="tab_v"><div>
                 <a href="#"><span class="icon-card"></span> Добавить карту</a>
             </div></div>
-        <div class="tab_v active" tab="2"><div>
-                <span class="icon-card gray"></span>
-                123456789000554856
-                <div class="gray">Ivanov Sergey</div>
-            </div></div>
-        <div class="tab_v" tab="3"><div>
-                <span class="icon-card gray"></span>
-                123456789000554856
-                <div class="gray">Ivanov Sergey</div>
-                <span class="label label_error label_small">Заблокирована</span>
-            </div></div>
-        <div class="tab_v" tab="4"><div>
-                <span class="icon-card gray"></span>
-                123456789000554856
-                <div class="gray">Ivanov Sergey</div>
-            </div></div>
-        <div class="tab_v gray preload"><div>
+        <?foreach($cards as $key => $card){?>
+            <div class="tab_v" tab="<?=$card['CARD_ID']?>"><div>
+                    <span class="icon-card gray"></span>
+                    <?=$card['CARD_ID']?>
+                    <div class="gray"><?=$card['HOLDER']?></div>
+                    <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
+                        <span class="label label_error label_small">Заблокирована</span>
+                    <?}?>
+                </div></div>
+        <?}?>
+        <!--div class="tab_v gray preload"><div>
                 <span class="icon-loader"></span> Загрузка карточек
-            </div></div>
+            </div></div-->
     </div>
     <div class="tabs_v_content">
-        <div class="tab_v_content" tab_content="1">1</div>
-        <div class="tab_v_content active" tab_content="2">
-            <div class="fr">
-                <button class="btn btn_red">Заблокировать</button> &nbsp;
-                <button class="btn"><i class="icon-pen"></i> Редактировать</button>
-            </div>
-
-            <b class="f18">Обороты за текущий период:</b><br>
-            152 л. / 5 122 ₽<br><br>
-
-            <b class="f18">Последняя заправка:</b>
-            <div class="line_inner">
-                <span class="gray">06.01.2015</span> &nbsp;&nbsp;&nbsp; <b>АЗС Роснефть №15</b> <div class="fr">Бензин АИ-95 10л. / 372 ₽</div>
-            </div>
-            <br>
-            <b class="f18">Ограничения по топливу:</b>
-            <table>
-                <tbody><tr>
-                    <td class="gray right">
-                        ДТ:<br>
-                        ДТ зимнее:<br>
-                        ДТ Евро:
-                    </td>
-                    <td class="line_inner">1000 л./сутки</td>
-                </tr>
-                <tr>
-                    <td class="gray right">Бензин АИ-95:</td>
-                    <td class="line_inner">150 ₽ единовременно</td>
-                </tr>
-                </tbody></table>
-            <br>
-            <b class="f18">История операций:</b>
-            <div class="line_inner">
-                <span class="gray">06.01.2015</span> &nbsp;&nbsp;&nbsp; Иванов И.И. <div class="fr">Статус - заблокирована</div>
-            </div>
-            <div class="line_inner">
-                <span class="gray">06.01.2015</span> &nbsp;&nbsp;&nbsp; Петров А.Г. <div class="fr">Изменен лимит по карте</div>
-            </div>
-        </div>
-        <div class="tab_v_content" tab_content="3">3</div>
-        <div class="tab_v_content" tab_content="4">4</div>
+        <?foreach($cards as $key => $card){?>
+            <div class="tab_v_content" tab_content="<?=$card['CARD_ID']?>"></div>
+        <?}?>
     </div>
 </div>
+
+<script>
+    $(function(){
+        $(".tabs_cards [tab]").on('click', function(){
+            var t = $(this);
+
+            if($(".tabs_cards [tab_content="+ t.attr('tab') +"]").text() == ''){
+                $(".tabs_cards [tab_content="+ t.attr('tab') +"]").addClass('block_loading');
+
+                $.post('/clients/card/' + t.attr('tab'), {}, function(data){
+                    $(".tabs_cards [tab_content="+ t.attr('tab') +"]").html(data).removeClass('block_loading');
+                });
+            }
+        });
+
+        $(".tabs_cards [tab]:first").click();
+
+        $(".cards_search").on('keypress', function(e){
+            if(e.keyCode == 13){
+                loadContract('cards', $(".cards_search").val());
+            }
+        });
+    });
+</script>

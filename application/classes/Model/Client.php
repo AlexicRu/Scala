@@ -14,12 +14,12 @@ class Model_Client extends Model
 		$sql = "
 			select *
 			from ".Oracle::$prefix."v_web_clients_title
-			where manager_id = {$user['MANAGER_ID']}
-		";
+			where manager_id = ".Oracle::quote($user['MANAGER_ID'])
+		;
 
 		if(!is_null($search)){
 			$search = mb_strtoupper($search);
-			$sql .= "where upper(client_name) like '%{$search}%' or upper(long_name) like '%{$search}%' or upper(contract_name) like '%{$search}%' or exists (select 1 from cards c where c.contract_id = v.contract_id and c.card_id like '%{$search}%')";
+			$sql .= "where upper(client_name) like '%".Oracle::quote($search)."%' or upper(long_name) like '%".Oracle::quote($search)."%' or upper(contract_name) like '%".Oracle::quote($search)."%' or exists (select 1 from cards c where c.contract_id = v.contract_id and c.card_id like '%".Oracle::quote($search)."%')";
 		}
 
 		$result = $db->tree($sql, 'CLIENT_ID');
@@ -54,7 +54,7 @@ class Model_Client extends Model
 
 		$db = Oracle::init();
 
-		$sql = "select * from ".Oracle::$prefix."V_WEB_CLIENTS_PROFILE where client_id = ".$clientId;
+		$sql = "select * from ".Oracle::$prefix."V_WEB_CLIENTS_PROFILE where client_id = ".Oracle::quote($clientId);
 
 		$client = $db->row($sql);
 

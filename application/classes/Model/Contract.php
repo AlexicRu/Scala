@@ -40,11 +40,11 @@ class Model_Contract extends Model
 		";
 
 		if(!empty($clientId)){
-			$sql .= " and client_id = {$clientId} ";
+			$sql .= " and client_id = ".Oracle::quote($clientId);
 		}
 
 		if(!empty($contractId)){
-			$sql .= " and contract_id = {$contractId} ";
+			$sql .= " and contract_id = ".Oracle::quote($contractId);
 		}
 
 		$sql .= 'order by date_begin, state_id';
@@ -86,8 +86,8 @@ class Model_Contract extends Model
 		$sql = "
 			select *
 			from ".Oracle::$prefix."V_WEB_CL_CONTRACTS_SET
-			where contract_id = {$contractId}
-		";
+			where contract_id = ".Oracle::quote($contractId)
+		;
 
 		$contract = $db->row($sql);
 
@@ -118,8 +118,8 @@ class Model_Contract extends Model
 		$sql = "
 			select *
 			from ".Oracle::$prefix."V_WEB_CTR_BALANCE
-			where contract_id = {$contractId}
-		";
+			where contract_id = ".Oracle::quote($contractId)
+		;
 
 		$balance = $db->row($sql);
 

@@ -6,7 +6,7 @@
 
 <div class="tabs_block">
     <div class="tabs">
-        <a href="#" ajax_tab="contract" class="tab <?=($tab == 'contract' ? 'active' : '')?>"><i class="icon-contract"></i> Договор</a><a href="#" ajax_tab="cards" class="tab <?=($tab == 'cards' ? 'active' : '')?>"><i class="icon-cards"></i> Карты</a><a href="#" ajax_tab="account" class="tab  <?=($tab == 'account' ? 'active' : '')?>"><i class="icon-account"></i> Счет</a><a href="#" ajax_tab="reports" class="tab <?=($tab == 'reports' ? 'active' : '')?>"><i class="icon-reports"></i> Отчеты</a>
+        <span ajax_tab="contract" class="tab <?=($tab == 'contract' ? 'active' : '')?>"><i class="icon-contract"></i> Договор</span><span ajax_tab="cards" class="tab <?=($tab == 'cards' ? 'active' : '')?>"><i class="icon-cards"></i> Карты</span><span ajax_tab="account" class="tab  <?=($tab == 'account' ? 'active' : '')?>"><i class="icon-account"></i> Счет</span><span ajax_tab="reports" class="tab <?=($tab == 'reports' ? 'active' : '')?>"><i class="icon-reports"></i> Отчеты</span>
     </div>
     <div class="tabs_content tabs_content_no_padding">
         <?=$content?>
