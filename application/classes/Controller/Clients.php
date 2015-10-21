@@ -181,15 +181,22 @@ class Controller_Clients extends Controller_Common {
 
 	/**
 	 * добавление контракта
-	 * web_pack.client_contract_add(p_client_id,
-	p_contract_name,
-	p_date_begin,
-	p_date_end,
-	p_currency default '643',
-	p_manager_id,
-	p_contract_id out,
-	p_error_code out);
+	 *
 	 */
 	public function action_contract_add()
-	{}
+	{
+		$params = $this->request->post('params');
+
+		$result = Model_Contract::addContract($params);
+
+		if(empty($result)){
+			$this->jsonResult(false);
+		}
+
+		if(!empty($result['error'])){
+			$this->jsonResult(false, $result['error']);
+		}
+
+		$this->jsonResult(true, $result);
+	}
 }

@@ -2,6 +2,7 @@
 
 class Model_Contract extends Model
 {
+	const DEFAULT_DATE_END				= '31.12.2099';
     const CURRENCY_RUR 		            = 643;
 
 	const PAYMENT_SCHEME_UNLIMITED 		= 1;
@@ -220,5 +221,55 @@ class Model_Contract extends Model
 		$sql = "select * from ".Oracle::$prefix."v_tarifs_list";
 
 		return $db->query($sql);
+	}
+
+	/**
+	 * добавление договора к пользователю
+	 *
+	 * @param $params
+	 */
+	public static function addContract($params)
+	{
+		if(empty($params['client_id']) || empty($params['name']) || empty($params['date_start'])){
+			return false;
+		}
+
+		if(!empty($params['date_end']) && strtotime($params['date_start']) > strtotime($params['date_end'])) {
+			return ['error' => 'Дата начала не может быть позже даты окончания'];
+		}
+
+		$db = Oracle::init();
+
+		$proc = 'begin '.Oracle::$prefix.'web_pack.client_contract_add(
+			:p_client_id,
+			:p_contract_name,
+			:p_date_begin,
+			:p_date_end,
+			:p_currency,
+			:p_manager_id,
+			:p_contract_id,
+			:p_error_code
+        ); end;';
+
+		$user = Auth::instance()->get_user();
+
+		$data = [
+			'p_client_id' 		=> $params['client_id'],
+			'p_contract_name' 	=> $params['name'],
+			'p_date_begin' 		=> $params['date_start'],
+			'p_date_end' 		=> !empty($params['date_end']) ? $params['date_end'] : self::DEFAULT_DATE_END,
+			'p_currency' 		=> self::CURRENCY_RUR,
+			'p_manager_id' 		=> $user['MANAGER_ID'],
+			'p_contract_id' 	=> 'out',
+			'p_error_code' 		=> 'out',
+		];
+
+		$res = $db->ora_proced($proc, $data);
+
+		if(empty($res['p_error_code'])){
+			return true;
+		}
+
+		return false;
 	}
 }
