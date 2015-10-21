@@ -18,7 +18,12 @@ class Controller_Clients extends Controller_Common {
 
 		$clients = Model_Client::getClientsList($search);
 
-		$this->tpl->bind('clients', $clients);
+        $popupClientAdd = Common::popupForm('Добавление нового клиента', 'client/add');
+
+		$this->tpl
+            ->bind('clients', $clients)
+            ->bind('popupClientAdd', $popupClientAdd)
+        ;
 	}
 
 	/**
@@ -35,9 +40,12 @@ class Controller_Clients extends Controller_Common {
 			throw new HTTP_Exception_404();
 		}
 
+		$popupContractAdd = Common::popupForm('Добавление нового договора', 'contract/add');
+
 		$this->tpl
 			->bind('client', $client)
 			->bind('contracts', $contracts)
+			->bind('popupContractAdd', $popupContractAdd)
 		;
 	}
 
@@ -63,6 +71,11 @@ class Controller_Clients extends Controller_Common {
 	public function action_contract()
 	{
 		$contractId = $this->request->param('id');
+
+		if($contractId == 0){
+			$this->html('<div class="error_block">Контракты отсутствуют</div>');
+		}
+
 		$tab = $this->request->post('tab');
 		$query = $this->request->post('query');
 
@@ -150,4 +163,33 @@ class Controller_Clients extends Controller_Common {
 
         $this->html($html);
     }
+
+	/**
+	 * добавление нового клиента
+	 */
+	public function action_client_add()
+	{
+		$params = $this->request->post('params');
+
+		$result = Model_Client::addClient($params);
+
+		if(empty($result)){
+			$this->jsonResult(false);
+		}
+		$this->jsonResult(true, $result);
+	}
+
+	/**
+	 * добавление контракта
+	 * web_pack.client_contract_add(p_client_id,
+	p_contract_name,
+	p_date_begin,
+	p_date_end,
+	p_currency default '643',
+	p_manager_id,
+	p_contract_id out,
+	p_error_code out);
+	 */
+	public function action_contract_add()
+	{}
 }

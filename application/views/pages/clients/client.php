@@ -109,14 +109,16 @@
 
 <select name="contracts_list" class="select_big" <?=(empty($contracts) ? 'disabled' :'')?>>
     <?if(empty($contracts)){?>
-        <option>Нет договоров</option>
+        <option value="0">Нет договоров</option>
     <?}else{
     foreach($contracts as $contract){?>
         <option value="<?=$contract['CONTRACT_ID']?>">Договор: <?=$contract['CONTRACT_NAME']?> от <?=$contract['DATE_BEGIN']?> <?if($contract['DATE_END'] != '31.12.2099'){?>до <?=$contract['DATE_END']?><?}?></option>
     <?}}?>
 </select>
 
-&nbsp;&nbsp;&nbsp;<span class="btn">+ Создать договор</span>
+&nbsp;&nbsp;&nbsp;<a href="#contract_add" class="btn fancy">+ Создать договор</a>
+
+<?=$popupContractAdd?>
 
 <div class="ajax_contract_block"></div>
 

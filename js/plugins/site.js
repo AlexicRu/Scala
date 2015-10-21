@@ -19,6 +19,13 @@ $(function(){
     $('.datepicker').each(function(){
         renderDatePicker($(this));
     });
+
+    $('.fancy').fancybox({
+        padding: [0,0,0,0]
+    });
+    $(document).on('click', '.fancy_close', function(){
+        $.fancybox.close();
+    });
 });
 
 function renderDatePicker(elem)
@@ -30,4 +37,16 @@ function renderDatePicker(elem)
         showOn: "button",
         buttonImageOnly: true
     });
+}
+
+function message(type, text)
+{
+    if(type == 0){
+        type = 'Ошибка!';
+    }
+    if(type == 1){
+        type = 'Успех!';
+    }
+
+    $.jGrowl(text, { header: type });
 }

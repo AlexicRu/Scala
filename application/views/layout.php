@@ -8,10 +8,12 @@
 	<script src="http://yastatic.net/jquery/2.1.3/jquery.min.js"></script>
 	<script src="http://yastatic.net/jquery-ui/1.11.2/jquery-ui.min.js"></script>
 
-	<link href="/style.css" rel="stylesheet">
 	<link href="/js/plugins/jGrowl/jGrowl.css" rel="stylesheet">
+	<link href="/js/plugins/fancy/jquery.fancybox.css" rel="stylesheet">
+	<link href="/style.css" rel="stylesheet">
 
 	<script src="/js/plugins/jGrowl/jGrowl.js"></script>
+	<script src="/js/plugins/fancy/jquery.fancybox.js"></script>
 	<script src="/js/plugins/site.js"></script>
 
 	<!--[if lt IE 9]>

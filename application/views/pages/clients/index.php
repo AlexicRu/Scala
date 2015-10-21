@@ -1,4 +1,4 @@
-<h1>Список клиентов <span class="btn">+ Добавить клиента</span></h1>
+<h1>Список клиентов <a href="#client_add" class="btn fancy">+ Добавить клиента</a></h1>
 <?
 if(!empty($_REQUEST['search'])){?>
     <h3>Результаты поиска</h3>
@@ -43,3 +43,5 @@ if(!empty($clients)){
 }else{?>
     <div class="block">Клиенты не найдены</div>
 <?}?>
+
+<?=$popupClientAdd?>
