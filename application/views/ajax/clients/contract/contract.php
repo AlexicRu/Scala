@@ -20,7 +20,7 @@
 
     <div class="fr" toggle_block="block2"><button class="btn" toggle="block2"><i class="icon-pen"></i> Редактировать</button></div>
     <div class="fr dn" toggle_block="block2">
-        <button class="btn btn_green btn_contract_save"><i class="icon-ok"></i> Сохранить</button>
+        <button class="btn btn_green btn_contract_save btn_reverse"><i class="icon-ok"></i> Сохранить</button>
         <button class="btn btn_red" toggle="block2"><i class="icon-cancel"></i> Отменить</button>
     </div>
 </div>

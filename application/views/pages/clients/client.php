@@ -100,8 +100,8 @@
 
     <button class="btn" toggle="edit_client" toggle_block="edit_client"><i class="icon-pen"></i> Редактировать</button>
 
+    <button class="btn btn_green dn client_edit_btn btn_reverse" toggle_block="edit_client"><i class="icon-ok"></i> Сохранить</button>
     <button class="btn btn_red dn" toggle="edit_client" toggle_block="edit_client"><i class="icon-cancel"></i> Отмена</button>
-    <button class="btn btn_green dn client_edit_btn" toggle_block="edit_client"><i class="icon-ok"></i> Сохранить</button>
 </div>
 <div class="more_info" toggle_block="block1">
     <a href="#" class="btn btn_gray btn_min_width" toggle="block1">Информация о компании</a>
