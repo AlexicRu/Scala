@@ -36,10 +36,11 @@
 		<form action="/clients" method="post"><button class="icon-find"></button><input type="text" name="search" placeholder="Поиск..." value="<?=(!empty($_REQUEST['search']) ? $_REQUEST['search'] : '')?>"></form>
 	</div>
 	<div class="personal">
-		<div class="avatar" style="background-image: url(/img/pic/01.png)"></div> Константинов Сергей Николавевич
+		<div class="avatar" <?/*style="background-image: url(/img/pic/01.png)"*/?>><i class="icon-clients"></i></div>
+		<?=$user['MANAGER_NAME']?> <?=$user['MANAGER_SURNAME']?> <?=$user['MANAGER_MIDDLENAME']?>
 	</div>
 	<div class="mail">
-		<a href="#"><span class="icon-mail"><span>6</span></span></a>
+		<a href="#"><span class="icon-mail"><!--span>6</span></span--></a>
 	</div>
 	<div class="settings">
 		<a href="#"><span class="icon-gear"></span></a>

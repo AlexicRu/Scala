@@ -192,10 +192,16 @@ header > div {
 .avatar {
   width: 44px;
   height: 44px;
-  display: inline-block;
+  display: table;
   border-radius: 50%;
-  background: no-repeat center;
+  background: #eee center;
   background-size: cover;
+}
+.avatar i {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 22px;
 }
 aside {
   vertical-align: top;
@@ -635,6 +641,10 @@ textarea.input_w_small {
 }
 .line_inner + .line_inner {
   margin-top: 2px;
+}
+.line_inner_150 {
+  display: inline-block;
+  width: 150px;
 }
 table td {
   padding: 8px;

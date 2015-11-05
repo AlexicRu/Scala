@@ -70,6 +70,7 @@ $(function(){
 
 function loadContract(tab, query)
 {
+    $.fancybox.close();
     $('.ajax_contract_block').empty().addClass('block_loading');
     var contractId = $('[name=contracts_list]').val();
 

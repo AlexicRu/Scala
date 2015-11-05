@@ -101,14 +101,25 @@ class Controller_Clients extends Controller_Common {
 			case 'cards':
                 $cards = Model_Card::getCards($contractId, false, $query);
 
+				$popupCardAdd = Common::popupForm('Добавление новой карты', 'card/add');
+
 				$content = View::factory('/ajax/clients/contract/cards')
                     ->bind('cards', $cards)
                     ->bind('query', $query)
+					->bind('popupCardAdd', $popupCardAdd)
                 ;
 				break;
 			case 'account':
+				$paymentsHistory = Model_Contract::getPaymentsHistory($contractId);
+				$turnover = Model_Contract::getTurnover($contractId);
+
+				$popupContractPaymentAdd = Common::popupForm('Добавление нового платежа', 'contract/payment_add');
+
 				$content = View::factory('/ajax/clients/contract/account')
                     ->bind('balance', $balance)
+                    ->bind('paymentsHistory', $paymentsHistory)
+					->bind('turnover', $turnover)
+					->bind('popupContractPaymentAdd', $popupContractPaymentAdd)
                 ;
 				break;
 			case 'reports':
@@ -142,7 +153,7 @@ class Controller_Clients extends Controller_Common {
 	}
 
     /**
-     * грузим данные по контракту
+     * грузим данные по карте
      */
     public function action_card()
     {
@@ -155,10 +166,12 @@ class Controller_Clients extends Controller_Common {
         }
 
         $oilRestrictions = Model_Card::getOilRestrictions($cardId);
+        $lastFilling = Model_Card::getLastFilling($cardId);
 
         $html = View::factory('/ajax/clients/card')
             ->bind('card', $card)
             ->bind('oilRestrictions', $oilRestrictions)
+            ->bind('lastFilling', $lastFilling)
         ;
 
         $this->html($html);
@@ -195,6 +208,54 @@ class Controller_Clients extends Controller_Common {
 
 		if(!empty($result['error'])){
 			$this->jsonResult(false, $result['error']);
+		}
+
+		$this->jsonResult(true, $result);
+	}
+
+	/**
+	 * добавляем новую карту
+	 */
+	public function action_card_add()
+	{
+		$params = $this->request->post('params');
+
+		$result = Model_Card::addCard($params);
+
+		if(empty($result)){
+			$this->jsonResult(false);
+		}
+
+		$this->jsonResult(true, $result);
+	}
+
+	/**
+	 * добавление нового платежа по контракту
+	 */
+	public function action_contract_payment_add()
+	{
+		$params = $this->request->post('params');
+
+		$result = Model_Contract::payment(Model_Contract::PAYMENT_ACTION_ADD, $params);
+
+		if(empty($result)){
+			$this->jsonResult(false);
+		}
+
+		$this->jsonResult(true, $result);
+	}
+
+	/**
+	 * удаляем платеж по контракту
+	 */
+	public function action_contract_payment_delete()
+	{
+		$params = $this->request->post('params');
+
+		$result = Model_Contract::payment(Model_Contract::PAYMENT_ACTION_DELETE, $params);
+
+		if(empty($result)){
+			$this->jsonResult(false);
 		}
 
 		$this->jsonResult(true, $result);

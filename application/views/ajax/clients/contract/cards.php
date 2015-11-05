@@ -20,7 +20,7 @@ foreach($cards as $card){
 <div class="tabs_vertical_block tabs_switcher tabs_cards">
     <div class="tabs_v">
         <div class="tab_v"><div>
-                <a href="#"><span class="icon-card"></span> Добавить карту</a>
+                <a href="#card_add" class="fancy"><span class="icon-card"></span> Добавить карту</a>
             </div></div>
         <?foreach($cards as $key => $card){?>
             <div class="tab_v" tab="<?=$card['CARD_ID']?>"><div>
@@ -42,6 +42,8 @@ foreach($cards as $card){
         <?}?>
     </div>
 </div>
+
+<?=$popupCardAdd?>
 
 <script>
     $(function(){

@@ -7,12 +7,10 @@
     <span toggle_block="edit_client" uid="client_name" class="dn"><nobr><input type="text" class="input_big" name="NAME" value="<?=$client['NAME']?>">*</nobr></span>
 </h2>
 
-<?if($client['LONG_NAME']){?>
-    <p>
-        <span toggle_block="edit_client" uid="client_long_name"><?=$client['LONG_NAME']?></span>
-        <span toggle_block="edit_client" uid="client_long_name" class="dn"><input type="text" name="LONG_NAME" value="<?=$client['LONG_NAME']?>"></span>
-    </p>
-<?}?>
+<p>
+    <span toggle_block="edit_client" uid="client_long_name"><?if($client['LONG_NAME']){?><?=$client['LONG_NAME']?><?}?></span>
+    <span toggle_block="edit_client" uid="client_long_name" class="dn"><input type="text" placeholder="Полное название" name="LONG_NAME" value="<?=$client['LONG_NAME']?>"></span>
+</p>
 
 <div toggle_block="block1" class="dn edit_client_block">
     <div class="col">

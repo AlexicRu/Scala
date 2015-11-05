@@ -118,7 +118,10 @@ header{
   }
 }
 .avatar{
-  width: 44px; height: 44px; display: inline-block; border-radius: 50%; background: no-repeat center; background-size: cover;
+  width: 44px; height: 44px; display: table; border-radius: 50%; background: #eee center; background-size: cover;
+  i{
+    display: table-cell; text-align: center; vertical-align: middle; font-size: 22px;
+  }
 }
 aside{
   vertical-align: top; position: fixed; width: 210px; background: #0e1d29; overflow: hidden; z-index: 2; height: 100%; padding-top: 85px;
@@ -380,6 +383,9 @@ input[type=text], input[type=password], input[type=number], select, textarea{
 }
 .line_inner + .line_inner{
   margin-top: 2px;
+}
+.line_inner_150{
+  display: inline-block; width: 150px;
 }
 table{
   td{

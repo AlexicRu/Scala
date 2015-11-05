@@ -107,7 +107,7 @@ class Model_Client extends Model
 		$data = [
 			'p_client_id' 	=> $clientId,
 			'p_name' 		=> $params['NAME'],
-			'p_long_name' 	=> $params['LONG_NAME'],
+			'p_long_name' 	=> $params['LONG_NAME'] ?: $params['NAME'],
 			'p_inn' 		=> $params['INN'],
 			'p_kpp' 		=> $params['KPP'],
 			'p_ogrn' 		=> $params['OGRN'],

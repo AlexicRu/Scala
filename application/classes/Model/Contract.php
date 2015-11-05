@@ -12,6 +12,10 @@ class Model_Contract extends Model
 	const INVOICE_PERIOD_TYPE_DAY		= 'D';
 	const INVOICE_PERIOD_TYPE_MONTH		= 'M';
 
+	const PAYMENT_ACTION_DELETE	= 0;
+	const PAYMENT_ACTION_ADD	= 1;
+	const PAYMENT_ACTION_EDIT	= 2;
+
 	public static $paymentSchemes = [
 		self::PAYMENT_SCHEME_UNLIMITED 	=> 'Безлимит',
 		self::PAYMENT_SCHEME_PREPAYMENT => 'Предоплата',
@@ -21,6 +25,12 @@ class Model_Contract extends Model
 	public static $invoicePeriods = [
 		self::INVOICE_PERIOD_TYPE_DAY 	=> 'День',
 		self::INVOICE_PERIOD_TYPE_MONTH => 'Месяц',
+	];
+
+	public static $paymentsActions = [
+		self::PAYMENT_ACTION_ADD 	=> 'Добавить платеж',
+		self::PAYMENT_ACTION_DELETE => 'Удалить платеж',
+		self::PAYMENT_ACTION_EDIT 	=> 'Обновить платеж',
 	];
 
 	/**
@@ -218,7 +228,9 @@ class Model_Contract extends Model
 	{
 		$db = Oracle::init();
 
-		$sql = "select * from ".Oracle::$prefix."v_tarifs_list";
+		$user = Auth::instance()->get_user();
+
+		$sql = "select * from ".Oracle::$prefix."v_tarifs_list where manager_id = ".Oracle::quote($user['MANAGER_ID']);
 
 		return $db->query($sql);
 	}
@@ -271,5 +283,119 @@ class Model_Contract extends Model
 		}
 
 		return false;
+	}
+
+	/**
+	 * получить историю операций по контракту
+	 *
+	 * @param $cardId
+	 * @param $limit
+	 */
+	public static function getPaymentsHistory($contractId, $limit = 10)
+	{
+		if(empty($contractId)){
+			return [];
+		}
+
+		$db = Oracle::init();
+
+		$sql = "
+			select *
+			from ".Oracle::$prefix."V_WEB_CL_CONTRACTS_PAYS
+			where 1=1
+		";
+
+		if(!empty($contractId)){
+			$sql .= " and contract_id = '".Oracle::quote($contractId)."'";
+		}
+
+		if(!empty($limit)){
+			$sql .= " and rownum <= ".intval($limit);
+		}
+
+		$sql .= " order by ORDER_DATE desc";
+
+		$history = $db->query($sql);
+
+		return $history;
+	}
+
+	/**
+	 * добавление нового платежа к
+	 *
+	 * @param $action
+	 * @param $params
+	 */
+	public static function payment($action, $params)
+	{
+		if(!in_array($action, array_keys(self::$paymentsActions)) || empty($params['contract_id'])){
+			return false;
+		}
+
+		$db = Oracle::init();
+
+		$proc = 'begin '.Oracle::$prefix.'web_pack.client_contract_payment(
+			:p_contract_id,
+			:p_action,
+			:p_order_guid,
+			:p_order_num,
+			:p_order_date,
+			:p_value,
+			:p_payment_cur,
+			:p_comment,
+			:p_manager_id,
+			:p_error_code
+        ); end;';
+
+		$user = Auth::instance()->get_user();
+
+		$data = [
+			'p_contract_id' 	=> $params['contract_id'],
+			'p_action' 			=> $action,
+			'p_order_guid' 		=> $action != self::PAYMENT_ACTION_ADD ? $params['guid'] : null,
+			'p_order_num' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['num'] : null,
+			'p_order_date' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['date'] : null,
+			'p_value' 			=> $action != self::PAYMENT_ACTION_DELETE ? $params['value'] : 0,
+			'p_payment_cur' 	=> $action == self::PAYMENT_ACTION_ADD ? self::CURRENCY_RUR : null,
+			'p_comment' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['comment'] : null,
+			'p_manager_id' 		=> $user['MANAGER_ID'],
+			'p_error_code' 		=> 'out',
+		];
+
+		$res = $db->ora_proced($proc, $data);
+
+		if(empty($res['p_error_code'])){
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Обороты по договору
+	 *
+	 * @param $contractId
+	 */
+	public static function getTurnover($contractId)
+	{
+		if(empty($contractId)){
+			return [];
+		}
+
+		$db = Oracle::init();
+
+		$sql = "
+			select *
+			from ".Oracle::$prefix."V_WEB_CTR_BALANCE
+			where 1=1
+		";
+
+		if(!empty($contractId)){
+			$sql .= " and contract_id = '".Oracle::quote($contractId)."'";
+		}
+
+		$turnover = $db->row($sql);
+
+		return $turnover;
 	}
 }

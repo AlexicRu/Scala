@@ -1,7 +1,7 @@
 <div class="block block_margin f18">
-    <span class="gray">Текущий баланс:</span> <b><?=number_format($balance['BALANCE'], 2, ',', ' ')?> &#x20bd;</b>
+    <span class="gray">Текущий баланс:</span> <b><?=number_format($balance['BALANCE'], 2, ',', ' ')?> <?=Text::RUR?></b>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <span class="gray">Оборот за текущий перид:</span> <b>55 522,56 л.</b>
+    <span class="gray">Оборот за текущий период:</span> <b><?=number_format($balance['MONTH_REALIZ'], 2, ',', ' ')?> л.</b>
 </div>
 
 <div class="tabs_block">

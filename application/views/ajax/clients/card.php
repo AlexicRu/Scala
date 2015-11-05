@@ -4,11 +4,11 @@
 </div>
 
 <b class="f18">Обороты за текущий период:</b><br>
-152 л. / 5 122 &#x20bd;<br><br>
+<?=number_format($card['REALIZ_LITRES'], 2, ',', ' ')?> л. / <?=number_format($card['REALIZ_CUR'], 2, ',', ' ')?> <?=Text::RUR?><br><br>
 
 <b class="f18">Последняя заправка:</b>
 <div class="line_inner">
-    <span class="gray">06.01.2015</span> &nbsp;&nbsp;&nbsp; <b>АЗС Роснефть №15</b> <div class="fr">Бензин АИ-95 10л. / 372 &#x20bd;</div>
+    <span class="gray"><?=$lastFilling['LAST_SERV_DATE']?></span> &nbsp;&nbsp;&nbsp; <b><?=$lastFilling['LAST_SERV_POS']?></b> <div class="fr"><?=$lastFilling['LAST_SERV_SERVICE']?> <?=number_format($lastFilling['LAST_SERV_AMOUNT'], 2, ',', ' ')?> л. / <?=number_format($lastFilling['LAST_SERV_CUR'], 2, ',', ' ')?> <?=Text::RUR?></div>
 </div>
 <br>
 
@@ -26,7 +26,7 @@
                 </td>
                 <td class="line_inner">
                     <?=$restrict['LIMIT_VALUE']?>
-                    <?=($restrict['LIMIT_PARAM'] == 1 ? 'л.' : '&#x20bd;')?>
+                    <?=($restrict['LIMIT_PARAM'] == 1 ? 'л.' : Text::RUR)?>
                     <?
                         switch($restrict['LIMIT_TYPE']) {
                             case 1:
