@@ -1,6 +1,6 @@
 <table class="table_form form_add_contract">
     <tr>
-        <td class="gray right" width="170">Заголовок:</td>
+        <td class="gray right" width="170">Номер:</td>
         <td>
             <input type="text" name="add_contract_name" class="input_big">
         </td>
@@ -8,7 +8,7 @@
     <tr>
         <td class="gray right" width="170">Дата начала:</td>
         <td>
-            <input type="text" class="input_big datepicker" readonly name="add_contract_date_start">
+            <input type="text" class="input_big datepicker" readonly name="add_contract_date_start" value="<?=date('d.m.Y')?>">
         </td>
     </tr>
     <tr>
@@ -25,7 +25,7 @@
         </td>
     </tr>
 </table>
-
+<small><i>* - Дату окончания оставить пустой в случае бессрочного договора</i></small>
 <script>
     $(function(){
         $('.btn_add_contract_go').on('click', function(){

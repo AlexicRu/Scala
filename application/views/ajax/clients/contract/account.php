@@ -76,7 +76,7 @@
             $.post('/clients/contract_payment_delete', {params:params}, function(data){
                 if(data.success){
                     message(1, 'Платеж успешно удален');
-                    row.remove();
+                    loadContract('account');
                 }else{
                     message(0, 'Ошибка удаления платежа');
                 }

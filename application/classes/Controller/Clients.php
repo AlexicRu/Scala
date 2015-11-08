@@ -260,4 +260,24 @@ class Controller_Clients extends Controller_Common {
 
 		$this->jsonResult(true, $result);
 	}
+
+	/**
+	 * генерация отчетов
+	 */
+	public function action_report()
+	{
+		$params = $this->request->query();
+
+		$report = Model_Report::generate($params);
+
+		if(empty($report)){
+			throw new HTTP_Exception_404();
+		}
+
+		foreach($report['headers'] as $header){
+			header($header);
+		}
+
+		$this->html($report['report']);
+	}
 }

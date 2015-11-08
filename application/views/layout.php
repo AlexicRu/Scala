@@ -37,7 +37,15 @@
 	</div>
 	<div class="personal">
 		<div class="avatar" <?/*style="background-image: url(/img/pic/01.png)"*/?>><i class="icon-clients"></i></div>
-		<?=$user['MANAGER_NAME']?> <?=$user['MANAGER_SURNAME']?> <?=$user['MANAGER_MIDDLENAME']?>
+		<?
+		if(!empty($user['MANAGER_NAME']) && !empty($user['MANAGER_SURNAME']) && !empty($user['MANAGER_MIDDLENAME'])){
+		 	echo $user['MANAGER_NAME'].' '.$user['MANAGER_SURNAME'].' '.$user['MANAGER_MIDDLENAME'];
+		}elseif(!empty($user['FIRM_NAME'])){
+			echo $user['FIRM_NAME'];
+		}else{
+			echo $user['LOGIN'];
+		}
+		?>
 	</div>
 	<div class="mail">
 		<a href="#"><span class="icon-mail"><!--span>6</span></span--></a>

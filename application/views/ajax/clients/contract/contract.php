@@ -47,11 +47,11 @@
                 <td class="gray right">Переодичность выставления счетов:</td>
                 <td>
                     <?
-                        if($contractSettings['INVOICE_PERIOD_TYPE'] == Model_Contract::INVOICE_PERIOD_TYPE_DAY){
-                            $period = Text::plural($contractSettings['INVOICE_PERIOD_VALUE'], ['день', 'дня', 'дней']);
-                        }else{
-                            $period = Text::plural($contractSettings['INVOICE_PERIOD_VALUE'], ['месяц', 'месяца', 'месяцев']);
-                        }
+                    if($contractSettings['INVOICE_PERIOD_TYPE'] == Model_Contract::INVOICE_PERIOD_TYPE_DAY){
+                        $period = Text::plural($contractSettings['INVOICE_PERIOD_VALUE'], ['день', 'дня', 'дней']);
+                    }else{
+                        $period = Text::plural($contractSettings['INVOICE_PERIOD_VALUE'], ['месяц', 'месяца', 'месяцев']);
+                    }
                     ?>
                     <span toggle_block="block2"><?=$contractSettings['INVOICE_PERIOD_VALUE'].' '.$period?></span>
                     <span toggle_block="block2" class="dn">
@@ -123,7 +123,7 @@
                     <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_OFFLINE']?></span>
                     <span toggle_block="block2" class="dn">
                         <select name="TARIF_OFFLINE">
-                            <?foreach($contractTariffs as $id => $value){?>
+                            <?foreach($contractTariffs as $tariff){?>
                                 <option value="<?=$tariff['ID']?>" <?if($tariff['ID'] == $contractSettings['TARIF_OFFLINE']){echo 'selected';}?>><?=$tariff['TARIF_NAME']?></option>
                             <?}?>
                         </select>

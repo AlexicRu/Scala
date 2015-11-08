@@ -6,9 +6,9 @@
         </td>
     </tr>
     <tr>
-        <td class="gray right" width="170">Дата:</td>
+        <td class="gray right" width="170">Дата платежного поручения:</td>
         <td>
-            <input type="text" name="add_contract_payment_date" class="input_big datepicker" readonly>
+            <input type="text" name="add_contract_payment_date" class="input_big datepicker" readonly maxDate="1" value="<?=date('d.m.Y')?>">
         </td>
     </tr>
     <tr>

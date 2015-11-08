@@ -20,9 +20,16 @@ $(function(){
         renderDatePicker($(this));
     });
 
+    $(document).on('click', ".btn_toggle", function(){
+        var btn = $(this);
+        btn.parent().find('.btn').removeClass('active');
+        btn.addClass('active');
+    });
+
     $('.fancy').fancybox({
         padding: [0,0,0,0]
     });
+
     $(document).on('click', '.fancy_close', function(){
         $.fancybox.close();
     });
@@ -30,13 +37,22 @@ $(function(){
 
 function renderDatePicker(elem)
 {
-    elem.wrap('<span class="datepicker_out" />');
-    elem.datepicker({
+    var options = {
         dateFormat: "dd.mm.yy",
         buttonImage: "/img/icon_calendar.png",
         showOn: "button",
-        buttonImageOnly: true
-    });
+        buttonImageOnly: true,
+        changeMonth:true,
+        changeYear:true
+    };
+
+    if(elem.attr('maxDate') == 1){
+        options.maxDate = new Date();
+    }
+
+    elem.wrap('<span class="datepicker_out" />');
+
+    elem.datepicker(options);
 }
 
 function message(type, text)
@@ -49,4 +65,20 @@ function message(type, text)
     }
 
     $.jGrowl(text, { header: type });
+}
+
+function renderScroll(elem, height)
+{
+    setTimeout(function(){
+        if(height == undefined) {
+            elem.css('height', elem.parent().height());
+        }else{
+            if(height < 0){
+                height = elem.parent().height() + height;
+            }
+            elem.css('height', height);
+        }
+
+        elem.show();
+    }, 500);
 }

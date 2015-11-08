@@ -20,10 +20,11 @@ foreach($cards as $card){
 <div class="tabs_vertical_block tabs_switcher tabs_cards">
     <div class="tabs_v">
         <div class="tab_v"><div>
-                <a href="#card_add" class="fancy"><span class="icon-card"></span> Добавить карту</a>
-            </div></div>
-        <?foreach($cards as $key => $card){?>
-            <div class="tab_v" tab="<?=$card['CARD_ID']?>"><div>
+            <a href="#card_add" class="fancy"><span class="icon-card"></span> Добавить карту</a>
+        </div></div>
+        <div class="scroll">
+            <?foreach($cards as $key => $card){?>
+                <div class="tab_v" tab="<?=$card['CARD_ID']?>"><div>
                     <span class="icon-card gray"></span>
                     <?=$card['CARD_ID']?>
                     <div class="gray"><?=$card['HOLDER']?></div>
@@ -31,7 +32,8 @@ foreach($cards as $card){
                         <span class="label label_error label_small">Заблокирована</span>
                     <?}?>
                 </div></div>
-        <?}?>
+            <?}?>
+        </div>
         <!--div class="tab_v gray preload"><div>
                 <span class="icon-loader"></span> Загрузка карточек
             </div></div-->
@@ -66,5 +68,7 @@ foreach($cards as $card){
                 loadContract('cards', $(".cards_search").val());
             }
         });
+
+        renderScroll($('.tabs_cards .scroll'), -70);
     });
 </script>
