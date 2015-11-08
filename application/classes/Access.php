@@ -11,7 +11,7 @@ class Access
     public static function allow($action)
     {
         if(empty($action)){
-            return false;
+            return true;
         }
 
         $user = Auth_Oracle::instance()->get_user();
@@ -26,18 +26,13 @@ class Access
         $deny = $access['deny'];
 
         if(
-            !array_key_exists($action, $allow) &&
-            !array_key_exists($action, $deny)
-        ){
-            return true; //все что не разрешено, то запрещено
-        }
-
-        if(
             (isset($allow[$action]) && !in_array($user['role'], $allow[$action])) ||
             (isset($deny[$action]) && in_array($user['role'], $deny[$action]))
         ){
             return false;
         }
+
+        //если нет явного запрета или наоборот, доступа только конкретной роли
 
         return true;
     }
