@@ -167,11 +167,13 @@ class Controller_Clients extends Controller_Common {
 
         $oilRestrictions = Model_Card::getOilRestrictions($cardId);
         $lastFilling = Model_Card::getLastFilling($cardId);
+		$operationsHistory = Model_Card::getOperationsHistory($cardId);
 
         $html = View::factory('/ajax/clients/card')
             ->bind('card', $card)
             ->bind('oilRestrictions', $oilRestrictions)
             ->bind('lastFilling', $lastFilling)
+            ->bind('operationsHistory', $operationsHistory)
         ;
 
         $this->html($html);

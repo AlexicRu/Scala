@@ -1,7 +1,9 @@
-<div class="fr">
-    <button class="btn btn_red">Заблокировать</button> &nbsp;
-    <button class="btn"><i class="icon-pen"></i> Редактировать</button>
-</div>
+<?if(Access::allow('edit_card')){?>
+    <div class="fr">
+        <button class="btn btn_red">Заблокировать</button> &nbsp;
+        <button class="btn"><i class="icon-pen"></i> Редактировать</button>
+    </div>
+<?}?>
 
 <b class="f18">Обороты за текущий период:</b><br>
 <?=number_format($card['REALIZ_LITRES'], 2, ',', ' ')?> л. / <?=number_format($card['REALIZ_CUR'], 2, ',', ' ')?> <?=Text::RUR?><br><br>
@@ -49,11 +51,11 @@
     </table>
     <br>
 <?}?>
-
-<b class="f18">История операций:</b>
-<div class="line_inner">
-    <span class="gray">06.01.2015</span> &nbsp;&nbsp;&nbsp; Иванов И.И. <div class="fr">Статус - заблокирована</div>
-</div>
-<div class="line_inner">
-    <span class="gray">06.01.2015</span> &nbsp;&nbsp;&nbsp; Петров А.Г. <div class="fr">Изменен лимит по карте</div>
-</div>
+<?if(!empty($operationsHistory)){?>
+    <b class="f18">История операций:</b>
+    <?foreach($operationsHistory as $operation){?>
+        <div class="line_inner">
+            <span class="gray"><?=$operation['H_DATE']?></span> &nbsp;&nbsp;&nbsp; <?=$operation['M_FIO']?> <div class="fr"><?=$operation['SHORT_DESCRIPTION']?></div>
+        </div>
+    <?}?>
+<?}?>

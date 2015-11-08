@@ -32,17 +32,36 @@ abstract class Controller_Common extends Controller_Template {
                 $this->tpl = View::factory('/pages/' . strtolower($controller) . '/' . $action);
             }
 
-            $config = Kohana::$config->load('main');
-            foreach ($config as $k => $v) {
-                if ($k == 'title')
-                    $this->title[] = $v;
-                else
+            $config = Kohana::$config->load('main')->as_array();
+            if(!empty($config)) {
+                foreach ($config as $k => $v) {
                     View::set_global($k, $v);
+                }
             }
 
             $this->template->content = '';
             $this->template->styles = [];
             $this->template->scripts = [];
+
+            //опредеяем кастомный диазйн
+            $design = Kohana::$config->load('design')->as_array();
+
+            if(!empty($_SERVER['SERVER_NAME'])){
+                $url = str_replace('.', '', $_SERVER['SERVER_NAME']);
+
+                if(isset($design[$url])){
+                    $customView = $design[$url]['class'];
+                    $this->title[] = $design[$url]['title'];
+                }
+            }
+
+            //если не смогли определить дизайн под конкретный урл, то грузим дефолтовый
+            if(empty($customView)){
+                $customView = $design['default']['class'];
+                $this->title[] = $design['default']['title'];
+            }
+
+            View::set_global('customView', $customView);
 
             $menu = Kohana::$config->load('menu');
             $content = View::factory('/includes/menu')

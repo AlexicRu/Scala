@@ -18,11 +18,13 @@
         </select>
     </span>
 
-    <div class="fr" toggle_block="block2"><button class="btn" toggle="block2"><i class="icon-pen"></i> Редактировать</button></div>
-    <div class="fr dn" toggle_block="block2">
-        <button class="btn btn_green btn_contract_save btn_reverse"><i class="icon-ok"></i> Сохранить</button>
-        <button class="btn btn_red" toggle="block2"><i class="icon-cancel"></i> Отменить</button>
-    </div>
+    <?if(Access::allow('edit_contract')){?>
+        <div class="fr" toggle_block="block2"><button class="btn" toggle="block2"><i class="icon-pen"></i> Редактировать</button></div>
+        <div class="fr dn" toggle_block="block2">
+            <button class="btn btn_green btn_contract_save btn_reverse"><i class="icon-ok"></i> Сохранить</button>
+            <button class="btn btn_red" toggle="block2"><i class="icon-cancel"></i> Отменить</button>
+        </div>
+    <?}?>
 </div>
 <div class="as_table">
     <div class="col">
@@ -101,37 +103,40 @@
                 </td>
             </tr>
         </table>
-    </div><div class="col line_inner">
-        <b class="f18">Тарификация</b>
-        <table>
-            <tr>
-                <td class="gray right">Online тариф:</td>
-                <td>
-                    <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_ONLINE']?></span>
-                    <span toggle_block="block2" class="dn">
-                        <select name="TARIF_ONLINE">
-                            <?foreach($contractTariffs as $tariff){?>
-                                <option value="<?=$tariff['ID']?>" <?if($tariff['ID'] == $contractSettings['TARIF_ONLINE']){echo 'selected';}?>><?=$tariff['TARIF_NAME']?></option>
-                            <?}?>
-                        </select>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="gray right">Offline тариф:</td>
-                <td>
-                    <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_OFFLINE']?></span>
-                    <span toggle_block="block2" class="dn">
-                        <select name="TARIF_OFFLINE">
-                            <?foreach($contractTariffs as $tariff){?>
-                                <option value="<?=$tariff['ID']?>" <?if($tariff['ID'] == $contractSettings['TARIF_OFFLINE']){echo 'selected';}?>><?=$tariff['TARIF_NAME']?></option>
-                            <?}?>
-                        </select>
-                    </span>
-                </td>
-            </tr>
-        </table>
     </div>
+    <?if(Access::allow('view_tariffs')){?>
+        <div class="col line_inner">
+        <b class="f18">Тарификация</b>
+            <table>
+                <tr>
+                    <td class="gray right">Online тариф:</td>
+                    <td>
+                        <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_ONLINE']?></span>
+                        <span toggle_block="block2" class="dn">
+                            <select name="TARIF_ONLINE">
+                                <?foreach($contractTariffs as $tariff){?>
+                                    <option value="<?=$tariff['ID']?>" <?if($tariff['ID'] == $contractSettings['TARIF_ONLINE']){echo 'selected';}?>><?=$tariff['TARIF_NAME']?></option>
+                                <?}?>
+                            </select>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gray right">Offline тариф:</td>
+                    <td>
+                        <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_OFFLINE']?></span>
+                        <span toggle_block="block2" class="dn">
+                            <select name="TARIF_OFFLINE">
+                                <?foreach($contractTariffs as $tariff){?>
+                                    <option value="<?=$tariff['ID']?>" <?if($tariff['ID'] == $contractSettings['TARIF_OFFLINE']){echo 'selected';}?>><?=$tariff['TARIF_NAME']?></option>
+                                <?}?>
+                            </select>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    <?}?>
 </div>
 
 <script>
@@ -148,39 +153,41 @@
             }
         });
 
-        $(".btn_contract_save").on('click', function(){
-            var params = {
-                contract:{
-                    CONTRACT_NAME:  $("[name=CONTRACT_NAME]").val(),
-                    DATE_BEGIN:     $("[name=DATE_BEGIN]").val(),
-                    DATE_END:       $("[name=DATE_END]").val(),
-                    STATE_ID:       $("[name=STATE_ID]").val()
-                },
-                settings:{
-                    TARIF_ONLINE:           $("[name=TARIF_ONLINE]").val(),
-                    TARIF_OFFLINE:          $("[name=TARIF_OFFLINE]").val(),
-                    AUTOBLOCK_LIMIT:        $("[name=AUTOBLOCK_LIMIT]").val(),
-                    PENALTIES:              $("[name=PENALTIES]").val(),
-                    OVERDRAFT:              $("[name=OVERDRAFT]").val(),
-                    INVOICE_PERIOD_TYPE:    $("[name=INVOICE_PERIOD_TYPE]").val(),
-                    INVOICE_PERIOD_VALUE:   $("[name=INVOICE_PERIOD_VALUE]").val(),
-                    scheme:                 $("[name=scheme]").val()
-                }
-            };
+        <?if(Access::allow('edit_contract')){?>
+            $(".btn_contract_save").on('click', function(){
+                var params = {
+                    contract:{
+                        CONTRACT_NAME:  $("[name=CONTRACT_NAME]").val(),
+                        DATE_BEGIN:     $("[name=DATE_BEGIN]").val(),
+                        DATE_END:       $("[name=DATE_END]").val(),
+                        STATE_ID:       $("[name=STATE_ID]").val()
+                    },
+                    settings:{
+                        TARIF_ONLINE:           $("[name=TARIF_ONLINE]").val(),
+                        TARIF_OFFLINE:          $("[name=TARIF_OFFLINE]").val(),
+                        AUTOBLOCK_LIMIT:        $("[name=AUTOBLOCK_LIMIT]").val(),
+                        PENALTIES:              $("[name=PENALTIES]").val(),
+                        OVERDRAFT:              $("[name=OVERDRAFT]").val(),
+                        INVOICE_PERIOD_TYPE:    $("[name=INVOICE_PERIOD_TYPE]").val(),
+                        INVOICE_PERIOD_VALUE:   $("[name=INVOICE_PERIOD_VALUE]").val(),
+                        scheme:                 $("[name=scheme]").val()
+                    }
+                };
 
-            if(params.contract.CONTRACT_NAME == ''){
-                $.jGrowl('Введите название', { header: 'Ошибка!' });
-                return false;
-            }
-
-            $.post('/clients/contract_edit/<?=$contractSettings['CONTRACT_ID']?>', {params:params}, function(data){
-                if(data.success){
-                    $.jGrowl('Контракт обновлен', { header: 'Успех!' });
-                    loadContract('contract');
-                }else{
-                    $.jGrowl('Сохранение не удалось', { header: 'Ошибка!' });
+                if(params.contract.CONTRACT_NAME == ''){
+                    $.jGrowl('Введите название', { header: 'Ошибка!' });
+                    return false;
                 }
+
+                $.post('/clients/contract_edit/<?=$contractSettings['CONTRACT_ID']?>', {params:params}, function(data){
+                    if(data.success){
+                        $.jGrowl('Контракт обновлен', { header: 'Успех!' });
+                        loadContract('contract');
+                    }else{
+                        $.jGrowl('Сохранение не удалось', { header: 'Ошибка!' });
+                    }
+                });
             });
-        });
+        <?}?>
     });
 </script>

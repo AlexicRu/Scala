@@ -32,9 +32,11 @@
             <?=number_format($turnover['LAST_MONTH_REALIZ'], 2, ',', ' ')?> л. / <?=number_format($turnover['LAST_MONTH_REALIZ_CUR'], 2, ',', ' ')?> <?=Text::RUR?>
         </div>
     </div><div class="col">
-        <div class="fr">
-            <a href="#contract_payment_add" class="fancy btn">+ Добавить платеж</a>
-        </div>
+        <?if(Access::allow('add_payment')){?>
+            <div class="fr">
+                <a href="#contract_payment_add" class="fancy btn">+ Добавить платеж</a>
+            </div>
+        <?}?>
         <b class="f18">Платежи:</b><br><br>
         <?
         if(!empty($paymentsHistory)) {
@@ -46,7 +48,9 @@
                     <span class="gray">Сумма</span> &nbsp;&nbsp;&nbsp;
                     <b><?=number_format($history['SUMPAY'], 2, ',', ' ')?> <?=Text::RUR?></b>
 
-                    <div class="fr"><a href="#" class="red del link_del_contract_payment">Удалить <i class="icon-cancel"></i></a></div>
+                    <?if(Access::allow('del_payment')){?>
+                        <div class="fr"><a href="#" class="red del link_del_contract_payment">Удалить <i class="icon-cancel"></i></a></div>
+                    <?}?>
                 </div>
             <?
             }
@@ -56,33 +60,37 @@
     </div>
 </div>
 
-<?=$popupContractPaymentAdd?>
+<?if(Access::allow('add_payment')){?>
+    <?=$popupContractPaymentAdd?>
+<?}?>
 
 <script>
     $(function(){
-        $('.link_del_contract_payment').on('click', function(){
-            var t = $(this);
-            var row = t.closest('[guid]');
+        <?if(Access::allow('del_payment')){?>
+            $('.link_del_contract_payment').on('click', function(){
+                var t = $(this);
+                var row = t.closest('[guid]');
 
-            if(!confirm('Удалить платеж ' + row.find('b.line_inner_150').text())){
-                return false;
-            }
-
-            var params = {
-                contract_id:    $('[name=contracts_list]').val(),
-                guid:           row.attr('guid')
-            };
-
-            $.post('/clients/contract_payment_delete', {params:params}, function(data){
-                if(data.success){
-                    message(1, 'Платеж успешно удален');
-                    loadContract('account');
-                }else{
-                    message(0, 'Ошибка удаления платежа');
+                if(!confirm('Удалить платеж ' + row.find('b.line_inner_150').text())){
+                    return false;
                 }
-            });
 
-            return false;
-        });
+                var params = {
+                    contract_id:    $('[name=contracts_list]').val(),
+                    guid:           row.attr('guid')
+                };
+
+                $.post('/clients/contract_payment_delete', {params:params}, function(data){
+                    if(data.success){
+                        message(1, 'Платеж успешно удален');
+                        loadContract('account');
+                    }else{
+                        message(0, 'Ошибка удаления платежа');
+                    }
+                });
+
+                return false;
+            });
+        <?}?>
     });
 </script>

@@ -77,12 +77,8 @@ class Model_Card extends Model
 		$sql = "
 			select *
 			from ".Oracle::$prefix."V_WEB_CRD_LIMITS
-			where 1=1
-		";
-
-		if(!empty($cardId)){
-			$sql .= " and card_id = ".Oracle::quote($cardId);
-		}
+			where card_id = ".Oracle::quote($cardId)
+		;
 
 		$restrictions = $db->tree($sql, 'LIMIT_GROUP');
 
@@ -105,12 +101,8 @@ class Model_Card extends Model
 		$sql = "
 			select *
 			from ".Oracle::$prefix."V_WEB_CRD_LAST_SERV
-			where 1=1
-		";
-
-		if(!empty($cardId)){
-			$sql .= " and card_id = ".Oracle::quote($cardId);
-		}
+			where card_id = ".Oracle::quote($cardId)
+		;
 
 		$restrictions = $db->row($sql);
 
@@ -161,5 +153,30 @@ class Model_Card extends Model
 		}
 
 		return false;
+	}
+
+	/**
+	 * получаем историю операция по карте
+	 *
+	 * @param $cardId
+	 * @param $limit
+	 */
+	public static function getOperationsHistory($cardId, $limit = 10)
+	{
+		if(empty($cardId)){
+			return [];
+		}
+
+		$db = Oracle::init();
+
+		$sql = "
+			select *
+			from ".Oracle::$prefix."V_WEB_CRD_HISTORY
+			where card_id = ".Oracle::quote($cardId)." and rownum <= ".intval($limit)
+		;
+
+		$history = $db->query($sql);
+
+		return $history;
 	}
 }

@@ -88,6 +88,9 @@ header{
 }
 .logo{
   text-align: center; width: 210px;
+  a{
+    display: inline-block; width: 120px; height: 40px; background:  no-repeat center; background-size: contain;
+  }
 }
 .hamburger, .mail, .settings, .logout{
   width: 70px; text-align: center; font-size: 20px;
@@ -124,19 +127,16 @@ header{
   }
 }
 aside{
-  vertical-align: top; position: fixed; width: 210px; background: #0e1d29; overflow: hidden; z-index: 2; height: 100%; padding-top: 85px;
+  vertical-align: top; position: fixed; width: 210px; overflow: hidden; z-index: 2; height: 100%; padding-top: 85px;
   .transition();
   a{
-    display: block; vertical-align: middle; font-size: 18px; color: white; text-decoration: none; font-family: @SegoeUISemiBold; padding: 9px 0 13px 55px; width: 210px;
+    display: block; vertical-align: middle; font-size: 18px; text-decoration: none; font-family: @SegoeUISemiBold; padding: 9px 0 13px 55px; width: 210px;
     .transition();
     &:hover, &.act{
-      background: #0e86ad; color: white; text-decoration: none;
-      span{
-        color: white;
-      }
+      text-decoration: none;
     }
     [class^="icon-"]{
-      font-size:20px; width: 35px; display: inline-block; padding-top: 3px; float: left; margin-left: -37px; color: rgba(255,255,255,.5);
+      font-size:20px; width: 35px; display: inline-block; padding-top: 3px; float: left; margin-left: -37px;
     }
   }
 }
@@ -494,3 +494,28 @@ textarea{
 .scroll{
   overflow-y: auto; width: 100%; display: none;
 }
+
+.custom_view_scala{
+  .logo{
+    a{
+      background-image: url(/img/logo.png);
+    }
+  }
+  aside{
+    background: #0e1d29;
+    .transition();
+    a{
+      color: white;
+      &:hover, &.act{
+        background: #0e86ad; color: white;
+        span{
+          color: white;
+        }
+      }
+      [class^="icon-"]{
+        color: rgba(255,255,255,.5);
+      }
+    }
+  }
+}
+.custom_view_oilst{}

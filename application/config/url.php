@@ -4,5 +4,7 @@ return [
     'trusted_hosts' => [
         'glopro.\.ru',
         '.*\.glopro\.ru',
+        'oilst\.ru',
+        '.*\.oilst\.ru',
     ],
 ];
