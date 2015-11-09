@@ -5,14 +5,9 @@
 
 	<title><?=$title?></title>
 
-	<link href="/style.css" rel="stylesheet">
-
-	<!--[if lt IE 9]>
-	<style>
-		.bad_browser{display:block;}
-		.wrapper, header{display:none;}
-	</style>
-	<![endif]-->
+	<?foreach($styles as $style){?>
+		<link href="<?=$style?>" rel="stylesheet">
+	<?}?>
 </head>
 
 <body class="custom_view_<?=$customView?>">
@@ -20,14 +15,10 @@
 		<div class="logo">
 			<a href="/"></a>
 		</div>
-		<!--div class="hamburger">
-			<a href="#"><span class="icon-menu"></span></a>
-		</div-->
 		<div>&nbsp;</div>
 	</header>
 
 	<div class="wrapper">
-		<?/*=$menu*/?>
 		<div class="content">
 			<h1>Авторизация</h1>
 			<div class="block">
@@ -39,11 +30,5 @@
 			</div>
 		</div>
 	</div>
-	<!--[if (lt IE 9)]>
-	<div class="bad_browser">
-		<h1>Ваш браузер устарел</h1>
-		Установите современный браузер <a href="http://www.firefox.com">Firefox</a>, <a href="http://www.google.com/chrome/">Chrome</a>, <a href="http://www.opera.com">Opera</a>.
-	</div>
-	<![endif]-->
-	</body>
+</body>
 </html>

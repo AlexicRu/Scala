@@ -32,7 +32,7 @@
             <?=number_format($turnover['LAST_MONTH_REALIZ'], 2, ',', ' ')?> л. / <?=number_format($turnover['LAST_MONTH_REALIZ_CUR'], 2, ',', ' ')?> <?=Text::RUR?>
         </div>
     </div><div class="col">
-        <?if(Access::allow('add_payment')){?>
+        <?if(Access::allow('clients_payment_add')){?>
             <div class="fr">
                 <a href="#contract_payment_add" class="fancy btn">+ Добавить платеж</a>
             </div>
@@ -48,7 +48,7 @@
                     <span class="gray">Сумма</span> &nbsp;&nbsp;&nbsp;
                     <b><?=number_format($history['SUMPAY'], 2, ',', ' ')?> <?=Text::RUR?></b>
 
-                    <?if(Access::allow('del_payment')){?>
+                    <?if(Access::allow('clients_payment_del')){?>
                         <div class="fr"><a href="#" class="red del link_del_contract_payment">Удалить <i class="icon-cancel"></i></a></div>
                     <?}?>
                 </div>
@@ -60,13 +60,13 @@
     </div>
 </div>
 
-<?if(Access::allow('add_payment')){?>
+<?if(Access::allow('clients_payment_add')){?>
     <?=$popupContractPaymentAdd?>
 <?}?>
 
 <script>
     $(function(){
-        <?if(Access::allow('del_payment')){?>
+        <?if(Access::allow('clients_payment_del')){?>
             $('.link_del_contract_payment').on('click', function(){
                 var t = $(this);
                 var row = t.closest('[guid]');

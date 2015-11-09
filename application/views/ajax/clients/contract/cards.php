@@ -19,7 +19,7 @@ foreach($cards as $card){
 </div>
 <div class="tabs_vertical_block tabs_switcher tabs_cards">
     <div class="tabs_v">
-        <?if(Access::allow('add_card')){?>
+        <?if(Access::allow('clients_card_add')){?>
             <div class="tab_v"><div>
                 <a href="#card_add" class="fancy"><span class="icon-card"></span> Добавить карту</a>
             </div></div>
@@ -47,7 +47,7 @@ foreach($cards as $card){
     </div>
 </div>
 
-<?if(Access::allow('add_card')){?>
+<?if(Access::allow('clients_card_add')){?>
     <?=$popupCardAdd?>
 <?}?>
 
@@ -73,7 +73,7 @@ foreach($cards as $card){
             }
         });
 
-        <?if(Access::allow('add_card')){?>
+        <?if(Access::allow('clients_card_add')){?>
             renderScroll($('.tabs_cards .scroll'), -70);
         <?}else{?>
             renderScroll($('.tabs_cards .scroll'));

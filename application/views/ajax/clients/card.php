@@ -1,4 +1,4 @@
-<?if(Access::allow('edit_card')){?>
+<?if(Access::allow('clients_card_edit')){?>
     <div class="fr">
         <button class="btn btn_red">Заблокировать</button> &nbsp;
         <button class="btn"><i class="icon-pen"></i> Редактировать</button>

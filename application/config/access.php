@@ -8,37 +8,40 @@
 
 return [
     'allow' => [ //для всех остальных ролей будер запрещено
-
+        // functions
+        // custom
     ],
-    'deny'  => [ //для всех остальных ролей будет разрешено
-        'menu_reports' => [
+    'deny' => [ //для всех остальных ролей будет разрешено
+        // functions
+        'reports_index' => [
             Access::ROLE_USER,
         ],
+        'clients_client_add' => [
+            Access::ROLE_USER,
+        ],
+        'clients_contract_add' => [
+            Access::ROLE_USER,
+        ],
+        'clients_contract_edit' => [
+            Access::ROLE_USER,
+        ],
+        'clients_card_add' => [
+            Access::ROLE_USER,
+        ],
+        'clients_card_edit' => [
+            Access::ROLE_USER,
+        ],
+        'clients_payment_add' => [
+            Access::ROLE_USER,
+        ],
+        'clients_payment_del' => [
+            Access::ROLE_USER,
+        ],
+        // custom
         'view_tariffs' => [
             Access::ROLE_USER,
         ],
-        'add_client' => [
-            Access::ROLE_USER,
-        ],
         'edit_client_full' => [
-            Access::ROLE_USER,
-        ],
-        'add_contract' => [
-            Access::ROLE_USER,
-        ],
-        'edit_contract' => [
-            Access::ROLE_USER,
-        ],
-        'add_card' => [
-            Access::ROLE_USER,
-        ],
-        'edit_card' => [
-            Access::ROLE_USER,
-        ],
-        'add_payment' => [
-            Access::ROLE_USER,
-        ],
-        'del_payment' => [
             Access::ROLE_USER,
         ],
     ]

@@ -133,7 +133,7 @@
                 date_end:       form.find('[name=fr_daily_date_end]').val()
             };
 
-            window.location.href = '/clients/report?' + $.param(params);
+            window.location.href = '/reports/generate?' + $.param(params);
         });
     });
 </script>

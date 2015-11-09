@@ -114,7 +114,7 @@
     <?}}?>
 </select>
 
-<?if(Access::allow('add_contract')){?>
+<?if(Access::allow('clients_contract_add')){?>
     &nbsp;&nbsp;&nbsp;<a href="#contract_add" class="btn fancy">+ Создать договор</a>
 
     <?=$popupContractAdd?>
