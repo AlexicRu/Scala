@@ -779,7 +779,6 @@ textarea {
 }
 .custom_view_scala aside {
   background: #0e1d29;
-  transition: all 0.3s ease;
 }
 .custom_view_scala aside a {
   color: white;
@@ -794,5 +793,26 @@ textarea {
   color: white;
 }
 .custom_view_scala aside a [class^="icon-"] {
+  color: rgba(255, 255, 255, 0.5);
+}
+.custom_view_oilst .logo a {
+  background-image: url(http://oilst.ru/img/logo.png);
+}
+.custom_view_oilst aside {
+  background: #bc771e;
+}
+.custom_view_oilst aside a {
+  color: white;
+}
+.custom_view_oilst aside a:hover,
+.custom_view_oilst aside a.act {
+  background: #8a7a66;
+  color: white;
+}
+.custom_view_oilst aside a:hover span,
+.custom_view_oilst aside a.act span {
+  color: white;
+}
+.custom_view_oilst aside a [class^="icon-"] {
   color: rgba(255, 255, 255, 0.5);
 }

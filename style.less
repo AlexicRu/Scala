@@ -503,7 +503,6 @@ textarea{
   }
   aside{
     background: #0e1d29;
-    .transition();
     a{
       color: white;
       &:hover, &.act{
@@ -518,4 +517,25 @@ textarea{
     }
   }
 }
-.custom_view_oilst{}
+.custom_view_oilst{
+  .logo{
+    a{
+      background-image: url(http://oilst.ru/img/logo.png);
+    }
+  }
+  aside{
+    background: #bc771e;
+    a{
+      color: white;
+      &:hover, &.act{
+        background: #8a7a66; color: white;
+        span{
+          color: white;
+        }
+      }
+      [class^="icon-"]{
+        color: rgba(255,255,255,.5);
+      }
+    }
+  }
+}
