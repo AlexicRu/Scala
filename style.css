@@ -816,3 +816,9 @@ textarea {
 .custom_view_oilst aside a [class^="icon-"] {
   color: rgba(255, 255, 255, 0.5);
 }
+.form_attention {
+  background: #f6f6f6;
+}
+table {
+  border-collapse: collapse;
+}

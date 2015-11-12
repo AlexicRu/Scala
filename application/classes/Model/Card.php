@@ -161,7 +161,7 @@ class Model_Card extends Model
 	 * @param $cardId
 	 * @param $limit
 	 */
-	public static function getOperationsHistory($cardId, $limit = 10)
+	public static function getOperationsHistory($cardId, $limit = 30)
 	{
 		if(empty($cardId)){
 			return [];

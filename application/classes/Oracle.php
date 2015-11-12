@@ -1,6 +1,9 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 class Oracle{
+
+	const CODE_ERROR = 1;
+
 	public static $prefix = 's_dev.';
 	private static $_conn = null;
 	private static $_instance = null;

@@ -1,4 +1,5 @@
 <div class="tc_top_line">
+    [<?=$contract['CONTRACT_ID']?>]
     <span toggle_block="block2">
         <?=$contract['CONTRACT_NAME']?> от <?=$contract['DATE_BEGIN']?> <?if($contract['DATE_END'] != '31.12.2099'){?>до <?=$contract['DATE_END']?><?}?> &nbsp;
         <span class="label <?=Status::$statusContractClasses[$contract['STATE_ID']]?>"><?=Status::$statusContractNames[$contract['STATE_ID']]?></span>
@@ -86,6 +87,7 @@
                     <?=Text::RUR?>
                 </td>
             </tr>
+            <?if(Access::allow('view_penalties_overdrafts')){?>
             <tr>
                 <td class="gray right">Пени:</td>
                 <td>
@@ -102,6 +104,7 @@
                     <?=Text::RUR?>
                 </td>
             </tr>
+            <?}?>
         </table>
     </div>
     <?if(Access::allow('view_tariffs')){?>

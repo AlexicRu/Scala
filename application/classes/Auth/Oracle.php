@@ -129,19 +129,6 @@ class Auth_Oracle extends Auth {
     }
 
     /**
-     * при регенерации сессии, надо опять подтянуть те самые дополнительные данные
-     */
-    public function regenerate_session()
-    {
-        $user = Auth::instance()->get_user();
-        $db = Oracle::init();
-
-        $user['clients'] = $db->column("select CLIENT_ID from ".Oracle::$prefix."V_WEB_MANAGER_CLIENTS where MANAGER_ID = ".$user['MANAGER_ID'], 'CLIENT_ID');
-
-        parent::complete_login($user);
-    }
-
-    /**
      * при регенерации данных пользователя подтягиваем его роль и вызываем завершение авторизации
      */
 	public function regenerate_user_profile()
@@ -150,7 +137,7 @@ class Auth_Oracle extends Auth {
         $db = Oracle::init();
 
 		$user = $db->row("select * from ".Oracle::$prefix."V_WEB_MANAGERS where MANAGER_ID = ".$user['MANAGER_ID']);
-        $user['role'] = $user['ACCESS_TYPE'];
+        $user['role'] = $user['ROLE_ID'];
 
         self::complete_login($user);
 	}

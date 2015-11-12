@@ -37,6 +37,9 @@ return [
         'clients_payment_del' => [
             Access::ROLE_USER,
         ],
+        'customer_settings' => [
+            Access::ROLE_USER,
+        ],
         // custom
         'view_tariffs' => [
             Access::ROLE_USER,
@@ -44,5 +47,8 @@ return [
         'edit_client_full' => [
             Access::ROLE_USER,
         ],
+        'view_penalties_overdrafts' => [
+            Access::ROLE_USER,
+        ]
     ]
 ];

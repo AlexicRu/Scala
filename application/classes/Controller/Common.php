@@ -3,7 +3,8 @@
 abstract class Controller_Common extends Controller_Template {
  
     public $template = 'layout';
-    public $title = array();
+    public $title = [];
+    public $errors = [];
     public $tpl = '';
 
     public function before()
@@ -23,14 +24,6 @@ abstract class Controller_Common extends Controller_Template {
         }
 
         parent::before();
-
-        //прописываем глобальные конфиги
-        View::set_global('user', Auth_Oracle::instance()->get_user());
-
-        $config = Kohana::$config->load('main')->as_array();
-        foreach ($config as $k => $v) {
-            View::set_global($k, $v);
-        }
 
         $allow = Access::allow(strtolower($controller.'_'.$action));
 
@@ -55,10 +48,26 @@ abstract class Controller_Common extends Controller_Template {
             die;
         }
     }
-    
-    public function after(){
+
+    /**
+     * прописываем глобальные конфиги
+     *
+     * @throws Kohana_Exception
+     */
+    public function after()
+    {
+        View::set_global('user', Auth_Oracle::instance()->get_user());
+
+        $config = Kohana::$config->load('main')->as_array();
+        foreach ($config as $k => $v) {
+            View::set_global($k, $v);
+        }
+
         View::set_global('title', implode(" :: ",$this->title));
+        View::set_global('errors', $this->errors);
+
         $this->template->content = $this->tpl;
+
         parent::after();
     }
 

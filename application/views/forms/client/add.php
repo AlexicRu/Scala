@@ -29,6 +29,9 @@
             $.post('/clients/client_add', {params:params}, function(data){
                 if(data.success){
                     message(1, 'Клиент успешно добавлен');
+                    setTimeout(function(){
+                        window.location.reload();
+                    }, 1000);
                 }else{
                     message(0, 'Ошибка добавления клиента');
                 }

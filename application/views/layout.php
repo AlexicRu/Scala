@@ -47,7 +47,7 @@
 			<a href="#"><span class="icon-mail"><!--span>6</span></span--></a>
 		</div>
 		<div class="settings">
-			<a href="#"><span class="icon-gear"></span></a>
+			<a href="/customer/settings"><span class="icon-gear"></span></a>
 		</div>
 		<div class="logout">
 			<a href="/logout"><span class="icon-exit"></span></a>
@@ -57,6 +57,11 @@
 	<div class="wrapper">
 		<?=$menu?>
 		<div class="content">
+			<?if(!empty($errors)){
+				foreach($errors as $error){
+					echo '<div class="error_block">'.$error.'</div>';
+				}
+			}?>
 			<?=$content?>
 		</div>
 	</div>
