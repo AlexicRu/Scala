@@ -57,11 +57,13 @@
 	<div class="wrapper">
 		<?=$menu?>
 		<div class="content">
-			<?if(!empty($errors)){
-				foreach($errors as $error){
-					echo '<div class="error_block">'.$error.'</div>';
-				}
-			}?>
+			<?if(!empty($errors)){?>
+				<script>
+				<?foreach($errors as $error){
+					echo 'message(0,"'.$error.'");';
+				}?>
+				</script>
+			<?}?>
 			<?=$content?>
 		</div>
 	</div>

@@ -122,17 +122,6 @@ class Model_Card extends Model
 
 		$db = Oracle::init();
 
-		$proc = 'begin '.Oracle::$prefix.'web_pack.client_contract_card(
-			:p_contract_id,
-			:p_card_id,
-			:p_card_type,
-			:p_holder,
-			:p_expire_date,
-			:v_action,
-			:p_manager_id,
-			:p_error_code
-        ); end;';
-
 		$user = Auth::instance()->get_user();
 
 		$data = [
@@ -146,9 +135,9 @@ class Model_Card extends Model
 			'p_error_code' 		=> 'out',
 		];
 
-		$res = $db->ora_proced($proc, $data);
+		$res = $db->procedure('client_contract_card', $data);
 
-		if(empty($res['p_error_code'])){
+		if(empty($res)){
 			return true;
 		}
 

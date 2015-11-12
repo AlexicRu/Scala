@@ -23,17 +23,6 @@ class Model_Customer extends Model
 
         $db = Oracle::init();
 
-        $proc = 'begin '.Oracle::$prefix.'web_pack.manager_edit(
-			:p_manager_id,
-			:p_role_id,
-			:p_name,
-			:p_surname,
-			:p_middlename,
-			:p_phone,
-			:p_email,
-			:p_error_code
-        ); end;';
-
         $data = [
             'p_manager_id' 	=> $user['MANAGER_ID'],
             'p_role_id' 	=> $user['role'],
@@ -45,9 +34,9 @@ class Model_Customer extends Model
             'p_error_code' 	=> 'out',
         ];
 
-        $res = $db->ora_proced($proc, $data);
+        $res = $db->procedure('manager_edit', $data);
 
-        if($res['p_error_code'] == Oracle::CODE_ERROR){
+        if($res == Oracle::CODE_ERROR){
             return false;
         }
 
@@ -56,11 +45,6 @@ class Model_Customer extends Model
             $params['customer_settings_password'] == $params['customer_settings_password_again']
         ){
             //обновление паролей
-            $proc = 'begin '.Oracle::$prefix.'web_pack.manager_change_password(
-                :p_manager_id,
-                :p_new_password,
-                :p_error_code
-            ); end;';
 
             $data = [
                 'p_manager_id' 	    => $user['MANAGER_ID'],
@@ -68,9 +52,9 @@ class Model_Customer extends Model
                 'p_error_code' 	    => 'out',
             ];
 
-            $res = $db->ora_proced($proc, $data);
+            $res = $db->procedure('manager_change_password', $data);
 
-            if(!empty($res['p_error_code'])){
+            if(!empty($res)){
                 return false;
             }
         }

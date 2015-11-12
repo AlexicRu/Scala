@@ -31,7 +31,7 @@ class Oracle{
 		return self::$_instance;
 	}
 
-	static public function query($sql, $type='select'){
+	public function query($sql, $type='select'){
 		if($type == 'select'){
 			$ret = array();
 			$res = oci_parse(self::$_conn, $sql);
@@ -47,8 +47,15 @@ class Oracle{
 			return 1;
 		}
 	}
-	
-	static public function ora_proced($sql, $params)
+
+	/**
+	 * непосредственное выполнение сформированной процедуры
+	 *
+	 * @param $sql
+	 * @param $params
+	 * @return mixed
+	 */
+	public function ora_proced($sql, $params)
 	{
 		$res = oci_parse(self::$_conn, $sql);
 		
@@ -64,24 +71,24 @@ class Oracle{
 		return $params;
 	}
 
-	static public function update($sql){
-		return self::query($sql, "update");
+	public function update($sql){
+		return $this->query($sql, "update");
 	}
 	
-	static public function insert($sql){
-		return self::query($sql, "update");
+	public function insert($sql){
+		return $this->query($sql, "update");
 	}
 
-	static public function row($sql){
-		$r = self::query($sql);
+	public function row($sql){
+		$r = $this->query($sql);
 		if(!empty($r) && !empty($r[0])){
 			return $r[0];
 		}
 		return false;
 	}
 
-	static public function column($sql, $column_key){
-		$r = self::query($sql);
+	public function column($sql, $column_key){
+		$r = $this->query($sql);
 
 		if(!empty($r) && count($r)){
 			$arr = array();
@@ -98,8 +105,8 @@ class Oracle{
 		return false;
 	}	
 
-	static public function one($sql){
-		$r = self::query($sql);
+	public function one($sql){
+		$r = $this->query($sql);
 		if(!empty($r) && !empty($r[0])){
 			return array_pop($r[0]);
 		}
@@ -113,9 +120,9 @@ class Oracle{
 	 * @param $field
 	 * @param $noArray
 	 */
-	public static function tree($sql, $field, $noArray = false)
+	public function tree($sql, $field, $noArray = false)
 	{
-		$result = self::query($sql);
+		$result = $this->query($sql);
 
 		$return = [];
 
@@ -146,5 +153,30 @@ class Oracle{
 	public static function quote($val)
 	{
 		return addslashes(trim($val));
+	}
+
+	/**
+	 * Выполнение процедуры
+	 */
+	public function procedure($procedure, $data)
+	{
+		if(empty($procedure) || empty($data)){
+			return self::CODE_ERROR;
+		}
+
+		$keys = [];
+		foreach(array_keys($data) as $key){
+			$keys[] = ':'.$key;
+		}
+
+		$proc = 'begin '.self::$prefix.'web_pack.'.$procedure.'('.implode(', ', $keys).'); end;';
+
+		$res = $this->ora_proced($proc, $data);
+
+		if(isset($res['p_error_code'])){
+			return $res['p_error_code'];
+		}
+
+		return self::CODE_ERROR;
 	}
 }

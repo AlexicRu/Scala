@@ -157,17 +157,6 @@ class Model_Contract extends Model
 
         $user = Auth::instance()->get_user();
 
-		$proc = 'begin '.Oracle::$prefix.'web_pack.client_contract_edit(
-			:p_contract_id,
-			:p_contract_name,
-			:p_date_begin,
-			:p_date_end,
-			:p_currency,
-			:p_state_id,
-			:p_manager_id,
-			:p_error_code
-        ); end;';
-
 		$data = [
 			'p_contract_id'		=> $contractId,
 			'p_contract_name' 	=> $params['contract']['CONTRACT_NAME'],
@@ -178,22 +167,6 @@ class Model_Contract extends Model
 			'p_manager_id' 		=> $user['MANAGER_ID'],
 			'p_error_code' 		=> 'out',
 		];
-
-        $proc1 = 'begin '.Oracle::$prefix.'web_pack.client_contract_settings_edit(
-			:p_contract_id,
-			:p_tarif_online,
-			:p_tarif_offline,
-			:p_autoblock_limit,
-			:p_autoblock_flag,
-			:p_penalties,
-			:p_penalties_flag,
-			:p_overdraft,
-			:p_invoice_currency,
-			:p_invoice_period_type,
-			:p_invoice_period_value,
-			:p_manager_id,
-			:p_error_code
-        ); end;';
 
         $data1 = [
             'p_contract_id'		        => $contractId,
@@ -211,10 +184,10 @@ class Model_Contract extends Model
             'p_error_code' 		        => 'out',
         ];
 
-		$res = $db->ora_proced($proc, $data);
-		$res1 = $db->ora_proced($proc1, $data1);
+		$res = $db->procedure('client_contract_edit', $data);
+		$res1 = $db->procedure('client_contract_settings_edit', $data1);
 
-		if(empty($res['p_error_code']) || empty($res1['p_error_code'])){
+		if(empty($res) || empty($res1)){
 			return true;
 		}
 
@@ -252,17 +225,6 @@ class Model_Contract extends Model
 
 		$db = Oracle::init();
 
-		$proc = 'begin '.Oracle::$prefix.'web_pack.client_contract_add(
-			:p_client_id,
-			:p_contract_name,
-			:p_date_begin,
-			:p_date_end,
-			:p_currency,
-			:p_manager_id,
-			:p_contract_id,
-			:p_error_code
-        ); end;';
-
 		$user = Auth::instance()->get_user();
 
 		$data = [
@@ -276,9 +238,9 @@ class Model_Contract extends Model
 			'p_error_code' 		=> 'out',
 		];
 
-		$res = $db->ora_proced($proc, $data);
+		$res = $db->procedure('client_contract_add', $data);
 
-		if(empty($res['p_error_code'])){
+		if(empty($res)){
 			return true;
 		}
 
@@ -334,19 +296,6 @@ class Model_Contract extends Model
 
 		$db = Oracle::init();
 
-		$proc = 'begin '.Oracle::$prefix.'web_pack.client_contract_payment(
-			:p_contract_id,
-			:p_action,
-			:p_order_guid,
-			:p_order_num,
-			:p_order_date,
-			:p_value,
-			:p_payment_cur,
-			:p_comment,
-			:p_manager_id,
-			:p_error_code
-        ); end;';
-
 		$user = Auth::instance()->get_user();
 
 		$data = [
@@ -362,9 +311,9 @@ class Model_Contract extends Model
 			'p_error_code' 		=> 'out',
 		];
 
-		$res = $db->ora_proced($proc, $data);
+		$res = $db->procedure('client_contract_payment', $data);
 
-		if(empty($res['p_error_code'])){
+		if(empty($res)){
 			return true;
 		}
 

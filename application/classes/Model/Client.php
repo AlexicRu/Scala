@@ -86,24 +86,6 @@ class Model_Client extends Model
 
 		$db = Oracle::init();
 
-		$proc = 'begin '.Oracle::$prefix.'web_pack.client_edit(
-			:p_client_id,
-			:p_name,
-			:p_long_name,
-			:p_inn,
-			:p_kpp,
-			:p_ogrn,
-			:p_okpo,
-			:p_y_address,
-			:p_f_address,
-			:p_p_address,
-			:p_email,
-			:p_phone,
-			:p_comments,
-			:p_manager_id,
-			:p_error_code
-        ); end;';
-
 		$user = Auth::instance()->get_user();
 
 		$data = [
@@ -124,9 +106,9 @@ class Model_Client extends Model
 			'p_error_code' 	=> 'out',
 		];
 
-		$res = $db->ora_proced($proc, $data);
+		$res = $db->procedure('client_edit', $data);
 
-		if(empty($res['p_error_code'])){
+		if(empty($res)){
 			return true;
 		}
 
@@ -146,13 +128,6 @@ class Model_Client extends Model
 
 		$db = Oracle::init();
 
-		$proc = 'begin '.Oracle::$prefix.'web_pack.client_add(
-			:p_name,
-			:p_manager_id,
-			:p_client_id,
-			:p_error_code
-        ); end;';
-
 		$user = Auth::instance()->get_user();
 
 		$data = [
@@ -162,9 +137,9 @@ class Model_Client extends Model
 			'p_error_code' 	=> 'out',
 		];
 
-		$res = $db->ora_proced($proc, $data);
+		$res = $db->procedure('client_add', $data);
 
-		if(empty($res['p_error_code'])){
+		if(empty($res)){
 			return true;
 		}
 
