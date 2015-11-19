@@ -2,6 +2,7 @@
 
 class Model_Card extends Model
 {
+	const CARD_STATE_IN_WORK 	= 1;
 	const CARD_STATE_BLOCKED 	= 4;
 
 	const CARD_ACTION_DELETE 	= 0;
@@ -174,15 +175,46 @@ class Model_Card extends Model
 	 *
 	 * @param $cardId
 	 */
-	public static function toggleStatus($cardId)
+	public static function toggleStatus($params)
 	{
-		if(empty($cardId)){
+		if(empty($params['card_id'])){
 			return false;
 		}
 
-		//todo
+		$db = Oracle::init();
 
-		return true;
+		$user = Auth::instance()->get_user();
+
+		//получаем карты и смотрим текущий статус у нее
+		$card = self::getCard($params['card_id']);
+
+		if(empty($card['CARD_ID'])){
+			return false;
+		}
+
+		switch($card['CARD_STATE']){
+			case self::CARD_STATE_BLOCKED:
+				$status = self::CARD_STATE_IN_WORK;
+				break;
+			default:
+				$status = self::CARD_STATE_BLOCKED;
+		}
+
+		$data = [
+				'p_card_id' 		=> $params['card_id'],
+				'p_new_state' 		=> $status,
+				'p_comment' 		=> $params['comment'],
+				'p_manager_id' 		=> $user['MANAGER_ID'],
+				'p_error_code' 		=> 'out',
+		];
+
+		$res = $db->procedure('card_change_state', $data);
+
+		if(empty($res)){
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

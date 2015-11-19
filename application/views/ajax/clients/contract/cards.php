@@ -13,8 +13,8 @@ foreach($cards as $card){
 
 <div class="tc_top_line">
     <span class="gray">Всего карт:</span> <?=count($cards)?> &nbsp;&nbsp;&nbsp;
-    <span class="gray">В работе:</span> <?=$cntWork?> &nbsp;&nbsp;&nbsp;
-    <span class="red">Заблокировано: <?=$cntDisable?></span>
+    <span class="gray">В работе:</span> <span class="cards_cnt_in_work"><?=$cntWork?></span> &nbsp;&nbsp;&nbsp;
+    <span class="red">Заблокировано: <span class="cards_cnt_blocked"><?=$cntDisable?></span></span>
     <div class="fr input_with_icon"><i class="icon-find"></i><input type="text" class="input_big cards_search" placeholder="Поиск..." value="<?=$query?>"></div>
 </div>
 <div class="tabs_vertical_block tabs_switcher tabs_cards">
@@ -78,5 +78,46 @@ foreach($cards as $card){
         <?}else{?>
             renderScroll($('.tabs_cards .scroll'));
         <?}?>
+
+        $(document).on('click', '.btn_card_toggle', function(){
+            var t = $(this);
+
+            var comment = '';
+
+            if(t.hasClass('btn_red')){
+                comment = prompt('Причина блокировки:');
+            }
+
+            if(comment != null) {
+                var params = {
+                    card_id: $('.tab_v_content.active [name=card_id]').val(),
+                    comment: comment
+                };
+
+                $.post('/clients/card_toggle', {params:params}, function (data) {
+                    if (data.success) {
+                        t.toggleClass('btn_red').toggleClass('btn_green').find('span').toggle();
+
+                        var tab = $('.tabs_cards [tab='+ params.card_id +'] > div');
+                        var cnt_in_work = $('.cards_cnt_in_work');
+                        var cnt_blocked = $('.cards_cnt_blocked');
+
+                        if(t.hasClass('btn_green')){
+                            tab.append('<span class="label label_error label_small">Заблокирована</span>');
+                            cnt_in_work.text(parseInt(cnt_in_work.text()) - 1);
+                            cnt_blocked.text(parseInt(cnt_blocked.text()) + 1);
+                        }else{
+                            tab.find('.label_error').remove();
+                            cnt_in_work.text(parseInt(cnt_in_work.text()) + 1);
+                            cnt_blocked.text(parseInt(cnt_blocked.text()) - 1);
+                        }
+
+                        message(1, 'Статус карты изменен');
+                    } else {
+                        message(0, 'Ошибка обновления');
+                    }
+                });
+            }
+        });
     });
 </script>

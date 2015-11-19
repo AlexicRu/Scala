@@ -306,9 +306,9 @@ class Controller_Clients extends Controller_Common {
 	 */
 	public function action_card_toggle()
 	{
-		$cardId = $this->request->post('card_id');
+		$params = $this->request->post('params');
 
-		$result = Model_Card::toggleStatus($cardId);
+		$result = Model_Card::toggleStatus($params);
 
 		if(empty($result)){
 			$this->jsonResult(false);
