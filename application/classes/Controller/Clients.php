@@ -168,12 +168,14 @@ class Controller_Clients extends Controller_Common {
         $oilRestrictions = Model_Card::getOilRestrictions($cardId);
         $lastFilling = Model_Card::getLastFilling($cardId);
 		$operationsHistory = Model_Card::getOperationsHistory($cardId);
+		$popupCardEdit = Common::popupForm('Редактирование карты', 'card/edit', ['card' => $card]);
 
         $html = View::factory('/ajax/clients/card')
             ->bind('card', $card)
             ->bind('oilRestrictions', $oilRestrictions)
             ->bind('lastFilling', $lastFilling)
             ->bind('operationsHistory', $operationsHistory)
+            ->bind('popupCardEdit', $popupCardEdit)
         ;
 
         $this->html($html);
@@ -232,6 +234,22 @@ class Controller_Clients extends Controller_Common {
 	}
 
 	/**
+	 * редактирование карты
+	 */
+	public function action_card_edit()
+	{
+		$params = $this->request->post('params');
+
+		$result = Model_Card::editCard($params);
+
+		if(empty($result)){
+			$this->jsonResult(false);
+		}
+
+		$this->jsonResult(true, $result);
+	}
+
+	/**
 	 * добавление нового платежа по контракту
 	 */
 	public function action_contract_payment_add()
@@ -281,5 +299,21 @@ class Controller_Clients extends Controller_Common {
 		}
 
 		$this->html($report['report']);
+	}
+
+	/**
+	 * блокируем/разблокируем карту
+	 */
+	public function action_card_toggle()
+	{
+		$cardId = $this->request->post('card_id');
+
+		$result = Model_Card::toggleStatus($cardId);
+
+		if(empty($result)){
+			$this->jsonResult(false);
+		}
+
+		$this->jsonResult(true);
 	}
 }

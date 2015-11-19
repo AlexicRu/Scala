@@ -168,4 +168,37 @@ class Model_Card extends Model
 
 		return $history;
 	}
+
+	/**
+	 * блокировка/разблокировка карты
+	 *
+	 * @param $cardId
+	 */
+	public static function toggleStatus($cardId)
+	{
+		if(empty($cardId)){
+			return false;
+		}
+
+		//todo
+
+		return true;
+	}
+
+	/**
+	 * редактирование карты и лимитов
+	 *
+	 * @param $params
+	 * @return bool
+	 */
+	public static function editCard($params)
+	{
+		if(empty($params['contract_id']) || empty($params['card_id'])){
+			return false;
+		}
+
+		//todo
+
+		return false;
+	}
 }

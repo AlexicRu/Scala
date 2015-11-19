@@ -7,11 +7,18 @@ class Common
 	 *
 	 * @param $header
 	 * @param $form
+	 * @param $data
 	 * @return $this
 	 */
-	public static function popupForm($header, $form)
+	public static function popupForm($header, $form, $data = [])
 	{
 		$formBody = View::factory('/forms/'.$form);
+
+		if(!empty($data) && is_array($data)){
+			foreach($data as $key => $value){
+				$formBody->bind($key, $value);
+			}
+		}
 
 		$id = str_replace('/', "_", $form);
 

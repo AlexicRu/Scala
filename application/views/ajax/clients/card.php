@@ -1,7 +1,7 @@
 <?if(Access::allow('clients_card_edit')){?>
     <div class="fr">
-        <button class="btn btn_red">Заблокировать</button> &nbsp;
-        <button class="btn"><i class="icon-pen"></i> Редактировать</button>
+        <button class="btn btn_red btn_card_toggle"><span>Заблокировать</span><span style="display: none">Разблокировать</span></button> &nbsp;
+        <a href="#card_edit" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
     </div>
 <?}?>
 
@@ -59,3 +59,23 @@
         </div>
     <?}?>
 <?}?>
+
+<?if(Access::allow('clients_card_edit')){?>
+    <?=$popupCardEdit?>
+<?}?>
+
+<script>
+    $(function(){
+        $('.btn_card_toggle').on('click', function(){
+            var t = $(this);
+            $.post('/clients/card_toggle', {card_id:<?=$card['CARD_ID']?>}, function(data){
+                if(data.success){
+                    t.toggleClass('btn_red').toggleClass('btn_green').find('span').toggle();
+                    message(1, 'Статус карты изменен');
+                }else{
+                    message(0, 'Ошибка обновления');
+                }
+            });
+        });
+    });
+</script>
