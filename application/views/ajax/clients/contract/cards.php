@@ -25,15 +25,30 @@ foreach($cards as $card){
             </div></div>
         <?}?>
         <div class="scroll">
-            <?foreach($cards as $key => $card){?>
-                <div class="tab_v" tab="<?=$card['CARD_ID']?>"><div>
-                    <span class="icon-card gray"></span>
-                    <?=$card['CARD_ID']?>
-                    <div class="gray"><?=$card['HOLDER']?></div>
-                    <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
-                        <span class="label label_error label_small">Заблокирована</span>
-                    <?}?>
-                </div></div>
+            <?if(is_array($foundCards) && empty($foundCards)){?>
+                <span class="gray">Карты не анйдены</span>
+            <?}else{?>
+                <?foreach($cards as $key => $card){
+                    $found = true;
+                    if($foundCards !== false){
+                        $found = false;
+                        foreach($foundCards as $foundCard){
+                            if($foundCard['CARD_ID'] == $card['CARD_ID']){
+                                $found = true;
+                                break;
+                            }
+                        }
+                    }
+                    ?>
+                    <div class="tab_v" tab="<?=$card['CARD_ID']?>" <?if(empty($found)){?>style="display: none;"<?}?>><div>
+                            <span class="icon-card gray"></span>
+                            <?=$card['CARD_ID']?>
+                            <div class="gray"><?=$card['HOLDER']?></div>
+                            <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
+                                <span class="label label_error label_small">Заблокирована</span>
+                            <?}?>
+                        </div></div>
+                <?}?>
             <?}?>
         </div>
         <!--div class="tab_v gray preload"><div>
@@ -56,13 +71,7 @@ foreach($cards as $card){
         $(".tabs_cards [tab]").on('click', function(){
             var t = $(this);
 
-            if($(".tabs_cards [tab_content="+ t.attr('tab') +"]").text() == ''){
-                $(".tabs_cards [tab_content="+ t.attr('tab') +"]").addClass('block_loading');
-
-                $.post('/clients/card/' + t.attr('tab'), {}, function(data){
-                    $(".tabs_cards [tab_content="+ t.attr('tab') +"]").html(data).removeClass('block_loading');
-                });
-            }
+            cardLoad(t);
         });
 
         $(".tabs_cards [tab]:first").click();

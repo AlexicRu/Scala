@@ -132,7 +132,8 @@
                 $.post('/clients/card_edit', {params: params}, function (data) {
                     if (data.success) {
                         message(1, 'Карта успешно обновлена');
-                        loadContract('cards', params.card_id);
+                        $.fancybox.close();
+                        cardLoad($('.tab_v.active'), true);
                     } else {
                         message(0, 'Ошибка обновления карты');
                     }

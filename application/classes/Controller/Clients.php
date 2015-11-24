@@ -99,12 +99,17 @@ class Controller_Clients extends Controller_Common {
 				;
 				break;
 			case 'cards':
-                $cards = Model_Card::getCards($contractId, false, $query);
+                $cards = Model_Card::getCards($contractId);
+				$foundCards = false;
+				if(!empty($query)){
+					$foundCards = Model_Card::getCards($contractId, false, $query);
+				}
 
 				$popupCardAdd = Common::popupForm('Добавление новой карты', 'card/add');
 
 				$content = View::factory('/ajax/clients/contract/cards')
                     ->bind('cards', $cards)
+                    ->bind('foundCards', $foundCards)
                     ->bind('query', $query)
 					->bind('popupCardAdd', $popupCardAdd)
                 ;

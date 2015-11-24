@@ -82,3 +82,14 @@ function renderScroll(elem, height)
         elem.show();
     }, 500);
 }
+
+function cardLoad(elem, force)
+{
+    if($(".tabs_cards [tab_content="+ elem.attr('tab') +"]").text() == '' || force == true){
+        $(".tabs_cards [tab_content="+ elem.attr('tab') +"]").empty().addClass('block_loading');
+
+        $.post('/clients/card/' + elem.attr('tab'), {}, function(data){
+            $(".tabs_cards [tab_content="+ elem.attr('tab') +"]").html(data).removeClass('block_loading');
+        });
+    }
+}

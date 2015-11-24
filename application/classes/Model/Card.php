@@ -262,7 +262,6 @@ class Model_Card extends Model
 	public static function editCardLimits($cardId, $limits)
 	{
 		if(empty($cardId) || empty($limits)){
-			echo 1;die;
 			return false;
 		}
 
