@@ -168,7 +168,13 @@ class Controller_Clients extends Controller_Common {
         $oilRestrictions = Model_Card::getOilRestrictions($cardId);
         $lastFilling = Model_Card::getLastFilling($cardId);
 		$operationsHistory = Model_Card::getOperationsHistory($cardId);
-		$popupCardEdit = Common::popupForm('Редактирование карты', 'card/edit', ['card' => $card]);
+		$servicesList = Model_Card::getServicesList();
+
+		$popupCardEdit = Common::popupForm('Редактирование карты', 'card/edit', [
+				'card' 				=> $card,
+				'oilRestrictions' 	=> $oilRestrictions,
+				'servicesList'		=> $servicesList
+		], 'card_edit_'.$cardId);
 
         $html = View::factory('/ajax/clients/card')
             ->bind('card', $card)
@@ -224,7 +230,7 @@ class Controller_Clients extends Controller_Common {
 	{
 		$params = $this->request->post('params');
 
-		$result = Model_Card::addCard($params);
+		$result = Model_Card::editCard($params, Model_Card::CARD_ACTION_ADD);
 
 		if(empty($result)){
 			$this->jsonResult(false);
@@ -240,7 +246,7 @@ class Controller_Clients extends Controller_Common {
 	{
 		$params = $this->request->post('params');
 
-		$result = Model_Card::editCard($params);
+		$result = Model_Card::editCard($params, Model_Card::CARD_ACTION_EDIT);
 
 		if(empty($result)){
 			$this->jsonResult(false);

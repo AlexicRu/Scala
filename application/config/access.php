@@ -49,6 +49,9 @@ return [
         ],
         'view_penalties_overdrafts' => [
             Access::ROLE_USER,
+        ],
+        'view_balance_sheet' => [
+            Access::ROLE_USER
         ]
     ]
 ];

@@ -652,6 +652,12 @@ table.table_form textarea,
 table.table_form .datepicker_out {
   width: 100%;
 }
+table.table_form td.v_top {
+  vertical-align: top;
+}
+table.table_form .table_form td {
+  background: #f6f6f6;
+}
 .right {
   text-align: right;
 }
@@ -796,7 +802,7 @@ textarea {
   color: rgba(255, 255, 255, 0.5);
 }
 .custom_view_oilst .logo a {
-  background-image: url(http://oilst.ru/img/logo.png);
+  background-image: url(/img/projects/oilst.png);
 }
 .custom_view_oilst aside {
   background: #bc771e;
@@ -821,4 +827,13 @@ textarea {
 }
 table {
   border-collapse: collapse;
+}
+.btn_card_edit_add_serviсe {
+  margin-top: 5px;
+}
+.form_elem {
+  margin-bottom: 5px;
+}
+.table_form_limits {
+  width: 755px;
 }

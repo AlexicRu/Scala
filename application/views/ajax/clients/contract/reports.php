@@ -3,6 +3,11 @@
         <div class="tab_v active" tab="1"><div>
                 <a href="#"><span class="icon-dailes f20"></span> Повседневные</a>
             </div></div>
+        <?if(Access::allow('view_balance_sheet')){?>
+        <div class="tab_v" tab="4"><div>
+                <a href="#"><span class="icon-dailes f20"></span> Оборотно-сальдовая ведомость</a>
+            </div></div>
+        <?}?>
         <?/*div class="tab_v" tab="2"><div>
                 <a href="#"><span class="icon-summary f20"></span> Итоговые</a>
             </div></div>
@@ -16,8 +21,8 @@
                 <tr>
                     <td class="gray right" width="160">Период:</td>
                     <td>
-                        <input type="text" name="fr_daily_date_start" class="input_big datepicker" readonly value="<?=date('01.m.Y')?>"> -
-                        <input type="text" name="fr_daily_date_end" class="input_big datepicker" readonly value="<?=date('d.m.Y')?>">
+                        <input type="text" name="fr_date_start" class="input_big datepicker" readonly value="<?=date('01.m.Y')?>"> -
+                        <input type="text" name="fr_date_end" class="input_big datepicker" readonly value="<?=date('d.m.Y')?>">
                     </td>
                 </tr>
                 <?/*tr>
@@ -39,7 +44,7 @@
                 <tr>
                     <td class="gray right">Формат файла:</td>
                     <td>
-                        <?/*span class="btn btn_toggle" format="pdf"><i class="icon-pdf icon_big"></i> PDF</span*/?>
+                        <span class="btn btn_toggle" format="pdf"><i class="icon-pdf icon_big"></i> PDF</span>
                         <span class="btn btn_toggle active" format="xls"><i class="icon-exel1 icon_big"></i> XLS</span>
                         <?/*span class="btn btn_toggle"><i class="icon-exel2 icon_big"></i> CXV</span*/?>
                     </td>
@@ -115,6 +120,29 @@
                 </tr>
                 </tbody></table>
         </div>
+        <div class="tab_v_content" tab_content="4">
+            <table form_report="balance_sheet">
+                <tr>
+                    <td class="gray right" width="160">Период:</td>
+                    <td>
+                        <input type="text" name="fr_date_start" class="input_big datepicker" readonly value="<?=date('01.m.Y')?>"> -
+                        <input type="text" name="fr_date_end" class="input_big datepicker" readonly value="<?=date('d.m.Y')?>">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gray right">Формат файла:</td>
+                    <td>
+                        <span class="btn btn_toggle active" format="xls"><i class="icon-exel1 icon_big"></i> XLS</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <span class="btn btn_get_balance_sheet_report"><i class="icon-download"></i> Скачать</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -129,8 +157,24 @@
                 contract_id:    $('[name=contracts_list]').val(),
                 type:           form.attr('form_report'),
                 format:         form.find('[format].active').attr('format'),
-                date_start:     form.find('[name=fr_daily_date_start]').val(),
-                date_end:       form.find('[name=fr_daily_date_end]').val()
+                date_start:     form.find('[name=fr_date_start]').val(),
+                date_end:       form.find('[name=fr_date_end]').val()
+            };
+
+            window.location.href = '/reports/generate?' + $.param(params);
+        });
+
+        $('.btn_get_balance_sheet_report').on('click', function () {
+
+            var t = $(this);
+            var form = t.closest('[form_report]');
+
+            var params = {
+                contract_id:    $('[name=contracts_list]').val(),
+                type:           form.attr('form_report'),
+                format:         form.find('[format].active').attr('format'),
+                date_start:     form.find('[name=fr_date_start]').val(),
+                date_end:       form.find('[name=fr_date_end]').val()
             };
 
             window.location.href = '/reports/generate?' + $.param(params);

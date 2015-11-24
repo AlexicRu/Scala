@@ -8,7 +8,7 @@
             <button class="btn btn_red btn_card_toggle"><span>Заблокировать</span><span style="display: none">Разблокировать</span></button>
         <?}?>
         &nbsp;
-        <a href="#card_edit" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
+        <a href="#card_edit_<?=$card['CARD_ID']?>" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
     </div>
 <?}?>
 
@@ -21,8 +21,8 @@
 </div>
 <br>
 
+<b class="f18">Ограничения по топливу:</b>
 <?if(!empty($oilRestrictions)){?>
-    <b class="f18">Ограничения по топливу:</b>
     <table>
         <?foreach($oilRestrictions as $restrictions){
             $restrict = reset($restrictions);
@@ -35,29 +35,15 @@
                 </td>
                 <td class="line_inner">
                     <?=$restrict['LIMIT_VALUE']?>
-                    <?=($restrict['LIMIT_PARAM'] == 1 ? 'л.' : Text::RUR)?>
-                    <?
-                        switch($restrict['LIMIT_TYPE']) {
-                            case 1:
-                                echo 'в сутки';
-                                break;
-                            case 2:
-                                echo 'в неделю';
-                                break;
-                            case 3:
-                                echo 'в месяц';
-                                break;
-                            case 4:
-                                echo 'единовременно';
-                                break;
-                        }
-                    ?>
+                    <?=Model_Card::$cardLimitsParams[$restrict['LIMIT_PARAM']]?>
+                    <?=Model_Card::$cardLimitsTypes[$restrict['LIMIT_TYPE']]?>
                 </td>
             </tr>
         <?}?>
     </table>
-    <br>
-<?}?>
+<?}else{?><div class="gray">Не указаны</div><?}?>
+<br>
+
 <?if(!empty($operationsHistory)){?>
     <b class="f18">История операций:</b>
     <?foreach($operationsHistory as $operation){?>

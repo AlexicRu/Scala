@@ -9,6 +9,26 @@ class Model_Card extends Model
 	const CARD_ACTION_ADD 		= 1;
 	const CARD_ACTION_EDIT		= 2;
 
+	const CARD_LIMIT_PARAM_VOLUME 	= 1;
+	const CARD_LIMIT_PARAM_RUR 		= 2;
+
+	const CARD_LIMIT_TYPE_DAY		= 1;
+	const CARD_LIMIT_TYPE_WEEK		= 2;
+	const CARD_LIMIT_TYPE_MONTH		= 3;
+	const CARD_LIMIT_TYPE_ONCE		= 4;
+
+	public static $cardLimitsParams = [
+		self::CARD_LIMIT_PARAM_VOLUME 	=> 'л.',
+		self::CARD_LIMIT_PARAM_RUR 		=> Text::RUR,
+	];
+
+	public static $cardLimitsTypes = [
+		self::CARD_LIMIT_TYPE_DAY 	=> 'в сутки',
+		self::CARD_LIMIT_TYPE_WEEK 	=> 'в неделю',
+		self::CARD_LIMIT_TYPE_MONTH => 'в месяц',
+		self::CARD_LIMIT_TYPE_ONCE 	=> 'единовременно',
+	];
+
 	/**
 	 * получаем список доступный карт по контракту
 	 *
@@ -115,7 +135,7 @@ class Model_Card extends Model
 	 *
 	 * @param $params
 	 */
-	public static function addCard($params)
+	public static function editCard($params, $action)
 	{
 		if(empty($params['contract_id']) || empty($params['card_id'])){
 			return false;
@@ -125,24 +145,40 @@ class Model_Card extends Model
 
 		$user = Auth::instance()->get_user();
 
+		if($action == self::CARD_ACTION_EDIT){
+			$card = self::getCard($params['card_id']);
+
+			if(empty($params['holder'])){
+				$params['holder'] = $card['HOLDER'];
+			}
+			if(empty($params['expire_date'])){
+				$params['expire_date'] = $card['EXPIRE_DATE'];
+			}
+		}
+
 		$data = [
 			'p_contract_id' 	=> $params['contract_id'],
 			'p_card_id' 		=> $params['card_id'],
 			'p_card_type' 		=> 1, //1-EMV, 2 - PayFlex, 3 - Loyalty
-			'p_holder' 			=> $params['holder'],
+			'p_holder' 			=> empty($params['holder']) ? '' : $params['holder'],
 			'p_expire_date' 	=> !empty($params['expire_date']) ? date('m/Y', strtotime($params['expire_date'])) : '',
-			'v_action' 			=> self::CARD_ACTION_ADD,
+			'v_action' 			=> $action,
 			'p_manager_id' 		=> $user['MANAGER_ID'],
 			'p_error_code' 		=> 'out',
 		];
 
 		$res = $db->procedure('client_contract_card', $data);
 
-		if(empty($res)){
-			return true;
+		if(!empty($res)){
+			return false;
 		}
 
-		return false;
+		//редактируем лимиту если таковые пришли в запросе
+		if(!empty($params['limits'])){
+			self::editCardLimits($params['card_id'], $params['limits']);
+		}
+
+		return true;
 	}
 
 	/**
@@ -201,11 +237,11 @@ class Model_Card extends Model
 		}
 
 		$data = [
-				'p_card_id' 		=> $params['card_id'],
-				'p_new_state' 		=> $status,
-				'p_comment' 		=> $params['comment'],
-				'p_manager_id' 		=> $user['MANAGER_ID'],
-				'p_error_code' 		=> 'out',
+			'p_card_id' 		=> $params['card_id'],
+			'p_new_state' 		=> $status,
+			'p_comment' 		=> $params['comment'],
+			'p_manager_id' 		=> $user['MANAGER_ID'],
+			'p_error_code' 		=> 'out',
 		];
 
 		$res = $db->procedure('card_change_state', $data);
@@ -223,14 +259,63 @@ class Model_Card extends Model
 	 * @param $params
 	 * @return bool
 	 */
-	public static function editCard($params)
+	public static function editCardLimits($cardId, $limits)
 	{
-		if(empty($params['contract_id']) || empty($params['card_id'])){
+		if(empty($cardId) || empty($limits)){
+			echo 1;die;
 			return false;
 		}
 
-		//todo
+		$db = Oracle::init();
 
-		return false;
+		$db->procedure('card_service_refresh', ['p_card_id' => $cardId]);
+
+		$user = Auth::instance()->get_user();
+
+		foreach($limits as $group => $limit){
+			foreach($limit['services'] as $service){
+				$data = [
+						'p_card_id'			=> $cardId,
+						'p_service_id'		=> $service,
+						'p_limit_group'		=> $group,
+						'p_limit_param'		=> $limit['param'],
+						'p_limit_type'		=> $limit['type'],
+						'p_limit_value'		=> $limit['value'],
+						'p_limit_currency'	=> Model_Contract::CURRENCY_RUR,
+						'p_limit_pcs'		=> 0, //default
+						'p_manager_id' 		=> $user['MANAGER_ID'],
+						'p_error_code' 		=> 'out',
+				];
+
+				$res = $db->procedure('card_service_edit', $data);
+
+				if(!empty($res)){
+					return false;
+				}
+			}
+		}
+
+
+		return true;
+	}
+
+	/**
+	 * получаем список доступных видов сервиса
+	 *
+	 * @return array|int
+	 */
+	public static function getServicesList()
+	{
+		$db = Oracle::init();
+
+		$user = Auth::instance()->get_user();
+
+		$sql = "
+			select *
+			from ".Oracle::$prefix."v_web_service_list
+			where agent_id = ".$user['AGENT_ID']
+		;
+
+		return $db->query($sql);
 	}
 }

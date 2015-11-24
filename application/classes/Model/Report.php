@@ -5,10 +5,12 @@ use Jaspersoft\Client\Client;
 
 class Model_Report extends Model
 {
-    const REPORT_TYPE_DAILY = 'daily';
+    const REPORT_TYPE_DAILY         = 'daily';
+    const REPORT_TYPE_BALANCE_SHEET = 'balance_sheet';
 
     public static $reportTypes = [
-        self::REPORT_TYPE_DAILY => 'kf_client_total_detail'
+        self::REPORT_TYPE_DAILY => 'kf_client_total_detail',
+        self::REPORT_TYPE_BALANCE_SHEET => 'kf_manager_osv'
     ];
 
     public static $formatHeaders = [
@@ -18,8 +20,13 @@ class Model_Report extends Model
             'Cache-Control: max-age=0'
         ],
         'pdf' => [
-            'Content-type:application/pdf',
-            'Content-Disposition:attachment;filename=__NAME__'
+            'Cache-Control: must-revalidate',
+            'Pragma: public',
+            'Content-Description: File Transfer',
+            'Content-Disposition: attachment;filename=__NAME__',
+            'Content-Transfer-Encoding: binary',
+            //'Content-Length: ' . strlen($report),
+            'Content-Type: application/pdf',
         ]
     ];
 
@@ -41,16 +48,12 @@ class Model_Report extends Model
         }
 
         $client = new Client(
-                "http://185.6.172.165:18080/jasperserver",
+                "http://10.8.222.40:8080/jasperserver",
                 "glopro",
                 "H-Geq_F4Gy"
         );
 
-        $controls = array(
-            'REPORT_START_TIME'     => [$params['date_start']." 00:00:00"],
-            'REPORT_END_TIME'       => [$params['date_end']." 23:59:59"],
-            'REPORT_CONTRACT_ID'    => [$params['contract_id']]
-        );
+        $controls = self::_prepareControls($params);
 
         $format = empty($params['format']) ? 'xls' : $params['format'];
 
@@ -64,5 +67,39 @@ class Model_Report extends Model
         }
 
         return ['report' => $report, 'headers' => $headers];
+    }
+
+    /**
+     * собираем массив опций для отчета
+     *
+     * @param $params
+     */
+    private static function _prepareControls($params)
+    {
+        $controls = [];
+
+        if(empty($params['type'])){
+            return $controls;
+        }
+
+        switch($params['type']){
+            case self::REPORT_TYPE_DAILY:
+                $controls = [
+                    'REPORT_START_TIME'     => [$params['date_start']." 00:00:00"],
+                    'REPORT_END_TIME'       => [$params['date_end']." 23:59:59"],
+                    'REPORT_CONTRACT_ID'    => [$params['contract_id']]
+                ];
+                break;
+            case self::REPORT_TYPE_BALANCE_SHEET:
+                $user = Auth::instance()->get_user();
+                $controls = [
+                    'REPORT_START_DATE'     => [$params['date_start']],
+                    'REPORT_END_DATE'       => [$params['date_end']],
+                    'REPORT_MANAGER_ID'     => [$user['MANAGER_ID']]
+                ];
+                break;
+        }
+
+        return $controls;
     }
 }
