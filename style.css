@@ -781,7 +781,7 @@ textarea {
   display: none;
 }
 .custom_view_scala .logo a {
-  background-image: url(/img/logo.png);
+  background-image: url(/img/logo.svg);
 }
 .custom_view_scala aside {
   background: #0e1d29;
