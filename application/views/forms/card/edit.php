@@ -15,19 +15,19 @@
                     <tr limit_group>
                         <td>
                             <?foreach($restrictions as $restrict){?>
-                                <div class="form_elem" limit_service>
+                                <div class="form_elem" limit_service><nobr>
                                     <select name="limit_service">
                                         <?foreach($servicesList as $service){?>
                                             <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $restrict['SERVICE_ID']){?>selected<?}?>><?=$service['LONG_DESC']?></option>
                                         <?}?>
                                     </select>
                                     <button class="btn btn_small btn_red btn_card_edit_del_serviсe">&times;</button>
-                                </div>
+                                </nobr></div>
                             <?}?>
-                            <div>
+                            <div><nobr>
                                 <button class="btn btn_small btn_green btn_card_edit_add_serviсe">+ добавить услугу</button>
                                 <button class="btn btn_small btn_red btn_card_edit_del_limit">&times; удалить лимит</button>
-                            </div>
+                            </nobr></div>
                         </td>
                         <td class="v_top">
                             <input type="text" name="limit_value" value="<?=$restriction['LIMIT_VALUE']?>" placeholder="Объем / сумма">
@@ -100,9 +100,9 @@
 
                 var canEdit = true;
 
-                if($('[limit_group]', form).size() == 0){
+                /*if($('[limit_group]', form).size() == 0){
                     canEdit = false;
-                }
+                }*/
 
                 $('[limit_group]', form).each(function(){
                     var group_block = $(this);
@@ -134,6 +134,7 @@
                         message(1, 'Карта успешно обновлена');
                         $.fancybox.close();
                         cardLoad($('.tab_v.active'), true);
+                        $('.tab_v.active div.gray').text(params.holder);
                     } else {
                         message(0, 'Ошибка обновления карты');
                     }
@@ -152,7 +153,7 @@
             $(document).on('click', ".btn_card_edit_add_serviсe", function () {
                 var t = $(this);
                 var td = t.closest('td');
-                var tpl = $('<div class="form_elem" limit_service><select name="limit_service" /><button class="btn btn_small btn_red btn_card_edit_del_serviсe">&times;</button></div>');
+                var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" /> <button class="btn btn_small btn_red btn_card_edit_del_serviсe">&times;</button></nobr></div>');
 
                 for (var i in services) {
                     tpl.find('select').append('<option value="' + i + '">' + services[i] + '</option>');
@@ -179,10 +180,10 @@
                 var t = $(this);
                 var table = t.closest('table');
                 var tpl = $('<tr limit_group>' +
-                    '<td><div>' +
+                    '<td><div><nobr>' +
                         '<button class="btn btn_small btn_green btn_card_edit_add_serviсe">+ добавить услугу</button>' +
                         '<button class="btn btn_small btn_red btn_card_edit_del_limit">&times; удалить лимит</button>' +
-                    '</div></td>' +
+                    '</div></nobr></td>' +
                     '<td class="v_top"><input type="text" name="limit_value" placeholder="Объем / сумма"></td>' +
                     '<td class="v_top"><select name="limit_param" /></td><td class="v_top"><select name="limit_type" /></td>' +
                 '</tr>');

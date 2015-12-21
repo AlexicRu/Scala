@@ -170,7 +170,7 @@ class Model_Card extends Model
 		$res = $db->procedure('client_contract_card', $data);
 
 		if(!empty($res)){
-			return false;
+			return $res;
 		}
 
 		//редактируем лимиту если таковые пришли в запросе
@@ -187,7 +187,7 @@ class Model_Card extends Model
 	 * @param $cardId
 	 * @param $limit
 	 */
-	public static function getOperationsHistory($cardId, $limit = 30)
+	public static function getOperationsHistory($cardId, $limit = 5)
 	{
 		if(empty($cardId)){
 			return [];
@@ -198,8 +198,9 @@ class Model_Card extends Model
 		$sql = "
 			select *
 			from ".Oracle::$prefix."V_WEB_CRD_HISTORY
-			where card_id = ".Oracle::quote($cardId)." and rownum <= ".intval($limit)
-		;
+			where card_id = ".Oracle::quote($cardId)." and rownum <= ".intval($limit)."
+			order by HISTORY_DATE desc
+		";
 
 		$history = $db->query($sql);
 

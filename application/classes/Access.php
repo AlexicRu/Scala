@@ -2,8 +2,11 @@
 
 class Access
 {
-    const ROLE_ADMIN 	= 3;
-    const ROLE_USER		= 99;
+    const USER_TEST 	= 6;
+
+    const ROLE_ADMIN 	        = 3;
+    const ROLE_USER		        = 99;
+    const ROLE_MANAGER_SALE		= 5;
 
     /**
      * функция проверки доступа

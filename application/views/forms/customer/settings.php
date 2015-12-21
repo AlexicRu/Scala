@@ -33,13 +33,13 @@
         <tr class="form_attention">
             <td class="gray right" width="170">Пароль:</td>
             <td>
-                <input type="password" name="customer_settings_password" class="input_big">
+                <input type="password" name="customer_settings_password" class="input_big" <?=($user['MANAGER_ID'] == Access::USER_TEST ? 'readonly' : '')?>>
             </td>
         </tr>
         <tr class="form_attention">
             <td class="gray right" width="170">Пароль еще раз:</td>
             <td>
-                <input type="password" name="customer_settings_password_again" class="input_big">
+                <input type="password" name="customer_settings_password_again" class="input_big" <?=($user['MANAGER_ID'] == Access::USER_TEST ? 'readonly' : '')?>>
             </td>
         </tr>
         <tr>

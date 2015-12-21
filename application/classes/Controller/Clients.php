@@ -237,11 +237,23 @@ class Controller_Clients extends Controller_Common {
 
 		$result = Model_Card::editCard($params, Model_Card::CARD_ACTION_ADD);
 
-		if(empty($result)){
-			$this->jsonResult(false);
+		if($result === true){
+			$this->jsonResult(true);
 		}
 
-		$this->jsonResult(true, $result);
+		$error = '';
+		switch($result){
+			case Oracle::CODE_ERROR :
+				break;
+			case 2:
+				$error = 'Карта уже существует';
+				break;
+			case 3:
+				$error = 'Неверный номер карты';
+				break;
+		}
+
+		$this->jsonResult(false, $error);
 	}
 
 	/**

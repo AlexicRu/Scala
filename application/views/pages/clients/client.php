@@ -105,7 +105,7 @@
     <a href="#" class="btn btn_gray btn_min_width" toggle="block1">Информация о компании</a>
 </div>
 
-<select name="contracts_list" class="select_big" <?=(empty($contracts) ? 'disabled' :'')?>>
+<select name="contracts_list" class="select_big select_long" <?=(empty($contracts) ? 'disabled' :'')?>>
     <?if(empty($contracts)){?>
         <option value="0">Нет договоров</option>
     <?}else{

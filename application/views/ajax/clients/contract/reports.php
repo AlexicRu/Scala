@@ -44,9 +44,9 @@
                 <tr>
                     <td class="gray right">Формат файла:</td>
                     <td>
-                        <span class="btn btn_toggle" format="pdf"><i class="icon-pdf icon_big"></i> PDF</span>
                         <span class="btn btn_toggle active" format="xls"><i class="icon-exel1 icon_big"></i> XLS</span>
-                        <?/*span class="btn btn_toggle"><i class="icon-exel2 icon_big"></i> CXV</span*/?>
+                        <?/*span class="btn btn_toggle" format="pdf"><i class="icon-pdf icon_big"></i> PDF</span>
+                        <span class="btn btn_toggle"><i class="icon-exel2 icon_big"></i> CXV</span*/?>
                     </td>
                 </tr>
                 <tr>

@@ -46,7 +46,7 @@
                     message(1, 'Карта успешно добавлена');
                     loadContract('cards');
                 }else{
-                    message(0, 'Ошибка добавления карты');
+                    message(0, data.data ? data.data : 'Ошибка добавления карты');
                 }
             });
         });

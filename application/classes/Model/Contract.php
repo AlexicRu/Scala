@@ -253,7 +253,7 @@ class Model_Contract extends Model
 	 * @param $cardId
 	 * @param $limit
 	 */
-	public static function getPaymentsHistory($contractId, $limit = 10)
+	public static function getPaymentsHistory($contractId, $limit = 30)
 	{
 		if(empty($contractId)){
 			return [];
@@ -275,7 +275,7 @@ class Model_Contract extends Model
 			$sql .= " and rownum <= ".intval($limit);
 		}
 
-		$sql .= " order by ORDER_DATE desc";
+		$sql .= " order by O_DATE desc";
 
 		$history = $db->query($sql);
 

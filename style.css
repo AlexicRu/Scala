@@ -75,6 +75,9 @@ select:disabled {
 select {
   max-width: 250px;
 }
+select.select_long {
+  max-width: 500px;
+}
 a {
   color: #0e86ad;
   text-decoration: none;

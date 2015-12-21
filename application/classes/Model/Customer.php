@@ -42,7 +42,8 @@ class Model_Customer extends Model
 
         if(
             !empty($params['customer_settings_password']) && !empty($params['customer_settings_password_again']) &&
-            $params['customer_settings_password'] == $params['customer_settings_password_again']
+            $params['customer_settings_password'] == $params['customer_settings_password_again'] &&
+            $user['MANAGER_ID'] != Access::USER_TEST
         ){
             //обновление паролей
 
