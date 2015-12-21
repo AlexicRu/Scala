@@ -44,14 +44,26 @@
 <?}else{?><div class="gray">Не указаны</div><?}?>
 <br>
 
-<?if(!empty($operationsHistory)){?>
+<div class="ajax_block_operations_history_out">
     <b class="f18">История операций:</b>
-    <?foreach($operationsHistory as $operation){?>
-        <div class="line_inner">
-            <span class="gray"><?=$operation['H_DATE']?></span> &nbsp;&nbsp;&nbsp; <?=$operation['M_FIO']?> <div class="fr"><?=$operation['SHORT_DESCRIPTION']?></div>
-        </div>
-    <?}?>
-<?}?>
+</div>
+<script>
+    $(function(){
+        paginationAjax('/clients/card_operations_history/' + $('[name=card_id]').val(), 'ajax_block_operations_history', renderAjaxPaginationOperationsHistory);
+    });
+    function renderAjaxPaginationOperationsHistory(data)
+    {
+        var block = $('.ajax_block_operations_history');
+
+        for(var i = 0 in data){
+            var tpl = $('<div class="line_inner"><span class="gray" /> &nbsp;&nbsp;&nbsp; <span /><div class="fr" /></div>');
+            tpl.find('span.gray').text(data[i].H_DATE);
+            tpl.find('span:last').text(data[i].M_FIO);
+            tpl.find('div.fr').text(data[i].SHORT_DESCRIPTION);
+            block.append(tpl);
+        }
+    }
+</script>
 
 <?if(Access::allow('clients_card_edit')){?>
     <?=$popupCardEdit?>

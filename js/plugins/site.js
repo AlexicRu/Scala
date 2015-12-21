@@ -93,3 +93,33 @@ function cardLoad(elem, force)
         });
     }
 }
+
+function paginationAjax(url, name, callback)
+{
+    var outer = $('.' + name + '_out');
+    var block = $('<div class="' + name + '" />');
+    var more = $('<div class="ajax_block_more"><button class="btn btn_small">Загрузить еще...</button></div>');
+
+    outer.append(block);
+    outer.append(more);
+    outer.data('offset', 0);
+
+    _paginationAjaxLoad(url, outer, callback);
+    more.on('click', function(){
+        _paginationAjaxLoad(url, outer, callback);
+    });
+}
+function _paginationAjaxLoad(url, outer, callback)
+{
+    $.post(url, {offset:outer.data('offset')}, function(data){
+        if(data.success){
+            callback(data.data.items);
+            if(data.data.more){
+                outer.find('.ajax_block_more').fadeIn();
+            }else{
+                outer.find('.ajax_block_more').fadeOut();
+            }
+            outer.data('offset', parseInt(outer.data('offset')) + data.data.items.length);
+        }
+    });
+}

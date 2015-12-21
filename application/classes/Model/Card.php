@@ -187,10 +187,23 @@ class Model_Card extends Model
 	 * @param $cardId
 	 * @param $limit
 	 */
-	public static function getOperationsHistory($cardId, $limit = 5)
+	public static function getOperationsHistory($cardId, $params = [])
 	{
 		if(empty($cardId)){
 			return [];
+		}
+
+		if(empty($params['offset'])){
+			$params['offset'] = 0;
+		}
+		if(empty($params['limit'])){
+			$params['limit'] = 10;
+		}
+
+		$from = $params['offset'];
+		$to = $params['limit']+$params['offset'];
+		if(!empty($params['check_more'])){
+			$to++;
 		}
 
 		$db = Oracle::init();
@@ -198,11 +211,21 @@ class Model_Card extends Model
 		$sql = "
 			select *
 			from ".Oracle::$prefix."V_WEB_CRD_HISTORY
-			where card_id = ".Oracle::quote($cardId)." and rownum <= ".intval($limit)."
+			where card_id = ".Oracle::quote($cardId)."
 			order by HISTORY_DATE desc
 		";
 
+		$sql = $db->limit($sql, $from, $to);
 		$history = $db->query($sql);
+
+		if(!empty($params['check_more'])) {
+			$more = false;
+			if (count($history) > $params['limit']) {
+				$more = true;
+			}
+			array_pop($history);
+			return [$history, $more];
+		}
 
 		return $history;
 	}

@@ -179,4 +179,24 @@ class Oracle{
 
 		return self::CODE_ERROR;
 	}
+
+	/**
+	 * вот такой вот кривой лимит с офсетом
+	 * @param $sql
+	 * @param $offset
+	 * @param $limit
+	 * @return string
+	 */
+	public function limit($sql, $offset = 0, $limit = 9999999)
+	{
+		$sql = "
+			select * from (
+			  select a.*, ROWNUM rnum from (
+				{$sql}
+			  ) a where rownum <= ".$limit."
+			) where rnum > ".$offset."
+		";
+
+		return $sql;
+	}
 }

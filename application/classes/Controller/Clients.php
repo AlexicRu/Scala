@@ -172,7 +172,6 @@ class Controller_Clients extends Controller_Common {
 
         $oilRestrictions = Model_Card::getOilRestrictions($cardId);
         $lastFilling = Model_Card::getLastFilling($cardId);
-		$operationsHistory = Model_Card::getOperationsHistory($cardId);
 		$servicesList = Model_Card::getServicesList();
 
 		$popupCardEdit = Common::popupForm('Редактирование карты', 'card/edit', [
@@ -185,7 +184,6 @@ class Controller_Clients extends Controller_Common {
             ->bind('card', $card)
             ->bind('oilRestrictions', $oilRestrictions)
             ->bind('lastFilling', $lastFilling)
-            ->bind('operationsHistory', $operationsHistory)
             ->bind('popupCardEdit', $popupCardEdit)
         ;
 
@@ -338,5 +336,26 @@ class Controller_Clients extends Controller_Common {
 		}
 
 		$this->jsonResult(true);
+	}
+
+	/**
+	 * аяксово+постранично получаем историю операций
+	 */
+	public function action_card_operations_history()
+	{
+		$cardId = $this->request->param('id');
+		$params = [
+			'offset' 		=> $this->request->post('offset'),
+			'limit'			=> 5,
+			'check_more'	=> true
+		];
+
+		list($operationsHistory, $more) = Model_Card::getOperationsHistory($cardId, $params);
+
+		if(empty($operationsHistory)){
+			$this->jsonResult(false);
+		}
+
+		$this->jsonResult(true, ['items' => $operationsHistory, 'more' => $more]);
 	}
 }
