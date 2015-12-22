@@ -115,14 +115,12 @@ class Controller_Clients extends Controller_Common {
                 ;
 				break;
 			case 'account':
-				$paymentsHistory = Model_Contract::getPaymentsHistory($contractId);
 				$turnover = Model_Contract::getTurnover($contractId);
 
 				$popupContractPaymentAdd = Common::popupForm('Добавление нового платежа', 'contract/payment_add');
 
 				$content = View::factory('/ajax/clients/contract/account')
                     ->bind('balance', $balance)
-                    ->bind('paymentsHistory', $paymentsHistory)
 					->bind('turnover', $turnover)
 					->bind('popupContractPaymentAdd', $popupContractPaymentAdd)
                 ;
@@ -346,8 +344,7 @@ class Controller_Clients extends Controller_Common {
 		$cardId = $this->request->param('id');
 		$params = [
 			'offset' 		=> $this->request->post('offset'),
-			'limit'			=> 5,
-			'check_more'	=> true
+			'pagination'	=> true
 		];
 
 		list($operationsHistory, $more) = Model_Card::getOperationsHistory($cardId, $params);
@@ -357,5 +354,25 @@ class Controller_Clients extends Controller_Common {
 		}
 
 		$this->jsonResult(true, ['items' => $operationsHistory, 'more' => $more]);
+	}
+
+	/**
+	 * аяксово+постранично получаем историю операций
+	 */
+	public function action_account_payments_history()
+	{
+		$contractId = $this->request->param('id');
+		$params = [
+			'offset' 		=> $this->request->post('offset'),
+			'pagination'	=> true
+		];
+
+		list($paymentsHistory, $more) = Model_Contract::getPaymentsHistory($contractId, $params);
+
+		if(empty($paymentsHistory)){
+			$this->jsonResult(false);
+		}
+
+		$this->jsonResult(true, ['items' => $paymentsHistory, 'more' => $more]);
 	}
 }

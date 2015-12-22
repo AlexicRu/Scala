@@ -193,19 +193,6 @@ class Model_Card extends Model
 			return [];
 		}
 
-		if(empty($params['offset'])){
-			$params['offset'] = 0;
-		}
-		if(empty($params['limit'])){
-			$params['limit'] = 10;
-		}
-
-		$from = $params['offset'];
-		$to = $params['limit']+$params['offset'];
-		if(!empty($params['check_more'])){
-			$to++;
-		}
-
 		$db = Oracle::init();
 
 		$sql = "
@@ -215,19 +202,11 @@ class Model_Card extends Model
 			order by HISTORY_DATE desc
 		";
 
-		$sql = $db->limit($sql, $from, $to);
-		$history = $db->query($sql);
-
-		if(!empty($params['check_more'])) {
-			$more = false;
-			if (count($history) > $params['limit']) {
-				$more = true;
-			}
-			array_pop($history);
-			return [$history, $more];
+		if(!empty($params['pagination'])) {
+			return $db->pagination($sql, $params);
 		}
 
-		return $history;
+		return $db->query($sql);
 	}
 
 	/**

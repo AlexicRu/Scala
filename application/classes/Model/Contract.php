@@ -253,7 +253,7 @@ class Model_Contract extends Model
 	 * @param $cardId
 	 * @param $limit
 	 */
-	public static function getPaymentsHistory($contractId, $limit = 30)
+	public static function getPaymentsHistory($contractId, $params = [])
 	{
 		if(empty($contractId)){
 			return [];
@@ -271,15 +271,13 @@ class Model_Contract extends Model
 			$sql .= " and contract_id = '".Oracle::quote($contractId)."'";
 		}
 
-		if(!empty($limit)){
-			$sql .= " and rownum <= ".intval($limit);
-		}
-
 		$sql .= " order by O_DATE desc";
 
-		$history = $db->query($sql);
+		if(!empty($params['pagination'])) {
+			return $db->pagination($sql, $params);
+		}
 
-		return $history;
+		return $db->query($sql);
 	}
 
 	/**

@@ -104,22 +104,24 @@ function paginationAjax(url, name, callback)
     outer.append(more);
     outer.data('offset', 0);
 
-    _paginationAjaxLoad(url, outer, callback);
+    _paginationAjaxLoad(url, outer, block, callback);
     more.on('click', function(){
-        _paginationAjaxLoad(url, outer, callback);
+        _paginationAjaxLoad(url, outer, block, callback);
     });
 }
-function _paginationAjaxLoad(url, outer, callback)
+function _paginationAjaxLoad(url, outer, block, callback)
 {
+    outer.find('.ajax_block_more').fadeOut();
+
     $.post(url, {offset:outer.data('offset')}, function(data){
         if(data.success){
-            callback(data.data.items);
+            callback(data.data.items, block);
             if(data.data.more){
                 outer.find('.ajax_block_more').fadeIn();
-            }else{
-                outer.find('.ajax_block_more').fadeOut();
             }
             outer.data('offset', parseInt(outer.data('offset')) + data.data.items.length);
+        }else{
+            outer.find('.ajax_block_more').fadeIn().html('<span class="gray">Данные отсутствуют</span>');
         }
     });
 }

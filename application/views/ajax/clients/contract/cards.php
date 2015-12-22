@@ -129,4 +129,15 @@ foreach($cards as $card){
             }
         });
     });
+
+    function renderAjaxPaginationOperationsHistory(data, block)
+    {
+        for(var i = 0 in data){
+            var tpl = $('<div class="line_inner"><span class="gray" /> &nbsp;&nbsp;&nbsp; <span /><div class="fr" /></div>');
+            tpl.find('span.gray').text(data[i].H_DATE);
+            tpl.find('span:last').text(data[i].M_FIO);
+            tpl.find('div.fr').text(data[i].SHORT_DESCRIPTION);
+            block.append(tpl);
+        }
+    }
 </script>

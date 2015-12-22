@@ -37,26 +37,37 @@
                 <a href="#contract_payment_add" class="fancy btn">+ Добавить платеж</a>
             </div>
         <?}?>
-        <b class="f18">Платежи:</b><br><br>
-        <?
-        if(!empty($paymentsHistory)) {
-            foreach ($paymentsHistory as $history) {
-                ?>
-                <div class="line_inner" guid="<?=$history['ORDER_GUID']?>">
-                    <span class="gray"><?=$history['ORDER_DATE']?></span> &nbsp;&nbsp;&nbsp;
-                    <b class="line_inner_150">№<?=$history['ORDER_NUM']?></b>
-                    <span class="gray">Сумма</span> &nbsp;&nbsp;&nbsp;
-                    <b><?=number_format($history['SUMPAY'], 2, ',', ' ')?> <?=Text::RUR?></b>
 
+
+        <div class="ajax_block_payments_history_out">
+            <b class="f18">Платежи:</b><br><br>
+        </div>
+        <script>
+            $(function(){
+                paginationAjax('/clients/account_payments_history/' + $('[name=contracts_list]').val(), 'ajax_block_payments_history', renderAjaxPaginationPaymentsHistory);
+            });
+            function renderAjaxPaginationPaymentsHistory(data, block)
+            {
+                for(var i = 0 in data){
+                    var tpl = $('<div class="line_inner">'+
+                        '<span class="gray" /> &nbsp;&nbsp;&nbsp; '+
+                        '<b class="line_inner_150" />'+
+                        '<span class="gray" /> &nbsp;&nbsp;&nbsp; '+
+                        '<b>' +
+                    '</div>');
                     <?if(Access::allow('clients_payment_del')){?>
-                        <div class="fr"><a href="#" class="red del link_del_contract_payment">Удалить <i class="icon-cancel"></i></a></div>
+                        tpl.append('<div class="fr"><a href="#" class="red del link_del_contract_payment">Удалить <i class="icon-cancel"></i></a></div>');
                     <?}?>
-                </div>
-            <?
+
+                    tpl.attr('guid', data[i].ORDER_GUID);
+                    tpl.find('span.gray:first').text(data[i].ORDER_DATE);
+                    tpl.find('b.line_inner_150').text('№' + data[i].ORDER_NUM);
+                    tpl.find('span.gray:last').text('Сумма');
+                    tpl.find('b:last').html(data[i].SUMPAY + ' <?=Text::RUR?>');
+                    block.append(tpl);
+                }
             }
-        }else{
-            echo '<div>Платежи отсутствуют</div>';
-        }?>
+        </script>
     </div>
 </div>
 
@@ -67,7 +78,7 @@
 <script>
     $(function(){
         <?if(Access::allow('clients_payment_del')){?>
-            $('.link_del_contract_payment').on('click', function(){
+            $(document).on('click', '.link_del_contract_payment', function(){
                 var t = $(this);
                 var row = t.closest('[guid]');
 

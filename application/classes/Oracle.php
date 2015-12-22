@@ -199,4 +199,39 @@ class Oracle{
 
 		return $sql;
 	}
+
+	/**
+	 * подготавливаем запрос для пагиниции
+	 * @param $sql
+	 * @param $params
+	 * @return mixed
+	 */
+	public function pagination($sql, $params)
+	{
+		if(empty($params['offset'])){
+			$params['offset'] = 0;
+		}
+		if(empty($params['limit'])){
+			$params['limit'] = 10;
+		}
+
+		$from = $params['offset'];
+		$to = $params['limit']+$params['offset'];
+
+		if(!empty($params['pagination'])){
+			$to++;
+		}
+
+		$sql = $this->limit($sql, $from, $to);
+
+		$items = $this->query($sql);
+
+		$more = false;
+		if (count($items) > $params['limit']) {
+			$more = true;
+			array_pop($items);
+		}
+
+		return [$items, $more];
+	}
 }
