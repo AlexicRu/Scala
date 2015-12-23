@@ -10,6 +10,9 @@ return [
     'allow' => [ //для всех остальных ролей будер запрещено
         // functions
         // custom
+        'show_setting_notices' => [
+            Access::ROLE_ADMIN
+        ]
     ],
     'deny' => [ //для всех остальных ролей будет разрешено
         // functions

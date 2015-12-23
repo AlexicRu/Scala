@@ -32,6 +32,10 @@ h1 .btn,
   vertical-align: top;
   float: right;
 }
+h1 + .tabs_block,
+.h1 + .tabs_block {
+  padding-top: 0;
+}
 h2,
 .h2 {
   font-size: 30px;
@@ -629,14 +633,14 @@ textarea.input_w_small {
 .tab_v.active a {
   color: white;
 }
-.tab_v_content {
+[tab_content] {
   display: none;
 }
-.tab_v_content.active {
+[tab_content].active {
   display: block;
 }
 .line_inner {
-  background: #f4f4f4;
+  background: #f6f6f6;
   padding: 10px 15px;
   margin-top: 8px;
 }
@@ -844,4 +848,44 @@ table {
   display: none;
   text-align: center;
   padding-top: 5px;
+}
+.switch_block {
+  margin-bottom: 25px;
+  padding-left: 40px;
+}
+.sb_block {
+  width: 30px;
+  text-align: center;
+  display: inline-block;
+  margin-left: -40px;
+  float: left;
+  margin-top: -2px;
+}
+.sb_title {
+  margin-bottom: 15px;
+  display: block;
+}
+.sb_title b {
+  font-size: 18px;
+  display: inline-block;
+  margin-right: 10px;
+}
+.sb_title .sb_block {
+  margin-top: 2px;
+}
+.sb_content {
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+.sb_content.sb_disabled {
+  color: #999;
+}
+.sb_content small {
+  font-size: 90%;
+  display: inline-block;
+  vertical-align: bottom;
+  margin-bottom: 7px;
+}
+.sb_content input[type=text] {
+  margin-top: 5px;
 }

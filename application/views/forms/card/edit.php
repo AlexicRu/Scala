@@ -60,7 +60,7 @@
     <tr>
         <td></td>
         <td>
-            <span class="btn btn_reverse btn_card_edit_go">Сохранить</span>
+            <span class="btn btn_reverse btn_card_edit_go"><i class="icon-ok"></i> Сохранить</span>
             <span class="btn btn_red fancy_close">Отмена</span>
         </td>
     </tr>

@@ -132,6 +132,7 @@ abstract class Controller_Common extends Controller_Template {
                 '/js/plugins/jGrowl/jGrowl.css',
                 '/js/plugins/fancy/jquery.fancybox.css',
                 '/style.css',
+                '/ui.css'
             ];
             $this->template->scripts = [
                 'https://yastatic.net/jquery/2.1.3/jquery.min.js',
@@ -139,6 +140,7 @@ abstract class Controller_Common extends Controller_Template {
                 '/js/plugins/jGrowl/jGrowl.js',
                 '/js/plugins/fancy/jquery.fancybox.js',
                 '/js/plugins/site.js',
+                '/js/plugins/ui.js',
             ];
         }else{
             $this->template->styles = [

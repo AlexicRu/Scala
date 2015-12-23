@@ -33,6 +33,23 @@ $(function(){
     $(document).on('click', '.fancy_close', function(){
         $.fancybox.close();
     });
+
+    $(document).on('change', '.switch_block [type=checkbox].switch', function(){
+        var t = $(this);
+        var switchBlock = t.closest('.switch_block');
+
+        if(t.prop('checked') == true){
+            switchBlock.find('input, select, textarea').prop('disabled', false);
+            switchBlock.find('.sb_content').removeClass('sb_disabled');
+            switchBlock.find('.checkbox_inner').removeClass('checkbox_disabled');
+            switchBlock.find('.radio_inner').removeClass('radio_disabled');
+        }else{
+            switchBlock.find('input, select, textarea').prop('disabled', true);
+            switchBlock.find('.sb_content').addClass('sb_disabled');
+            switchBlock.find('.checkbox_inner').addClass('checkbox_disabled');
+            switchBlock.find('.radio_inner').addClass('radio_disabled');
+        }
+    });
 });
 
 function renderDatePicker(elem)

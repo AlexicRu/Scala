@@ -28,6 +28,9 @@ h1, .h1{font-size: 24px; font-weight: normal; margin: 0 0 25px; padding: 0; colo
   .btn{
     margin-top: -4px; vertical-align: top;  float: right;
   }
+  +.tabs_block{
+    padding-top: 0;
+  }
 }
 h2, .h2{font-size: 30px; font-weight: normal; margin: 0 0 10px; padding: 0; color: #000;}
 h3, .h3{font-size: 16px; font-weight: normal; margin: 0 0 5px; padding: 0; color: #999;}
@@ -375,14 +378,14 @@ input[type=text], input[type=password], input[type=number], select, textarea{
     }
   }
 }
-.tab_v_content{
+[tab_content]{
   display: none;
   &.active{
     display: block;
   }
 }
 .line_inner{
-  background: #f4f4f4; padding: 10px 15px; margin-top: 8px;
+  background: #f6f6f6; padding: 10px 15px; margin-top: 8px;
 }
 .line_inner + .line_inner{
   margin-top: 2px;
@@ -567,4 +570,31 @@ table{
 }
 .ajax_block_more{
   display: none; text-align: center; padding-top: 5px;
+}
+.switch_block{
+  margin-bottom: 25px; padding-left: 40px;
+}
+.sb_block{
+  width: 30px; text-align: center; display: inline-block; margin-left: -40px; float: left; margin-top: -2px;
+}
+.sb_title{
+  margin-bottom: 15px; display: block;
+  b {
+    font-size: 18px; display: inline-block; margin-right: 10px;
+  }
+  .sb_block{
+    margin-top: 2px;
+  }
+}
+.sb_content{
+  margin-bottom: 15px; font-size: 18px;
+  &.sb_disabled{
+    color: #999;
+  }
+  small{
+    font-size: 90%; display: inline-block; vertical-align: bottom; margin-bottom: 7px;
+  }
+  input[type=text]{
+    margin-top: 5px;
+  }
 }

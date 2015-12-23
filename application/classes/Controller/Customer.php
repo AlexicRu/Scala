@@ -19,14 +19,21 @@ class Controller_Customer extends Controller_Common {
 		$this->title[] = 'Настройки';
 
 		$params = $this->request->post();
-		if(!empty($params)){
+		if(!empty($params) && $params['form_type'] == 'settings'){
 			if(!Model_Customer::edit($params)){
 				$this->errors[] = 'Ошибка сохранения';
 			}
 		}
+		if(!empty($params) && $params['form_type'] == 'settings_notices'){
+
+		}
 
 		$settingsForm = View::factory('/forms/customer/settings');
+		$settingsNoticesForm = View::factory('/forms/customer/settings_notices');
 
-		$this->tpl->bind('settingsForm', $settingsForm);
+		$this->tpl
+			->bind('settingsForm', $settingsForm)
+			->bind('settingsNoticesForm', $settingsNoticesForm)
+		;
 	}
 }
