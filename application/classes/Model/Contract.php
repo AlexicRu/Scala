@@ -302,7 +302,7 @@ class Model_Contract extends Model
 			'p_order_guid' 		=> $action != self::PAYMENT_ACTION_ADD ? $params['guid'] : null,
 			'p_order_num' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['num'] : null,
 			'p_order_date' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['date'] : null,
-			'p_value' 			=> $action != self::PAYMENT_ACTION_DELETE ? $params['value'] : 0,
+			'p_value' 			=> $action != self::PAYMENT_ACTION_DELETE ? Oracle::toFloat($params['value']) : 0,
 			'p_payment_cur' 	=> $action == self::PAYMENT_ACTION_ADD ? self::CURRENCY_RUR : null,
 			'p_comment' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['comment'] : null,
 			'p_manager_id' 		=> $user['MANAGER_ID'],

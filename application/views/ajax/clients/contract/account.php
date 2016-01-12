@@ -63,7 +63,7 @@
                     tpl.find('span.gray:first').text(data[i].ORDER_DATE);
                     tpl.find('b.line_inner_150').text('№' + data[i].ORDER_NUM);
                     tpl.find('span.gray:last').text('Сумма');
-                    tpl.find('b:last').html(data[i].SUMPAY + ' <?=Text::RUR?>');
+                    tpl.find('b:last').html(number_format(data[i].SUMPAY, 2, ',', ' ') + ' <?=Text::RUR?>');
                     block.append(tpl);
                 }
             }

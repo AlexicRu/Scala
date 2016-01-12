@@ -234,4 +234,15 @@ class Oracle{
 
 		return [$items, $more];
 	}
+
+	/**
+	 * меняем запятую на точку, это для корректной записи в базу
+	 *
+	 * @param $number
+	 * @return mixed
+	 */
+	public static function toFloat($number)
+	{
+		return str_replace(',', '.', $number);
+	}
 }

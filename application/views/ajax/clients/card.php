@@ -1,16 +1,17 @@
 <input type="hidden" name="card_id" value="<?=$card['CARD_ID']?>">
 
-<?if(Access::allow('clients_card_edit')){?>
-    <div class="fr">
+<div class="fr">
+    <?if(in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_EMV_CAN, Model_Card::CARD_TYPE_PAYFLEX_CAN])){?>
         <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
             <button class="btn btn_green btn_card_toggle"><span style="display: none">Заблокировать</span><span>Разблокировать</span></button>
         <?}else{?>
             <button class="btn btn_red btn_card_toggle"><span>Заблокировать</span><span style="display: none">Разблокировать</span></button>
         <?}?>
-        &nbsp;
-        <a href="#card_edit_<?=$card['CARD_ID']?>" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
-    </div>
-<?}?>
+    <?}?>
+    <?if(Access::allow('clients_card_edit')){?>
+        &nbsp; <a href="#card_edit_<?=$card['CARD_ID']?>" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
+    <?}?>
+</div>
 
 <b class="f18">Обороты за текущий период:</b><br>
 <?=number_format($card['REALIZ_LITRES'], 2, ',', ' ')?> л. / <?=number_format($card['REALIZ_CUR'], 2, ',', ' ')?> <?=Text::RUR?><br><br>

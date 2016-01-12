@@ -100,7 +100,7 @@
                 <td class="gray right">Овердрафт:</td>
                 <td>
                     <span toggle_block="block2"><?=$contractSettings['OVERDRAFT']?></span>
-                    <span toggle_block="block2" class="dn"><input type="text" name="OVERDRAFT" value="<?=$contractSettings['OVERDRAFT']?>"></span>
+                    <span toggle_block="block2" class="dn"><input type="number" name="OVERDRAFT" min="0" value="<?=$contractSettings['OVERDRAFT']?>"></span>
                     <?=Text::RUR?>
                 </td>
             </tr>
@@ -185,6 +185,11 @@
                 $.post('/clients/contract_edit/<?=$contractSettings['CONTRACT_ID']?>', {params:params}, function(data){
                     if(data.success){
                         $.jGrowl('Контракт обновлен', { header: 'Успех!' });
+
+                        var contractFullName = "Договор: [<?=$contractSettings['CONTRACT_ID']?>] " + params.contract.CONTRACT_NAME + " от " + params.contract.DATE_BEGIN + (params.contract.DATE_END != '31.12.2099' ? " до " + params.contract.DATE_END : '');
+
+                        $("[name=contracts_list] option:selected").text(contractFullName);
+
                         loadContract('contract');
                     }else{
                         $.jGrowl('Сохранение не удалось', { header: 'Ошибка!' });

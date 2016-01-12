@@ -74,7 +74,18 @@ foreach($cards as $card){
             cardLoad(t);
         });
 
-        $(".tabs_cards [tab]:first").click();
+        var clicked = false;
+        $(".tabs_cards [tab]").each(function(){
+            if(clicked){
+                return;
+            }
+            var t = $(this);
+
+            if(!t.attr('style')){
+                clicked = true;
+                t.click();
+            }
+        });
 
         $(".cards_search").on('keypress', function(e){
             if(e.keyCode == 13){
@@ -88,7 +99,7 @@ foreach($cards as $card){
             renderScroll($('.tabs_cards .scroll'));
         <?}?>
 
-        $(document).on('click', '.btn_card_toggle', function(){
+        $(document).off('click', '.btn_card_toggle').on('click', '.btn_card_toggle', function(){
             var t = $(this);
 
             var comment = '';

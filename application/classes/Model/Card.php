@@ -17,6 +17,11 @@ class Model_Card extends Model
 	const CARD_LIMIT_TYPE_MONTH		= 3;
 	const CARD_LIMIT_TYPE_ONCE		= 4;
 
+	const CARD_TYPE_EMV_CAN 		= 1; //Карта EMV с возможностью смены лимитов/блокировки в сторонней системе
+	const CARD_TYPE_EMV_CANT 		= 2; //Карта EMV без возможности смены лимитов/блокировки в сторонней системе
+	const CARD_TYPE_PAYFLEX_CAN 	= 3; //Карта PayFlex с возможностью блокировки в сторонней системе
+	const CARD_TYPE_PAYFLEX_CANT 	= 4; //Карта PayFlex без возможности блокировки в сторонней системе
+
 	public static $cardLimitsParams = [
 		self::CARD_LIMIT_PARAM_VOLUME 	=> 'л.',
 		self::CARD_LIMIT_PARAM_RUR 		=> Text::RUR,
@@ -119,10 +124,18 @@ class Model_Card extends Model
 
 		$db = Oracle::init();
 
+		$card = Model_Card::getCard($cardId);
+
+		$where = ["card_id = ".Oracle::quote($cardId)];
+
+		if(!empty($card['CONTRACT_ID'])){
+			$where[] = "contract_id = ".Oracle::quote($card['CONTRACT_ID']);
+		}
+
 		$sql = "
 			select *
 			from ".Oracle::$prefix."V_WEB_CRD_LAST_SERV
-			where card_id = ".Oracle::quote($cardId)
+			where ".implode(" and ", $where)
 		;
 
 		$restrictions = $db->row($sql);
@@ -195,10 +208,18 @@ class Model_Card extends Model
 
 		$db = Oracle::init();
 
+		$card = Model_Card::getCard($cardId);
+
+		$where = ["card_id = ".Oracle::quote($cardId)];
+
+		if(!empty($card['CONTRACT_ID'])){
+			$where[] = "contract_id = ".Oracle::quote($card['CONTRACT_ID']);
+		}
+
 		$sql = "
 			select *
 			from ".Oracle::$prefix."V_WEB_CRD_HISTORY
-			where card_id = ".Oracle::quote($cardId)."
+			where ".implode(" and ", $where)."
 			order by HISTORY_DATE desc
 		";
 

@@ -141,6 +141,7 @@ abstract class Controller_Common extends Controller_Template {
                 '/js/plugins/fancy/jquery.fancybox.js',
                 '/js/plugins/site.js',
                 '/js/plugins/ui.js',
+                '/js/plugins/functions.js',
             ];
         }else{
             $this->template->styles = [

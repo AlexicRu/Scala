@@ -60,7 +60,8 @@ function renderDatePicker(elem)
         showOn: "button",
         buttonImageOnly: true,
         changeMonth:true,
-        changeYear:true
+        changeYear:true,
+        yearRange: "2000:2099"
     };
 
     if(elem.attr('maxDate') == 1){
