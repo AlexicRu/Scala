@@ -5,6 +5,7 @@ class Access
     const USER_TEST 	= 6;
 
     const ROLE_ADMIN 	        = 3;
+    const ROLE_MANAGER          = 4;
     const ROLE_USER		        = 99;
     const ROLE_MANAGER_SALE		= 5;
 
@@ -49,5 +50,34 @@ class Access
     public static function deny($action)
     {
         return !self::allow($action);
+    }
+
+    /**
+     * проверка доступов
+     *
+     * @param $type
+     * @param $id
+     */
+    public static function check($type, $id)
+    {
+        $allow = false;
+
+        if(!empty($type)){
+            switch($type){
+                case 'client':
+                    if(!empty($id)){
+                        $clients = Model_Client::getClientsList();
+
+                        if(!empty($clients[$id])){
+                            $allow = true;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        if(!$allow){
+            throw new HTTP_Exception_404();
+        }
     }
 }

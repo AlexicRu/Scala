@@ -33,6 +33,8 @@ class Controller_Clients extends Controller_Common {
 	{
 		$clientId = $this->request->param('id');
 
+		Access::check('client', $clientId);
+
 		$client = Model_Client::getClient($clientId);
 		$contracts = Model_Contract::getContracts($clientId);
 
@@ -170,7 +172,7 @@ class Controller_Clients extends Controller_Common {
 
         $oilRestrictions = Model_Card::getOilRestrictions($cardId);
         $lastFilling = Model_Card::getLastFilling($cardId);
-		$servicesList = Model_Card::getServicesList();
+		$servicesList = Model_Card::getServicesList($cardId);
 
 		$popupCardEdit = Common::popupForm('Редактирование карты', 'card/edit', [
 				'card' 				=> $card,

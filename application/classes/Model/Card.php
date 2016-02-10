@@ -31,7 +31,7 @@ class Model_Card extends Model
 		self::CARD_LIMIT_TYPE_DAY 	=> 'в сутки',
 		self::CARD_LIMIT_TYPE_WEEK 	=> 'в неделю',
 		self::CARD_LIMIT_TYPE_MONTH => 'в месяц',
-		self::CARD_LIMIT_TYPE_ONCE 	=> 'единовременно',
+		//self::CARD_LIMIT_TYPE_ONCE 	=> 'единовременно',
 	];
 
 	/**
@@ -303,7 +303,7 @@ class Model_Card extends Model
 						'p_limit_group'		=> $group,
 						'p_limit_param'		=> $limit['param'],
 						'p_limit_type'		=> $limit['type'],
-						'p_limit_value'		=> $limit['value'],
+						'p_limit_value'		=> str_replace(",", ".", $limit['value']),
 						'p_limit_currency'	=> Model_Contract::CURRENCY_RUR,
 						'p_limit_pcs'		=> 0, //default
 						'p_manager_id' 		=> $user['MANAGER_ID'],
@@ -318,6 +318,7 @@ class Model_Card extends Model
 			}
 		}
 
+		$db->procedure('card_queue_limit_add', ['p_card_id' => $cardId]);
 
 		return true;
 	}
@@ -327,17 +328,15 @@ class Model_Card extends Model
 	 *
 	 * @return array|int
 	 */
-	public static function getServicesList()
+	public static function getServicesList($cardId)
 	{
+		if(empty($cardId)){
+			return false;
+		}
+
 		$db = Oracle::init();
 
-		$user = Auth::instance()->get_user();
-
-		$sql = "
-			select *
-			from ".Oracle::$prefix."v_web_service_list
-			where agent_id = ".$user['AGENT_ID']
-		;
+		$sql = "select * from ".Oracle::$prefix."V_WEB_SERVICES_LIST where card_bin = ".intval(substr($cardId, 0, 6));
 
 		return $db->query($sql);
 	}

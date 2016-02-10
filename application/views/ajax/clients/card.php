@@ -1,15 +1,21 @@
 <input type="hidden" name="card_id" value="<?=$card['CARD_ID']?>">
 
+<?
+$user = Auth::instance()->get_user();
+?>
+
 <div class="fr">
-    <?if(in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_EMV_CAN, Model_Card::CARD_TYPE_PAYFLEX_CAN])){?>
+    <?if(in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_EMV_CAN, Model_Card::CARD_TYPE_PAYFLEX_CAN]) || in_array($user['role'], [Access::ROLE_MANAGER, Access::ROLE_ADMIN])){?>
         <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
             <button class="btn btn_green btn_card_toggle"><span style="display: none">Заблокировать</span><span>Разблокировать</span></button>
         <?}else{?>
             <button class="btn btn_red btn_card_toggle"><span>Заблокировать</span><span style="display: none">Разблокировать</span></button>
         <?}?>
     <?}?>
-    <?if(Access::allow('clients_card_edit')){?>
-        &nbsp; <a href="#card_edit_<?=$card['CARD_ID']?>" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
+    <?if(!in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_PAYFLEX_CAN, Model_Card::CARD_TYPE_PAYFLEX_CANT])){?>
+        <?if(Access::allow('clients_card_edit')){?>
+            &nbsp; <a href="#card_edit_<?=$card['CARD_ID']?>" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
+        <?}?>
     <?}?>
 </div>
 

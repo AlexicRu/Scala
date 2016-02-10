@@ -1,3 +1,6 @@
+<?
+$postfix = $card['CARD_ID'];
+?>
 <table class="table_form form_card_edit">
     <tr>
         <td class="gray right" width="170">Держатель:</td>
@@ -18,15 +21,15 @@
                                 <div class="form_elem" limit_service><nobr>
                                     <select name="limit_service">
                                         <?foreach($servicesList as $service){?>
-                                            <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $restrict['SERVICE_ID']){?>selected<?}?>><?=$service['LONG_DESC']?></option>
+                                            <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $restrict['SERVICE_ID']){?>selected<?}?>><?=$service['DESC_FOREIGN']?></option>
                                         <?}?>
                                     </select>
-                                    <button class="btn btn_small btn_red btn_card_edit_del_serviсe">&times;</button>
+                                    <button class="btn btn_small btn_red btn_card_edit_del_serviсe" onclick="cardEditDelService_<?=$postfix?>($(this))">&times;</button>
                                 </nobr></div>
                             <?}?>
                             <div><nobr>
-                                <button class="btn btn_small btn_green btn_card_edit_add_serviсe">+ добавить услугу</button>
-                                <button class="btn btn_small btn_red btn_card_edit_del_limit">&times; удалить лимит</button>
+                                <button class="btn btn_small btn_green btn_card_edit_add_serviсe" onclick="cardEditAddService_<?=$postfix?>($(this))">+ добавить услугу</button>
+                                <button class="btn btn_small btn_red btn_card_edit_del_limit" onclick="cardEditDelLimit_<?=$postfix?>($(this))">&times; удалить лимит</button>
                             </nobr></div>
                         </td>
                         <td class="v_top">
@@ -49,7 +52,7 @@
                     </tr>
                 <?}?>
                 <tr>
-                    <td><button class="btn btn_green btn_card_edit_add_limit">+ Добавить ограничение</button></td>
+                    <td><button class="btn btn_green btn_card_edit_add_limit" onclick="cardEditAddLimit_<?=$postfix?>($(this))">+ Добавить ограничение</button></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -60,147 +63,145 @@
     <tr>
         <td></td>
         <td>
-            <span class="btn btn_reverse btn_card_edit_go"><i class="icon-ok"></i> Сохранить</span>
+            <span class="btn btn_reverse btn_card_edit_go" onclick="cardEditGo_<?=$postfix?>($(this))"><i class="icon-ok"></i> Сохранить</span>
             <span class="btn btn_red fancy_close">Отмена</span>
         </td>
     </tr>
 </table>
 
 <script>
-    $(function(){
-        //чтобы не вешались несколько ивентов
-        if(typeof(loaded_form_card_edit)  == "undefined") {
-            loaded_form_card_edit = true;
+    var services_<?=$postfix?> = {
+        <?foreach($servicesList as $service){?>
+        "<?=$service['SERVICE_ID']?>": "<?=$service['DESC_FOREIGN']?>",
+        <?}?>
+    };
+    var limitParams_<?=$postfix?> = {
+        <?foreach(Model_Card::$cardLimitsParams as $limitParam => $value){?>
+        "<?=$limitParam?>": "<?=$value?>",
+        <?}?>
+    };
+    var limitTypes_<?=$postfix?> = {
+        <?foreach(Model_Card::$cardLimitsTypes as $limitType => $value){?>
+        "<?=$limitType?>": "<?=$value?>",
+        <?}?>
+    };
 
-            var services = {
-                <?foreach($servicesList as $service){?>
-                "<?=$service['SERVICE_ID']?>": "<?=$service['LONG_DESC']?>",
-                <?}?>
-            };
-            var limitParams = {
-                <?foreach(Model_Card::$cardLimitsParams as $limitParam => $value){?>
-                "<?=$limitParam?>": "<?=$value?>",
-                <?}?>
-            };
-            var limitTypes = {
-                <?foreach(Model_Card::$cardLimitsTypes as $limitType => $value){?>
-                "<?=$limitType?>": "<?=$value?>",
-                <?}?>
-            };
+    function cardEditDelService_<?=$postfix?>(t)
+    {
+        t.closest('[limit_service]').fadeOut();
+        setTimeout(function () {
+            t.closest('[limit_service]').remove();
+        }, 300);
+    }
 
-            $(document).on('click', '.btn_card_edit_go', function () {
-                var t = $(this);
-                var form = t.closest('.form_card_edit');
-                var params = {
-                    contract_id : $('[name=contracts_list]').val(),
-                    card_id     : $('.tab_v.active').attr('tab'),
-                    holder      : $('[name=card_edit_holder]', form).val(),
-                    limits      : []
-                };
+    function cardEditAddService_<?=$postfix?>(t)
+    {
+        var td = t.closest('td');
 
-                var canEdit = true;
-
-                /*if($('[limit_group]', form).size() == 0){
-                    canEdit = false;
-                }*/
-
-                $('[limit_group]', form).each(function(){
-                    var group_block = $(this);
-                    var group = {
-                        value:      $('[name=limit_value]', group_block).val(),
-                        param:      $('[name=limit_param]', group_block).val(),
-                        type:       $('[name=limit_type]', group_block).val(),
-                        services:   []
-                    };
-
-                    $('[name=limit_service]', group_block).each(function(){
-                        group.services.push($(this).val());
-                    });
-
-                    params.limits.push(group);
-
-                    if(!group.value || $('[name=limit_service]', group_block).size() == 0){
-                        canEdit = false;
-                    }
-                });
-
-                if(canEdit == false){
-                    message(0, 'Заполните данные корректно');
-                    return;
-                }
-
-                $.post('/clients/card_edit', {params: params}, function (data) {
-                    if (data.success) {
-                        message(1, 'Карта успешно обновлена');
-                        $.fancybox.close();
-                        cardLoad($('.tab_v.active'), true);
-                        $('.tab_v.active div.gray').text(params.holder);
-                    } else {
-                        message(0, 'Ошибка обновления карты');
-                    }
-                });
-            });
-
-            //удаление услуги
-            $(document).on('click', ".btn_card_edit_del_serviсe", function () {
-                var t = $(this);
-                t.closest('[limit_service]').fadeOut();
-                setTimeout(function () {
-                    t.closest('[limit_service]').remove();
-                }, 300);
-            });
-            //добавление услуги
-            $(document).on('click', ".btn_card_edit_add_serviсe", function () {
-                var t = $(this);
-                var td = t.closest('td');
-                var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" /> <button class="btn btn_small btn_red btn_card_edit_del_serviсe">&times;</button></nobr></div>');
-
-                for (var i in services) {
-                    tpl.find('select').append('<option value="' + i + '">' + services[i] + '</option>');
-                }
-
-                if (td.find('[limit_service]').size()) {
-                    tpl.insertAfter(td.find('[limit_service]:last'));
-                } else {
-                    tpl.insertBefore(td.find('div'));
-                }
-            });
-            //удаление ограничения
-            $(document).on('click', ".btn_card_edit_del_limit", function () {
-                var t = $(this);
-                if (confirm('Удалить весь лимит?')) {
-                    t.closest('[limit_group]').fadeOut();
-                    setTimeout(function () {
-                        t.closest('[limit_group]').remove();
-                    }, 300);
-                }
-            });
-            //добавление ограничения
-            $(document).on('click', ".btn_card_edit_add_limit", function () {
-                var t = $(this);
-                var table = t.closest('table');
-                var tpl = $('<tr limit_group>' +
-                    '<td><div><nobr>' +
-                        '<button class="btn btn_small btn_green btn_card_edit_add_serviсe">+ добавить услугу</button>' +
-                        '<button class="btn btn_small btn_red btn_card_edit_del_limit">&times; удалить лимит</button>' +
-                    '</div></nobr></td>' +
-                    '<td class="v_top"><input type="text" name="limit_value" placeholder="Объем / сумма"></td>' +
-                    '<td class="v_top"><select name="limit_param" /></td><td class="v_top"><select name="limit_type" /></td>' +
-                '</tr>');
-
-                for (var i in limitParams) {
-                    tpl.find('select[name=limit_param]').append('<option value="' + i + '">' + limitParams[i] + '</option>');
-                }
-                for (var j in limitTypes) {
-                    tpl.find('select[name=limit_type]').append('<option value="' + j + '">' + limitTypes[j] + '</option>');
-                }
-
-                if (table.find('[limit_group]').size()) {
-                    tpl.insertAfter(table.find('[limit_group]:last'));
-                } else {
-                    tpl.insertBefore(table.find('tr'));
-                }
-            });
+        if(td.find('[limit_service]').size()){
+            message(0, 'Максимум один вид услуги');
+            return false;
         }
-    });
+
+        var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" /> <button class="btn btn_small btn_red btn_card_edit_del_serviсe">&times;</button></nobr></div>');
+
+        for (var i in services_<?=$postfix?>) {
+            tpl.find('select').append('<option value="' + i + '">' + services_<?=$postfix?>[i] + '</option>');
+        }
+
+        if (td.find('[limit_service]').size()) {
+            tpl.insertAfter(td.find('[limit_service]:last'));
+        } else {
+            tpl.insertBefore(td.find('div'));
+        }
+    }
+
+    function cardEditDelLimit_<?=$postfix?>(t)
+    {
+        if (confirm('Удалить весь лимит?')) {
+            t.closest('[limit_group]').fadeOut();
+            setTimeout(function () {
+                t.closest('[limit_group]').remove();
+            }, 300);
+        }
+    }
+
+    function cardEditAddLimit_<?=$postfix?>(t)
+    {
+        var table = t.closest('table');
+        var tpl = $('<tr limit_group>' +
+            '<td><div><nobr>' +
+            '<button class="btn btn_small btn_green btn_card_edit_add_serviсe" onclick="cardEditAddService_<?=$postfix?>($(this))">+ добавить услугу</button>' +
+            '<button class="btn btn_small btn_red btn_card_edit_del_limit" onclick="cardEditDelLimit_<?=$postfix?>($(this))">&times; удалить лимит</button>' +
+            '</div></nobr></td>' +
+            '<td class="v_top"><input type="text" name="limit_value" placeholder="Объем / сумма"></td>' +
+            '<td class="v_top"><select name="limit_param" /></td><td class="v_top"><select name="limit_type" /></td>' +
+            '</tr>');
+
+        for (var i in limitParams_<?=$postfix?>) {
+            tpl.find('select[name=limit_param]').append('<option value="' + i + '">' + limitParams_<?=$postfix?>[i] + '</option>');
+        }
+        for (var j in limitTypes_<?=$postfix?>) {
+            tpl.find('select[name=limit_type]').append('<option value="' + j + '">' + limitTypes_<?=$postfix?>[j] + '</option>');
+        }
+
+        if (table.find('[limit_group]').size()) {
+            tpl.insertAfter(table.find('[limit_group]:last'));
+        } else {
+            tpl.insertBefore(table.find('tr'));
+        }
+    }
+
+    function cardEditGo_<?=$postfix?>(t)
+    {
+        var form = t.closest('.form_card_edit');
+        var params = {
+            contract_id : $('[name=contracts_list]').val(),
+            card_id     : $('.tab_v.active').attr('tab'),
+            holder      : $('[name=card_edit_holder]', form).val(),
+            limits      : []
+        };
+
+        var canEdit = true;
+
+        /*if($('[limit_group]', form).size() == 0){
+         canEdit = false;
+         }*/
+
+        $('[limit_group]', form).each(function(){
+            var group_block = $(this);
+            var group = {
+                value:      $('[name=limit_value]', group_block).val(),
+                param:      $('[name=limit_param]', group_block).val(),
+                type:       $('[name=limit_type]', group_block).val(),
+                services:   []
+            };
+
+            $('[name=limit_service]', group_block).each(function(){
+                group.services.push($(this).val());
+            });
+
+            params.limits.push(group);
+
+            if(group.value == '' || $('[name=limit_service]', group_block).size() == 0){
+                canEdit = false;
+            }
+        });
+
+        if(canEdit == false){
+            message(0, 'Заполните данные корректно');
+            return;
+        }
+
+        $.post('/clients/card_edit', {params: params}, function (data) {
+            if (data.success) {
+                message(1, 'Карта успешно обновлена');
+                $.fancybox.close();
+                cardLoad($('.tab_v.active'), true);
+                $('.tab_v.active div.gray').text(params.holder);
+            } else {
+                message(0, 'Ошибка обновления карты');
+            }
+        });
+    }
 </script>

@@ -176,7 +176,7 @@ class Model_Contract extends Model
             'p_autoblock_flag' 		    => $params['settings']['scheme'] == 1 ? 0 : 1,
             'p_penalties' 		        => $params['settings']['PENALTIES'],
             'p_penalties_flag' 		    => $params['settings']['PENALTIES'] ? 1 : 0,
-            'p_overdraft' 		        => $params['settings']['OVERDRAFT'],
+            'p_overdraft' 		        => abs($params['settings']['OVERDRAFT']),
             'p_invoice_currency' 		=> self::CURRENCY_RUR,
             'p_invoice_period_type' 	=> $params['settings']['INVOICE_PERIOD_TYPE'],
             'p_invoice_period_value' 	=> $params['settings']['INVOICE_PERIOD_VALUE'],

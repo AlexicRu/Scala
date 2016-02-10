@@ -35,7 +35,7 @@ return [
             Access::ROLE_USER,
         ],
         'clients_card_edit' => [
-            Access::ROLE_USER,
+            //Access::ROLE_USER,
         ],
         'clients_payment_add' => [
             Access::ROLE_USER,

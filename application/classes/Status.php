@@ -3,7 +3,7 @@
 class Status
 {
 	const STATUS_CONTRACT_WORK 			= 1;
-	const STATUS_CONTRACT_BLOCKED 		= 4;
+	const STATUS_CONTRACT_BLOCKED 		= 9;
 	const STATUS_CONTRACT_EXPIRED 		= 5;
 	const STATUS_CONTRACT_NOT_IN_WORK 	= 6;
 
