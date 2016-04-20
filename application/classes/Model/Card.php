@@ -76,9 +76,9 @@ class Model_Card extends Model
 	/**
 	 * вытягиваем одну карту
 	 */
-	public static function getCard($cardId)
+	public static function getCard($cardId, $contractId = false)
 	{
-		$card = self::getCards(false, $cardId);
+		$card = self::getCards($contractId, $cardId);
 
 		if(!empty($cardId)){
 			return reset($card);
@@ -186,10 +186,8 @@ class Model_Card extends Model
 			return $res;
 		}
 
-		//редактируем лимиту если таковые пришли в запросе
-		if(!empty($params['limits'])){
-			self::editCardLimits($params['card_id'], $params['limits']);
-		}
+		//редактируем лимитов если таковые пришли в запросе
+		self::editCardLimits($params['card_id'], empty($params['limits']) ? false : $params['limits']);
 
 		return true;
 	}
@@ -237,7 +235,7 @@ class Model_Card extends Model
 	 */
 	public static function toggleStatus($params)
 	{
-		if(empty($params['card_id'])){
+		if(empty($params['card_id']) || empty($params['contract_id'])){
 			return false;
 		}
 
@@ -246,7 +244,7 @@ class Model_Card extends Model
 		$user = Auth::instance()->get_user();
 
 		//получаем карты и смотрим текущий статус у нее
-		$card = self::getCard($params['card_id']);
+		$card = self::getCard($params['card_id'], $params['contract_id']);
 
 		if(empty($card['CARD_ID'])){
 			return false;
@@ -262,6 +260,7 @@ class Model_Card extends Model
 
 		$data = [
 			'p_card_id' 		=> $params['card_id'],
+			'p_contract_id' 	=> $params['contract_id'],
 			'p_new_state' 		=> $status,
 			'p_comment' 		=> $params['comment'],
 			'p_manager_id' 		=> $user['MANAGER_ID'],
@@ -285,13 +284,17 @@ class Model_Card extends Model
 	 */
 	public static function editCardLimits($cardId, $limits)
 	{
-		if(empty($cardId) || empty($limits)){
+		if(empty($cardId)){
 			return false;
 		}
 
 		$db = Oracle::init();
 
 		$db->procedure('card_service_refresh', ['p_card_id' => $cardId]);
+
+		if(empty($limits)){
+			return true;
+		}
 
 		$user = Auth::instance()->get_user();
 

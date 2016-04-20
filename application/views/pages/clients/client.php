@@ -26,7 +26,7 @@
                 <td class="gray right">Фактический адрес:</td>
                 <td>
                     <span toggle_block="edit_client" uid="client_f_address"><?=($client['F_ADDRESS'] ?: '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_f_address" class="dn"><input type="text" name="F_ADDRESS" value="<?=$client['F_ADDRESS']?>" <?if(Access::deny('edit_client_full')){?>disabled<?}?>></span>
+                    <span toggle_block="edit_client" uid="client_f_address" class="dn"><input type="text" name="F_ADDRESS" value="<?=$client['F_ADDRESS']?>" ></span>
                 </td>
             </tr>
             <tr>
@@ -40,7 +40,7 @@
                 <td class="gray right" valign="top">Комментарий:</td>
                 <td>
                     <span toggle_block="edit_client" uid="client_comments"><?=($client['COMMENTS'] ? str_replace("\n", "<br>", $client['COMMENTS']) : '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_comments" class="dn"><textarea name="COMMENTS" <?if(Access::deny('edit_client_full')){?>disabled<?}?>><?=$client['COMMENTS']?></textarea></span>
+                    <span toggle_block="edit_client" uid="client_comments" class="dn"><textarea name="COMMENTS"><?=$client['COMMENTS']?></textarea></span>
                 </td>
             </tr>
         </table>
@@ -50,14 +50,14 @@
                 <td class="gray right" width="170">Телефон:</td>
                 <td width="200">
                     <span toggle_block="edit_client" uid="client_phone"><?=($client['PHONE'] ?: '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_phone" class="dn"><nobr><input type="text" name="PHONE" value="<?=$client['PHONE']?>" <?if(Access::deny('edit_client_full')){?>disabled<?}?>>*</nobr></span>
+                    <span toggle_block="edit_client" uid="client_phone" class="dn"><nobr><input type="text" name="PHONE" value="<?=$client['PHONE']?>">*</nobr></span>
                 </td>
             </tr>
             <tr>
                 <td class="gray right">E-mail:</td>
                 <td>
                     <span toggle_block="edit_client" uid="client_email"><?=($client['EMAIL'] ? '<a href="mailto'.$client['EMAIL'].'">'.$client['EMAIL'].'</a>' : '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_email" class="dn"><nobr><input type="text" name="EMAIL" value="<?=$client['EMAIL']?>" <?if(Access::deny('edit_client_full')){?>disabled<?}?>>*</nobr></span>
+                    <span toggle_block="edit_client" uid="client_email" class="dn"><nobr><input type="text" name="EMAIL" value="<?=$client['EMAIL']?>">*</nobr></span>
                 </td>
             </tr>
             <tr>
@@ -78,14 +78,14 @@
                 <td class="gray right">ОГРН:</td>
                 <td>
                     <span toggle_block="edit_client" uid="client_ogrn"><?=($client['OGRN'] ?: '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_ogrn" class="dn"><input type="text" name="OGRN" value="<?=$client['OGRN']?>" <?if(Access::deny('edit_client_full')){?>disabled<?}?>></span>
+                    <span toggle_block="edit_client" uid="client_ogrn" class="dn"><input type="text" name="OGRN" value="<?=$client['OGRN']?>"></span>
                 </td>
             </tr>
             <tr>
                 <td class="gray right">ОКПО:</td>
                 <td>
                     <span toggle_block="edit_client" uid="client_okpo"><?=($client['OKPO'] ?: '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_okpo" class="dn"><input type="text" name="OKPO" value="<?=$client['OKPO']?>" <?if(Access::deny('edit_client_full')){?>disabled<?}?>></span>
+                    <span toggle_block="edit_client" uid="client_okpo" class="dn"><input type="text" name="OKPO" value="<?=$client['OKPO']?>"></span>
                 </td>
             </tr>
         </table>

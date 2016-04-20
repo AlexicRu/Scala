@@ -12,11 +12,11 @@ $user = Auth::instance()->get_user();
             <button class="btn btn_red btn_card_toggle"><span>Заблокировать</span><span style="display: none">Разблокировать</span></button>
         <?}?>
     <?}?>
-    <?if(!in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_PAYFLEX_CAN, Model_Card::CARD_TYPE_PAYFLEX_CANT])){?>
+    <?/*if(!in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_PAYFLEX_CAN, Model_Card::CARD_TYPE_PAYFLEX_CANT])){*/?>
         <?if(Access::allow('clients_card_edit')){?>
             &nbsp; <a href="#card_edit_<?=$card['CARD_ID']?>" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
         <?}?>
-    <?}?>
+    <?/*}*/?>
 </div>
 
 <b class="f18">Обороты за текущий период:</b><br>

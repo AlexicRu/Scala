@@ -111,6 +111,7 @@ foreach($cards as $card){
             if(comment != null) {
                 var params = {
                     card_id: $('.tab_v_content.active [name=card_id]').val(),
+                    contract_id: $('[name=contracts_list]').val(),
                     comment: comment
                 };
 

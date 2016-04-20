@@ -8,6 +8,7 @@ $postfix = $card['CARD_ID'];
             <input type="text" name="card_edit_holder" class="input_big" value="<?=$card['HOLDER']?>" maxlength="200">
         </td>
     </tr>
+    <?if(in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_EMV_CAN])){?>
     <tr>
         <td class="gray right v_top" width="170">Ограничения по топливу:</td>
         <td>
@@ -60,6 +61,7 @@ $postfix = $card['CARD_ID'];
             </table>
         </td>
     </tr>
+    <?}?>
     <tr>
         <td></td>
         <td>

@@ -78,7 +78,7 @@
 <script>
     $(function(){
         <?if(Access::allow('clients_payment_del')){?>
-            $(document).on('click', '.link_del_contract_payment', function(){
+            $(document).off('click', '.link_del_contract_payment').on('click', '.link_del_contract_payment', function(){
                 var t = $(this);
                 var row = t.closest('[guid]');
 

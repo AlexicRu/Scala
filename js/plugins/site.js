@@ -106,7 +106,7 @@ function cardLoad(elem, force)
     if($(".tabs_cards [tab_content="+ elem.attr('tab') +"]").text() == '' || force == true){
         $(".tabs_cards [tab_content="+ elem.attr('tab') +"]").empty().addClass('block_loading');
 
-        $.post('/clients/card/' + elem.attr('tab'), {}, function(data){
+        $.post('/clients/card/' + elem.attr('tab') + '/?contract_id=' + $('[name=contracts_list]').val(), {}, function(data){
             $(".tabs_cards [tab_content="+ elem.attr('tab') +"]").html(data).removeClass('block_loading');
         });
     }

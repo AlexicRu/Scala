@@ -163,8 +163,9 @@ class Controller_Clients extends Controller_Common {
     public function action_card()
     {
         $cardId = $this->request->param('id');
+		$contractId = $this->request->query('contract_id');
 
-        $card = Model_Card::getCard($cardId);
+        $card = Model_Card::getCard($cardId, $contractId);
 
         if(empty($card)){
             $this->html('<div class="error_block">Ошибка</div>');
