@@ -145,4 +145,52 @@ class Model_Client extends Model
 
 		return false;
 	}
+
+	/**
+	 * созданеи ЛК для пользователя
+	 *
+	 * @param $params
+	 */
+	public static function createCabinet($params)
+	{
+		if(empty($params['client_id']) || empty($params['email_to'])){
+			return false;
+		}
+
+		$db = Oracle::init();
+
+		$user = Auth::instance()->get_user();
+
+		$client = Model_Client::getClient($params['client_id']);
+
+		if(empty($client)){
+			return false;
+		}
+
+		$data = [
+			'p_client_id' 	=> $client['CLIENT_ID'],
+			'p_login' 		=> $client['EMAIL'],
+			'p_password' 	=> null,
+			'p_email_to' 	=> $params['email_to'],
+			'p_fl_send' 	=> 0,
+			'p_manager_id' 	=> $user['MANAGER_ID'],
+			'p_error_code' 	=> 'out',
+		];
+
+		$res = $db->procedure('manager_client_private_office', $data);
+
+		switch($res){
+			case Oracle::CODE_ERROR:
+			case 3:
+				return Oracle::CODE_ERROR;
+			case 2:
+				return 'Неверный email';
+			case 4:
+				return 'Линчый кабинет уже создан';
+			case 5:
+				return 'Не удалось отправить почту на указанный email';
+			default:
+				return Oracle::CODE_SUCCESS;
+		}
+	}
 }

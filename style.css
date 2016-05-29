@@ -633,6 +633,18 @@ textarea.input_w_small {
 .tab_v.active a {
   color: white;
 }
+.tab_v.active.card_blocked {
+  color: white;
+}
+.tab_v.active.card_blocked [class^="icon-"] {
+  color: white;
+}
+.tab_v.card_blocked {
+  color: #b54848;
+}
+.tab_v.card_blocked [class^="icon-"] {
+  color: #b54848;
+}
 [tab_content] {
   display: none;
 }

@@ -5,7 +5,7 @@ $user = Auth::instance()->get_user();
 ?>
 
 <div class="fr">
-    <?if(in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_EMV_CAN, Model_Card::CARD_TYPE_PAYFLEX_CAN]) || in_array($user['role'], [Access::ROLE_MANAGER, Access::ROLE_ADMIN])){?>
+    <?if(in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_EMV_CAN, Model_Card::CARD_TYPE_PAYFLEX_CAN]) || Access::allow('clients_card_toggle')){?>
         <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
             <button class="btn btn_green btn_card_toggle"><span style="display: none">Заблокировать</span><span>Разблокировать</span></button>
         <?}else{?>

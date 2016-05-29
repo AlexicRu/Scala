@@ -43,11 +43,13 @@ class Controller_Clients extends Controller_Common {
 		}
 
 		$popupContractAdd = Common::popupForm('Добавление нового договора', 'contract/add');
+		$popupCabinetCreate = Common::popupForm('Создание личного кабинета', 'client/cabinet_create');
 
 		$this->tpl
 			->bind('client', $client)
 			->bind('contracts', $contracts)
 			->bind('popupContractAdd', $popupContractAdd)
+			->bind('popupCabinetCreate', $popupCabinetCreate)
 		;
 	}
 
@@ -377,5 +379,21 @@ class Controller_Clients extends Controller_Common {
 		}
 
 		$this->jsonResult(true, ['items' => $paymentsHistory, 'more' => $more]);
+	}
+
+	/**
+	 * создание ЛК для пользователя
+	 */
+	public function action_cabinet_create()
+	{
+		$params = $this->request->post('params');
+
+		$result = Model_Client::createCabinet($params);
+
+		if(!empty($result)){
+			$this->jsonResult(false, $result);
+		}
+
+		$this->jsonResult(true);
 	}
 }

@@ -4,10 +4,13 @@ class Access
 {
     const USER_TEST 	= 6;
 
-    const ROLE_ADMIN 	        = 3;
-    const ROLE_MANAGER          = 4;
-    const ROLE_USER		        = 99;
-    const ROLE_MANAGER_SALE		= 5;
+    const ROLE_ROOT 	                = 1;
+    const ROLE_ADMIN 	                = 2;
+    const ROLE_SUPERVISOR               = 3;
+    const ROLE_MANAGER                  = 4;
+    const ROLE_USER		                = 99;
+    const ROLE_MANAGER_SALE		        = 5;
+    const ROLE_MANAGER_SALE_SUPPORT		= 6;
 
     /**
      * функция проверки доступа
@@ -20,7 +23,7 @@ class Access
 
         $user = Auth_Oracle::instance()->get_user();
 
-        if($user['role'] == self::ROLE_ADMIN){
+        if(in_array($user['role'], [self::ROLE_ROOT])){
             return true;
         }
 

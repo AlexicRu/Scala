@@ -7,12 +7,26 @@
  */
 
 return [
-    'allow' => [ //для всех остальных ролей будер запрещено
+    'allow' => [ //для всех остальных ролей будет запрещено
         // functions
+        'clients_card_toggle' => [
+            Access::ROLE_MANAGER,
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
+        'control_index' => [
+            Access::ROLE_SUPERVISOR,
+        ],
+        'client_cabinet_create' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
         // custom
         'show_setting_notices' => [
-            Access::ROLE_ADMIN
-        ]
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_ROOT
+        ],
     ],
     'deny' => [ //для всех остальных ролей будет разрешено
         // functions
@@ -60,6 +74,6 @@ return [
         ],
         'view_balance_sheet' => [
             Access::ROLE_USER
-        ]
+        ],
     ]
 ];

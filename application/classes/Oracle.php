@@ -2,6 +2,7 @@
 
 class Oracle{
 
+	const CODE_SUCCESS = 0;
 	const CODE_ERROR = 1;
 
 	public static $prefix = 's_dev.';

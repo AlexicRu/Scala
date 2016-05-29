@@ -96,7 +96,11 @@
 <div class="more_info dn" toggle_block="block1">
     <a href="#" class="btn btn_gray btn_min_width" toggle="block1">Скрыть информацию о компании</a> &nbsp;
 
-    <button class="btn" toggle="edit_client" toggle_block="edit_client"><i class="icon-pen"></i> Редактировать</button>
+    <button class="btn" toggle="edit_client" toggle_block="edit_client"><i class="icon-pen"></i> Редактировать</button> &nbsp;
+
+    <?if(Access::allow('client_cabinet_create') && empty($client['EXISTS_OFFICE'])){?>
+        <a href="#client_cabinet_create" class="btn btn_green fancy">+ Создать ЛК</a>
+    <?}?>
 
     <button class="btn btn_green dn client_edit_btn btn_reverse" toggle_block="edit_client"><i class="icon-ok"></i> Сохранить</button>
     <button class="btn btn_red dn" toggle="edit_client" toggle_block="edit_client"><i class="icon-cancel"></i> Отмена</button>
@@ -118,6 +122,10 @@
     &nbsp;&nbsp;&nbsp;<a href="#contract_add" class="btn fancy">+ Создать договор</a>
 
     <?=$popupContractAdd?>
+<?}?>
+
+<?if(Access::allow('client_cabinet_create')){?>
+    <?=$popupCabinetCreate?>
 <?}?>
 
 <div class="ajax_contract_block"></div>

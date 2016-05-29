@@ -1,0 +1,88 @@
+@import "fonts/icons/style.css";
+
+@color: #0e86ad;
+@color1: rgba(14,134,173,0.3);
+@color2: #fff;
+@color3: #999999;
+@color4: rgba(153,153,153,0.3);
+
+.transition(@param: all, @time: 0.3s, @type:ease){
+  transition: @param @time @type;
+}
+
+.checkbox_outer{}
+.checkbox_inner{
+  display: inline-block; width: 18px; height: 18px; border: 1px solid @color1; border-radius: 3px; vertical-align: bottom; cursor: pointer; text-align: center; line-height: 0; padding: 1px 0 0 0;
+  .transition();
+
+  .icon-ok{
+    display: none; font-size: 13px; color:@color2;
+  }
+
+  &.checkbox_checked{
+    background: @color; border-color: @color;
+    .icon-ok{
+      display: inline-block;
+    }
+  }
+  &.checkbox_disabled{
+    border-color: @color4; cursor: default;
+    &.checkbox_checked{
+      background: @color3; border-color: @color3;
+    }
+  }
+}
+.radio_outer{}
+.radio_inner{
+  display: inline-block; width: 18px; height: 18px; border: 1px solid @color1; border-radius: 50%; vertical-align: bottom; cursor: pointer; text-align: center; line-height: 0; padding: 3px 0 0 0;
+  .transition();
+
+  span{
+    display: none; width: 10px; height: 10px; border-radius: 50%;
+  }
+
+  &.radio_checked{
+     border-color: @color;
+    span{
+      display: inline-block; background: @color;
+    }
+  }
+  &.radio_disabled{
+    border-color: @color4; cursor: default;
+    &.radio_checked{
+      span{
+        background: @color3;
+      }
+    }
+  }
+}
+.switch_outer{}
+.switch_inner{
+  display: inline-block; height: 20px; width: 30px; border-radius: 10px; padding: 1px; line-height: 0; cursor: pointer; vertical-align: bottom; text-align: left;
+  background: @color2; border:1px solid @color1;
+  .transition();
+
+  span{
+    display: inline-block; width: 16px; height: 16px; border-radius: 50%; background: @color;
+  }
+
+  &.switch_checked{
+    padding-left: 11px;
+    background: @color;
+    span{
+      background: @color2;
+    }
+  }
+  &.switch_disabled{
+    border-color: @color4; cursor: default;
+    span{
+      background: @color3;
+    }
+    &.switch_checked{
+      background: @color3; border-color: @color3;
+      span{
+        background:@color2;
+      }
+    }
+  }
+}

@@ -1,0 +1,109 @@
+@import "fonts/icons/style.css";
+.checkbox_inner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(14, 134, 173, 0.3);
+  border-radius: 3px;
+  vertical-align: bottom;
+  cursor: pointer;
+  text-align: center;
+  line-height: 0;
+  padding: 1px 0 0 0;
+  transition: all 0.3s ease;
+}
+.checkbox_inner .icon-ok {
+  display: none;
+  font-size: 13px;
+  color: #fff;
+}
+.checkbox_inner.checkbox_checked {
+  background: #0e86ad;
+  border-color: #0e86ad;
+}
+.checkbox_inner.checkbox_checked .icon-ok {
+  display: inline-block;
+}
+.checkbox_inner.checkbox_disabled {
+  border-color: rgba(153, 153, 153, 0.3);
+  cursor: default;
+}
+.checkbox_inner.checkbox_disabled.checkbox_checked {
+  background: #999999;
+  border-color: #999999;
+}
+.radio_inner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(14, 134, 173, 0.3);
+  border-radius: 50%;
+  vertical-align: bottom;
+  cursor: pointer;
+  text-align: center;
+  line-height: 0;
+  padding: 3px 0 0 0;
+  transition: all 0.3s ease;
+}
+.radio_inner span {
+  display: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.radio_inner.radio_checked {
+  border-color: #0e86ad;
+}
+.radio_inner.radio_checked span {
+  display: inline-block;
+  background: #0e86ad;
+}
+.radio_inner.radio_disabled {
+  border-color: rgba(153, 153, 153, 0.3);
+  cursor: default;
+}
+.radio_inner.radio_disabled.radio_checked span {
+  background: #999999;
+}
+.switch_inner {
+  display: inline-block;
+  height: 20px;
+  width: 30px;
+  border-radius: 10px;
+  padding: 1px;
+  line-height: 0;
+  cursor: pointer;
+  vertical-align: bottom;
+  text-align: left;
+  background: #fff;
+  border: 1px solid rgba(14, 134, 173, 0.3);
+  transition: all 0.3s ease;
+}
+.switch_inner span {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #0e86ad;
+}
+.switch_inner.switch_checked {
+  padding-left: 11px;
+  background: #0e86ad;
+}
+.switch_inner.switch_checked span {
+  background: #fff;
+}
+.switch_inner.switch_disabled {
+  border-color: rgba(153, 153, 153, 0.3);
+  cursor: default;
+}
+.switch_inner.switch_disabled span {
+  background: #999999;
+}
+.switch_inner.switch_disabled.switch_checked {
+  background: #999999;
+  border-color: #999999;
+}
+.switch_inner.switch_disabled.switch_checked span {
+  background: #fff;
+}
