@@ -40,10 +40,13 @@ foreach($cards as $card){
                         }
                     }
                     ?>
-                    <div class="tab_v <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>card_blocked<?}?>" tab="<?=$card['CARD_ID']?>" <?if(empty($found)){?>style="display: none;"<?}?>><div>
+                    <div class="tab_v" tab="<?=$card['CARD_ID']?>" <?if(empty($found)){?>style="display: none;"<?}?>><div>
                             <span class="icon-card gray"></span>
                             <?=$card['CARD_ID']?>
                             <div class="gray"><?=$card['HOLDER']?></div>
+                            <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
+                                <span class="label label_error label_small">Заблокирована</span>
+                            <?}?>
                         </div></div>
                 <?}?>
             <?}?>
@@ -120,11 +123,12 @@ foreach($cards as $card){
                         var cnt_in_work = $('.cards_cnt_in_work');
                         var cnt_blocked = $('.cards_cnt_blocked');
 
-                        tab.parent().toggleClass('card_blocked');
                         if(t.hasClass('btn_green')){
+                            tab.append('<span class="label label_error label_small">Заблокирована</span>');
                             cnt_in_work.text(parseInt(cnt_in_work.text()) - 1);
                             cnt_blocked.text(parseInt(cnt_blocked.text()) + 1);
                         }else{
+                            tab.find('.label_error').remove();
                             cnt_in_work.text(parseInt(cnt_in_work.text()) + 1);
                             cnt_blocked.text(parseInt(cnt_blocked.text()) - 1);
                         }

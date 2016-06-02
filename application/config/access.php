@@ -14,12 +14,24 @@ return [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
         ],
-        'control_index' => [
-            Access::ROLE_SUPERVISOR,
-        ],
         'client_cabinet_create' => [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
+        ],
+        'control_index' => [
+            Access::ROLE_ROOT
+        ],
+        'reports_index' => [
+            Access::ROLE_ROOT
+        ],
+        'news_index' => [
+            Access::ROLE_ROOT
+        ],
+        'support_index' => [
+            Access::ROLE_ROOT
+        ],
+        'messages_index' => [
+            Access::ROLE_ROOT
         ],
         // custom
         'show_setting_notices' => [
@@ -27,6 +39,9 @@ return [
             Access::ROLE_SUPERVISOR,
             Access::ROLE_ROOT
         ],
+        'root' => [
+            Access::ROLE_ROOT
+        ]
     ],
     'deny' => [ //для всех остальных ролей будет разрешено
         // functions

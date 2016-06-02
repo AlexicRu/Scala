@@ -1,4 +1,4 @@
-<form method="post" onsubmit="return checkFormCustomerSettingsNotices($(this));">
+<form method="post" onsubmit="return checkFormContractNoticeSettings($(this));">
     <input type="hidden" name="form_type" value="settings_notices">
 
     <div class="switch_block">
@@ -53,7 +53,7 @@
 </form>
 
 <script>
-    function checkFormCustomerSettingsNotices(form)
+    function checkFormContractNoticeSettings(form)
     {
         return true;
     }

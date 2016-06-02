@@ -65,7 +65,8 @@ abstract class Controller_Common extends Controller_Template {
 
         View::set_global('title', implode(" :: ",$this->title));
         View::set_global('errors', $this->errors);
-
+        View::set_global('notices', Model_Message::collect(['not_read' => true]));
+        
         $this->template->content = $this->tpl;
 
         parent::after();
@@ -84,6 +85,11 @@ abstract class Controller_Common extends Controller_Template {
 
     protected function jsonResult($result, $data = []){
         self::json(['success' => $result, 'data' => $data]);
+    }
+
+    protected function _isPost()
+    {
+        return HTTP_Request::POST == $this->request->method();
     }
 
     /**

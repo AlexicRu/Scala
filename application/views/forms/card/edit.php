@@ -1,3 +1,8 @@
+<style>
+    [limit_group] td{
+        border-bottom: 1px solid #ddd;
+    }
+</style>
 <?
 $postfix = $card['CARD_ID'];
 ?>

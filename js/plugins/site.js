@@ -50,6 +50,22 @@ $(function(){
             switchBlock.find('.radio_inner').addClass('radio_disabled');
         }
     });
+
+    $('.mark_read').on('click', function () {
+        $.post('/messages/make_read', {}, function (data) {
+            if(data.success){
+                message(1, 'Сообщения отмечены прочинанными');
+                $('.notices').fadeOut();
+                $('.mail span span').remove();
+                setTimeout(function () {
+                    $('.notices').remove();
+                }, 400);
+            }else{
+                message(0, 'Ошибка');
+            }
+        });
+        return false;
+    });
 });
 
 function renderDatePicker(elem)

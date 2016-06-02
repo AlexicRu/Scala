@@ -107,9 +107,9 @@
             <?}?>
         </table>
     </div>
-    <?if(Access::allow('view_tariffs')){?>
-        <div class="col line_inner">
-        <b class="f18">Тарификация</b>
+    <div class="col line_inner">
+        <?if(Access::allow('view_tariffs')){?>
+            <b class="f18">Тарификация</b>
             <table>
                 <tr>
                     <td class="gray right">Online тариф:</td>
@@ -138,12 +138,20 @@
                     </td>
                 </tr>
             </table>
-        </div>
-    <?}?>
+        <?}?>
+        <?if(Access::allow('root')){?>
+            <br>
+            <a href="#" class="btn">История по договору</a> <a href="#contract_notice_settings" class="btn fancy">Настройка оповещений</a>
+
+            <?=$popupContractNoticeSettings?>
+        <?}?>
+    </div>
 </div>
 
 <script>
     $(function(){
+        renderElements();
+
         $("select[name=scheme]").on('change', function(){
             var t = $(this);
 

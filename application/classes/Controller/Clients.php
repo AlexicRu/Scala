@@ -95,11 +95,13 @@ class Controller_Clients extends Controller_Common {
 			case 'contract':
 				$contractSettings = Model_Contract::getContractSettings($contractId);
                 $contractTariffs = Model_Contract::getTariffs();
+				$popupContractNoticeSettings = Common::popupForm('Настройка уведомлений', 'contract/notice_settings');
 
 				$content = View::factory('/ajax/clients/contract/contract')
 					->bind('contract', $contract)
 					->bind('contractSettings', $contractSettings)
 					->bind('contractTariffs', $contractTariffs)
+					->bind('popupContractNoticeSettings', $popupContractNoticeSettings)
 				;
 				break;
 			case 'cards':

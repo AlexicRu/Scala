@@ -130,6 +130,7 @@ header {
 header > div {
   display: table-cell;
   vertical-align: middle;
+  position: relative;
 }
 .logo {
   text-align: center;
@@ -150,10 +151,10 @@ header > div {
   text-align: center;
   font-size: 20px;
 }
-.hamburger a,
-.mail a,
-.settings a,
-.logout a {
+.hamburger > a,
+.mail > a,
+.settings > a,
+.logout > a {
   display: table-cell;
   width: 70px;
   height: 70px;
@@ -162,10 +163,10 @@ header > div {
   vertical-align: middle;
   transition: all 0.3s ease;
 }
-.hamburger a:hover,
-.mail a:hover,
-.settings a:hover,
-.logout a:hover {
+.hamburger > a:hover,
+.mail > a:hover,
+.settings > a:hover,
+.logout > a:hover {
   background: #f6f6f6;
 }
 .hamburger {
@@ -191,6 +192,9 @@ header > div {
   border: none;
   font-size: 18px;
   font-family: SegoeUILight, Tahoma;
+}
+.mail:hover .notices {
+  display: block;
 }
 .personal {
   width: 220px;
@@ -340,6 +344,17 @@ a.btn:hover {
 .btn.btn_green.active {
   background: #76b548;
   border-color: #76b548;
+  color: white;
+}
+.btn.btn_orange {
+  color: darkorange;
+  border-color: rgba(255, 69, 0, 0.3);
+}
+.btn.btn_orange:hover,
+.btn.btn_orange.btn_reverse,
+.btn.btn_orange.active {
+  background: darkorange;
+  border-color: darkorange;
   color: white;
 }
 .btn [class^="icon-"] {
@@ -900,4 +915,48 @@ table {
 }
 .sb_content input[type=text] {
   margin-top: 5px;
+}
+.notices {
+  position: absolute;
+  font-size: 16px;
+  background: white;
+  top: 70px;
+  left: -30px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: none;
+  text-align: left;
+}
+.notices:before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: 55px;
+  z-index: 10;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 8px 9px 8px;
+  border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+}
+.notices:after {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 55px;
+  z-index: 11;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 8px 9px 8px;
+  border-color: transparent transparent white transparent;
+}
+.notices > div {
+  width: 220px;
+  padding: 5px 15px;
+}
+.notice {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.n_title {
+  font-weight: bold;
 }

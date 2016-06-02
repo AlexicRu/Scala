@@ -44,7 +44,20 @@
 			?>
 		</div>
 		<div class="mail">
-			<a href="#"><span class="icon-mail"><!--span>6</span></span--></a>
+			<a href="/messages"><span class="icon-mail"><?if(count($notices)){?><span><?=count($notices)?></span><?}?></span></a>
+			<?if(count($notices)){?>
+				<div class="notices">
+					<?foreach($notices as $notice){?>
+						<div class="notice">
+							<div class="n_title"><?=$notice[0]?></div>
+							<?=$notice[1]?>
+						</div>
+					<?}?>
+					<div>
+						<a href="#" class="mark_read">Отметить прочитанным</a>
+					</div>
+				</div>
+			<?}?>
 		</div>
 		<div class="settings">
 			<a href="/customer/settings"><span class="icon-gear"></span></a>

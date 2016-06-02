@@ -28,12 +28,10 @@ class Controller_Customer extends Controller_Common {
 
 		}
 
-		$settingsForm = View::factory('/forms/customer/settings');
-		$settingsNoticesForm = View::factory('/forms/customer/settings_notices');
+		$customerSettingsForm = View::factory('/forms/customer/settings');
 
 		$this->tpl
-			->bind('settingsForm', $settingsForm)
-			->bind('settingsNoticesForm', $settingsNoticesForm)
+			->bind('customerSettingsForm', $customerSettingsForm)
 		;
 	}
 }
