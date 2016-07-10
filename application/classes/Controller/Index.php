@@ -4,7 +4,6 @@ class Controller_Index extends Controller_Common {
 
 	public function action_index()
 	{
-
 	}
 
 	/**
@@ -13,8 +12,9 @@ class Controller_Index extends Controller_Common {
 	public function action_login()
 	{
 		$post = Request::current()->post();
-
+		
 		if(empty($post['login']) || empty($post['password'])){
+			Messages::put('Не заполнен логин или пароль', 'error');
 			$this->redirect('/');
 		}
 
@@ -22,6 +22,7 @@ class Controller_Index extends Controller_Common {
 			$this->redirect('/clients');
 		}
 
+		Messages::put('Неправильный логин или пароль', 'error');
         $this->redirect('/');
 	}
 

@@ -13,6 +13,7 @@ return [
             Access::ROLE_MANAGER,
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
+            Access::ROLE_USER
         ],
         'client_cabinet_create' => [
             Access::ROLE_ADMIN,

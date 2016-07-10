@@ -33,6 +33,7 @@
 		</div>
 		<div class="personal">
 			<div class="avatar" <?/*style="background-image: url(/img/pic/01.png)"*/?>><i class="icon-user"></i></div>
+			<div class="personal_name">
 			<?
 			if(!empty($user['MANAGER_NAME']) && !empty($user['MANAGER_SURNAME']) && !empty($user['MANAGER_MIDDLENAME'])){
 				echo $user['MANAGER_NAME'].' '.$user['MANAGER_SURNAME'].' '.$user['MANAGER_MIDDLENAME'];
@@ -42,6 +43,7 @@
 				echo $user['LOGIN'];
 			}
 			?>
+			</div>
 		</div>
 		<div class="mail">
 			<a href="/messages"><span class="icon-mail"><?if(count($notices)){?><span><?=count($notices)?></span><?}?></span></a>

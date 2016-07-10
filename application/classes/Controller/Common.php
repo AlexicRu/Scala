@@ -9,6 +9,8 @@ abstract class Controller_Common extends Controller_Template {
 
     public function before()
     {
+        Cache::$default = 'memcache';
+
         $controller = $this->request->controller();
         $action = $this->request->action();
 
@@ -138,7 +140,8 @@ abstract class Controller_Common extends Controller_Template {
                 '/js/plugins/jGrowl/jGrowl.css',
                 '/js/plugins/fancy/jquery.fancybox.css',
                 '/style.css',
-                '/ui.css'
+                '/ui.css',
+                '/design.css',
             ];
             $this->template->scripts = [
                 'https://yastatic.net/jquery/2.1.3/jquery.min.js',
@@ -148,12 +151,17 @@ abstract class Controller_Common extends Controller_Template {
                 '/js/plugins/site.js',
                 '/js/plugins/ui.js',
                 '/js/plugins/functions.js',
+                '/js/plugins/common.js',
             ];
         }else{
             $this->template->styles = [
-                '/style.css'
+                '/style.css',
+                '/design.css',
             ];
-            $this->template->scripts = [];
+            $this->template->scripts = [
+                'https://yastatic.net/jquery/2.1.3/jquery.min.js',
+                '/js/plugins/common.js',
+            ];
         }
     }
 } // End Common
