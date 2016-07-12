@@ -13,6 +13,7 @@ return [
             Access::ROLE_MANAGER,
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
+            Access::ROLE_USER
         ],
         'client_cabinet_create' => [
             Access::ROLE_ADMIN,
@@ -31,7 +32,11 @@ return [
             Access::ROLE_ROOT
         ],
         'messages_index' => [
-            Access::ROLE_ROOT
+            Access::ROLE_ROOT,
+            Access::ROLE_SUPERVISOR
+        ],
+        'clients_card_withdraw' => [
+            Access::ROLE_SUPERVISOR
         ],
         // custom
         'show_setting_notices' => [

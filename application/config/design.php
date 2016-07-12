@@ -7,5 +7,9 @@ return array(
     'lkoilstru' => [
         'title' => 'OilST',
         'class' => 'oilst'
+    ],
+    'mo-47gloproru' => [
+        'title' => 'ФСК Мостоотряд-47',
+        'class' => 'mo47'
     ]
 );

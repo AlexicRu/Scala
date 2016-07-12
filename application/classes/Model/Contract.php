@@ -345,4 +345,26 @@ class Model_Contract extends Model
 
 		return $turnover;
 	}
+
+	/**
+	 * получаем историю по контракту
+	 *
+	 * @param $params
+	 */
+	public static function getHistory($params)
+	{
+		if(empty($params['contract_id'])){
+			return false;
+		}
+
+		$db = Oracle::init();
+
+		$sql = "select * from ".Oracle::$prefix."v_web_cl_contract_history where contract_id = ".$params['contract_id']. ' order by date_time desc';
+
+		if(!empty($params['pagination'])) {
+			return $db->pagination($sql, $params);
+		}
+
+		return $db->query($sql);
+	}
 }

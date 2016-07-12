@@ -814,48 +814,6 @@ textarea {
   width: 100%;
   display: none;
 }
-.custom_view_scala .logo a {
-  background-image: url(/img/logo.svg);
-}
-.custom_view_scala aside {
-  background: #0e1d29;
-}
-.custom_view_scala aside a {
-  color: white;
-}
-.custom_view_scala aside a:hover,
-.custom_view_scala aside a.act {
-  background: #0e86ad;
-  color: white;
-}
-.custom_view_scala aside a:hover span,
-.custom_view_scala aside a.act span {
-  color: white;
-}
-.custom_view_scala aside a [class^="icon-"] {
-  color: rgba(255, 255, 255, 0.5);
-}
-.custom_view_oilst .logo a {
-  background-image: url(/img/projects/oilst.png);
-}
-.custom_view_oilst aside {
-  background: #bc771e;
-}
-.custom_view_oilst aside a {
-  color: white;
-}
-.custom_view_oilst aside a:hover,
-.custom_view_oilst aside a.act {
-  background: #8a7a66;
-  color: white;
-}
-.custom_view_oilst aside a:hover span,
-.custom_view_oilst aside a.act span {
-  color: white;
-}
-.custom_view_oilst aside a [class^="icon-"] {
-  color: rgba(255, 255, 255, 0.5);
-}
 .form_attention {
   background: #f6f6f6;
 }
@@ -959,4 +917,21 @@ table {
 }
 .n_title {
   font-weight: bold;
+}
+.personal_name {
+  max-height: 60px;
+  overflow-y: hidden;
+}
+.message {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 20px 30px;
+  margin: 20px 0;
+}
+.message .message_close {
+  float: right;
+  cursor: pointer;
+}
+.message-error {
+  background: lightsalmon;
 }

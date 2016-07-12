@@ -8,6 +8,9 @@
 	<?foreach($styles as $style){?>
 		<link href="<?=$style?>" rel="stylesheet">
 	<?}?>
+	<?foreach($scripts as $script){?>
+		<script src="<?=$script?>"></script>
+	<?}?>
 </head>
 
 <body class="custom_view_<?=$customView?>">
@@ -28,6 +31,15 @@
 					<button class="btn">Войти</button>
 				</form>
 			</div>
+			
+			<?
+			$messages = Messages::get();
+			if(!empty($messages)){
+				foreach($messages as $message){
+					echo '<div class="message message-'.$message['type'].'">'.$message['text'].'<span class="message_close icon-cancel"></span></div>';
+				}
+			}
+			?>
 		</div>
 	</div>
 </body>

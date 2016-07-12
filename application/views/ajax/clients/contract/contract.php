@@ -139,9 +139,14 @@
                 </tr>
             </table>
         <?}?>
+
+        <br>
+        <a href="#contract_history" class="btn fancy">История по договору</a>
+
+        <?=$popupContractHistory?>
+        
         <?if(Access::allow('root')){?>
-            <br>
-            <a href="#" class="btn">История по договору</a> <a href="#contract_notice_settings" class="btn fancy">Настройка оповещений</a>
+            <a href="#contract_notice_settings" class="btn fancy">Настройка оповещений</a>
 
             <?=$popupContractNoticeSettings?>
         <?}?>

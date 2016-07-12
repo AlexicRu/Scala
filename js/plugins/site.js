@@ -128,7 +128,7 @@ function cardLoad(elem, force)
     }
 }
 
-function paginationAjax(url, name, callback)
+function paginationAjax(url, name, callback, params)
 {
     var outer = $('.' + name + '_out');
     var block = $('<div class="' + name + '" />');
@@ -138,16 +138,22 @@ function paginationAjax(url, name, callback)
     outer.append(more);
     outer.data('offset', 0);
 
-    _paginationAjaxLoad(url, outer, block, callback);
+    _paginationAjaxLoad(url, outer, block, callback, params);
     more.on('click', function(){
-        _paginationAjaxLoad(url, outer, block, callback);
+        _paginationAjaxLoad(url, outer, block, callback, params);
     });
 }
-function _paginationAjaxLoad(url, outer, block, callback)
+function _paginationAjaxLoad(url, outer, block, callback, params)
 {
+    if(!params){
+        params = {};
+    }
+    
     outer.find('.ajax_block_more').fadeOut();
 
-    $.post(url, {offset:outer.data('offset')}, function(data){
+    params.offset = outer.data('offset');
+    
+    $.post(url, params, function(data){
         if(data.success){
             callback(data.data.items, block);
             if(data.data.more){

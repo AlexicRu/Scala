@@ -152,4 +152,30 @@ foreach($cards as $card){
             block.append(tpl);
         }
     }
+
+    /**
+     * изъятие карты
+     * @param cardId
+     */
+    function cardWithdraw(cardId)
+    {
+        if(!confirm('Изъять карту из договора?')){
+            return false;
+        }
+        var params = {
+            card_id: cardId,
+            contract_id: $('[name=contracts_list]').val()
+        };
+
+        $.post('/clients/card_withdraw', {params:params}, function (data) {
+            if (data.success) {
+
+                message(1, 'Успешное изъятие');
+                loadContract('cards');
+            } else {
+                message(0, 'Ошибка изъятия');
+            }
+        });
+        return false;
+    }
 </script>

@@ -28,16 +28,19 @@ class Auth_Oracle extends Auth {
         }
 
         // If the passwords match, perform a login
-        if (!empty($user['PASSWORD']) && $user['PASSWORD'] === $password)
-        {
-            // Finish the login
-            $this->complete_login($user);
-
-            return TRUE;
+        if (empty($user['PASSWORD']) || $user['PASSWORD'] !== $password){
+            Messages::put('Неправильный логин или пароль', 'error');
+            return false;
         }
 
-        // Login failed
-        return FALSE;
+        if($user['STATE_ID'] != 1){
+            Messages::put('Доступ запрещен', 'error');
+            return false;
+        }
+
+        // Finish the login
+        $this->complete_login($user);
+        return true;
     }
 
     /**

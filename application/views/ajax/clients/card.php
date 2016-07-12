@@ -12,14 +12,14 @@ $user = Auth::instance()->get_user();
             <button class="btn btn_red btn_card_toggle"><span><i class="icon-block"></i> Заблокировать</span><span style="display: none"><i class="icon-backblock"></i> Разблокировать</span></button>
         <?}?>
     <?}?>
+    <?if(Access::allow('clients_card_withdraw')){?>
+        &nbsp; <a href="#" class="btn btn_orange" onclick="cardWithdraw('<?=$card['CARD_ID']?>')"><i class="icon-cancel"></i> Изъять</a>
+    <?}?>
     <?/*if(!in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_PAYFLEX_CAN, Model_Card::CARD_TYPE_PAYFLEX_CANT])){*/?>
         <?if(Access::allow('clients_card_edit')){?>
             &nbsp; <a href="#card_edit_<?=$card['CARD_ID']?>" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
         <?}?>
     <?/*}*/?>
-    <?if(Access::allow('root')){?>
-        &nbsp; <a href="#" class="btn btn_orange"><i class="icon-cancel"></i> Изъять</a>
-    <?}?>
 </div>
 
 <b class="f18">Обороты за текущий период:</b><br>
@@ -57,12 +57,13 @@ $user = Auth::instance()->get_user();
 <div class="ajax_block_operations_history_<?=$card['CARD_ID']?>_out">
     <b class="f18">История операций:</b>
 </div>
+
+<?if(Access::allow('clients_card_edit')){?>
+    <?=$popupCardEdit?>
+<?}?>
+
 <script>
     $(function(){
         paginationAjax('/clients/card_operations_history/<?=$card['CARD_ID']?>', 'ajax_block_operations_history_<?=$card['CARD_ID']?>', renderAjaxPaginationOperationsHistory);
     });
 </script>
-
-<?if(Access::allow('clients_card_edit')){?>
-    <?=$popupCardEdit?>
-<?}?>
