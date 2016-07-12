@@ -2,51 +2,36 @@
 
 class Model_Message extends Model
 {
+    const STATUS_NOTREAD = 0;
+    const STATUS_READ = 1;
+
     /**
      * собираем доступные пользовалю сообщения
      *
      * @param array $params
-     * @param bool $user
      * @return array
      */
-    public static function collect($params = [], $user = false)
+    public static function collect($params = [])
     {
         if(empty($user)){
             $user = Auth::instance()->get_user();
         }
 
-        //todo
+        $db = Oracle::init();
+
+        $sql = "select * from ".Oracle::$prefix."V_WEB_NOTIFICATION where manager_id = ".$user['MANAGER_ID'];
 
         if(!empty($params['not_read'])){
-            
+            $sql .= ' and status = '.self::STATUS_NOTREAD;
         }
 
-        /*if(!empty($params['pagination'])) {
-            return $db->pagination($sql, $params);
-        }*/
-        
-        $notice = [];
-
-        if($user['ROLE_ID'] == Access::ROLE_ROOT) {
-            $notice = [
-                50 => ['title', 'text'],
-                51 => ['title title', 'text огромный текст'],
-                52 => ['title', 'text а вот тут можно было и поэму какую-нить написать, вот как все длинно'],
-                53 => ['title очень длинный заголовок', 'text'],
-                54 => ['title', 'text'],
-                55 => ['title ну прям совсем неприлично длинный заголовок', 'text'],
-                60 => ['title', 'text'],
-                70 => ['title', 'text'],
-                83 => ['title', 'text'],
-                100 => ['title', 'text'],
-            ];
-        }
+        $sql .= ' order by date_time desc';
 
         if(!empty($params['pagination'])) {
-            return [$notice, true];
+            return $db->pagination($sql, $params);
         }
 
-        return $notice;
+        return $db->query($sql);
     }
 
 
@@ -55,13 +40,26 @@ class Model_Message extends Model
      *
      * @param bool $user
      */
-    public static function makeRead($user = false)
+    public static function makeRead($params = [], $user = false)
     {
+        $db = Oracle::init();
+
         if(empty($user)){
             $user = Auth::instance()->get_user();
         }
 
-        //todo
+        $data = [
+            'p_note_guid' 		=> $params['note_guid'],
+            'p_new_status' 	    => self::STATUS_READ,
+            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = $db->procedure('notification_change_status', $data);
+
+        if(!empty($res)){
+            return $res;
+        }
 
         return true;
     }

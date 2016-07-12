@@ -22,7 +22,6 @@ class Controller_Index extends Controller_Common {
 			$this->redirect('/clients');
 		}
 
-		Messages::put('Неправильный логин или пароль', 'error');
         $this->redirect('/');
 	}
 

@@ -67,7 +67,10 @@ abstract class Controller_Common extends Controller_Template {
 
         View::set_global('title', implode(" :: ",$this->title));
         View::set_global('errors', $this->errors);
-        View::set_global('notices', Model_Message::collect(['not_read' => true]));
+
+        if(Auth::instance()->logged_in()) {
+            View::set_global('notices', Model_Message::collect(['not_read' => true]));
+        }
         
         $this->template->content = $this->tpl;
 

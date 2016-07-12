@@ -12,11 +12,10 @@
     });
 
     function renderAjaxPaginationMessages(data, block) {
-        console.log(data);
         for(var i = 0 in data){
             var tpl = $('<div class="notice"><div class="n_title"></div></div>');
-            tpl.find('.n_title').text(data[i][0]);
-            tpl.append(data[i][1]);
+            tpl.find('.n_title').text(data[i]['SUBJECT']);
+            tpl.append(data[i]['NOTIFICATION_BODY']);
             block.append(tpl);
         }
     }

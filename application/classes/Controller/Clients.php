@@ -96,12 +96,14 @@ class Controller_Clients extends Controller_Common {
 				$contractSettings = Model_Contract::getContractSettings($contractId);
                 $contractTariffs = Model_Contract::getTariffs();
 				$popupContractNoticeSettings = Common::popupForm('Настройка уведомлений', 'contract/notice_settings');
+				$popupContractHistory = Common::popupForm('История по договору', 'contract/history');
 
 				$content = View::factory('/ajax/clients/contract/contract')
 					->bind('contract', $contract)
 					->bind('contractSettings', $contractSettings)
 					->bind('contractTariffs', $contractTariffs)
 					->bind('popupContractNoticeSettings', $popupContractNoticeSettings)
+					->bind('popupContractHistory', $popupContractHistory)
 				;
 				break;
 			case 'cards':
@@ -397,5 +399,43 @@ class Controller_Clients extends Controller_Common {
 		}
 
 		$this->jsonResult(true);
+	}
+
+	/**
+	 * изымаем новую карту
+	 */
+	public function action_card_withdraw()
+	{
+		$params = $this->request->post('params');
+
+		$result = Model_Card::withdrawCard($params);
+
+		if($result === true){
+			$this->jsonResult(true);
+		}
+
+		$this->jsonResult(false);
+	}
+
+	/**
+	 * список состояний контракта
+	 */
+	public function action_contract_history()
+	{
+		if($this->_isPost()) {
+			$params = [
+				'contract_id'	=> $this->request->post('contract_id'), 
+				'offset' 		=> $this->request->post('offset'),
+				'pagination' 	=> true
+			];
+
+			list($history, $more) = Model_Contract::getHistory($params);
+
+			if(empty($history)){
+				$this->jsonResult(false);
+			}
+
+			$this->jsonResult(true, ['items' => $history, 'more' => $more]);
+		}		
 	}
 }

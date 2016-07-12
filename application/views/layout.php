@@ -49,10 +49,16 @@
 			<a href="/messages"><span class="icon-mail"><?if(count($notices)){?><span><?=count($notices)?></span><?}?></span></a>
 			<?if(count($notices)){?>
 				<div class="notices">
-					<?foreach($notices as $notice){?>
+					<?
+					$i = 5;
+					foreach($notices as $notice){
+						if($i-- < 0){
+							break;
+						}
+						?>
 						<div class="notice">
-							<div class="n_title"><?=$notice[0]?></div>
-							<?=$notice[1]?>
+							<div class="n_title"><?=$notice['SUBJECT']?></div>
+							<?=$notice['NOTIFICATION_BODY']?>
 						</div>
 					<?}?>
 					<div>

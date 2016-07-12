@@ -343,4 +343,36 @@ class Model_Card extends Model
 
 		return $db->query($sql);
 	}
+
+	/**
+	 * изъятие карты
+	 *
+	 * @param $params
+	 * @return bool|int
+	 */
+	public static function withdrawCard($params)
+	{
+		if(empty($params['contract_id']) || empty($params['card_id'])){
+			return false;
+		}
+
+		$db = Oracle::init();
+
+		$user = Auth::instance()->get_user();
+
+		$data = [
+			'p_card_id' 		=> $params['card_id'],
+			'p_contract_id' 	=> $params['contract_id'],
+			'p_manager_id' 		=> $user['MANAGER_ID'],
+			'p_error_code' 		=> 'out',
+		];
+
+		$res = $db->procedure('card_contract_withdraw', $data);
+
+		if(!empty($res)){
+			return $res;
+		}
+
+		return true;
+	}
 }

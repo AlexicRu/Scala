@@ -32,7 +32,7 @@ class Controller_Messages extends Controller_Common {
 	 */
 	public function action_make_read()
 	{
-		$res = Model_Message::makeRead();
+		$res = Model_Message::makeRead(['note_guid' => null]);
 		
 		if(empty($res)){
 			$this->jsonResult(false);
