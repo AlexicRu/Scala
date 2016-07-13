@@ -359,7 +359,7 @@ class Model_Contract extends Model
 
 		$db = Oracle::init();
 
-		$sql = "select * from ".Oracle::$prefix."v_web_cl_contract_history where contract_id = ".$params['contract_id']. ' order by history_date_time desc';
+		$sql = "select * from ".Oracle::$prefix."v_web_cl_contract_history where contract_id = ".$params['contract_id']. ' order by history_date desc';
 
 		if(!empty($params['pagination'])) {
 			return $db->pagination($sql, $params);
