@@ -24,6 +24,9 @@ class Model_Message extends Model
         if(!empty($params['not_read'])){
             $sql .= ' and status = '.self::STATUS_NOTREAD;
         }
+        if(!empty($params['search'])){
+            //todo
+        }
 
         $sql .= ' order by date_time desc';
 

@@ -57,6 +57,7 @@ $(function(){
                 message(1, 'Сообщения отмечены прочинанными');
                 $('.notices').fadeOut();
                 $('.mail span span').remove();
+                $('.unread0').removeClass('unread0');
                 setTimeout(function () {
                     $('.notices').remove();
                 }, 400);

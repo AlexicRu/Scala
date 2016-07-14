@@ -62,7 +62,7 @@
 						</div>
 					<?}?>
 					<div>
-						<a href="#" class="mark_read">Отметить прочитанным</a>
+						<a href="#" class="mark_read"><i class="icon-ok"></i> Отметить прочитанным</a>
 					</div>
 				</div>
 			<?}?>

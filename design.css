@@ -1,0 +1,63 @@
+.custom_view_scala .logo a {
+  background-image: url(/img/logo.svg);
+}
+.custom_view_scala aside {
+  background: #0e1d29;
+}
+.custom_view_scala aside a {
+  color: white;
+}
+.custom_view_scala aside a:hover,
+.custom_view_scala aside a.act {
+  background: #0e86ad;
+  color: white;
+}
+.custom_view_scala aside a:hover span,
+.custom_view_scala aside a.act span {
+  color: white;
+}
+.custom_view_scala aside a [class^="icon-"] {
+  color: rgba(255, 255, 255, 0.5);
+}
+.custom_view_oilst .logo a {
+  background-image: url(/img/projects/oilst.png);
+}
+.custom_view_oilst aside {
+  background: #bc771e;
+}
+.custom_view_oilst aside a {
+  color: white;
+}
+.custom_view_oilst aside a:hover,
+.custom_view_oilst aside a.act {
+  background: #8a7a66;
+  color: white;
+}
+.custom_view_oilst aside a:hover span,
+.custom_view_oilst aside a.act span {
+  color: white;
+}
+.custom_view_oilst aside a [class^="icon-"] {
+  color: rgba(255, 255, 255, 0.5);
+}
+.custom_view_mo47 .logo a {
+  background-image: url(/img/projects/mo47.png);
+}
+.custom_view_mo47 aside {
+  background: #ddd;
+}
+.custom_view_mo47 aside a {
+  color: white;
+}
+.custom_view_mo47 aside a:hover,
+.custom_view_mo47 aside a.act {
+  background: #4D8FC7;
+  color: white;
+}
+.custom_view_mo47 aside a:hover span,
+.custom_view_mo47 aside a.act span {
+  color: white;
+}
+.custom_view_mo47 aside a [class^="icon-"] {
+  color: rgba(255, 255, 255, 0.5);
+}

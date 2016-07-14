@@ -13,8 +13,9 @@ class Controller_Messages extends Controller_Common {
 	{
 		if($this->_isPost()) {
 			$params = [
-				'offset' => $this->request->post('offset'),
-				'pagination' => true
+				'offset'        => $this->request->post('offset'),
+				'search'        => $this->request->post('search'),
+				'pagination'    => true
 			];
 
 			list($messages, $more) = Model_Message::collect($params);
@@ -25,6 +26,12 @@ class Controller_Messages extends Controller_Common {
 
 			$this->jsonResult(true, ['items' => $messages, 'more' => $more]);
 		}
+
+        $search = $this->request->query('m_search');
+
+        $this->tpl
+            ->bind('mSearch', $search)
+        ;
 	}
 
 	/**
