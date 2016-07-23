@@ -142,7 +142,7 @@ header{
 aside{
   vertical-align: top; position: fixed; width: 210px; overflow: hidden; z-index: 2; height: 100%; padding-top: 85px;
   .transition();
-  a{
+  >a, .sub_menu_title{
     display: block; vertical-align: middle; font-size: 18px; text-decoration: none; font-family: @SegoeUISemiBold; padding: 9px 0 13px 55px; width: 210px;
     .transition();
     &:hover, &.act{
@@ -345,18 +345,54 @@ input[type=text], input[type=password], input[type=number], select, textarea{
   input[type=text]{
     padding-left: 40px;
   }
-  [class^="icon-"]{
+  i[class^="icon-"]{
     position: absolute; top:15px; left:15px;
   }
 }
 .tabs_vertical_block{
   background: #f6f6f6; display: table; width: 100%;
 }
+.tabs_bordered{
+  border:  1px solid rgba(0,0,0,.1);
+}
 .tabs_v{
   width: 365px; display: table-cell; vertical-align: top;
 }
+.tabs_managers{
+  border:  1px solid rgba(0,0,0,.1);
+
+  .tabs_v{
+    width: 260px; border-right: 1px solid rgba(0,0,0,.1);
+    .tab_v{
+      padding: 13px 20px 15px 20px; min-height: 50px;
+    }
+  }
+  .tabs_v_content{
+    &.block_loading{
+      margin: 0;
+    }
+  }
+  .tabs_block{
+    padding: 0;
+  }
+  .tabs_content{
+    border-right: none; border-bottom: none; border-left: none;
+  }
+  .tab{
+    background: none;
+    &.active{
+      border-top-color: transparent;
+    }
+    &:first-child{
+      border-left-color: transparent;
+    }
+  }
+}
 .tabs_v_content{
-   background: white; padding: 20px; display: table-cell; vertical-align: top;
+   background: white; padding: 20px; display: table-cell; vertical-align: top; min-height: 200px;
+  &.tabs_content_no_padding{
+    padding: 0;
+  }
 }
 .tab_v{
   padding: 13px 20px 15px 60px; border-bottom:  1px solid rgba(0,0,0,.1); position: relative; cursor: pointer; min-height: 70px; display: table; width: 100%;
@@ -643,5 +679,17 @@ table{
   }
   &.unread0{
     background: #f6f6f6;
+  }
+}
+.sub_menu_items{
+  display: none; background: rgba(255,255,255,.05); font-size: 16px; padding-top: 9px;
+  >div{
+    padding: 0 0 13px 55px;
+  }
+  a{
+    color:#ddd; text-decoration: none;
+    &:hover, &.act{
+      text-decoration: none; color: @color1;
+    }
   }
 }

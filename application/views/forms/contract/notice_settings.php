@@ -48,7 +48,7 @@
     </div>
     <div class="switch_block">
         <span class="sb_block"></span>
-        <button class="btn btn_green btn_reverse btn_customer_settings_go"><i class="icon-ok"></i> Сохранить</button>
+        <button class="btn btn_green btn_reverse btn_manager_settings_go"><i class="icon-ok"></i> Сохранить</button>
     </div>
 </form>
 

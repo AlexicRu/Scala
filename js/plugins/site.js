@@ -6,7 +6,7 @@ $(function(){
     $(document).on('click', "[tab]", function(){
         var t = $(this);
         var block = t.closest('.tabs_switcher');
-        $('[tab_content], [tab]', block).removeClass('active');
+        $(' > div > [tab_content], > div > [tab], > div > .scroll > [tab]', block).removeClass('active');
         t.addClass('active');
         $('[tab_content='+ t.attr('tab') +']', block).addClass('active');
         return false;
@@ -106,15 +106,18 @@ function renderScroll(elem, height)
 {
     setTimeout(function(){
         if(height == undefined) {
-            elem.css('height', elem.parent().height());
+            height = elem.parent().height();
         }else{
             if(height < 0){
                 height = elem.parent().height() + height;
             }
-            elem.css('height', height);
         }
 
-        elem.show();
+        if(height < 100){
+            height = 100;
+        }
+
+        elem.css('height', height).show();
     }, 500);
 }
 

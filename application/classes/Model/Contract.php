@@ -2,6 +2,25 @@
 
 class Model_Contract extends Model
 {
+    const STATE_CONTRACT_WORK 			= 1;
+    const STATE_CONTRACT_BLOCKED 		= 9;
+    const STATE_CONTRACT_EXPIRED 		= 5;
+    const STATE_CONTRACT_NOT_IN_WORK 	= 6;
+
+    public static $statusContractNames = [
+        self::STATE_CONTRACT_WORK 			=> 'В работе',
+        self::STATE_CONTRACT_NOT_IN_WORK 	=> 'Не в работе',
+        self::STATE_CONTRACT_BLOCKED 		=> 'Заблокирован',
+        self::STATE_CONTRACT_EXPIRED 		=> 'Завершен',
+    ];
+
+    public static $statusContractClasses = [
+        self::STATE_CONTRACT_WORK 			=> 'label_success',
+        self::STATE_CONTRACT_NOT_IN_WORK 	=> 'label_info',
+        self::STATE_CONTRACT_BLOCKED 		=> 'label_error',
+        self::STATE_CONTRACT_EXPIRED 		=> 'label_warning',
+    ];
+
 	const DEFAULT_DATE_END				= '31.12.2099';
     const CURRENCY_RUR 		            = 643;
 

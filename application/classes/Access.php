@@ -12,6 +12,13 @@ class Access
     const ROLE_MANAGER_SALE		        = 5;
     const ROLE_MANAGER_SALE_SUPPORT		= 6;
 
+    public static $roles = [
+        self::ROLE_MANAGER              => 'Менеджер',
+        self::ROLE_USER                 => 'Пользователь',
+        self::ROLE_MANAGER_SALE         => 'Менеджер 1',
+        self::ROLE_MANAGER_SALE_SUPPORT => 'Менеджер 2',
+    ];
+
     /**
      * функция проверки доступа
      */
@@ -33,8 +40,14 @@ class Access
         $deny = $access['deny'];
 
         if(
-            (isset($allow[$action]) && !in_array($user['role'], $allow[$action])) ||
-            (isset($deny[$action]) && in_array($user['role'], $deny[$action]))
+            (isset($allow[$action]) && (
+                !in_array($user['role'], $allow[$action]) &&
+                !in_array('u_'.$user['MANAGER_ID'], $allow[$action])
+            )) ||
+            (isset($deny[$action]) && (
+                in_array($user['role'], $deny[$action]) ||
+                in_array('u_'.$user['MANAGER_ID'], $deny[$action])
+            ))
         ){
             return false;
         }
