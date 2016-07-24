@@ -469,8 +469,17 @@ table{
     input, textarea, .datepicker_out{
       width: 100%;
     }
-    td.v_top{
-      vertical-align: top;
+    tr{
+      &.dark{
+        td{
+          background: #f6f6f6;
+        }
+      }
+    }
+    td{
+      &.v_top {
+        vertical-align: top;
+      }
     }
     .table_form{
       td{
@@ -691,5 +700,13 @@ table{
     &:hover, &.act{
       text-decoration: none; color: @color1;
     }
+  }
+}
+sup{
+  &.required{
+    color: #b54848;
+    font-size: 120%;
+    line-height: 90%;
+    font-weight: bold;
   }
 }

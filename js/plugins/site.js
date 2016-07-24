@@ -90,18 +90,6 @@ function renderDatePicker(elem)
     elem.datepicker(options);
 }
 
-function message(type, text)
-{
-    if(type == 0){
-        type = 'Ошибка!';
-    }
-    if(type == 1){
-        type = 'Успех!';
-    }
-
-    $.jGrowl(text, { header: type });
-}
-
 function renderScroll(elem, height)
 {
     setTimeout(function(){

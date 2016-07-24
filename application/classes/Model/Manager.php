@@ -178,4 +178,61 @@ class Model_Manager extends Model
 
         return false;
     }
+
+    /**
+     * у выбранного менеджера удаляем клиента
+     *
+     * @param $managerId
+     * @param $clientId
+     */
+    public static function delClient($managerId, $clientId)
+    {
+        if(empty($managerId) || empty($clientId)){
+            return Oracle::CODE_ERROR;
+        }
+
+        //todo
+
+        return Oracle::CODE_SUCCESS;
+    }
+
+    /**
+     * добавляем менеджера
+     *
+     * @param $params
+     */
+    public static function addManager($params)
+    {
+        if(empty($params['role']) || empty($params['login']) || empty($params['password'])){
+            return false;
+        }
+        if($params['password'] != $params['password_again']){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_manager_role_id' 	=> $params['role'],
+            'p_manager_name' 	    => empty($params['name']) ? '' : $params['name'],
+            'p_manager_surname' 	=> empty($params['surname']) ? '' : $params['surname'],
+            'p_manager_midname' 	=> empty($params['middlename']) ? '' : $params['middlename'],
+            'p_login' 	            => $params['login'],
+            'p_password' 	        => $params['password'],
+            'p_phone' 	            => empty($params['phone']) ? '' : $params['phone'],
+            'p_email' 	            => empty($params['email']) ? '' : $params['email'],
+            'p_manager_id' 		    => $user['MANAGER_ID'],
+            'p_new_manager_id' 		=> 'out',
+            'p_error_code' 		    => 'out',
+        ];
+
+        $res = $db->procedure('ctrl_manager_add', $data);
+
+        if($res == Oracle::CODE_ERROR){
+            return false;
+        }
+        return true;
+    }
 }

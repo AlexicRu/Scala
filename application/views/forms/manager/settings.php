@@ -8,6 +8,9 @@ if(empty($width)){
 if(!isset($reload)){
     $reload = true;
 }
+if(empty($changeRole)){
+    $changeRole = false;
+}
 ?>
 <form method="post" onsubmit="return checkFormManagerSettings($(this));">
     <input type="hidden" name="form_type" value="settings">
@@ -44,6 +47,18 @@ if(!isset($reload)){
                         <input type="text" name="manager_settings_phone" class="input_big" value="<?=$manager['CELLPHONE']?>">
                     </td>
                 </tr>
+                <?if($changeRole){?>
+                    <tr>
+                        <td class="gray right">Роль:</td>
+                        <td>
+                            <select name="manager_settings_role" class="select_big">
+                                <?foreach(Access::$roles as $role => $name){?>
+                                    <option value="<?=$role?>"><?=$name?></option>
+                                <?}?>
+                            </select>
+                        </td>
+                    </tr>
+                <?}?>
                 <tr>
                     <td></td>
                     <td>

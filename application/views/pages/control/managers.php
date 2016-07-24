@@ -7,7 +7,7 @@
         </div></div>
 
         <div class="tab_v"><div>
-            <a href="#manager_user" class="fancy">Добавить менеджера</a>
+            <a href="#manager_add" class="fancy">Добавить менеджера</a>
         </div></div>
 
         <div class="scroll">
@@ -35,6 +35,8 @@
         <?}?>
     </div>
 </div>
+
+<?=$popupManagerAdd?>
 
 <script>
     $(function(){

@@ -27,9 +27,12 @@ class Controller_Control extends Controller_Common {
 
         $managers = Model_Manager::getManagersList($params);
 
+        $popupManagerAdd = Common::popupForm('Добавление менеджера', 'manager/add');
+
         $this->tpl
             ->bind('managers', $managers)
             ->bind('mSearch', $search)
+            ->bind('popupManagerAdd', $popupManagerAdd)
         ;
     }
 
@@ -52,6 +55,7 @@ class Controller_Control extends Controller_Common {
             ->set('manager', $manager)
             ->set('width', 100)
             ->set('reload', 0)
+            ->set('changeRole', 1)
         ;
 
         $html = View::factory('/ajax/control/manager')

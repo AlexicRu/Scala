@@ -735,6 +735,9 @@ table.table_form textarea,
 table.table_form .datepicker_out {
   width: 100%;
 }
+table.table_form tr.dark td {
+  background: #f6f6f6;
+}
 table.table_form td.v_top {
   vertical-align: top;
 }
@@ -1024,4 +1027,10 @@ table {
 .sub_menu_items a.act {
   text-decoration: none;
   color: #0e86ad;
+}
+sup.required {
+  color: #b54848;
+  font-size: 120%;
+  line-height: 90%;
+  font-weight: bold;
 }

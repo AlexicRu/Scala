@@ -5,16 +5,21 @@ class Model_Client extends Model
 	/**
 	 * получаем список клиентов
 	 */
-	public static function getClientsList($search = null)
+	public static function getClientsList($search = null, $params = [])
 	{
 		$db = Oracle::init();
 
-		$user = Auth::instance()->get_user();
+        if(empty($params['manager_id'])){
+            $user = Auth::instance()->get_user();
+            $managerId = $user['MANAGER_ID'];
+        }else{
+            $managerId = $params['manager_id'];
+        }
 
 		$sql = "
 			select *
 			from ".Oracle::$prefix."v_web_clients_title v
-			where v.manager_id = ".Oracle::quote($user['MANAGER_ID'])
+			where v.manager_id = ".Oracle::quote($managerId)
 		;
 
 		if(!is_null($search)){

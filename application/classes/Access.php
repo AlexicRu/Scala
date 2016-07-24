@@ -14,9 +14,9 @@ class Access
 
     public static $roles = [
         self::ROLE_MANAGER              => 'Менеджер',
-        self::ROLE_USER                 => 'Пользователь',
         self::ROLE_MANAGER_SALE         => 'Менеджер 1',
         self::ROLE_MANAGER_SALE_SUPPORT => 'Менеджер 2',
+        self::ROLE_SUPERVISOR           => 'Супервайзер',
     ];
 
     /**
