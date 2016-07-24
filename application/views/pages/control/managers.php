@@ -1,4 +1,4 @@
-<h1>Менеджеры</h1>
+<h1><?=Lng::phrase('managers')?></h1>
 
 <div class="tabs_vertical_block tabs_switcher tabs_managers">
     <div class="tabs_v">
