@@ -2,8 +2,8 @@
 
 class Model_Message extends Model
 {
-    const STATUS_NOTREAD = 0;
-    const STATUS_READ = 1;
+    const MESSAGE_STATUS_NOTREAD = 0;
+    const MESSAGE_STATUS_READ = 1;
 
     /**
      * собираем доступные пользовалю сообщения
@@ -22,7 +22,10 @@ class Model_Message extends Model
         $sql = "select * from ".Oracle::$prefix."V_WEB_NOTIFICATION where manager_id = ".$user['MANAGER_ID'];
 
         if(!empty($params['not_read'])){
-            $sql .= ' and status = '.self::STATUS_NOTREAD;
+            $sql .= ' and status = '.self::MESSAGE_STATUS_NOTREAD;
+        }
+        if(!empty($params['search'])){
+            //todo
         }
 
         $sql .= ' order by date_time desc';
@@ -50,7 +53,7 @@ class Model_Message extends Model
 
         $data = [
             'p_note_guid' 		=> $params['note_guid'],
-            'p_new_status' 	    => self::STATUS_READ,
+            'p_new_status' 	    => self::MESSAGE_STATUS_READ,
             'p_manager_id' 		=> $user['MANAGER_ID'],
             'p_error_code' 		=> 'out',
         ];

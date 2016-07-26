@@ -1,0 +1,83 @@
+.custom_view_scala .logo a {
+  background-image: url(/img/logo.svg);
+}
+.custom_view_scala aside {
+  background: #0e1d29;
+}
+.custom_view_scala aside > a,
+.custom_view_scala aside .sub_menu_title {
+  color: white;
+}
+.custom_view_scala aside > a:hover,
+.custom_view_scala aside .sub_menu_title:hover,
+.custom_view_scala aside > a.act,
+.custom_view_scala aside .sub_menu_title.act {
+  background: #0e86ad;
+  color: white;
+}
+.custom_view_scala aside > a:hover span,
+.custom_view_scala aside .sub_menu_title:hover span,
+.custom_view_scala aside > a.act span,
+.custom_view_scala aside .sub_menu_title.act span {
+  color: white;
+}
+.custom_view_scala aside > a [class^="icon-"],
+.custom_view_scala aside .sub_menu_title [class^="icon-"] {
+  color: rgba(255, 255, 255, 0.5);
+}
+.custom_view_oilst .logo a {
+  background-image: url(/img/projects/oilst.png);
+}
+.custom_view_oilst > a,
+.custom_view_oilst .sub_menu_title {
+  background: #bc771e;
+}
+.custom_view_oilst > a a,
+.custom_view_oilst .sub_menu_title a {
+  color: white;
+}
+.custom_view_oilst > a a:hover,
+.custom_view_oilst .sub_menu_title a:hover,
+.custom_view_oilst > a a.act,
+.custom_view_oilst .sub_menu_title a.act {
+  background: #8a7a66;
+  color: white;
+}
+.custom_view_oilst > a a:hover span,
+.custom_view_oilst .sub_menu_title a:hover span,
+.custom_view_oilst > a a.act span,
+.custom_view_oilst .sub_menu_title a.act span {
+  color: white;
+}
+.custom_view_oilst > a a [class^="icon-"],
+.custom_view_oilst .sub_menu_title a [class^="icon-"] {
+  color: rgba(255, 255, 255, 0.5);
+}
+.custom_view_mo47 .logo a {
+  background-image: url(/img/projects/mo47.png);
+}
+.custom_view_mo47 > a,
+.custom_view_mo47 .sub_menu_title {
+  background: #ddd;
+}
+.custom_view_mo47 > a a,
+.custom_view_mo47 .sub_menu_title a {
+  color: white;
+}
+.custom_view_mo47 > a a:hover,
+.custom_view_mo47 .sub_menu_title a:hover,
+.custom_view_mo47 > a a.act,
+.custom_view_mo47 .sub_menu_title a.act {
+  background: #4D8FC7;
+  color: white;
+}
+.custom_view_mo47 > a a:hover span,
+.custom_view_mo47 .sub_menu_title a:hover span,
+.custom_view_mo47 > a a.act span,
+.custom_view_mo47 .sub_menu_title a.act span {
+  color: white;
+}
+.custom_view_mo47 > a a [class^="icon-"],
+.custom_view_mo47 .sub_menu_title a [class^="icon-"] {
+  color: rgba(255, 255, 255, 0.5);
+}

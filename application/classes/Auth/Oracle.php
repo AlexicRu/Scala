@@ -15,10 +15,7 @@ class Auth_Oracle extends Auth {
     {
         if ( ! is_array($user))
         {
-            $db = Oracle::init();
-
-            $user = $db->row("select * from ".Oracle::$prefix."V_WEB_MANAGERS where LOGIN = '".strtoupper($user)."'");
-            $user['role'] = $user['ROLE_ID'];
+            $user = Model_Manager::getManager(['login' => strtoupper($user)]);
         }
 
         if (is_string($password))

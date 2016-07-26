@@ -20,7 +20,8 @@ return [
             Access::ROLE_SUPERVISOR,
         ],
         'control_index' => [
-            Access::ROLE_ROOT
+            Access::ROLE_ROOT,
+            'u_7',
         ],
         'reports_index' => [
             Access::ROLE_ROOT
@@ -79,7 +80,7 @@ return [
             Access::ROLE_USER,
             Access::ROLE_MANAGER_SALE,
         ],
-        'customer_settings' => [
+        'manager_settings' => [
             //Access::ROLE_USER,
         ],
         // custom

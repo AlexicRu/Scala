@@ -26,7 +26,7 @@ foreach($cards as $card){
         <?}?>
         <div class="scroll">
             <?if(is_array($foundCards) && empty($foundCards)){?>
-                <span class="gray">Карты не анйдены</span>
+                <span class="gray">Карты не найдены</span>
             <?}else{?>
                 <?foreach($cards as $key => $card){
                     $found = true;

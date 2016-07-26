@@ -2,7 +2,9 @@
 
 return array(
     'clients'   => ['title' => 'Фирмы', 'icon' => 'icon-clients'],
-    'control'   => ['title' => 'Управление', 'icon' => 'icon-set'],
+    'control'   => ['title' => 'Управление', 'icon' => 'icon-set', 'children' => [
+        'managers' => 'Менеджеры',
+    ]],
     'reports'   => ['title' => 'Отчетность', 'icon' => 'icon-reports'],
     'news'      => ['title' => 'Новости', 'icon' => 'icon-news'],
     'support'   => ['title' => 'Поддержка', 'icon' => 'icon-question'],

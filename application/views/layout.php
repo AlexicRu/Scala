@@ -62,13 +62,13 @@
 						</div>
 					<?}?>
 					<div>
-						<a href="#" class="mark_read">Отметить прочитанным</a>
+						<a href="#" class="mark_read"><i class="icon-ok"></i> Отметить прочитанным</a>
 					</div>
 				</div>
 			<?}?>
 		</div>
 		<div class="settings">
-			<a href="/customer/settings"><span class="icon-gear"></span></a>
+			<a href="/managers/settings"><span class="icon-gear"></span></a>
 		</div>
 		<div class="logout">
 			<a href="/logout"><span class="icon-exit"></span></a>

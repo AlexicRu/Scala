@@ -2,7 +2,7 @@
     [<?=$contract['CONTRACT_ID']?>]
     <span toggle_block="block2">
         <?=$contract['CONTRACT_NAME']?> от <?=$contract['DATE_BEGIN']?> <?if($contract['DATE_END'] != '31.12.2099'){?>до <?=$contract['DATE_END']?><?}?> &nbsp;
-        <span class="label <?=Status::$statusContractClasses[$contract['STATE_ID']]?>"><?=Status::$statusContractNames[$contract['STATE_ID']]?></span>
+        <span class="label <?=Model_Contract::$statusContractClasses[$contract['STATE_ID']]?>"><?=Model_Contract::$statusContractNames[$contract['STATE_ID']]?></span>
     </span>
     <span toggle_block="block2" class="dn gray">
         <input type="text" name="CONTRACT_NAME" value="<?=$contract['CONTRACT_NAME']?>" class="input_big input_w_small">
@@ -12,7 +12,7 @@
         <input type="text" name="DATE_END" value="<?=$contract['DATE_END']?>" class="input_big input_w_small datepicker" readonly>
         <select class="select_big" name="STATE_ID">
             <?
-            foreach(Status::$statusContractNames as $id => $name){
+            foreach(Model_Contract::$statusContractNames as $id => $name){
                 ?><option value="<?=$id?>" <?if($id == $contract['STATE_ID']){echo 'selected';}?>><?=$name?></option><?
             }
             ?>
