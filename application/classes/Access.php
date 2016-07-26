@@ -42,11 +42,13 @@ class Access
         if(
             (isset($allow[$action]) && (
                 !in_array($user['role'], $allow[$action]) &&
-                !in_array('u_'.$user['MANAGER_ID'], $allow[$action])
+                !in_array('u_'.$user['MANAGER_ID'], $allow[$action]) &&
+                !in_array('a_'.$user['AGENT_ID'], $allow[$action])
             )) ||
             (isset($deny[$action]) && (
                 in_array($user['role'], $deny[$action]) ||
-                in_array('u_'.$user['MANAGER_ID'], $deny[$action])
+                in_array('u_'.$user['MANAGER_ID'], $deny[$action]) ||
+                in_array('a_'.$user['AGENT_ID'], $deny[$action])
             ))
         ){
             return false;
