@@ -13,10 +13,10 @@ class Access
     const ROLE_MANAGER_SALE_SUPPORT		= 6;
 
     public static $roles = [
-        self::ROLE_MANAGER              => 'Менеджер',
-        self::ROLE_MANAGER_SALE         => 'Менеджер 1',
-        self::ROLE_MANAGER_SALE_SUPPORT => 'Менеджер 2',
-        self::ROLE_SUPERVISOR           => 'Супервайзер',
+        self::ROLE_MANAGER              => 'Менеджер сопровождения',
+        self::ROLE_MANAGER_SALE         => 'Менеджер по продажам',
+        self::ROLE_MANAGER_SALE_SUPPORT => 'Manager Менеджер по продажам и сопровождению',
+        self::ROLE_SUPERVISOR           => 'Главный менеджер',
     ];
 
     /**

@@ -26,22 +26,9 @@
 
     function renderAjaxPaginationMessages(data, block) {
         for(var i = 0 in data){
-            var tpl = $('<div class="news_elem"><div class="n_title"></div></div>');
+            var tpl = $('<div class="news_elem"><div class="n_title"></div><div class="n_date gray"></div></div>');
             tpl.find('.n_title').text(data[i]['SUBJECT']);
-            tpl.append(data[i]['NOTIFICATION_BODY']);
-            tpl.addClass('unread' + data[i].STATUS);
-            block.append(tpl);
-        }
-        for(var i = 0 in data){
-            var tpl = $('<div class="news_elem"><div class="n_title"></div></div>');
-            tpl.find('.n_title').text(data[i]['SUBJECT']);
-            tpl.append(data[i]['NOTIFICATION_BODY']);
-            tpl.addClass('unread' + data[i].STATUS);
-            block.append(tpl);
-        }
-        for(var i = 0 in data){
-            var tpl = $('<div class="news_elem"><div class="n_title"></div></div>');
-            tpl.find('.n_title').text(data[i]['SUBJECT']);
+            tpl.find('.n_date').text(data[i]['NOTE_DATE']);
             tpl.append(data[i]['NOTIFICATION_BODY']);
             tpl.addClass('unread' + data[i].STATUS);
             block.append(tpl);

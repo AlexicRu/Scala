@@ -21,8 +21,11 @@ class Controller_Control extends Controller_Common {
     {
         $search = $this->request->query('m_search');
 
+        $user = Auth::instance()->get_user();
+
         $params = [
-            'name' => $search
+            'name'      => $search,
+            'agent_id'  => $user['AGENT_ID']
         ];
 
         $managers = Model_Manager::getManagersList($params);

@@ -3,7 +3,7 @@
 class Model_Manager extends Model
 {
     const STATE_MANAGER_ACTIVE      = 1;
-    const STATE_MANAGER_BLOCKED     = 0;
+    const STATE_MANAGER_BLOCKED     = 4;
 
     /**
      * радактируем данные юзверя
@@ -78,7 +78,7 @@ class Model_Manager extends Model
     {
         $db = Oracle::init();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_MANAGERS where 1 = 1 ";
+        $sql = "select * from ".Oracle::$prefix."V_WEB_MANAGERS where MANAGER_ID != 0 ";
 
         if(!empty($params['name'])){
             $params['name'] = mb_strtoupper($params['name']);
@@ -160,17 +160,15 @@ class Model_Manager extends Model
             default:
                 $status = self::STATE_MANAGER_ACTIVE;
         }
-        return true;
+
         $data = [
-            'p_card_id' 		=> $params['card_id'],
-            'p_new_state' 		=> $status,
-            'p_comment' 		=> $params['comment'],
-            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_manager_for_id' 	=> $manager['MANAGER_ID'],
+            'p_new_status' 		=> $status,
+            'p_manager_who_id' 	=> $user['MANAGER_ID'],
             'p_error_code' 		=> 'out',
         ];
 
-        //todo
-        //$res = $db->procedure('card_change_state', $data);
+        $res = $db->procedure('ctrl_manager_change_status', $data);
 
         if(empty($res)){
             return true;
@@ -191,7 +189,22 @@ class Model_Manager extends Model
             return Oracle::CODE_ERROR;
         }
 
-        //todo
+        $user = Auth::instance()->get_user();
+
+        $db = Oracle::init();
+
+        $data = [
+            'p_manager_for_id' 	=> $managerId,
+            'p_client_id' 		=> $clientId,
+            'p_manager_who_id' 	=> $user['MANAGER_ID'],
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = $db->procedure('ctrl_manager_client_del', $data);
+
+        if($res == Oracle::CODE_ERROR){
+            return Oracle::CODE_ERROR;
+        }
 
         return Oracle::CODE_SUCCESS;
     }
