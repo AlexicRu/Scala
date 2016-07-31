@@ -11,5 +11,9 @@ return array(
     'mo-47gloproru' => [
         'title' => 'ФСК Мостоотряд-47',
         'class' => 'mo47'
-    ]
+    ],
+    'lkvegihcom' => [
+        'title' => 'ВЕГИХ',
+        'class' => 'vegix'
+    ],
 );

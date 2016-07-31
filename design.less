@@ -26,9 +26,9 @@
       background-image: url(/img/projects/oilst.png);
     }
   }
-  >a, .sub_menu_title{
+  aside{
     background: #bc771e;
-    a{
+    >a, .sub_menu_title{
       color: white;
       &:hover, &.act{
         background: #8a7a66; color: white;
@@ -41,6 +41,13 @@
       }
     }
   }
+  .sub_menu_items{
+    a{
+      &:hover, &.act{
+        color:white;
+      }
+    }
+  }
 }
 .custom_view_mo47{
   .logo{
@@ -48,9 +55,9 @@
       background-image: url(/img/projects/mo47.png);
     }
   }
-  >a, .sub_menu_title{
+  aside{
     background: #ddd;
-    a{
+    >a, .sub_menu_title{
       color: white;
       &:hover, &.act{
         background: #4D8FC7; color: white;
@@ -60,6 +67,35 @@
       }
       [class^="icon-"]{
         color: rgba(255,255,255,.5);
+      }
+    }
+  }
+}
+.custom_view_vegix{
+  .logo{
+    a{
+      background-image: url(/img/projects/vegix.png);
+    }
+  }
+  aside{
+    background: #800000;
+    >a, .sub_menu_title{
+      color: white;
+      &:hover, &.act{
+        background: #330000; color: white;
+        span{
+          color: white;
+        }
+      }
+      [class^="icon-"]{
+        color: rgba(255,255,255,.5);
+      }
+    }
+  }
+  .sub_menu_items{
+    a{
+      &:hover, &.act{
+        color:white;
       }
     }
   }
