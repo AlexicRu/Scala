@@ -53,7 +53,7 @@ if(empty($changeRole)){
                         <td>
                             <select name="manager_settings_role" class="select_big">
                                 <?foreach(Access::$roles as $role => $name){?>
-                                    <option value="<?=$role?>"><?=$name?></option>
+                                    <option value="<?=$role?>" <?if($role == $manager['ROLE_ID']){?>selected<?}?>><?=$name?></option>
                                 <?}?>
                             </select>
                         </td>

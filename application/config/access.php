@@ -22,6 +22,7 @@ return [
         'control_index' => [
             Access::ROLE_ROOT,
             'u_7',
+            'a_10',
         ],
         'reports_index' => [
             Access::ROLE_ROOT
@@ -43,7 +44,8 @@ return [
         'show_setting_notices' => [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
-            Access::ROLE_ROOT
+            Access::ROLE_ROOT,
+            'a_10',
         ],
         'root' => [
             Access::ROLE_ROOT

@@ -293,6 +293,7 @@ class Model_Card extends Model
 		$db->procedure('card_service_refresh', ['p_card_id' => $cardId]);
 
 		if(empty($limits)){
+            $db->procedure('card_queue_limit_add', ['p_card_id' => $cardId]);
 			return true;
 		}
 

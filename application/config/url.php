@@ -6,5 +6,7 @@ return [
         '.*\.glopro\.ru',
         'oilst\.ru',
         '.*\.oilst\.ru',
+        'vegih\.com',
+        '.*\.vegih\.com',
     ],
 ];
