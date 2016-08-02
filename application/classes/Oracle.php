@@ -159,7 +159,7 @@ class Oracle{
 	/**
 	 * Выполнение процедуры
 	 */
-	public function procedure($procedure, $data)
+	public function procedure($procedure, $data, $fullResponse = false)
 	{
 		if(empty($procedure) || empty($data)){
 			return self::CODE_ERROR;
@@ -173,6 +173,10 @@ class Oracle{
 		$proc = 'begin '.self::$prefix.'web_pack.'.$procedure.'('.implode(', ', $keys).'); end;';
 
 		$res = $this->ora_proced($proc, $data);
+
+        if($fullResponse){
+            return $res;
+        }
 
 		if(isset($res['p_error_code'])){
 			return $res['p_error_code'];

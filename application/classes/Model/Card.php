@@ -65,7 +65,7 @@ class Model_Card extends Model
 		}
 
 		if(!empty($query)){
-			$sql .= " and card_id like '%".Oracle::quote($query)."%'";
+			$sql .= " and (card_id like '%".Oracle::quote($query)."%' or upper(holder) like '%".mb_strtoupper(Oracle::quote($query))."%')";
 		}
 
 		$cards = $db->query($sql);

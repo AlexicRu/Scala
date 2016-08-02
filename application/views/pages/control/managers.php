@@ -19,9 +19,7 @@
                 <?foreach($managers as $key => $manager){?>
                     <div class="tab_v" tab="manager<?=$manager['MANAGER_ID']?>"><div>
                         <span class="gray">[<?=$manager['MANAGER_ID']?>]</span>
-                        <?=$manager['MANAGER_SURNAME']?>
-                        <?=$manager['MANAGER_NAME']?>
-                        <?=$manager['MANAGER_MIDDLENAME']?>
+                        <?=$manager['M_NAME']?>
                     </div></div>
                 <?}?>
             <?}?>
