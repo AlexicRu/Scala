@@ -115,4 +115,16 @@ class Controller_Managers extends Controller_Common {
         }
         $this->jsonResult(true);
     }
+
+    /**
+     * список доступный клиентов
+     */
+    public function action_managers_clients()
+    {
+        $params = $this->request->post('params');
+
+        $clients = Model_Manager::getClientsList($params);
+
+        $this->jsonResult(true, $clients);
+    }
 }

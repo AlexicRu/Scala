@@ -38,7 +38,7 @@
             manager_id: $('.tab_content[manager_id]:visible').attr('manager_id')
         };
 
-        ajax = $.post('/clients/index', params, function (data) {
+        ajax = $.post('/managers/managers_clients', {params:params}, function (data) {
             list.removeClass('block_loading');
 
             for(var i in data.data){

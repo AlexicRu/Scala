@@ -16,6 +16,9 @@
   display: none;
   font-size: 13px;
   color: #fff;
+  position: relative;
+  top: inherit;
+  left: inherit;
 }
 .checkbox_inner.checkbox_checked {
   background: #0e86ad;

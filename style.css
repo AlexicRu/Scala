@@ -612,10 +612,6 @@ textarea.input_w_small {
   width: 260px;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
-.tabs_managers .tabs_v .tab_v {
-  padding: 13px 20px 15px 20px;
-  min-height: 50px;
-}
 .tabs_managers .tabs_v_content.block_loading {
   margin: 0;
 }
@@ -708,6 +704,15 @@ textarea.input_w_small {
 }
 .tab_v.card_blocked [class^="icon-"] {
   color: #b54848;
+}
+.tab_v.tab_v_small {
+  padding: 13px 20px 15px 20px;
+  min-height: 50px;
+}
+.tab_v.tab_v_filter {
+  padding: 3px 20px 5px;
+  min-height: 30px;
+  cursor: default;
 }
 [tab_content] {
   display: none;
@@ -1097,4 +1102,32 @@ sup.required {
 }
 .scli_close:hover {
   color: white;
+}
+.filter_toggle {
+  position: relative;
+  color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+.filter_toggle:after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 4px 3px 0 3px;
+  border-color: #999 transparent transparent transparent;
+}
+.filter_toggle.active:after {
+  border-width: 0 3px 4px 3px;
+  border-color: transparent transparent #999 transparent;
+}
+.filter_block {
+  display: none;
+  padding-bottom: 10px;
+}
+.filter_row {
+  padding: 15px 0;
 }
