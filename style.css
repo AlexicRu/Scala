@@ -458,6 +458,7 @@ a.btn:hover {
 }
 .fr {
   float: right;
+  text-align: right;
 }
 .fr + .fr {
   margin-right: 20px;
@@ -724,6 +725,10 @@ textarea.input_w_small {
   background: #f6f6f6;
   padding: 10px 15px;
   margin-top: 8px;
+}
+.line_inner .full_comment {
+  color: #999;
+  text-align: right;
 }
 .line_inner + .line_inner {
   margin-top: 2px;
