@@ -126,11 +126,13 @@ class Controller_Clients extends Controller_Common {
 				$turnover = Model_Contract::getTurnover($contractId);
 
 				$popupContractPaymentAdd = Common::popupForm('Добавление нового платежа', 'contract/payment_add');
+                $popupClientBillAdd = Common::popupForm('Выставить счет', 'client/bill_add');
 
 				$content = View::factory('/ajax/clients/contract/account')
                     ->bind('balance', $balance)
 					->bind('turnover', $turnover)
 					->bind('popupContractPaymentAdd', $popupContractPaymentAdd)
+                    ->bind('popupClientBillAdd', $popupClientBillAdd)
                 ;
 				break;
 			case 'reports':
@@ -438,4 +440,34 @@ class Controller_Clients extends Controller_Common {
 			$this->jsonResult(true, ['items' => $history, 'more' => $more]);
 		}		
 	}
+
+    /**
+     * выставляем счет клиенту
+     */
+	public function action_add_bill()
+    {
+        $contractId = $this->request->query('contract_id');
+        $sum = $this->request->query('sum');
+
+        $invoiceNum = Model_Contract::addBill($contractId, $sum);
+
+        $params = [
+            'type'              => Model_Report::REPORT_TYPE_BILL,
+            'format'            => 'pdf',
+            'contract_id'       => $contractId,
+            'invoice_number'    => $invoiceNum,
+        ];
+
+        $report = Model_Report::generate($params);
+
+        if(empty($report)){
+            throw new HTTP_Exception_500('Счет не сформировался');
+        }
+
+        foreach($report['headers'] as $header){
+            header($header);
+        }
+
+        $this->html($report['report']);
+    }
 }

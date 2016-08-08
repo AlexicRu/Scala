@@ -1,5 +1,10 @@
 <div class="tc_top_line">
-    <span class="gray">Баланс по договору:</span> <?=number_format($balance['BALANCE'], 2, ',', ' ')?>
+    <span class="gray">Баланс по договору:</span> <?=number_format($balance['BALANCE'], 2, ',', ' ')?> <?=Text::RUR?>
+    <div class="fr">
+        <?if(Access::allow('clients_bill_add')){?>
+            <a href="#client_bill_add" class="fancy btn">Выставить счет</a>
+        <?}?>
+    </div>
 </div>
 <div class="as_table">
     <div class="col line_inner">
@@ -74,6 +79,10 @@
 <?if(Access::allow('clients_payment_add')){?>
     <?=$popupContractPaymentAdd?>
 <?}?>
+<?if(Access::allow('clients_bill_add')){?>
+    <?=$popupClientBillAdd?>
+<?}?>
+
 
 <script>
     $(function(){

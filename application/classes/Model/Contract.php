@@ -386,4 +386,29 @@ class Model_Contract extends Model
 
 		return $db->query($sql);
 	}
+
+    /**
+     * добавление нового платежа к
+     *
+     * @param $contractId
+     * @param $sum
+     */
+    public static function addBill($contractId, $sum)
+    {
+        if(empty($contractId) || empty($sum)){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $data = [
+            'p_contract_id' 	=> $contractId,
+            'p_invoice_sum' 	=> str_replace(',', '.', $sum),
+            'p_invoice_num' 	=> 'out',
+        ];
+
+        $invoiceNum = $db->procedure('client_contract_invoice_pay', $data, true);
+
+        return $invoiceNum['p_invoice_num'];
+    }
 }

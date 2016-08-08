@@ -7,10 +7,12 @@ class Model_Report extends Model
 {
     const REPORT_TYPE_DAILY         = 'daily';
     const REPORT_TYPE_BALANCE_SHEET = 'balance_sheet';
+    const REPORT_TYPE_BILL          = 'bill';
 
     public static $reportTypes = [
-        self::REPORT_TYPE_DAILY => 'kf_client_total_detail',
-        self::REPORT_TYPE_BALANCE_SHEET => 'kf_manager_osv'
+        self::REPORT_TYPE_DAILY         => 'kf/kf_client_total_detail',
+        self::REPORT_TYPE_BALANCE_SHEET => 'kf/kf_manager_osv',
+        self::REPORT_TYPE_BILL          => 'ru/invoice_client'
     ];
 
     public static $formatHeaders = [
@@ -40,24 +42,24 @@ class Model_Report extends Model
     {
         if(
             empty($params['type']) || !in_array($params['type'], array_keys(Model_Report::$reportTypes)) ||
-            empty($params['contract_id']) ||
-            empty($params['date_start']) ||
-            empty($params['date_end'])
+            empty($params['contract_id'])
         ){
             return false;
         }
 
+        $config = Kohana::$config->load('jasper');
+
         $client = new Client(
-                "http://10.8.222.40:8080/jasperserver",
-                "glopro",
-                "H-Geq_F4Gy"
+            $config['host'],
+            $config['login'],
+            $config['password']
         );
 
         $controls = self::_prepareControls($params);
 
         $format = empty($params['format']) ? 'xls' : $params['format'];
 
-        $report = $client->reportService()->runReport('/reports/kf/'.self::$reportTypes[$params['type']], $format, null, null, $controls);
+        $report = $client->reportService()->runReport('/reports/'.self::$reportTypes[$params['type']], $format, null, null, $controls);
 
         $name = 'report_'.$params['type'].'_'.date('Y_m_d').'.'.$format;
 
@@ -96,6 +98,13 @@ class Model_Report extends Model
                     'REPORT_START_DATE'     => [$params['date_start']],
                     'REPORT_END_DATE'       => [$params['date_end']],
                     'REPORT_MANAGER_ID'     => [$user['MANAGER_ID']]
+                ];
+                break;
+                break;
+            case self::REPORT_TYPE_BILL:
+                $controls = [
+                    'INVOICE_CONTRACT_ID'  => [$params['contract_id']],
+                    'INVOICE_NUMBER'       => [$params['invoice_number']],
                 ];
                 break;
         }

@@ -87,7 +87,7 @@
   background-image: url(/img/projects/vegix.png);
 }
 .custom_view_vegix aside {
-  background: #800000;
+  background: #fff;
 }
 .custom_view_vegix aside > a,
 .custom_view_vegix aside .sub_menu_title {
@@ -97,7 +97,7 @@
 .custom_view_vegix aside .sub_menu_title:hover,
 .custom_view_vegix aside > a.act,
 .custom_view_vegix aside .sub_menu_title.act {
-  background: #330000;
+  background: #0e86ad;
   color: white;
 }
 .custom_view_vegix aside > a:hover span,
@@ -108,9 +108,9 @@
 }
 .custom_view_vegix aside > a [class^="icon-"],
 .custom_view_vegix aside .sub_menu_title [class^="icon-"] {
-  color: rgba(255, 255, 255, 0.5);
+  color: #f90e24;
 }
 .custom_view_vegix .sub_menu_items a:hover,
 .custom_view_vegix .sub_menu_items a.act {
-  color: white;
+  color: #f90e24;
 }
