@@ -61,10 +61,13 @@ class Controller_Control extends Controller_Common {
             ->set('changeRole', 1)
         ;
 
+        $popupManagerAddClients = Common::popupForm('Добавление клиентов', 'manager/add_clients');
+
         $html = View::factory('/ajax/control/manager')
             ->bind('managerId', $managerId)
             ->bind('manager', $manager)
             ->bind('managerSettingsForm', $managerSettingsForm)
+            ->bind('popupManagerAddClients', $popupManagerAddClients)
         ;
 
         $this->html($html);

@@ -100,4 +100,19 @@ class Controller_Managers extends Controller_Common {
         }
         $this->jsonResult(true);
     }
+
+    /**
+     * добавление клиентов
+     */
+    public function action_add_clients()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Manager::addClients($params);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true);
+    }
 }

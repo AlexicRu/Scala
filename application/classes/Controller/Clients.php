@@ -15,15 +15,20 @@ class Controller_Clients extends Controller_Common {
 	public function action_index()
 	{
 		$search = $this->request->post('search');
+        $addClients = $this->request->post('add_clients') && $this->request->is_ajax();
 
-		$clients = Model_Client::getClientsList($search);
+		$clients = Model_Client::getClientsList($search, ['add_clients' => $addClients]);
 
-        $popupClientAdd = Common::popupForm('Добавление нового клиента', 'client/add');
+        if (!$this->request->is_ajax()) {
+            $popupClientAdd = Common::popupForm('Добавление нового клиента', 'client/add');
 
-		$this->tpl
-            ->bind('clients', $clients)
-            ->bind('popupClientAdd', $popupClientAdd)
-        ;
+            $this->tpl
+                ->bind('clients', $clients)
+                ->bind('popupClientAdd', $popupClientAdd)
+            ;
+        } else {
+            $this->jsonResult(true, $clients);
+        }
 	}
 
 	/**

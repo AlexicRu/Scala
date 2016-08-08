@@ -713,3 +713,57 @@ sup{
 .n_date{
   margin-bottom: 5px;
 }
+.client_list{
+
+}
+.clients_btn{
+  height: 60px; text-align: right;
+}
+.input_out{
+  margin: -30px -30px 0; border-bottom: 1px solid #d8d9da; padding: 0 30px;
+  input[type=text]{
+    border: 0; width: 100%;
+  }
+}
+.found_clients_list{
+  margin: 0 -30px 20px; height: 350px; overflow-y: auto; width: 600px;
+}
+.client_found_row{
+  border-bottom: 1px solid #d8d9da; display: table; width: 100%;
+  padding: 10px 20px 10px 45px;
+  >span{
+    display: table-cell;
+    &:first-child{
+      width: 30px;
+    }
+  }
+}
+.cfr_id{
+  display: inline-block;
+  margin: 0 10px;
+  width: 50px;
+}
+.selected_clients_list{
+  min-height: 50px; padding-bottom: 10px;
+}
+.scl_item{
+  display: inline-block;
+  border-radius: 4px;
+  background: #0e86ad;
+  color: white;
+  padding: 1px 5px 2px 7px; margin: 0 5px 3px 0;
+}
+.scli_close{
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 0 0 3px;
+  font-size: 20px;
+  line-height: 14px;
+  .transition();
+
+  &:hover{
+    color: white;
+  }
+}

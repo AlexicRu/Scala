@@ -9,22 +9,31 @@ class Model_Client extends Model
 	{
 		$db = Oracle::init();
 
-        if(empty($params['manager_id'])){
+        $sql = "
+			select *
+			from ".Oracle::$prefix."v_web_clients_title v
+			where 1=1
+		";
+
+        if (empty($params['manager_id'])) {
             $user = Auth::instance()->get_user();
             $managerId = $user['MANAGER_ID'];
-        }else{
+        } else {
             $managerId = $params['manager_id'];
         }
 
-		$sql = "
-			select *
-			from ".Oracle::$prefix."v_web_clients_title v
-			where v.manager_id = ".Oracle::quote($managerId)
-		;
+        if(empty($params['add_clients'])) {
+            $sql .= " and v.manager_id = ".Oracle::quote($managerId);
+        }
 
 		if(!is_null($search)){
 			$search = mb_strtoupper($search);
-			$sql .= " and (upper(v.client_name) like '%".Oracle::quote($search)."%' or upper(v.long_name) like '%".Oracle::quote($search)."%' or upper(v.contract_name) like '%".Oracle::quote($search)."%' or exists (select 1 from ".Oracle::$prefix."V_WEB_CRD_LIST c where c.contract_id = v.contract_id and c.card_id like '%".Oracle::quote($search)."%'))";
+
+            if(empty($params['add_clients'])) {
+                $sql .= " and (upper(v.client_name) like '%" . Oracle::quote($search) . "%' or upper(v.long_name) like '%" . Oracle::quote($search) . "%' or upper(v.contract_name) like '%" . Oracle::quote($search) . "%' or exists (select 1 from " . Oracle::$prefix . "V_WEB_CRD_LIST c where c.contract_id = v.contract_id and c.card_id like '%" . Oracle::quote($search) . "%'))";
+            }else{
+                $sql .= " and upper(v.long_name) like '%" . Oracle::quote($search) . "%' and v.manager_id != ".$managerId;
+            }
 		}
 
 		$sql .= " order by client_id desc ";

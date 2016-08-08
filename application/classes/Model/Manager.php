@@ -248,4 +248,37 @@ class Model_Manager extends Model
         }
         return true;
     }
+
+    /**
+     * добавляем клиентов
+     *
+     * @param $params
+     */
+    public static function addClients($params)
+    {
+        if(empty($params['ids']) || empty($params['manager_id'])){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        foreach($params['ids'] as $id){
+            $data = [
+                'p_manager_for_id' 	=> $params['manager_id'],
+                'p_client_id' 	    => $id,
+                'p_manager_who_id' 	=> $user['MANAGER_ID'],
+                'p_error_code' 		=> 'out',
+            ];
+
+            $res = $db->procedure('ctrl_manager_client_add', $data);
+
+            if($res == Oracle::CODE_ERROR){
+                return false;
+            }
+        }
+
+        return true;
+    }    
 }
