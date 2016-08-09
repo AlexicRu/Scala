@@ -151,7 +151,7 @@ foreach($cards as $card){
             tpl.find('div.fr').html(data[i].SHORT_DESCRIPTION);
 
             if(data[i].DESCRIPTION){
-                tpl.append('<div class="full_comment">'+ data[i].DESCRIPTION +'</div>');
+                tpl.append('<div class="full_comment">Комментарий: '+ data[i].DESCRIPTION +'</div>');
             }
 
             block.append(tpl);

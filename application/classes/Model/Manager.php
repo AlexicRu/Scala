@@ -312,17 +312,17 @@ class Model_Manager extends Model
         }
 
         $sql = "
-			select *
+			select distinct v.NAME, v.client_id
 			from ".Oracle::$prefix."V_WEB_MANAGER_CLIENTS v
 			where v.manager_id != ".$managerId." and v.agent_id = ".$agentId
 		;
 
         if(!empty($params['search'])){
-            $sql .= " and upper(v.long_name) like '%" . Oracle::quote($params['search']) . "%'";
+            $sql .= " and upper(v.NAME) like '%" . mb_strtoupper(Oracle::quote($params['search'])) . "%'";
         }
 
         $sql .= " order by v.client_id desc ";
 
-        return $db->tree($sql, 'CLIENT_ID');
+        return $db->query($sql);
     }
 }

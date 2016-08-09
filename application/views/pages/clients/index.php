@@ -13,7 +13,7 @@ if(!empty($clients)){
 
             <?if(!empty($client['contracts'])){?>
                 <div class="fr btn" toggle="client<?=$client['CLIENT_ID']?>">
-                    <span toggle_block="client<?=$client['CLIENT_ID']?>">Договора</span>
+                    <span toggle_block="client<?=$client['CLIENT_ID']?>">Договоры</span>
                     <span toggle_block="client<?=$client['CLIENT_ID']?>" class="dn">Свернуть</span>
                 </div>
             <?}?>

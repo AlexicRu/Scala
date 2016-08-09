@@ -95,7 +95,8 @@ class Controller_Clients extends Controller_Common {
 			case 'contract':
 				$contractSettings = Model_Contract::getContractSettings($contractId);
                 $contractTariffs = Model_Contract::getTariffs();
-				$popupContractNoticeSettings = Common::popupForm('Настройка уведомлений', 'contract/notice_settings');
+                $noticeSettings = Model_Contract::getContractNoticeSettings($contractId);
+				$popupContractNoticeSettings = Common::popupForm('Настройка уведомлений', 'contract/notice_settings', ['settings' => $noticeSettings]);
 				$popupContractHistory = Common::popupForm('История по договору', 'contract/history');
 
 				$content = View::factory('/ajax/clients/contract/contract')
@@ -469,5 +470,22 @@ class Controller_Clients extends Controller_Common {
         }
 
         $this->html($report['report']);
+    }
+
+    /**
+     * настройка уведомлений
+     */
+    public function action_edit_contract_notices()
+    {
+        $params = $this->request->post('params');
+        $contractId = $this->request->post('contract_id');
+
+        $result = Model_Contract::editNoticesSettings($contractId, $params);
+
+        if(!empty($result)){
+            $this->jsonResult(false, $result);
+        }
+
+        $this->jsonResult(true);
     }
 }

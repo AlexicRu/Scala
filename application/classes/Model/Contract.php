@@ -411,4 +411,60 @@ class Model_Contract extends Model
 
         return $invoiceNum['p_invoice_num'];
     }
+
+    /**
+     * редактирование настройек уведомлений
+     *
+     * @param $contractId
+     * @param $params
+     */
+    public static function editNoticesSettings($contractId, $params)
+    {
+        if(empty($contractId)){
+            return Oracle::CODE_ERROR;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_contract_id'         => $contractId,
+            'p_manager_id'          => $user['MANAGER_ID'],
+            'p_report_send'         => 0,
+            'p_rep_send_per'        => 'W',
+            'p_rep_send_per_value'  => 0,
+            'p_eml_card_block'      => !empty($params['notice_email_card']) ? 1 : 0,
+            'p_eml_contract_block'  => !empty($params['notice_email_firm']) ? 1 : 0,
+            'p_eml_blnc_ctrl'       => !empty($params['notice_email_barrier']) ? 1 : 0,
+            'p_eml_blnc_ctrl_value' => !empty($params['notice_email_barrier_value']) ? $params['notice_email_barrier_value'] : 0,
+            'p_sms_card_block'      => 0,
+            'p_sms_contract_block'  => 0,
+            'p_sms_blnc_ctrl'       => 0,
+            'p_sms_blnc_ctrl_value' => 0,
+            'p_sms_add_payment'     => 0,
+            'p_sms_card_trz'        => 0,
+            'p_error_code' 		    => 'out',
+        ];
+
+        return $db->procedure('client_contract_notify_config', $data);
+    }
+
+    /**
+     * получаем тукущие настройки уведомлений
+     *
+     * @param $contractId
+     */
+    public static function getContractNoticeSettings($contractId)
+    {
+        if(empty($contractId)){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $sql = "select * from ".Oracle::$prefix."V_WEB_CTR_NOTIFY_SET where contract_id = ".$contractId;
+
+        return $db->row($sql);
+    }
 }

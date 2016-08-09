@@ -145,11 +145,9 @@
 
         <?=$popupContractHistory?>
         
-        <?if(Access::allow('root')){?>
-            <a href="#contract_notice_settings" class="btn fancy">Настройка оповещений</a>
+        <a href="#contract_notice_settings" class="btn fancy">Настройка уведомлений</a>
 
-            <?=$popupContractNoticeSettings?>
-        <?}?>
+        <?=$popupContractNoticeSettings?>
     </div>
 </div>
 

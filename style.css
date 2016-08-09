@@ -729,6 +729,7 @@ textarea.input_w_small {
 .line_inner .full_comment {
   color: #999;
   text-align: right;
+  clear: both;
 }
 .line_inner + .line_inner {
   margin-top: 2px;
