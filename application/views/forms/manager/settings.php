@@ -1,6 +1,8 @@
 <?
+$isEdit = false;
 if(empty($manager)){
     $manager = $user;
+    $isEdit = true;
 }
 if(empty($width)){
     $width = 170;
@@ -14,6 +16,9 @@ if(empty($changeRole)){
 ?>
 <form method="post" onsubmit="return checkFormManagerSettings($(this));">
     <input type="hidden" name="form_type" value="settings">
+    <?if($isEdit){?>
+    <input type="hidden" name="manager_settings_id" value="<?=$manager['MANAGER_ID']?>">
+    <?}?>
     <div class="as_table">
         <div class="col">
             <table class="table_form">

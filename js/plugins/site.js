@@ -16,6 +16,12 @@ $(function(){
         $("[toggle_block='"+ $(this).attr('toggle') +"']").toggle();
     });
 
+    $(document).on('click', '.filter_toggle', function () {
+        var t = $(this);
+        t.closest('.filter_outer').find('.filter_block').slideToggle();
+        t.toggleClass('active');
+    });
+
     $('.datepicker').each(function(){
         renderDatePicker($(this));
     });

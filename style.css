@@ -458,6 +458,7 @@ a.btn:hover {
 }
 .fr {
   float: right;
+  text-align: right;
 }
 .fr + .fr {
   margin-right: 20px;
@@ -612,10 +613,6 @@ textarea.input_w_small {
   width: 260px;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
-.tabs_managers .tabs_v .tab_v {
-  padding: 13px 20px 15px 20px;
-  min-height: 50px;
-}
 .tabs_managers .tabs_v_content.block_loading {
   margin: 0;
 }
@@ -709,6 +706,15 @@ textarea.input_w_small {
 .tab_v.card_blocked [class^="icon-"] {
   color: #b54848;
 }
+.tab_v.tab_v_small {
+  padding: 13px 20px 15px 20px;
+  min-height: 50px;
+}
+.tab_v.tab_v_filter {
+  padding: 3px 20px 5px;
+  min-height: 30px;
+  cursor: default;
+}
 [tab_content] {
   display: none;
 }
@@ -719,6 +725,10 @@ textarea.input_w_small {
   background: #f6f6f6;
   padding: 10px 15px;
   margin-top: 8px;
+}
+.line_inner .full_comment {
+  color: #999;
+  text-align: right;
 }
 .line_inner + .line_inner {
   margin-top: 2px;
@@ -1036,4 +1046,93 @@ sup.required {
 }
 .n_date {
   margin-bottom: 5px;
+}
+.clients_btn {
+  height: 60px;
+  text-align: right;
+}
+.input_out {
+  margin: -30px -30px 0;
+  border-bottom: 1px solid #d8d9da;
+  padding: 0 30px;
+}
+.input_out input[type=text] {
+  border: 0;
+  width: 100%;
+}
+.found_clients_list {
+  margin: 0 -30px 20px;
+  height: 350px;
+  overflow-y: auto;
+  width: 600px;
+}
+.client_found_row {
+  border-bottom: 1px solid #d8d9da;
+  display: table;
+  width: 100%;
+  padding: 10px 20px 10px 45px;
+}
+.client_found_row > span {
+  display: table-cell;
+}
+.client_found_row > span:first-child {
+  width: 30px;
+}
+.cfr_id {
+  display: inline-block;
+  margin: 0 10px;
+  width: 50px;
+}
+.selected_clients_list {
+  min-height: 50px;
+  padding-bottom: 10px;
+}
+.scl_item {
+  display: inline-block;
+  border-radius: 4px;
+  background: #0e86ad;
+  color: white;
+  padding: 1px 5px 2px 7px;
+  margin: 0 5px 3px 0;
+}
+.scli_close {
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 0 0 3px;
+  font-size: 20px;
+  line-height: 14px;
+  transition: all 0.3s ease;
+}
+.scli_close:hover {
+  color: white;
+}
+.filter_toggle {
+  position: relative;
+  color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+.filter_toggle:after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 4px 3px 0 3px;
+  border-color: #999 transparent transparent transparent;
+}
+.filter_toggle.active:after {
+  border-width: 0 3px 4px 3px;
+  border-color: transparent transparent #999 transparent;
+}
+.filter_block {
+  display: none;
+  padding-bottom: 10px;
+}
+.filter_row {
+  padding: 15px 0;
 }

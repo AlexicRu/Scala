@@ -148,7 +148,12 @@ foreach($cards as $card){
             var tpl = $('<div class="line_inner"><span class="gray" /> &nbsp;&nbsp;&nbsp; <span /><div class="fr" /></div>');
             tpl.find('span.gray').text(data[i].H_DATE);
             tpl.find('span:last').text(data[i].M_FIO);
-            tpl.find('div.fr').text(data[i].SHORT_DESCRIPTION);
+            tpl.find('div.fr').html(data[i].SHORT_DESCRIPTION);
+
+            if(data[i].DESCRIPTION){
+                tpl.append('<div class="full_comment">'+ data[i].DESCRIPTION +'</div>');
+            }
+
             block.append(tpl);
         }
     }

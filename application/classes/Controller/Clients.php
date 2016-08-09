@@ -20,7 +20,7 @@ class Controller_Clients extends Controller_Common {
 
         $popupClientAdd = Common::popupForm('Добавление нового клиента', 'client/add');
 
-		$this->tpl
+        $this->tpl
             ->bind('clients', $clients)
             ->bind('popupClientAdd', $popupClientAdd)
         ;

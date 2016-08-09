@@ -18,9 +18,15 @@
             <h2>ID: <?=$managerId?></h2>
 
             <?=$managerSettingsForm?>
+            <?=$popupManagerAddClients?>
 
         </div>
-        <div tab_content="clients" class="tab_content" manager_id="<?=$managerId?>"></div>
+        <div tab_content="clients" class="tab_content" manager_id="<?=$managerId?>">
+            <div class="clients_btn">
+                <a href="#manager_add_clients" class="fancy btn">Добавить клиентов</a>
+            </div>
+            <div class="client_list"></div>
+        </div>
     </div>
 </div>
 
@@ -55,7 +61,7 @@
 
     function showManagersClients(managerId)
     {
-        var block = $('[tab_content=clients][manager_id='+ managerId +']');
+        var block = $('[tab_content=clients][manager_id='+ managerId +'] .client_list');
 
         if(block.html() != ''){
             return true;

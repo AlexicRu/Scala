@@ -19,14 +19,13 @@ class Controller_Control extends Controller_Common {
      */
 	public function action_managers()
     {
-        $search = $this->request->query('m_search');
+        $filter = $this->request->query('filter') ?: ['only_managers' => 1];
 
         $user = Auth::instance()->get_user();
 
-        $params = [
-            'name'      => $search,
-            'agent_id'  => $user['AGENT_ID']
-        ];
+        $params = ['agent_id' => $user['AGENT_ID']];
+
+        $params = array_merge($params, $filter);
 
         $managers = Model_Manager::getManagersList($params);
 
@@ -34,8 +33,8 @@ class Controller_Control extends Controller_Common {
 
         $this->tpl
             ->bind('managers', $managers)
-            ->bind('mSearch', $search)
             ->bind('popupManagerAdd', $popupManagerAdd)
+            ->bind('filter', $filter)
         ;
     }
 
@@ -61,10 +60,13 @@ class Controller_Control extends Controller_Common {
             ->set('changeRole', 1)
         ;
 
+        $popupManagerAddClients = Common::popupForm('Добавление клиентов', 'manager/add_clients');
+
         $html = View::factory('/ajax/control/manager')
             ->bind('managerId', $managerId)
             ->bind('manager', $manager)
             ->bind('managerSettingsForm', $managerSettingsForm)
+            ->bind('popupManagerAddClients', $popupManagerAddClients)
         ;
 
         $this->html($html);

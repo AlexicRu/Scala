@@ -12,7 +12,7 @@ class Model_Report extends Model
     public static $reportTypes = [
         self::REPORT_TYPE_DAILY         => 'kf/kf_client_total_detail',
         self::REPORT_TYPE_BALANCE_SHEET => 'kf/kf_manager_osv',
-        self::REPORT_TYPE_BILL          => 'ru/invoice_client'
+        self::REPORT_TYPE_BILL          => 'ru/aN_invoice_client'
     ];
 
     public static $formatHeaders = [
@@ -59,7 +59,14 @@ class Model_Report extends Model
 
         $format = empty($params['format']) ? 'xls' : $params['format'];
 
-        $report = $client->reportService()->runReport('/reports/'.self::$reportTypes[$params['type']], $format, null, null, $controls);
+        $type = self::$reportTypes[$params['type']];
+
+        if($type == self::REPORT_TYPE_BILL){
+            $user = Auth_Oracle::instance()->get_user();
+            $type = str_replace('ru/aN', 'ru/a'.$user['AGENT_ID'], $type);
+        }
+
+        $report = $client->reportService()->runReport('/reports/'.$type, $format, null, null, $controls);
 
         $name = 'report_'.$params['type'].'_'.date('Y_m_d').'.'.$format;
 

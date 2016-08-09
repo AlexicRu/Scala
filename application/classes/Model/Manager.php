@@ -80,15 +80,20 @@ class Model_Manager extends Model
 
         $sql = "select * from ".Oracle::$prefix."V_WEB_MANAGERS where MANAGER_ID != 0 ";
 
-        if(!empty($params['name'])){
-            $params['name'] = mb_strtoupper($params['name']);
+        if(!empty($params['search'])){
+            $params['search'] = mb_strtoupper($params['search']);
             $sql .= " and (
-                upper(MANAGER_NAME) like '%". Oracle::quote($params['name'])."%' or 
-                upper(MANAGER_SURNAME) like '%". Oracle::quote($params['name'])."%' or 
-                upper(MANAGER_MIDDLENAME) like '%". Oracle::quote($params['name'])."%' 
+                upper(MANAGER_NAME) like '%". Oracle::quote($params['search'])."%' or 
+                upper(MANAGER_SURNAME) like '%". Oracle::quote($params['search'])."%' or 
+                upper(MANAGER_MIDDLENAME) like '%". Oracle::quote($params['search'])."%' 
             )";
         }
-        unset($params['name']);
+        unset($params['search']);
+
+        if(!empty($params['only_managers'])){
+            $sql .= " and ROLE_ID != ". Access::ROLE_USER;
+        }
+        unset($params['only_managers']);
 
         foreach($params as $key => $value){
             $sql .= " and ".strtoupper($key)." = '". Oracle::quote($value)."' ";
@@ -247,5 +252,77 @@ class Model_Manager extends Model
             return false;
         }
         return true;
+    }
+
+    /**
+     * добавляем клиентов
+     *
+     * @param $params
+     */
+    public static function addClients($params)
+    {
+        if(empty($params['ids']) || empty($params['manager_id'])){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        foreach($params['ids'] as $id){
+            $data = [
+                'p_manager_for_id' 	=> $params['manager_id'],
+                'p_client_id' 	    => $id,
+                'p_manager_who_id' 	=> $user['MANAGER_ID'],
+                'p_error_code' 		=> 'out',
+            ];
+
+            $res = $db->procedure('ctrl_manager_client_add', $data);
+
+            if($res == Oracle::CODE_ERROR){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * получаем список доступный клиентов по манагеру
+     *
+     * @param array $params
+     * @return array
+     */
+    public static function getClientsList($params = [])
+    {
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        if (empty($params['manager_id'])) {
+            $managerId = $user['MANAGER_ID'];
+        } else {
+            $managerId = $params['manager_id'];
+        }
+
+        if (empty($params['agent_id'])) {
+            $agentId = $user['AGENT_ID'];
+        } else {
+            $agentId = $params['agent_id'];
+        }
+
+        $sql = "
+			select *
+			from ".Oracle::$prefix."V_WEB_MANAGER_CLIENTS v
+			where v.manager_id != ".$managerId." and v.agent_id = ".$agentId
+		;
+
+        if(!empty($params['search'])){
+            $sql .= " and upper(v.long_name) like '%" . Oracle::quote($params['search']) . "%'";
+        }
+
+        $sql .= " order by v.client_id desc ";
+
+        return $db->tree($sql, 'CLIENT_ID');
     }
 }
