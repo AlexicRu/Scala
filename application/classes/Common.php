@@ -8,7 +8,6 @@ class Common
 	 * @param $header
 	 * @param $form
 	 * @param $data
-	 * @return $this
 	 */
 	public static function popupForm($header, $form, $data = [], $formName = '')
 	{

@@ -24,7 +24,7 @@ html, body {
 	font-size: 16px;
 }
 img{border:0;}
-h1, .h1{font-size: 24px; font-weight: normal; margin: 0 0 25px; padding: 0; color: #999; text-transform: uppercase;
+h1, .h1{font-size: 30px; font-weight: normal; margin: 0 0 25px; padding: 0; color: #999; text-transform: uppercase;
   .btn{
     margin-top: -4px; vertical-align: top;  float: right;
   }
@@ -34,6 +34,13 @@ h1, .h1{font-size: 24px; font-weight: normal; margin: 0 0 25px; padding: 0; colo
 }
 h2, .h2{font-size: 30px; font-weight: normal; margin: 0 0 10px; padding: 0; color: #000;}
 h3, .h3{font-size: 16px; font-weight: normal; margin: 0 0 5px; padding: 0; color: #999;}
+
+.f24{
+  font-size: 24px;
+}
+.blue{
+  color: @color1;
+}
 
 b, strong{
   font-weight: normal; font-family: SegoeUISemiBold;
@@ -230,9 +237,6 @@ a.btn, a.btn:hover{
 }
 .block{
   background: white; border: 1px solid rgba(0,0,0,.1); padding: 20px 30px; margin: 20px 0;
-  h2,.h2{
-    color:#0e86ad; font-size: 24px;
-  }
   .table_out{
     margin: 0 -30px -20px;
     .table{
@@ -284,7 +288,7 @@ a.btn, a.btn:hover{
   }
 }
 .back_link{
-  margin-bottom: 15px; display: inline-block;
+  margin-bottom: 15px; display: inline-block; color: #0e86ad;
 }
 input[type=text].input_big, input[type=password].input_big, input[type=number].input_big, select.select_big, textarea.textarea_big{
   height: 46px; background: white; font-family: SegoeUILight; border: 1px solid #d8d9da; border-radius: 5px; color: black; font-size: 18px; vertical-align: top; padding-left: 15px; padding-right: 15px;
@@ -717,7 +721,8 @@ sup{
   }
 }
 .n_date{
-  margin-bottom: 5px;
+  margin-bottom: 7px;
+  margin-top: -2px;
 }
 .client_list{
 
@@ -796,4 +801,21 @@ sup{
 }
 .filter_row{
   padding: 15px 0;
+}
+.n_link{
+  margin-top: 10px;
+}
+.n_img{
+  width: 160px; height: 110px; display: inline-block; float: right; margin: 0 0 10px 20px; background: transparent center no-repeat; background-size: cover;
+}
+.n_link_back{
+  border-bottom:1px solid rgba(0, 0, 0, 0.1); border-top:1px solid rgba(0, 0, 0, 0.1); margin: 20px -20px -20px; padding: 10px 20px 15px; color: #0e86ad; font-size: 18px;
+}
+.n_img_detail{
+  margin: 10px 0 20px;
+}
+.dropzone {
+  min-height: 50px;
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+  padding: 0;
 }

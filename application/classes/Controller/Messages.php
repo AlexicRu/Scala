@@ -18,7 +18,7 @@ class Controller_Messages extends Controller_Common {
 				'pagination'    => true
 			];
 
-			list($messages, $more) = Model_Message::collect($params);
+			list($messages, $more) = Model_Message::getList($params);
 
 			if(empty($messages)){
 				$this->jsonResult(false);

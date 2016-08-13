@@ -43,7 +43,6 @@
 
             for(var i in data.data){
                 var tpl = $('<div class="client_found_row"><span><input type="checkbox" class="found_client" onchange="checkFoundClient($(this))"></span><span class="cfr_id gray" /><span class="cfr_name" /></div>');
-console.log(data.data[i]);
                 tpl.find('.cfr_id').text(data.data[i].CLIENT_ID);
                 tpl.find('.cfr_name').text(data.data[i].NAME);
                 tpl.attr('client_id', data.data[i].CLIENT_ID);

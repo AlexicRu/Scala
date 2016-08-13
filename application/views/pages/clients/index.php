@@ -18,7 +18,7 @@ if(!empty($clients)){
                 </div>
             <?}?>
 
-            <h2><a href="/clients/client/<?=$client['CLIENT_ID']?>"><?=$client['CLIENT_NAME']?></a></h2>
+            <h2 class="f24 blue"><a href="/clients/client/<?=$client['CLIENT_ID']?>"><?=$client['CLIENT_NAME']?></a></h2>
             <?if(!empty($client['LONG_NAME'])){?>
                 <h3><?=$client['LONG_NAME']?></h3>
             <?}?>

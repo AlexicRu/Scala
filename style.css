@@ -19,7 +19,7 @@ img {
 }
 h1,
 .h1 {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: normal;
   margin: 0 0 25px;
   padding: 0;
@@ -51,6 +51,12 @@ h3,
   margin: 0 0 5px;
   padding: 0;
   color: #999;
+}
+.f24 {
+  font-size: 24px;
+}
+.blue {
+  color: #0e86ad;
 }
 b,
 strong {
@@ -387,11 +393,6 @@ a.btn:hover {
   padding: 20px 30px;
   margin: 20px 0;
 }
-.block h2,
-.block .h2 {
-  color: #0e86ad;
-  font-size: 24px;
-}
 .block .table_out {
   margin: 0 -30px -20px;
 }
@@ -466,6 +467,7 @@ a.btn:hover {
 .back_link {
   margin-bottom: 15px;
   display: inline-block;
+  color: #0e86ad;
 }
 input[type=text].input_big,
 input[type=password].input_big,
@@ -1046,7 +1048,8 @@ sup.required {
   font-weight: bold;
 }
 .n_date {
-  margin-bottom: 5px;
+  margin-bottom: 7px;
+  margin-top: -2px;
 }
 .clients_btn {
   height: 60px;
@@ -1136,4 +1139,32 @@ sup.required {
 }
 .filter_row {
   padding: 15px 0;
+}
+.n_link {
+  margin-top: 10px;
+}
+.n_img {
+  width: 160px;
+  height: 110px;
+  display: inline-block;
+  float: right;
+  margin: 0 0 10px 20px;
+  background: transparent center no-repeat;
+  background-size: cover;
+}
+.n_link_back {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 20px -20px -20px;
+  padding: 10px 20px 15px;
+  color: #0e86ad;
+  font-size: 18px;
+}
+.n_img_detail {
+  margin: 10px 0 20px;
+}
+.dropzone {
+  min-height: 50px;
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+  padding: 0;
 }

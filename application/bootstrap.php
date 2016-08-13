@@ -125,7 +125,7 @@ Kohana::modules(array(
 	'cache'      => MODPATH.'cache',      // Caching with multiple backends
 	// 'codebench'  => MODPATH.'codebench',  // Benchmarking tool
 	'database'   => MODPATH.'database',   // Database access
-	// 'image'      => MODPATH.'image',      // Image manipulation
+	'image'      => MODPATH.'image',      // Image manipulation
 	// 'minion'     => MODPATH.'minion',     // CLI Tasks
 	'orm'        => MODPATH.'orm',        // Object Relationship Mapping
 	// 'unittest'   => MODPATH.'unittest',   // Unit testing
@@ -145,6 +145,12 @@ Cookie::$salt = 'edrge5rg1e5rg4e98rg4sd648er4gerg';
  * Set the routes. Each route must have a minimum of a name, a URI and a set of
  * defaults for the URI.
  */
+
+Route::set('news', 'news/<id>', array('id' => '\d'))
+    ->defaults(array(
+        'controller' => 'news',
+        'action'     => 'news_detail',
+    ));
 
 Route::set('auth', '<action>', array('action' => '^(login|logout)$'))
 	->defaults(array(

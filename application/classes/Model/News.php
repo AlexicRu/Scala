@@ -9,7 +9,7 @@ class Model_News extends Model
      * @param bool $user
      * @return array
      */
-    public static function load($params = [], $user = false)
+    public static function getList($params = [], $user = false)
     {
         if(empty($user)){
             $user = Auth::instance()->get_user();
@@ -17,35 +17,66 @@ class Model_News extends Model
 
         //todo
 
-        /*if(!empty($params['pagination'])) {
-            return $db->pagination($sql, $params);
-        }*/
-        
-        $notice = [];
+         /*$db = Oracle::init();
 
-        if($user['ROLE_ID'] == Access::ROLE_ROOT) {
-            $news = [
-                50 => ['title', 'text'],
-            ];
+        $sql = "select * from ".Oracle::$prefix."V_WEB_NOTIFICATION where manager_id = ".$user['MANAGER_ID'];
+
+        $sql .= ' order by date_time desc';
+
+        if(!empty($params['pagination'])) {
+            return $db->pagination($sql, $params);
         }
+
+        return $db->query($sql);*/
+
+        $news = [
+            1 => [
+                "ID" => 1,
+                'SUBJECT' => 'Новость 1',
+                'NOTE_DATE' => '2016-08-12',
+                'NOTIFICATION_BODY' => ' flwsefgaekefuyhgaoweyu gfwouleyg fwiyetf owuey gwoyeg woue gwueyrg wieyrg wouey grwoueyr gwouey',
+                'IMG' => '/img/pic/01.jpg'
+            ],
+        ];
 
         if(!empty($params['pagination'])) {
             return [$news, true];
         }
-
         return $news;
     }
 
+    /**
+     * получаем конкретную новость
+     *
+     * @param $newsId
+     */
+    public static function getNewsById($newsId)
+    {
+        if(empty($newsId)){
+            return false;
+        }
+
+        $detail = self::getList([
+            'pagination'    => false,
+            'id'            => $newsId
+        ]);
+
+        if(!empty($detail[$newsId])){
+            return $detail[$newsId];
+        }
+
+        return false;
+    }
 
     /**
-     * отмечаем сообщения прочитанными
+     * добавляем новость
      *
-     * @param bool $user
+     * @param $params
      */
-    public static function makeRead($user = false)
+    public static function addNews($params)
     {
-        if(empty($user)){
-            $user = Auth::instance()->get_user();
+        if(empty($params)){
+            return false;
         }
 
         //todo

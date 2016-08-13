@@ -6,7 +6,9 @@ class Lng
     {
         $config = Kohana::$config->load('lng')->as_array();
 
-        $lng = 'eng';
+        $cache = Cache::instance();
+
+        $lng = $cache->get('lng', 'ru');
 
         if(empty($config[$lng][$phrase])){
             return '';

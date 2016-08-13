@@ -31,4 +31,23 @@ class Controller_Index extends Controller_Common {
 		$this->redirect('/');
 	}
 
+    /**
+     * грузим файлы аяксово
+     */
+	public function action_upload_image()
+    {
+        if (!empty($_FILES['file'])) {
+            $name = explode('.', $_FILES['file']['name']);
+            $filename = md5(time().'salt'.$_FILES['file']['name']).'.'.end($name);
+
+            $directory = Upload::generateImageDirectory($filename);
+
+            if(Upload::save($_FILES['file'], $filename, $_SERVER["DOCUMENT_ROOT"].$directory)){
+                $this->jsonResult(true, ['file' => $directory.$filename]);
+            }
+        }
+
+        $this->jsonResult(false);
+    }
+
 } // End Welcome
