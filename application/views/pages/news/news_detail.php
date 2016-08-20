@@ -3,8 +3,10 @@
 <h1>Новости</h1>
 
 <div class="news_elem block">
-    <h2>Новость 1</h2>
-    <div class="n_date gray">2016-08-12</div>
-    <div class="n_img_detail"><img src="/img/pic/01.jpg"></div>
-    <div class="n_body"> flwsefgaekefuyhgaoweyu gfwouleyg fwiyetf owuey gwoyeg woue gwueyrg wieyrg wouey grwoueyr gwouey</div>
+    <h2><?=$detail['TITLE']?></h2>
+    <div class="n_date gray"><?=$detail['DATE_CREATE_WEB']?></div>
+    <?if(!empty($detail['PICTURE'])){?>
+        <div class="n_img_detail"><img src="<?=$detail['PICTURE']?>"></div>
+    <?}?>
+    <div class="n_body"><?=$detail['CONTENT']?></div>
 </div>

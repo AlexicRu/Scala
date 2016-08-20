@@ -186,8 +186,10 @@ class Model_Card extends Model
 			return $res;
 		}
 
-		//редактируем лимитов если таковые пришли в запросе
-		self::editCardLimits($params['card_id'], empty($params['limits']) ? false : $params['limits']);
+		if($action != self::CARD_ACTION_ADD) {
+            //редактируем лимитов если таковые пришли в запросе
+            self::editCardLimits($params['card_id'], empty($params['limits']) ? false : $params['limits']);
+        }
 
 		return true;
 	}

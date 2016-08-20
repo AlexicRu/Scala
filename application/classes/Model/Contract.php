@@ -463,7 +463,9 @@ class Model_Contract extends Model
 
         $db = Oracle::init();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_CTR_NOTIFY_SET where contract_id = ".$contractId;
+        $user = Auth::instance()->get_user();
+
+        $sql = "select * from ".Oracle::$prefix."V_WEB_CTR_NOTIFY_SET where contract_id = ".$contractId. " and manager_id = ".$user['MANAGER_ID'];
 
         return $db->row($sql);
     }

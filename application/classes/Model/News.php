@@ -15,33 +15,41 @@ class Model_News extends Model
             $user = Auth::instance()->get_user();
         }
 
-        //todo
+        $db = Oracle::init();
 
-         /*$db = Oracle::init();
-
-        $sql = "select * from ".Oracle::$prefix."V_WEB_NOTIFICATION where manager_id = ".$user['MANAGER_ID'];
-
-        $sql .= ' order by date_time desc';
-
-        if(!empty($params['pagination'])) {
-            return $db->pagination($sql, $params);
+        $agentIds = [$user['AGENT_ID']];
+        if($user['role'] != Access::ROLE_USER){
+            $agentIds[] = 0;
         }
 
-        return $db->query($sql);*/
+        $sql = "select * from ".Oracle::$prefix."V_WEB_NEWS where agent_id in (".implode(',', $agentIds).")";
 
-        $news = [
-            1 => [
-                "ID" => 1,
-                'SUBJECT' => 'Новость 1',
-                'NOTE_DATE' => '2016-08-12',
-                'NOTIFICATION_BODY' => ' flwsefgaekefuyhgaoweyu gfwouleyg fwiyetf owuey gwoyeg woue gwueyrg wieyrg wouey grwoueyr gwouey',
-                'IMG' => '/img/pic/01.jpg'
-            ],
-        ];
+        $sql .= ' order by DATE_CREATE desc';
 
         if(!empty($params['pagination'])) {
-            return [$news, true];
+            list($news, $more) = $db->pagination($sql, $params);
+
+            foreach($news as &$newsDetail){
+                $newsDetail['announce'] = strip_tags($newsDetail['CONTENT']);
+
+                if(strlen($newsDetail['announce']) > 500){
+                    $newsDetail['announce'] = mb_strcut($newsDetail['announce'], 0, 500);
+                }
+            }
+
+            return [$news, $more];
         }
+
+        $news = $db->tree($sql, 'NEWS_ID', true);
+
+        foreach($news as &$newsDetail){
+            $newsDetail['announce'] = strip_tags($newsDetail['CONTENT']);
+
+            if(strlen($newsDetail['announce']) > 500){
+                $newsDetail['announce'] = mb_strcut($newsDetail['announce'], 0, 500);
+            }
+        }
+
         return $news;
     }
 
@@ -79,8 +87,26 @@ class Model_News extends Model
             return false;
         }
 
-        //todo
+        $db = Oracle::init();
 
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_agent_id' 	    => $user['AGENT_ID'],
+            'p_type_id' 	    => 0,
+            'p_announce' 	    => 'анонс',
+            'p_title' 		    => $params['title'],
+            'p_content' 	    => $params['text'],
+            'p_picture' 	    => $params['image'],
+            'p_is_published' 	=> 1,
+            'p_error_code' 	    => 'out',
+        ];
+
+        $res = $db->procedure('news_add', $data);
+
+        if($res == Oracle::CODE_ERROR){
+            return false;
+        }
         return true;
     }
 }
