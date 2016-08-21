@@ -81,7 +81,7 @@ class Model_News extends Model
      *
      * @param $params
      */
-    public static function addNews($params)
+    public static function editNews($params)
     {
         if(empty($params)){
             return false;
@@ -89,20 +89,26 @@ class Model_News extends Model
 
         $db = Oracle::init();
 
-        $user = Auth::instance()->get_user();
-
         $data = [
-            'p_agent_id' 	    => $user['AGENT_ID'],
             'p_type_id' 	    => 0,
             'p_announce' 	    => 'анонс',
             'p_title' 		    => $params['title'],
             'p_content' 	    => $params['text'],
-            'p_picture' 	    => $params['image'],
+            'p_picture' 	    => empty($params['image']) ? '' : $params['image'],
             'p_is_published' 	=> 1,
             'p_error_code' 	    => 'out',
         ];
 
-        $res = $db->procedure('news_add', $data);
+        if(!empty($params['id'])) {
+            $preData = ['p_news_id' => $params['id']];
+
+            $res = $db->procedure('news_modify', array_merge($preData, $data));
+        } else {
+            $user = Auth::instance()->get_user();
+            $preData = ['p_agent_id' => $user['AGENT_ID']];
+
+            $res = $db->procedure('news_add', array_merge($preData, $data));
+        }
 
         if($res == Oracle::CODE_ERROR){
             return false;

@@ -20,9 +20,11 @@ foreach($cards as $card){
 <div class="tabs_vertical_block tabs_switcher tabs_cards">
     <div class="tabs_v">
         <?if(Access::allow('clients_card_add')){?>
-            <div class="tab_v"><div>
-                <a href="#card_add" class="fancy"><span class="icon-card"></span> Добавить карту</a>
-            </div></div>
+            <div class="before_scroll">
+                <div class="tab_v"><div>
+                    <a href="#card_add" class="fancy"><span class="icon-card"></span> Добавить карту</a>
+                </div></div>
+            </div>
         <?}?>
         <div class="scroll">
             <?if(is_array($foundCards) && empty($foundCards)){?>
@@ -93,12 +95,6 @@ foreach($cards as $card){
             }
         });
 
-        <?if(Access::allow('clients_card_add')){?>
-            renderScroll($('.tabs_cards .scroll'), -70);
-        <?}else{?>
-            renderScroll($('.tabs_cards .scroll'));
-        <?}?>
-
         $(document).off('click', '.btn_card_toggle').on('click', '.btn_card_toggle', function(){
             var t = $(this);
 
@@ -156,6 +152,8 @@ foreach($cards as $card){
 
             block.append(tpl);
         }
+
+        renderScroll($('.tabs_cards .scroll'));
     }
 
     /**

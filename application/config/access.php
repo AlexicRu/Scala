@@ -30,6 +30,9 @@ return [
         'support_index' => [
             Access::ROLE_ROOT
         ],
+        'news_index' => [
+            Access::ROLE_ROOT
+        ],
         'messages_index' => [
             Access::ROLE_ROOT,
             Access::ROLE_SUPERVISOR

@@ -92,6 +92,8 @@
             }else{
                 message(0, 'Ошибка загрузки клиентов');
             }
+
+            renderScroll($('.tabs_managers .scroll'));
         });
     }
 

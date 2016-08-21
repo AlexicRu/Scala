@@ -85,7 +85,8 @@ class Model_Manager extends Model
             $sql .= " and (
                 upper(MANAGER_NAME) like '%". Oracle::quote($params['search'])."%' or 
                 upper(MANAGER_SURNAME) like '%". Oracle::quote($params['search'])."%' or 
-                upper(MANAGER_MIDDLENAME) like '%". Oracle::quote($params['search'])."%' 
+                upper(MANAGER_MIDDLENAME) like '%". Oracle::quote($params['search'])."%' or
+                upper(M_NAME) like '%". Oracle::quote($params['search'])."%'
             )";
         }
         unset($params['search']);
@@ -246,12 +247,12 @@ class Model_Manager extends Model
             'p_error_code' 		    => 'out',
         ];
 
-        $res = $db->procedure('ctrl_manager_add', $data);
+        $res = $db->procedure('ctrl_manager_add', $data, true);
 
-        if($res == Oracle::CODE_ERROR){
+        if($res['p_error_code'] == Oracle::CODE_ERROR){
             return false;
         }
-        return true;
+        return $res['p_new_manager_id'];
     }
 
     /**

@@ -2,22 +2,24 @@
 
 <div class="tabs_vertical_block tabs_switcher tabs_managers">
     <div class="tabs_v">
-        <form>
-            <div class="tab_v tab_v_small"><div>
-                <div class="input_with_icon"><i class="icon-find"></i><input type="text" name="filter[search]" class="input_big input_messages" placeholder="Поиск..." value="<?=(empty($filter['search']) ? '' : $filter['search'])?>"></div>
-            </div></div>
-            <div class="tab_v tab_v_filter filter_outer"><div>
-                <div class="filter_toggle">Фильтр</div>
-                <div class="filter_block">
-                    <div class="filter_row"><label><input type="checkbox" name="filter[only_managers]" value="1" <?=(empty($filter['only_managers']) ? '' : 'checked')?>> Только менеджеры</label></div>
-                    <button class="btn">Применить</button>
-                </div>
-            </div></div>
-        </form>
+        <div class="before_scroll">
+            <form>
+                <div class="tab_v tab_v_small"><div>
+                    <div class="input_with_icon"><i class="icon-find"></i><input type="text" name="filter[search]" class="input_big input_messages" placeholder="Поиск..." value="<?=(empty($filter['search']) ? '' : $filter['search'])?>"></div>
+                </div></div>
+                <div class="tab_v tab_v_filter filter_outer"><div>
+                    <div class="filter_toggle">Фильтр</div>
+                    <div class="filter_block">
+                        <div class="filter_row"><label><input type="checkbox" name="filter[only_managers]" value="1" <?=(empty($filter['only_managers']) ? '' : 'checked')?>> Только менеджеры</label></div>
+                        <button class="btn">Применить</button>
+                    </div>
+                </div></div>
+            </form>
 
-        <div class="tab_v tab_v_small"><div>
-            <a href="#manager_add" class="fancy">Добавить менеджера</a>
-        </div></div>
+            <div class="tab_v tab_v_small"><div>
+                <a href="#manager_add" class="fancy">Добавить менеджера</a>
+            </div></div>
+        </div>
 
         <div class="scroll">
             <?if(empty($managers)){?>
@@ -47,8 +49,6 @@
 
 <script>
     $(function(){
-        renderScroll($('.tabs_managers .scroll'), -125);
-
         $(".tabs_managers .tabs_v .scroll > [tab]").on('click', function(){
             var t = $(this);
 

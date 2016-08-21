@@ -90,8 +90,11 @@ a{
 }
 
 .content{
-  position: fixed; width: 100%; height: 100%; z-index: 1; top:0; left:0; padding: 92px 30px 30px 240px; overflow-y: auto;
+  position: fixed; width: 100%; height: 100%; z-index: 1; top:0; left:0; padding: 71px 0 0 210px;
   .transition();
+}
+.content_inner{
+  display: inline-block; width: 100%; height: 100%; overflow-y: auto; padding: 30px;
 }
 header{
   position: fixed; height: 70px; top:0; left:0; z-index: 99; width: 100%; background: white; border-bottom: 1px solid #d8d9da; display: table;
@@ -256,6 +259,21 @@ a.btn, a.btn:hover{
   td,th{
     padding: 15px 30px; border-top:1px solid rgba(0,0,0,.1);
   }
+  th{
+    background: #f6f6f6; text-align: left;
+  }
+  &.table_small{
+    font-size: 16px;
+    td,th{
+      padding: 10px 15px;
+    }
+  }
+  &.table_fullscreen{
+    border:none;
+    th {
+      border-top: none;
+    }
+  }
 }
 .gray{
   color: #999999;
@@ -345,7 +363,7 @@ input[type=text], input[type=password], input[type=number], select, textarea{
   }
 }
 .input_with_icon{
-  font-size: 16px; color:#7e7e7e; position: relative;
+  font-size: 16px; color:#7e7e7e; position: relative; display: inline-block;
   input[type=text]{
     padding-left: 40px;
   }
@@ -366,12 +384,7 @@ input[type=text], input[type=password], input[type=number], select, textarea{
   border:  1px solid rgba(0,0,0,.1);
 
   .tabs_v{
-    width: 260px; border-right: 1px solid rgba(0,0,0,.1);
-  }
-  .tabs_v_content{
-    &.block_loading{
-      margin: 0;
-    }
+    width: 260px;
   }
   .tabs_block{
     padding: 0;
@@ -390,9 +403,14 @@ input[type=text], input[type=password], input[type=number], select, textarea{
   }
 }
 .tabs_v_content{
-   background: white; padding: 20px; display: table-cell; vertical-align: top; min-height: 200px;
+   background: white; display: table-cell; vertical-align: top; min-height: 200px; border-left:1px solid rgba(0,0,0,.1);
   &.tabs_content_no_padding{
-    padding: 0;
+    .tab_v_content{
+      padding: 0;
+    }
+  }
+  .tab_v_content{
+    padding: 20px;
   }
 }
 .tab_v{
@@ -563,7 +581,7 @@ textarea{
   min-height: 100px;
 }
 .block_loading{
-  min-height: 200px; background: #ededed url(/img/load.gif) no-repeat center center;  margin: 10px 0;
+  min-height: 200px; background: #ededed url(/img/load.gif) no-repeat center center;
 }
 .error_block{
   padding: 10px; text-align: center;
@@ -593,7 +611,8 @@ textarea{
   font-weight: bold; border: 1px solid rgba(255,255,255,.5); border-radius: 5px; padding: 4px!important;
 }
 .scroll{
-  overflow-y: auto; width: 100%; display: none;
+  overflow-y: auto; width: 100%; display: none; min-height: 300px;
+  .transition();
 }
 
 .form_attention{
@@ -612,7 +631,7 @@ table{
   width: 755px;
 }
 .ajax_block_more{
-  display: none; text-align: center; padding-top: 5px;
+  display: none; text-align: center; padding-top: 5px; padding-bottom: 10px;
 }
 .switch_block{
   margin-bottom: 25px; padding-left: 40px;
@@ -703,7 +722,7 @@ table{
 .sub_menu_items{
   display: none; background: rgba(255,255,255,.05); font-size: 16px; padding-top: 9px;
   >div{
-    padding: 0 0 13px 55px;
+    padding: 0 10px 13px 55px;
   }
   a{
     color:#ddd; text-decoration: none;
@@ -820,4 +839,10 @@ sup{
   min-height: 50px;
   border: 2px dashed rgba(0, 0, 0, 0.1);
   padding: 0;
+}
+.tab_content_header{
+  padding: 20px; border-bottom: 1px solid rgba(0,0,0,.1);
+}
+.ajax_contract_block{
+  margin-top: 20px;
 }
