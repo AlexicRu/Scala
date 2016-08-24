@@ -93,12 +93,12 @@ class Controller_Managers extends Controller_Common {
     {
         $params = $this->request->post('params');
 
-        $result = Model_Manager::addManager($params);
+        $newManagerId = Model_Manager::addManager($params);
 
-        if(empty($result)){
+        if(empty($newManagerId)){
             $this->jsonResult(false);
         }
-        $this->jsonResult(true);
+        $this->jsonResult(true, $newManagerId);
     }
 
     /**

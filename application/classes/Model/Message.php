@@ -11,7 +11,7 @@ class Model_Message extends Model
      * @param array $params
      * @return array
      */
-    public static function collect($params = [])
+    public static function getList($params = [])
     {
         if(empty($user)){
             $user = Auth::instance()->get_user();

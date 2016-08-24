@@ -13,12 +13,12 @@ if(!empty($clients)){
 
             <?if(!empty($client['contracts'])){?>
                 <div class="fr btn" toggle="client<?=$client['CLIENT_ID']?>">
-                    <span toggle_block="client<?=$client['CLIENT_ID']?>">Договора</span>
+                    <span toggle_block="client<?=$client['CLIENT_ID']?>">Договоры</span>
                     <span toggle_block="client<?=$client['CLIENT_ID']?>" class="dn">Свернуть</span>
                 </div>
             <?}?>
 
-            <h2><a href="/clients/client/<?=$client['CLIENT_ID']?>"><?=$client['CLIENT_NAME']?></a></h2>
+            <h2 class="f24 blue"><a href="/clients/client/<?=$client['CLIENT_ID']?>"><?=$client['CLIENT_NAME']?></a></h2>
             <?if(!empty($client['LONG_NAME'])){?>
                 <h3><?=$client['LONG_NAME']?></h3>
             <?}?>

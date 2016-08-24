@@ -10,7 +10,7 @@ class Messages
      */
     public static function get()
     {
-        $cache = $cache = Cache::instance();
+        $cache = Cache::instance();
         
         $messages = $cache->get('messages');
         

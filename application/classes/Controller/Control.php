@@ -71,4 +71,50 @@ class Controller_Control extends Controller_Common {
 
         $this->html($html);
     }
+
+    /**
+     * страницы групп точек
+     */
+    public function action_dots()
+    {
+        $dotsGroups = Model_Dot::getGroups();
+
+        $this->tpl
+            ->bind('dotsGroups', $dotsGroups)
+        ;
+    }
+
+    /**
+     * оболочка для постраничной загрузки списка точек
+     */
+    public function action_group_dots()
+    {
+        $groupId = $this->request->param('id');
+
+        $html = View::factory('/ajax/control/dots')
+            ->bind('groupId', $groupId)
+        ;
+
+        $this->html($html);
+    }
+
+    /**
+     * получаем список точек по группе
+     */
+    public function action_load_group_dots()
+    {
+        $params = [
+            'group_id'	    => $this->request->post('group_id'),
+            'offset' 		=> $this->request->post('offset'),
+            'pagination'    => true
+        ];
+
+        list($dots, $more) = Model_Dot::getGroupDots($params);
+
+        if(empty($dots)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, ['items' => $dots, 'more' => $more]);
+    }
 }

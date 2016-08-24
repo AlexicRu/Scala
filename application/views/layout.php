@@ -78,14 +78,16 @@
 	<div class="wrapper">
 		<?=$menu?>
 		<div class="content">
-			<?if(!empty($errors)){?>
-				<script>
-				<?foreach($errors as $error){
-					echo 'message(0,"'.$error.'");';
-				}?>
-				</script>
-			<?}?>
-			<?=$content?>
+			<div class="content_inner">
+				<?if(!empty($errors)){?>
+					<script>
+					<?foreach($errors as $error){
+						echo 'message(0,"'.$error.'");';
+					}?>
+					</script>
+				<?}?>
+				<?=$content?>
+			</div>
 		</div>
 	</div>
 	<!--[if (lt IE 9)]>

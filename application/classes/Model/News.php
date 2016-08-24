@@ -9,47 +9,110 @@ class Model_News extends Model
      * @param bool $user
      * @return array
      */
-    public static function load($params = [], $user = false)
+    public static function getList($params = [], $user = false)
     {
         if(empty($user)){
             $user = Auth::instance()->get_user();
         }
 
-        //todo
+        $db = Oracle::init();
 
-        /*if(!empty($params['pagination'])) {
-            return $db->pagination($sql, $params);
-        }*/
-        
-        $notice = [];
-
-        if($user['ROLE_ID'] == Access::ROLE_ROOT) {
-            $news = [
-                50 => ['title', 'text'],
-            ];
+        $agentIds = [$user['AGENT_ID']];
+        if($user['role'] != Access::ROLE_USER){
+            $agentIds[] = 0;
         }
 
+        $sql = "select * from ".Oracle::$prefix."V_WEB_NEWS where agent_id in (".implode(',', $agentIds).")";
+
+        $sql .= ' order by DATE_CREATE desc';
+
         if(!empty($params['pagination'])) {
-            return [$news, true];
+            list($news, $more) = $db->pagination($sql, $params);
+
+            foreach($news as &$newsDetail){
+                $newsDetail['announce'] = strip_tags($newsDetail['CONTENT']);
+
+                if(strlen($newsDetail['announce']) > 500){
+                    $newsDetail['announce'] = mb_strcut($newsDetail['announce'], 0, 500);
+                }
+            }
+
+            return [$news, $more];
+        }
+
+        $news = $db->tree($sql, 'NEWS_ID', true);
+
+        foreach($news as &$newsDetail){
+            $newsDetail['announce'] = strip_tags($newsDetail['CONTENT']);
+
+            if(strlen($newsDetail['announce']) > 500){
+                $newsDetail['announce'] = mb_strcut($newsDetail['announce'], 0, 500);
+            }
         }
 
         return $news;
     }
 
-
     /**
-     * отмечаем сообщения прочитанными
+     * получаем конкретную новость
      *
-     * @param bool $user
+     * @param $newsId
      */
-    public static function makeRead($user = false)
+    public static function getNewsById($newsId)
     {
-        if(empty($user)){
-            $user = Auth::instance()->get_user();
+        if(empty($newsId)){
+            return false;
         }
 
-        //todo
+        $detail = self::getList([
+            'pagination'    => false,
+            'id'            => $newsId
+        ]);
 
+        if(!empty($detail[$newsId])){
+            return $detail[$newsId];
+        }
+
+        return false;
+    }
+
+    /**
+     * добавляем новость
+     *
+     * @param $params
+     */
+    public static function editNews($params)
+    {
+        if(empty($params)){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $data = [
+            'p_type_id' 	    => 0,
+            'p_announce' 	    => 'анонс',
+            'p_title' 		    => $params['title'],
+            'p_content' 	    => $params['text'],
+            'p_picture' 	    => empty($params['image']) ? '' : $params['image'],
+            'p_is_published' 	=> 1,
+            'p_error_code' 	    => 'out',
+        ];
+
+        if(!empty($params['id'])) {
+            $preData = ['p_news_id' => $params['id']];
+
+            $res = $db->procedure('news_modify', array_merge($preData, $data));
+        } else {
+            $user = Auth::instance()->get_user();
+            $preData = ['p_agent_id' => $user['AGENT_ID']];
+
+            $res = $db->procedure('news_add', array_merge($preData, $data));
+        }
+
+        if($res == Oracle::CODE_ERROR){
+            return false;
+        }
         return true;
     }
 }

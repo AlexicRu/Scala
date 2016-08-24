@@ -1,6 +1,6 @@
 <script src="/js/clients/client.js"></script>
 
-<a href="/clients" class="back_link">&larr; Вернуться назад</a>
+<div class="back_link">&larr; <a href="/clients">Вернуться назад</a></div>
 
 <h2>
     <span toggle_block="edit_client" uid="client_name"><?=$client['NAME']?></span>

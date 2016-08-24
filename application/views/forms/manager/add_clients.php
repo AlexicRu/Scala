@@ -43,11 +43,10 @@
 
             for(var i in data.data){
                 var tpl = $('<div class="client_found_row"><span><input type="checkbox" class="found_client" onchange="checkFoundClient($(this))"></span><span class="cfr_id gray" /><span class="cfr_name" /></div>');
-
                 tpl.find('.cfr_id').text(data.data[i].CLIENT_ID);
-                tpl.find('.cfr_name').text(data.data[i].LONG_NAME ? data.data[i].LONG_NAME : data.data[i].CLIENT_NAME);
+                tpl.find('.cfr_name').text(data.data[i].NAME);
                 tpl.attr('client_id', data.data[i].CLIENT_ID);
-                tpl.data('client_name', data.data[i].LONG_NAME ? data.data[i].LONG_NAME : data.data[i].CLIENT_NAME);
+                tpl.data('client_name', data.data[i].NAME);
 
                 var ids = collectFoundIds(block);
 

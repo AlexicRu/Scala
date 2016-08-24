@@ -9,6 +9,11 @@ $(function(){
         $(' > div > [tab_content], > div > [tab], > div > .scroll > [tab]', block).removeClass('active');
         t.addClass('active');
         $('[tab_content='+ t.attr('tab') +']', block).addClass('active');
+
+        if(t.hasClass('tab_v')) {
+            renderScroll(t.closest('.tabs_switcher').find('.scroll'));
+        }
+
         return false;
     });
 
@@ -96,20 +101,13 @@ function renderDatePicker(elem)
     elem.datepicker(options);
 }
 
-function renderScroll(elem, height)
+function renderScroll(elem)
 {
-    setTimeout(function(){
-        if(height == undefined) {
-            height = elem.parent().height();
-        }else{
-            if(height < 0){
-                height = elem.parent().height() + height;
-            }
-        }
+    setTimeout(function () {
+        var block = elem.closest('.tabs_vertical_block');
+        var preScrollHeight = block.find('.before_scroll').size() ? block.find('.before_scroll').height() : 0;
 
-        if(height < 100){
-            height = 100;
-        }
+        var height = block.find('.tab_v_content.active').outerHeight() - preScrollHeight;
 
         elem.css('height', height).show();
     }, 500);
@@ -150,7 +148,7 @@ function _paginationAjaxLoad(url, outer, block, callback, params)
     outer.find('.ajax_block_more').fadeOut();
 
     params.offset = outer.data('offset');
-    
+
     $.post(url, params, function(data){
         if(data.success){
             callback(data.data.items, block);

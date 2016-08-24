@@ -61,7 +61,7 @@ class Model_Report extends Model
 
         $type = self::$reportTypes[$params['type']];
 
-        if($type == self::REPORT_TYPE_BILL){
+        if($params['type'] == self::REPORT_TYPE_BILL){
             $user = Auth_Oracle::instance()->get_user();
             $type = str_replace('ru/aN', 'ru/a'.$user['AGENT_ID'], $type);
         }

@@ -23,6 +23,13 @@ abstract class Controller_Common extends Controller_Template {
             if($controller == 'Index' && $action == 'index') {
                 $this->redirect('/clients');
             }
+
+            //подключаем меню
+            $menu = Kohana::$config->load('menu');
+            $content = View::factory('/includes/menu')
+                ->bind('menu', $menu);
+
+            View::set_global('menu', $content);
         }
 
         parent::before();
@@ -41,7 +48,7 @@ abstract class Controller_Common extends Controller_Template {
             }
 
             $this->_checkCustomDesign();
-            $this->_appendFiles();
+            $this->_appendFilesBefore();
         }
 
         //если все таки аякс
@@ -58,6 +65,10 @@ abstract class Controller_Common extends Controller_Template {
      */
     public function after()
     {
+        if(!$this->request->is_ajax()) {
+            $this->_appendFilesAfter();
+        }
+
         View::set_global('user', Auth_Oracle::instance()->get_user());
 
         $config = Kohana::$config->load('main')->as_array();
@@ -69,7 +80,7 @@ abstract class Controller_Common extends Controller_Template {
         View::set_global('errors', $this->errors);
 
         if(Auth::instance()->logged_in()) {
-            View::set_global('notices', Model_Message::collect(['not_read' => true]));
+            View::set_global('notices', Model_Message::getList(['not_read' => true]));
         }
         
         $this->template->content = $this->tpl;
@@ -130,41 +141,64 @@ abstract class Controller_Common extends Controller_Template {
      *
      * @throws Kohana_Exception
      */
-    private function _appendFiles()
+    private function _appendFilesBefore()
     {
         if(Auth::instance()->logged_in()) {
-            $menu = Kohana::$config->load('menu');
-            $content = View::factory('/includes/menu')
-                ->bind('menu', $menu);
-
-            View::set_global('menu', $content);
-
             $this->template->styles = [
                 '/js/plugins/jGrowl/jGrowl.css',
                 '/js/plugins/fancy/jquery.fancybox.css',
-                '/style.css',
-                '/ui.css',
-                '/design.css',
             ];
             $this->template->scripts = [
                 'https://yastatic.net/jquery/2.1.3/jquery.min.js',
                 'https://yastatic.net/jquery-ui/1.11.2/jquery-ui.min.js',
                 '/js/plugins/jGrowl/jGrowl.js',
                 '/js/plugins/fancy/jquery.fancybox.js',
-                '/js/plugins/site.js',
-                '/js/plugins/ui.js',
-                '/js/plugins/functions.js',
-                '/js/plugins/common.js',
+                '/js/ui.js',
+                '/js/functions.js',
+                '/js/common.js',
             ];
         }else{
-            $this->template->styles = [
-                '/style.css',
-                '/design.css',
-            ];
+            $this->template->styles = [];
             $this->template->scripts = [
                 'https://yastatic.net/jquery/2.1.3/jquery.min.js',
-                '/js/plugins/common.js',
+                '/js/common.js',
             ];
         }
     }
+    private function _appendFilesAfter()
+    {
+        if(Auth::instance()->logged_in()) {
+            $this->template->styles[] = '/ui.css';
+            $this->template->styles[] = '/style.css';
+            $this->template->styles[] = '/design.css';
+
+            $this->template->scripts[] = '/js/site.js';
+        }else{
+            $this->template->styles[] = '/style.css';
+            $this->template->styles[] = '/design.css';
+        }
+    }
+
+    /**
+     * подключаем скрипты и стили редактора
+     */
+    protected function _initWYSIWYG()
+    {
+        $this->template->styles[] = '/js/plugins/trumbowyg/ui/trumbowyg.min.css';
+        $this->template->styles[] = '/js/plugins/trumbowyg/plugins/colors/ui/trumbowyg.colors.min.css';
+        $this->template->scripts[] = '/js/plugins/trumbowyg/trumbowyg.min.js';
+        $this->template->scripts[] = '/js/plugins/trumbowyg/plugins/colors/trumbowyg.colors.min.js';
+        $this->template->scripts[] = '/js/plugins/trumbowyg/plugins/noembed/trumbowyg.noembed.min.js';
+        $this->template->scripts[] = '/js/plugins/trumbowyg/plugins/upload/trumbowyg.upload.min.js';
+    }
+
+    /**
+     * подключаем скрипты и стили аяксовой загрузки картинок
+     */
+    protected function _initDropZone()
+    {
+        $this->template->styles[] = '/js/plugins/dropzone/dropzone.css';
+        $this->template->scripts[] = '/js/plugins/dropzone/dropzone.js';
+    }
+
 } // End Common

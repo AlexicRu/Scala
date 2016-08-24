@@ -27,10 +27,10 @@ return [
         'reports_index' => [
             Access::ROLE_ROOT
         ],
-        'news_index' => [
+        'support_index' => [
             Access::ROLE_ROOT
         ],
-        'support_index' => [
+        'news_index' => [
             Access::ROLE_ROOT
         ],
         'messages_index' => [
@@ -39,6 +39,10 @@ return [
         ],
         'clients_card_withdraw' => [
             Access::ROLE_SUPERVISOR
+        ],
+        'clients_bill_add' => [
+            'a_1',
+            'a_10',
         ],
         // custom
         'show_setting_notices' => [
