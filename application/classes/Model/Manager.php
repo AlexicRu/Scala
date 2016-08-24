@@ -78,7 +78,7 @@ class Model_Manager extends Model
     {
         $db = Oracle::init();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_MANAGERS where MANAGER_ID != 0 ";
+        $sql = "select * from ".Oracle::$prefix."V_WEB_MANAGERS where 1=1 ";
 
         if(!empty($params['search'])){
             $params['search'] = mb_strtoupper($params['search']);

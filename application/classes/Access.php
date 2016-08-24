@@ -22,6 +22,11 @@ class Access
         self::ROLE_USER_SECOND          => 'Клиент (без редактирования лимитов)',
     ];
 
+    public static $clientRoles = [
+        self::ROLE_USER                 => 'Клиент',
+        self::ROLE_USER_SECOND          => 'Клиент (без редактирования лимитов)',
+    ];
+
     public static $usersRoles = [
         self::ROLE_USER,
         self::ROLE_USER_SECOND
