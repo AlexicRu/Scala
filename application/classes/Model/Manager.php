@@ -92,7 +92,7 @@ class Model_Manager extends Model
         unset($params['search']);
 
         if(!empty($params['only_managers'])){
-            $sql .= " and ROLE_ID not in (".implode(', ', Access::$usersRoles).")";
+            $sql .= " and ROLE_ID not in (".implode(', ', array_keys(Access::$clientRoles)).")";
         }
         unset($params['only_managers']);
 

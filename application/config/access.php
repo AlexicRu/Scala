@@ -22,6 +22,7 @@ return [
         ],
         'control_index' => [
             Access::ROLE_ROOT,
+            Access::ROLE_ADMIN,
             'u_7',
             'a_10',
         ],
@@ -32,11 +33,8 @@ return [
             Access::ROLE_ROOT
         ],
         'news_index' => [
-            Access::ROLE_ROOT
-        ],
-        'messages_index' => [
             Access::ROLE_ROOT,
-            Access::ROLE_SUPERVISOR
+            Access::ROLE_ADMIN,
         ],
         'clients_card_withdraw' => [
             Access::ROLE_SUPERVISOR
@@ -46,12 +44,6 @@ return [
             'a_10',
         ],
         // custom
-        'show_setting_notices' => [
-            Access::ROLE_ADMIN,
-            Access::ROLE_SUPERVISOR,
-            Access::ROLE_ROOT,
-            'a_10',
-        ],
         'root' => [
             Access::ROLE_ROOT
         ]
@@ -61,6 +53,19 @@ return [
         'reports_index' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
+        ],
+        'control_index' => [
+            Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
+        ],
+        'control_managers' => [
+            Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
+        ],
+        'control_dots' => [
+            Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
+            Access::ROLE_ADMIN,
         ],
         'clients_client_add' => [
             Access::ROLE_USER,
@@ -83,6 +88,7 @@ return [
         ],
         'clients_card_edit' => [
             //Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
         ],
         'clients_payment_add' => [
             Access::ROLE_USER,

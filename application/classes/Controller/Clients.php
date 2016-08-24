@@ -277,6 +277,12 @@ class Controller_Clients extends Controller_Common {
 			$this->jsonResult(false);
 		}
 
+		$messages = Messages::get();
+
+        if(!empty($messages)){
+            $this->jsonResult(false, $messages);
+        }
+
 		$this->jsonResult(true, $result);
 	}
 

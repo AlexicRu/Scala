@@ -290,6 +290,30 @@ class Model_Card extends Model
 			return false;
 		}
 
+        $user = Auth::instance()->get_user();
+
+		if(in_array($user['role'], array_keys(Access::$clientRoles))) {
+            $currentLimits = self::getOilRestrictions($cardId);
+
+            foreach($limits as $limit){
+                if(
+                    ($limit['param'] == 1 && $limit['value'] > 1000) ||
+                    ($limit['param'] == 2 && $limit['value'] > 30000)
+                ){
+                    foreach($limit['services'] as $service){
+                        foreach ($currentLimits as $currentLimit){
+                            foreach ($currentLimit as $currentL) {
+                                if ($currentL['SERVICE_ID'] == $service && $limit['value'] != $currentL['LIMIT_VALUE']) {
+                                    Messages::put('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
 		$db = Oracle::init();
 
 		$db->procedure('card_service_refresh', ['p_card_id' => $cardId]);
@@ -298,8 +322,6 @@ class Model_Card extends Model
             $db->procedure('card_queue_limit_add', ['p_card_id' => $cardId]);
 			return true;
 		}
-
-		$user = Auth::instance()->get_user();
 
 		foreach($limits as $group => $limit){
 			foreach($limit['services'] as $service){

@@ -27,11 +27,6 @@ class Access
         self::ROLE_USER_SECOND          => 'Клиент (без редактирования лимитов)',
     ];
 
-    public static $usersRoles = [
-        self::ROLE_USER,
-        self::ROLE_USER_SECOND
-    ];
-
     /**
      * функция проверки доступа
      */
