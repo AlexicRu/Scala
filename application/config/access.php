@@ -13,7 +13,8 @@ return [
             Access::ROLE_MANAGER,
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
-            Access::ROLE_USER
+            Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
         ],
         'client_cabinet_create' => [
             Access::ROLE_ADMIN,
@@ -59,31 +60,38 @@ return [
         // functions
         'reports_index' => [
             Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
         ],
         'clients_client_add' => [
             Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
         ],
         'clients_contract_add' => [
             Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
         ],
         'clients_contract_edit' => [
             Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
         ],
         'clients_card_add' => [
             Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
         ],
         'clients_card_edit' => [
             //Access::ROLE_USER,
         ],
         'clients_payment_add' => [
             Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
         ],
         'clients_payment_del' => [
             Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
         ],
         'manager_settings' => [
@@ -92,15 +100,19 @@ return [
         // custom
         'view_tariffs' => [
             Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
         ],
         'edit_client_full' => [
             Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
         ],
         'view_penalties_overdrafts' => [
             Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
         ],
         'view_balance_sheet' => [
-            Access::ROLE_USER
+            Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
         ],
     ]
 ];

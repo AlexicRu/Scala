@@ -9,6 +9,7 @@ class Access
     const ROLE_SUPERVISOR               = 3;
     const ROLE_MANAGER                  = 4;
     const ROLE_USER		                = 99;
+    const ROLE_USER_SECOND		        = 98;
     const ROLE_MANAGER_SALE		        = 5;
     const ROLE_MANAGER_SALE_SUPPORT		= 6;
 
@@ -18,6 +19,12 @@ class Access
         self::ROLE_MANAGER_SALE_SUPPORT => 'Менеджер по продажам и сопровождению',
         self::ROLE_SUPERVISOR           => 'Главный менеджер',
         self::ROLE_USER                 => 'Клиент',
+        self::ROLE_USER_SECOND          => 'Клиент (без редактирования лимитов)',
+    ];
+
+    public static $usersRoles = [
+        self::ROLE_USER,
+        self::ROLE_USER_SECOND
     ];
 
     /**

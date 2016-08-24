@@ -18,7 +18,7 @@ class Model_News extends Model
         $db = Oracle::init();
 
         $agentIds = [$user['AGENT_ID']];
-        if($user['role'] != Access::ROLE_USER){
+        if(!in_array($user['role'], Access::$usersRoles)){
             $agentIds[] = 0;
         }
 
