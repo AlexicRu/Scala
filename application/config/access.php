@@ -32,16 +32,16 @@ return [
         'support_index' => [
             Access::ROLE_ROOT
         ],
-        'news_index' => [
-            Access::ROLE_ROOT,
-            Access::ROLE_ADMIN,
-        ],
         'clients_card_withdraw' => [
             Access::ROLE_SUPERVISOR
         ],
         'clients_bill_add' => [
             'a_1',
             'a_10',
+        ],
+        'news_news_edit' => [
+            Access::ROLE_ROOT,
+            Access::ROLE_ADMIN,
         ],
         // custom
         'root' => [

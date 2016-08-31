@@ -161,9 +161,6 @@ class Model_Card extends Model
 		if($action == self::CARD_ACTION_EDIT){
 			$card = self::getCard($params['card_id']);
 
-			if(empty($params['holder'])){
-				$params['holder'] = $card['HOLDER'];
-			}
 			if(empty($params['expire_date'])){
 				$params['expire_date'] = $card['EXPIRE_DATE'];
 			}
@@ -300,6 +297,10 @@ class Model_Card extends Model
                     ($limit['param'] == 1 && $limit['value'] > 1000) ||
                     ($limit['param'] == 2 && $limit['value'] > 30000)
                 ){
+                    if(empty($currentLimits)){
+                        Messages::put('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
+                        return false;
+                    }
                     foreach($limit['services'] as $service){
                         foreach ($currentLimits as $currentLimit){
                             foreach ($currentLimit as $currentL) {
