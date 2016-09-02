@@ -17,6 +17,16 @@
             <input type="text" class="input_big" name="cabinet_create_email">
         </td>
     </tr>
+    <tr>
+        <td class="gray right">Роль:</td>
+        <td>
+            <select name="cabinet_create_role">
+                <?foreach(Access::$clientRoles as $roleId => $role){?>
+                    <option value="<?=$roleId?>"><?=$role?></option>
+                <?}?>
+            </select>
+        </td>
+    </tr>
     <!--tr>
         <td class="gray right" width="170">Отправить клиенту данные:</td><td>
             <input type="checkbox" class="input_big" name="cabinet_create_send">
@@ -37,6 +47,7 @@
             var params = {
                 client_id:      clientId ,
                 email_to:       $('[name=cabinet_create_email]').val(),
+                role:           $('[name=cabinet_create_role]').val(),
             };
 
             if(params.email_to == ''){
@@ -47,7 +58,7 @@
             $.post('/clients/cabinet_create', {params:params}, function(data){
                 if(data.success){
                     message(1, 'Личный кабинет успешно создан');
-                    $.fancybox().close();
+                    $.fancybox.close();
                 }else{
                     message(0, data.data ? data.data : 'Ошибка создания личного кабинета');
                 }

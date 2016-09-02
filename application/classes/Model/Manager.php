@@ -78,7 +78,7 @@ class Model_Manager extends Model
     {
         $db = Oracle::init();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_MANAGERS where MANAGER_ID != 0 ";
+        $sql = "select * from ".Oracle::$prefix."V_WEB_MANAGERS where 1=1 ";
 
         if(!empty($params['search'])){
             $params['search'] = mb_strtoupper($params['search']);
@@ -92,7 +92,7 @@ class Model_Manager extends Model
         unset($params['search']);
 
         if(!empty($params['only_managers'])){
-            $sql .= " and ROLE_ID != ". Access::ROLE_USER;
+            $sql .= " and ROLE_ID not in (".implode(', ', array_keys(Access::$clientRoles)).")";
         }
         unset($params['only_managers']);
 
@@ -312,17 +312,21 @@ class Model_Manager extends Model
             $agentId = $params['agent_id'];
         }
 
-        $sql = "
-			select distinct v.NAME, v.client_id
-			from ".Oracle::$prefix."V_WEB_MANAGER_CLIENTS v
-			where v.manager_id != ".$managerId." and v.agent_id = ".$agentId
-		;
+        $sql = "select *
+            from ".Oracle::$prefix."V_WEB_CLIENTS_LIST t 
+            where t.agent_id = ".$agentId."
+            and not exists
+            (
+                select 1 
+                from ".Oracle::$prefix."V_WEB_MANAGER_CLIENTS vwc 
+                where vwc.client_id = t.client_id and vwc.agent_id = t.agent_id and vwc.manager_id = ".$managerId."
+            )";
 
         if(!empty($params['search'])){
-            $sql .= " and upper(v.NAME) like '%" . mb_strtoupper(Oracle::quote($params['search'])) . "%'";
+            $sql .= " and upper(t.NAME) like '%" . mb_strtoupper(Oracle::quote($params['search'])) . "%'";
         }
 
-        $sql .= " order by v.client_id desc ";
+        $sql .= " order by t.client_id desc ";
 
         return $db->query($sql);
     }

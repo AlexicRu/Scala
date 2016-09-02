@@ -208,6 +208,12 @@ $postfix = $card['CARD_ID'];
                 $('.tab_v.active div.gray').text(params.holder);
             } else {
                 message(0, 'Ошибка обновления карты');
+
+                if(data.data){
+                    for(var i in data.data){
+                        message(0, data.data[i].text);
+                    }
+                }
             }
         });
     }

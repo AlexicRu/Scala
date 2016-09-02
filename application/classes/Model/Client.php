@@ -174,6 +174,7 @@ class Model_Client extends Model
 
 		$data = [
 			'p_client_id' 	=> $client['CLIENT_ID'],
+			'p_role_id' 	=> $params['role'],
 			'p_login' 		=> $client['EMAIL'],
 			'p_password' 	=> null,
 			'p_email_to' 	=> $params['email_to'],

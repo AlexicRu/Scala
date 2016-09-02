@@ -23,7 +23,15 @@ class Controller_Managers extends Controller_Common {
 
 		$params = $this->request->post();
 		if(!empty($params) && $params['form_type'] == 'settings'){
-			$result = Model_Manager::edit($params);
+		    $user = false;
+
+            if(!empty($params['manager_settings_id'])){
+                $user = [
+                    'MANAGER_ID' => $params['manager_settings_id'],
+                    'role' => $params['manager_settings_role'],
+                ];
+            }
+			$result = Model_Manager::edit($params, $user);
 
             $this->jsonResult($result);
 		}
