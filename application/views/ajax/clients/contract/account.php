@@ -8,6 +8,7 @@
 </div>
 <div class="as_table">
     <div class="col line_inner">
+        <?if(Access::allow('view_contract_balances')){?>
         <b class="f18">Остатки по договору:</b>
         <br>Без ограничений<br>
         <?/*<table>
@@ -25,6 +26,7 @@
             </tr>
             </tbody></table>*/?>
         <br>
+        <?}?>
 
         <b class="f18">Обороты по договору:</b>
         <div class="white_block">

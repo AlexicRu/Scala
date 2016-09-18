@@ -46,6 +46,9 @@ return [
             Access::ROLE_ADMIN,
         ],
         // custom
+        'view_contract_balances' => [
+            Access::ROLE_ROOT
+        ],
         'root' => [
             Access::ROLE_ROOT
         ]

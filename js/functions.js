@@ -6,6 +6,13 @@ function number_format( number, decimals, dec_point, thousands_sep ) {	// Format
 
     var i, j, kw, kd, km;
 
+    var belowZero = '';
+
+    if(number < 0){
+        belowZero = '-';
+        number *= -1;
+    }
+
     // input sanitation & defaults
     if( isNaN(decimals = Math.abs(decimals)) ){
         decimals = 2;
@@ -31,5 +38,5 @@ function number_format( number, decimals, dec_point, thousands_sep ) {	// Format
     kd = (decimals ? dec_point + Math.abs(number - i).toFixed(decimals).replace(/-/, 0).slice(2) : "");
 
 
-    return km + kw + kd;
+    return belowZero + km + kw + kd;
 }
