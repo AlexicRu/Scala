@@ -15,6 +15,8 @@ return [
             Access::ROLE_SUPERVISOR,
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
+            Access::ROLE_MANAGER_SALE,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
         'client_cabinet_create' => [
             Access::ROLE_ADMIN,
@@ -57,15 +59,21 @@ return [
         'control_index' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
+            Access::ROLE_MANAGER_SALE,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
         'control_managers' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
+            Access::ROLE_MANAGER_SALE,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
         'control_dots' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
             Access::ROLE_ADMIN,
+            Access::ROLE_MANAGER_SALE,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
         'clients_client_add' => [
             Access::ROLE_USER,
