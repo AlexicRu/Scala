@@ -52,6 +52,9 @@ class Model_Contract extends Model
 		self::PAYMENT_ACTION_EDIT 	=> 'Обновить платеж',
 	];
 
+    const DOTS_GROUP_ACTION_EDIT = 1;
+    const DOTS_GROUP_ACTION_DEL = 0;
+
 	/**
 	 * получаем список контрактов
 	 */
@@ -490,5 +493,58 @@ class Model_Contract extends Model
         }
 
         return $db->query($sql);
+    }
+
+    /**
+     * добавляем группу точек
+     *
+     * @param $params
+     */
+    public static function addDotsGroup($params)
+    {
+        if(empty($params['name'])){
+            return Oracle::CODE_ERROR;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_pos_group_name'    => $params['name'],
+            'p_pos_group_id'      => 'out',
+            'p_pos_group_type'    => 1,
+            'p_manager_id'        => $user['MANAGER_ID'],
+            'p_error_code' 		  => 'out',
+        ];
+
+        return $db->procedure('ctrl_pos_group_add', $data);
+    }
+
+    /**
+     * редактируем группу точек
+     *
+     * @param $params
+     */
+    public static function editDotsGroup($params, $action = self::DOTS_GROUP_ACTION_EDIT)
+    {
+        if(empty($params['group_id'])){
+            return Oracle::CODE_ERROR;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_pos_group_id'      => $params['group_id'],
+            'p_action'            => $action,
+            'p_group_name'        => $params['name'],
+            'p_pos_group_type'    => 1,
+            'p_manager_id'        => $user['MANAGER_ID'],
+            'p_error_code' 		  => 'out',
+        ];
+
+        return $db->procedure('ctrl_pos_group_edit', $data);
     }
 }

@@ -19,6 +19,8 @@ class Controller_Control extends Controller_Common {
      */
 	public function action_managers()
     {
+        $this->title[] = 'Менеджеры';
+
         $filter = $this->request->query('filter') ?: ['only_managers' => 1];
 
         $user = Auth::instance()->get_user();
@@ -77,10 +79,23 @@ class Controller_Control extends Controller_Common {
      */
     public function action_dots()
     {
-        $dotsGroups = Model_Dot::getGroups();
+        $this->title[] = 'Группы точек';
+
+        $filter = $this->request->query('filter');
+
+        $dotsGroups = Model_Dot::getGroups($filter);
+
+        $popupAddDotsGroup = Common::popupForm('Добавление группы точек', 'control/add_dots_group');
+        $popupAddDot = Common::popupForm('Добавление точки', 'control/add_dot');
+
+        $popupEditDotsGroup = Common::popupForm('Редактирование группы точек', 'control/edit_dots_group');
 
         $this->tpl
             ->bind('dotsGroups', $dotsGroups)
+            ->bind('filter', $filter)
+            ->bind('popupEditDotsGroup', $popupEditDotsGroup)
+            ->bind('popupAddDot', $popupAddDot)
+            ->bind('popupAddDotsGroup', $popupAddDotsGroup)
         ;
     }
 

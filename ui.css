@@ -35,6 +35,12 @@
   background: #999999;
   border-color: #999999;
 }
+.check_box_active_reverse .checkbox_inner {
+  border-color: #dedede;
+}
+.check_box_active_reverse.checkbox_checked {
+  border-color: #dedede;
+}
 .radio_inner {
   display: inline-block;
   width: 18px;
