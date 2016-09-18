@@ -478,7 +478,7 @@ input[type=text], input[type=password], input[type=number], select, textarea{
   }
 }
 .line_inner{
-  background: #f6f6f6; padding: 10px 15px; margin-top: 8px;
+  background: #f6f6f6; padding: 10px 15px; margin-top: 8px; white-space: nowrap;
   .full_comment{
     color:#999; text-align: right; clear: both;
   }
@@ -486,8 +486,14 @@ input[type=text], input[type=password], input[type=number], select, textarea{
 .line_inner + .line_inner{
   margin-top: 2px;
 }
+.line_inner_100{
+  display: inline-block; width: 100px;
+}
 .line_inner_150{
   display: inline-block; width: 150px;
+}
+.line_inner_200{
+  display: inline-block; width: 200px; white-space: normal;
 }
 table{
   td{

@@ -2,7 +2,10 @@
     <span class="gray">Баланс по договору:</span> <?=number_format($balance['BALANCE'], 2, ',', ' ')?> <?=Text::RUR?>
     <div class="fr">
         <?if(Access::allow('clients_bill_add')){?>
-            <a href="#client_bill_add" class="fancy btn">Выставить счет</a>
+            <a href="#contract_bill_add" class="fancy btn">Выставить счет</a>
+        <?}?>
+        <?if(Access::allow('clients_bill_print')){?>
+            <a href="#contract_bill_print" class="fancy btn">Печать счетов</a>
         <?}?>
     </div>
 </div>
@@ -82,9 +85,11 @@
     <?=$popupContractPaymentAdd?>
 <?}?>
 <?if(Access::allow('clients_bill_add')){?>
-    <?=$popupClientBillAdd?>
+    <?=$popupContractBillAdd?>
 <?}?>
-
+<?if(Access::allow('clients_bill_print')){?>
+    <?=$popupContractBillPrint?>
+<?}?>
 
 <script>
     $(function(){

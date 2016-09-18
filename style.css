@@ -750,6 +750,7 @@ textarea.input_w_small {
   background: #f6f6f6;
   padding: 10px 15px;
   margin-top: 8px;
+  white-space: nowrap;
 }
 .line_inner .full_comment {
   color: #999;
@@ -759,9 +760,18 @@ textarea.input_w_small {
 .line_inner + .line_inner {
   margin-top: 2px;
 }
+.line_inner_100 {
+  display: inline-block;
+  width: 100px;
+}
 .line_inner_150 {
   display: inline-block;
   width: 150px;
+}
+.line_inner_200 {
+  display: inline-block;
+  width: 200px;
+  white-space: normal;
 }
 table td {
   padding: 8px;
