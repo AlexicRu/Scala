@@ -24,20 +24,23 @@ class Model_Manager extends Model
             return false;
         }
 
+        $userWho = Auth::instance()->get_user();
+
         $db = Oracle::init();
 
         $data = [
-            'p_manager_id' 	=> $user['MANAGER_ID'],
-            'p_role_id' 	=> $user['role'],
-            'p_name' 	    => empty($params['manager_settings_name'])         ? '' : $params['manager_settings_name'],
-            'p_surname' 	=> empty($params['manager_settings_surname'])      ? '' : $params['manager_settings_surname'],
-            'p_middlename' 	=> empty($params['manager_settings_middlename'])   ? '' : $params['manager_settings_middlename'],
-            'p_phone' 		=> empty($params['manager_settings_phone'])        ? '' : $params['manager_settings_phone'],
-            'p_email' 		=> empty($params['manager_settings_email'])        ? '' : $params['manager_settings_email'],
-            'p_error_code' 	=> 'out',
+            'p_manager_for_id' 	=> $user['MANAGER_ID'],
+            'p_role_id' 	    => $user['role'],
+            'p_name' 	        => empty($params['manager_settings_name'])         ? '' : $params['manager_settings_name'],
+            'p_surname' 	    => empty($params['manager_settings_surname'])      ? '' : $params['manager_settings_surname'],
+            'p_middlename' 	    => empty($params['manager_settings_middlename'])   ? '' : $params['manager_settings_middlename'],
+            'p_phone' 		    => empty($params['manager_settings_phone'])        ? '' : $params['manager_settings_phone'],
+            'p_email' 		    => empty($params['manager_settings_email'])        ? '' : $params['manager_settings_email'],
+            'p_manager_who_id' 	=> $userWho['MANAGER_ID'],
+            'p_error_code' 	    => 'out',
         ];
 
-        $res = $db->procedure('manager_edit', $data);
+        $res = $db->procedure('ctrl_manager_edit', $data);
 
         if($res == Oracle::CODE_ERROR){
             return false;
@@ -56,7 +59,7 @@ class Model_Manager extends Model
                 'p_error_code' 	    => 'out',
             ];
 
-            $res = $db->procedure('manager_change_password', $data);
+            $res = $db->procedure('ctrl_manager_change_password', $data);
 
             if(!empty($res)){
                 return false;
