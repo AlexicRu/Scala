@@ -127,13 +127,15 @@ class Controller_Clients extends Controller_Common {
 				$turnover = Model_Contract::getTurnover($contractId);
 
 				$popupContractPaymentAdd = Common::popupForm('Добавление нового платежа', 'contract/payment_add');
-                $popupClientBillAdd = Common::popupForm('Выставить счет', 'client/bill_add');
+                $popupContractBillAdd = Common::popupForm('Выставить счет', 'contract/bill_add');
+                $popupContractBillPrint = Common::popupForm('Печать счетов', 'contract/bill_print');
 
 				$content = View::factory('/ajax/clients/contract/account')
                     ->bind('balance', $balance)
 					->bind('turnover', $turnover)
 					->bind('popupContractPaymentAdd', $popupContractPaymentAdd)
-                    ->bind('popupClientBillAdd', $popupClientBillAdd)
+                    ->bind('popupContractBillAdd', $popupContractBillAdd)
+                    ->bind('popupContractBillPrint', $popupContractBillPrint)
                 ;
 				break;
 			case 'reports':
@@ -490,6 +492,55 @@ class Controller_Clients extends Controller_Common {
 
         if(!empty($result)){
             $this->jsonResult(false, $result);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * список выставленных счетов по контракту
+     */
+    public function action_bills_list()
+    {
+        $params = [
+            'contract_id'	=> $this->request->post('contract_id'),
+            'offset' 		=> $this->request->post('offset'),
+            'pagination' 	=> true
+        ];
+
+        list($history, $more) = Model_Contract::getBillsList($params);
+
+        if(empty($history)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, ['items' => $history, 'more' => $more]);
+    }
+
+    /**
+     * добавляем группу точек
+     */
+    public function action_add_dots_group()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Contract::addDotsGroup($params);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    public function action_edit_dots_group()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Contract::editDotsGroup($params);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
         }
 
         $this->jsonResult(true);

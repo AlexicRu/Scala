@@ -20,6 +20,7 @@ return [
         ],
         'client_cabinet_create' => [
             Access::ROLE_ADMIN,
+            Access::ROLE_MANAGER,
             Access::ROLE_SUPERVISOR,
         ],
         'control_index' => [
@@ -35,6 +36,7 @@ return [
             Access::ROLE_ROOT
         ],
         'clients_card_withdraw' => [
+            Access::ROLE_MANAGER,
             Access::ROLE_SUPERVISOR
         ],
         'clients_bill_add' => [
@@ -46,6 +48,9 @@ return [
             Access::ROLE_ADMIN,
         ],
         // custom
+        'view_contract_balances' => [
+            Access::ROLE_ROOT
+        ],
         'root' => [
             Access::ROLE_ROOT
         ]
@@ -79,6 +84,7 @@ return [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
+            Access::ROLE_MANAGER,
         ],
         'clients_contract_add' => [
             Access::ROLE_USER,

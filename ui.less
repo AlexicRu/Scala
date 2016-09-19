@@ -5,6 +5,7 @@
 @color2: #fff;
 @color3: #999999;
 @color4: rgba(153,153,153,0.3);
+@color5: #dedede;
 
 .transition(@param: all, @time: 0.3s, @type:ease){
   transition: @param @time @type;
@@ -35,6 +36,15 @@
     }
   }
 }
+.check_box_active_reverse{
+  .checkbox_inner{
+    border-color:@color5;
+  }
+  &.checkbox_checked{
+    border-color: @color5;
+  }
+}
+
 .radio_outer{}
 .radio_inner{
   display: inline-block; width: 18px; height: 18px; border: 1px solid @color1; border-radius: 50%; vertical-align: bottom; cursor: pointer; text-align: center; line-height: 0; padding: 3px 0 0 0;

@@ -183,7 +183,7 @@ class Model_Client extends Model
 			'p_error_code' 	=> 'out',
 		];
 
-		$res = $db->procedure('manager_client_private_office', $data);
+		$res = $db->procedure('client_private_office', $data);
 
 		switch($res){
 			case Oracle::CODE_ERROR:
