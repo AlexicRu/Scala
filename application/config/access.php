@@ -37,6 +37,8 @@ return [
         ],
         'clients_card_withdraw' => [
             Access::ROLE_MANAGER,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
+            Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR
         ],
         'clients_bill_add' => [
