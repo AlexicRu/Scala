@@ -109,7 +109,7 @@ function renderScroll(elem)
 
         var height = block.find('.tab_v_content.active').outerHeight() - preScrollHeight;
 
-        elem.css('height', height).show();
+        elem.css('height', height);
     }, 500);
 }
 

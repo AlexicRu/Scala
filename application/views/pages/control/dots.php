@@ -125,18 +125,4 @@
             });
         }
     }
-
-    function showEditDotsGroupPopup(groupId)
-    {
-        var block = $('#control_edit_dots_group');
-
-        $('input', block).val('');
-
-        $('[name=edit_dots_group_name]', block).val($('[tab=group_dot'+ groupId +'] [name=group_name]').val());
-        $('[name=edit_dots_group_id]', block).val(groupId);
-
-        $.fancybox.open(block, {
-            padding: [0,0,0,0]
-        });
-    }
 </script>

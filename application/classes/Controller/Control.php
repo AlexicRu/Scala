@@ -25,7 +25,10 @@ class Controller_Control extends Controller_Common {
 
         $user = Auth::instance()->get_user();
 
-        $params = ['agent_id' => $user['AGENT_ID']];
+        $params = [
+            'agent_id' => $user['AGENT_ID'],
+            'not_admin' => true
+        ];
 
         $params = array_merge($params, $filter);
 

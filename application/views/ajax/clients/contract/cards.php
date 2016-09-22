@@ -12,10 +12,16 @@ foreach($cards as $card){
 ?>
 
 <div class="tc_top_line">
-    <span class="gray">Всего карт:</span> <?=count($cards)?> &nbsp;&nbsp;&nbsp;
-    <span class="gray">В работе:</span> <span class="cards_cnt_in_work"><?=$cntWork?></span> &nbsp;&nbsp;&nbsp;
-    <span class="red">Заблокировано: <span class="cards_cnt_blocked"><?=$cntDisable?></span></span>
-    <div class="fr input_with_icon"><i class="icon-find"></i><input type="text" class="input_big cards_search" placeholder="Поиск..." value="<?=$query?>"></div>
+    <span class="gray">Всего карт:
+        <a href="#" onclick="filterCards('all')"><?=count($cards)?></a>
+    </span> &nbsp;&nbsp;&nbsp;
+    <span class="gray <?=(!empty($params['status']) && $params['status'] == 'work' ? 'act' : '')?>">
+        В работе: <a href="#" onclick="filterCards(true)" class="cards_cnt_in_work"><?=$cntWork?></a>
+    </span> &nbsp;&nbsp;&nbsp;
+    <span class="red <?=(!empty($params['status']) && $params['status'] == 'disabled' ? 'act' : '')?>">
+        Заблокировано: <a href="#" onclick="filterCards(false)" class="cards_cnt_blocked"><?=$cntDisable?></a>
+    </span>
+    <div class="fr input_with_icon"><i class="icon-find"></i><input type="text" class="input_big cards_search" placeholder="Поиск..." value="<?=(!empty($params['query']) ? $params['query'] : '')?>"></div>
 </div>
 <div class="tabs_vertical_block tabs_switcher tabs_cards">
     <div class="tabs_v">
@@ -27,8 +33,11 @@ foreach($cards as $card){
             </div>
         <?}?>
         <div class="scroll">
-            <?if(is_array($foundCards) && empty($foundCards)){?>
-                <span class="gray">Карты не найдены</span>
+            <?
+            if(is_array($foundCards) && empty($foundCards)){?>
+                <div class="tab_v"><div>
+                        <span class="gray">Карты не найдены</span>
+                    </div></div>
             <?}else{?>
                 <?foreach($cards as $key => $card){
                     $found = true;
@@ -179,6 +188,22 @@ foreach($cards as $card){
                 message(0, 'Ошибка изъятия');
             }
         });
+        return false;
+    }
+
+    /**
+     * фильтр
+     */
+    function filterCards(type)
+    {
+        if(type == 'all') {
+            loadContract('cards', $(".cards_search").val());
+
+            return false;
+        }
+
+        loadContract('cards', $(".cards_search").val(), {status: type == 1 ? 'work' : 'disabled'});
+
         return false;
     }
 </script>

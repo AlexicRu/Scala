@@ -615,6 +615,9 @@ textarea.input_w_small {
 .tc_top_line .fr {
   margin-top: -5px;
 }
+.tc_top_line .act {
+  font-weight: bold;
+}
 .input_with_icon {
   font-size: 16px;
   color: #7e7e7e;
@@ -922,7 +925,6 @@ textarea {
 .scroll {
   overflow-y: auto;
   width: 100%;
-  display: none;
   min-height: 300px;
   transition: all 0.3s ease;
 }

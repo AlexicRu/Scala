@@ -4,6 +4,7 @@ class Access
 {
     const USER_TEST 	= 6;
 
+    const ROLE_GOD 	                    = 0;
     const ROLE_ROOT 	                = 1;
     const ROLE_ADMIN 	                = 2;
     const ROLE_SUPERVISOR               = 3;
@@ -25,6 +26,12 @@ class Access
     public static $clientRoles = [
         self::ROLE_USER                 => 'Клиент',
         self::ROLE_USER_SECOND          => 'Клиент (без редактирования лимитов)',
+    ];
+
+    public static $adminRoles = [
+        self::ROLE_ADMIN,
+        self::ROLE_ROOT,
+        self::ROLE_GOD
     ];
 
     /**
