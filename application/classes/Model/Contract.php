@@ -539,7 +539,7 @@ class Model_Contract extends Model
         $data = [
             'p_pos_group_id'      => $params['group_id'],
             'p_action'            => $action,
-            'p_group_name'        => $params['name'],
+            'p_group_name'        => !empty($params['name']) ? $params['name'] : '',
             'p_pos_group_type'    => 1,
             'p_manager_id'        => $user['MANAGER_ID'],
             'p_error_code' 		  => 'out',

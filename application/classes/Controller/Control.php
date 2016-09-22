@@ -135,4 +135,57 @@ class Controller_Control extends Controller_Common {
 
         $this->jsonResult(true, ['items' => $dots, 'more' => $more]);
     }
+
+    /**
+     * удаляем группы точек
+     */
+    public function action_del_group_dots()
+    {
+        $groups = $this->request->post('groups');
+
+        $deleted = $notDeleted = [];
+
+        if(is_array($groups)) {
+            foreach($groups as $group) {
+                list($dots, $more) = Model_Dot::getGroupDots(['group_id' => $group]);
+
+                if(empty($dots)) {
+                    $deleted[$group] = Oracle::CODE_SUCCESS == Model_Contract::editDotsGroup(['group_id' => $group], Model_Contract::DOTS_GROUP_ACTION_DEL);
+                }else{
+                    $notDeleted[$group] = true;
+                }
+            }
+        }
+
+        $this->jsonResult(true, ['deleted' => $deleted, 'not_deleted' => $notDeleted]);
+    }
+
+    /**
+     * добавляем группу точек
+     */
+    public function action_add_dots_group()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Contract::addDotsGroup($params);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    public function action_edit_dots_group()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Contract::editDotsGroup($params);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
 }

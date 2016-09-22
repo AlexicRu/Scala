@@ -521,33 +521,4 @@ class Controller_Clients extends Controller_Common {
 
         $this->jsonResult(true, ['items' => $history, 'more' => $more]);
     }
-
-    /**
-     * добавляем группу точек
-     */
-    public function action_add_dots_group()
-    {
-        $params = $this->request->post('params');
-
-        $result = Model_Contract::addDotsGroup($params);
-
-        if(!empty($result)){
-            $this->jsonResult(false);
-        }
-
-        $this->jsonResult(true);
-    }
-
-    public function action_edit_dots_group()
-    {
-        $params = $this->request->post('params');
-
-        $result = Model_Contract::editDotsGroup($params);
-
-        if(!empty($result)){
-            $this->jsonResult(false);
-        }
-
-        $this->jsonResult(true);
-    }
 }

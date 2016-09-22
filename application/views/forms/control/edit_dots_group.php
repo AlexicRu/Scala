@@ -28,7 +28,7 @@
                 return false;
             }
 
-            $.post('/clients/edit_dots_group', {params:params}, function(data){
+            $.post('/control/edit_dots_group', {params:params}, function(data){
                 if(data.success){
                     message(1, 'Группа успешно обновлена');
                     setTimeout(function () {

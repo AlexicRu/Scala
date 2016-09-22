@@ -26,7 +26,7 @@
                 return false;
             }
 
-            $.post('/clients/add_dots_group', {params:params}, function(data){
+            $.post('/control/add_dots_group', {params:params}, function(data){
                 if(data.success){
                     message(1, 'Группа успешно добавлена');
                     setTimeout(function () {

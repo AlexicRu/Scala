@@ -41,7 +41,7 @@
                                         <span class="btn btn_green btn_tiny btn_icon" onclick="showEditDotsGroupPopup(<?=$group['GROUP_ID']?>)"><i class="icon-pen"></i></span>
                                     </span>
                                     <span class="gray">[<?=$group['GROUP_ID']?>]</span>
-                                    <?=$group['GROUP_NAME']?>
+                                    <span class="group_name"><?=$group['GROUP_NAME']?></span>
                                 </div></div>
                             <?}?>
                         <?}?>
@@ -96,9 +96,12 @@
         });
         $('.btn_del_dots_groups').on('click', function () {
             var groups = [];
+            var selectedGroups = {};
 
             $('[type=checkbox][name=group_id]:checked').each(function () {
-                groups.push($(this).val());
+                var t = $(this);
+                groups.push(t.val());
+                selectedGroups['group' + t.val()] = t.closest('.tab_v');
             });
 
             if(groups.length == 0){
@@ -108,6 +111,20 @@
             if(!confirm('Удалить ' + groups.length + ' групп точек?')){
                 return false;
             }
+
+            $.post('/control/del_group_dots', {groups: groups}, function (data) {
+
+                for(var i in data.data.deleted){
+                    selectedGroups['group' + i].remove();
+                }
+
+                for(var i in data.data.not_deleted){
+                    message(0, 'Ошибка удаления. Группа <b>'+ selectedGroups['group' + i].find('.group_name').text() +'</b> содержит точки');
+                }
+
+                $('.tabs_group_dots .tabs_v .scroll > [tab]:first').click();
+
+            });
         });
     });
 
@@ -124,5 +141,19 @@
                 tabContent.html(data).parent().removeClass('block_loading');
             });
         }
+    }
+
+    function showEditDotsGroupPopup(groupId)
+    {
+        var block = $('#control_edit_dots_group');
+
+        $('input', block).val('');
+
+        $('[name=edit_dots_group_name]', block).val($('[tab=group_dot'+ groupId +'] [name=group_name]').val());
+        $('[name=edit_dots_group_id]', block).val(groupId);
+
+        $.fancybox.open(block, {
+            padding: [0,0,0,0]
+        });
     }
 </script>
