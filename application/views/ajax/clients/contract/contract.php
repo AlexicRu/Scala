@@ -5,11 +5,11 @@
         <span class="label <?=Model_Contract::$statusContractClasses[$contract['STATE_ID']]?>"><?=Model_Contract::$statusContractNames[$contract['STATE_ID']]?></span>
     </span>
     <span toggle_block="block2" class="dn gray">
-        <input type="text" name="CONTRACT_NAME" value="<?=$contract['CONTRACT_NAME']?>" class="input_big input_w_small">
+        <input type="text" name="CONTRACT_NAME" value="<?=$contract['CONTRACT_NAME']?>" class="input_big input_medium">
         от
-        <input type="text" name="DATE_BEGIN" value="<?=$contract['DATE_BEGIN']?>" class="input_big input_w_small datepicker" readonly>
+        <input type="text" name="DATE_BEGIN" value="<?=$contract['DATE_BEGIN']?>" class="input_big input_medium datepicker" readonly>
         до
-        <input type="text" name="DATE_END" value="<?=$contract['DATE_END']?>" class="input_big input_w_small datepicker" readonly>
+        <input type="text" name="DATE_END" value="<?=$contract['DATE_END']?>" class="input_big input_medium datepicker" readonly>
         <select class="select_big" name="STATE_ID">
             <?
             foreach(Model_Contract::$statusContractNames as $id => $name){
@@ -47,6 +47,14 @@
                 </td>
             </tr>
             <tr>
+                <td class="gray right" width="130">Блокировка:</td>
+                <td>
+                    <span toggle_block="block2"><?=$contractSettings['AUTOBLOCK_LIMIT']?></span>
+                    <span toggle_block="block2" class="dn"><input type="text" name="AUTOBLOCK_LIMIT" class="input_small" value="<?=$contractSettings['AUTOBLOCK_LIMIT']?>" <?if ($contractSettings['scheme'] != Model_Contract::PAYMENT_SCHEME_LIMIT){echo 'disabled';}?>></span>
+                    <?=Text::RUR?>
+                </td>
+            </tr>
+            <tr>
                 <td class="gray right">Переодичность выставления счетов:</td>
                 <td>
                     <?
@@ -76,36 +84,64 @@
                 </td>
             </tr>
         </table>
+
+        <?if(Access::allow('view_penalties')){?>
         <br>
-        <b class="f18">Ограничения по счету:</b>
-        <table>
-            <tr>
-                <td class="gray right" width="160">Блокировка:</td>
-                <td>
-                    <span toggle_block="block2"><?=$contractSettings['AUTOBLOCK_LIMIT']?></span>
-                    <span toggle_block="block2" class="dn"><input type="text" name="AUTOBLOCK_LIMIT" value="<?=$contractSettings['AUTOBLOCK_LIMIT']?>" <?if ($contractSettings['scheme'] != Model_Contract::PAYMENT_SCHEME_LIMIT){echo 'disabled';}?>></span>
-                    <?=Text::RUR?>
-                </td>
-            </tr>
-            <?if(Access::allow('view_penalties_overdrafts')){?>
-            <tr>
-                <td class="gray right">Пени:</td>
-                <td>
-                    <span toggle_block="block2"><?=$contractSettings['PENALTIES']?></span>
-                    <span toggle_block="block2" class="dn"><input type="text" name="PENALTIES" value="<?=$contractSettings['PENALTIES']?>"></span>
-                    %
-                </td>
-            </tr>
-            <tr>
-                <td class="gray right">Овердрафт:</td>
-                <td>
-                    <span toggle_block="block2"><?=$contractSettings['OVERDRAFT']?></span>
-                    <span toggle_block="block2" class="dn"><input type="number" name="OVERDRAFT" min="0" value="<?=$contractSettings['OVERDRAFT']?>"></span>
-                    <?=Text::RUR?>
-                </td>
-            </tr>
-            <?}?>
-        </table>
+        <b class="f18">Штрафы:</b><br>
+        <fieldset>
+            <legend>По счету</legend>
+            <table>
+                <tr>
+                    <td class="gray right">Пени:</td>
+                    <td>
+                        <span toggle_block="block2"><?=$contractSettings['PENALTIES']?></span>
+                        <span toggle_block="block2" class="dn"><input type="text" name="PENALTIES" class="input_small" value="<?=$contractSettings['PENALTIES']?>"></span>
+                        %
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gray right">Овердрафт:</td>
+                    <td>
+                        <span toggle_block="block2"><?=$contractSettings['OVERDRAFT']?></span>
+                        <span toggle_block="block2" class="dn"><input type="number" name="OVERDRAFT" class="input_small" min="0" value="<?=$contractSettings['OVERDRAFT']?>"></span>
+                        <?=Text::RUR?>
+                    </td>
+                </tr>
+            </table>
+        </fieldset><fieldset>
+            <legend>По карте</legend>
+            <table>
+                <tr>
+                    <td class="gray right" width="200">Штрафы за маленькие обороты:</td>
+                    <td>
+                        <span toggle_block="block2"><input type="checkbox" class="switch" disabled></span>
+                        <span toggle_block="block2" class="dn"><input type="checkbox" class="switch"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gray right">Оборот за период менее:</td>
+                    <td>
+                        <span toggle_block="block2">15000 <?=Text::RUR?></span>
+                        <span toggle_block="block2" class="dn">
+                            <input type="text" class="input_tiny" value="15000">
+                            <select>
+                                <option><?=Text::RUR?></option>
+                                <option>Л</option>
+                            </select>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gray right">Размер штрафа:</td>
+                    <td>
+                        <span toggle_block="block2">500</span>
+                        <span toggle_block="block2" class="dn"><input type="text" class="input_small" value="500"></span>
+                        <?=Text::RUR?>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <?}?>
     </div>
     <div class="col line_inner">
         <?if(Access::allow('view_tariffs')){?>

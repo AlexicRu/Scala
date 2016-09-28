@@ -403,6 +403,9 @@ a.btn:hover {
   border-color: transparent;
   padding: 0 5px 3px;
 }
+.btn.block_loading {
+  height: auto;
+}
 .block {
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -534,12 +537,19 @@ textarea {
   padding-left: 10px;
   padding-right: 10px;
 }
-input[type=text].input_w_small,
-input[type=password].input_w_small,
-input[type=number].input_w_small,
-select.input_w_small,
-textarea.input_w_small {
+input[type=text].input_small,
+input[type=password].input_small,
+input[type=number].input_small,
+select.input_small,
+textarea.input_small {
   width: 140px;
+}
+input[type=text].input_tiny,
+input[type=password].input_tiny,
+input[type=number].input_tiny,
+select.input_tiny,
+textarea.input_tiny {
+  width: 70px;
 }
 .more_info {
   margin-bottom: 30px;
@@ -614,9 +624,6 @@ textarea.input_w_small {
 }
 .tc_top_line .fr {
   margin-top: -5px;
-}
-.tc_top_line .act {
-  font-weight: bold;
 }
 .input_with_icon {
   font-size: 16px;
@@ -1234,4 +1241,20 @@ sup.required {
 .tabs_group_dots .check_span {
   display: none;
   margin-right: 10px;
+}
+.popup_dots_list {
+  margin: -30px -30px 0;
+  height: 500px;
+  overflow-y: auto;
+  display: none;
+  width: 1060px;
+}
+.popup_dots_list_btns {
+  text-align: right;
+  padding: 20px 30px 0;
+}
+.popup_dots_list_preview {
+  width: 1000px;
+  padding: 50px;
+  text-align: center;
 }

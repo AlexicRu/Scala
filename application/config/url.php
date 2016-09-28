@@ -8,5 +8,7 @@ return [
         '.*\.oilst\.ru',
         'vegih\.com',
         '.*\.vegih\.com',
+        'piteroilcard\.ru',
+        '.*\.piteroilcard\.ru',
     ],
 ];

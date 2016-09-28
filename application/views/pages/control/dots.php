@@ -2,7 +2,7 @@
 
 <div class="tabs_block tabs_switcher tabs_group_dots">
     <div class="tabs">
-        <span tab="groups" class="tab active">Группы точек</span><span tab="info" class="tab">Информация о точках</span>
+        <span tab="groups" class="tab active">Группы точек</span><span tab="info" class="tab" onclick="showDotsList()">Информация о точках</span>
     </div>
     <div class="tabs_content tabs_content_no_padding">
         <div tab_content="groups" class="tab_content active">
@@ -10,7 +10,7 @@
                 <div class="fr">
                     <span toggle_block="group_dots_block">
                         <a href="#control_add_dots_group" class="btn fancy">+ Добавить группу</a>
-                        <a href="#control_add_dot" class="btn fancy">+ Добавить точку</a>
+                        <a href="#control_add_dot" class="btn fancy">+ Добавить точки</a>
                         <span class="btn btn_green btn_icon" toggle="group_dots_block"><i class="icon-pen"></i></span>
                     </span>
 
@@ -154,6 +154,23 @@
 
         $.fancybox.open(block, {
             padding: [0,0,0,0]
+        });
+    }
+
+    function showDotsList()
+    {
+        var block = $('[tab_content=info]');
+
+        if(block.html() != ''){
+            return true;
+        }
+
+        block.addClass('block_loading');
+
+        $.post('/control/show_dots', {  }, function (data) {
+            block.removeClass('block_loading');
+
+            block.html(data);
         });
     }
 </script>

@@ -100,3 +100,34 @@
     }
   }
 }
+.custom_view_piteroil{
+  .logo{
+    a{
+      background-image: url(/img/projects/piter.jpg);
+    }
+  }
+  aside{
+    background: #f7d463;
+    >a, .sub_menu_title{
+      color: #000000;
+      &:hover, &.act{
+        background: #ed8e00; color: #000000;
+        span{
+          color: #000000;
+        }
+      }
+      [class^="icon-"]{
+        color: #000000;
+      }
+    }
+  }
+  .sub_menu_items{
+    background: rgba(0, 0, 0, 0.05);
+    a{
+      color:#444;
+      &:hover, &.act{
+        color:#000000;
+      }
+    }
+  }
+}

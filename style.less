@@ -245,6 +245,9 @@ a.btn, a.btn:hover{
   &.btn_tiny{
     border-color: transparent; padding: 0 5px 3px;
   }
+  &.block_loading{
+    height: auto;
+  }
 }
 .block{
   background: white; border: 1px solid rgba(0,0,0,.1); padding: 20px 30px; margin: 20px 0;
@@ -322,8 +325,11 @@ input[type=text].input_big, input[type=password].input_big, input[type=number].i
 input[type=text], input[type=password], input[type=number], select, textarea{
   height: 34px; background: white; font-family: SegoeUILight; border: 1px solid #d8d9da; border-radius: 5px; color: black; font-size: 16px; vertical-align: top; padding-left: 10px; padding-right: 10px;
 
-  &.input_w_small{
+  &.input_small{
     width: 140px;
+  }
+  &.input_tiny{
+    width: 70px;
   }
 }
 .more_info{
@@ -368,9 +374,6 @@ input[type=text], input[type=password], input[type=number], select, textarea{
   font-size: 24px; padding:  25px 20px 0; border-bottom: 1px solid rgba(0,0,0,.1); height: 90px;
   .fr{
     margin-top: -5px;
-  }
-  .act{
-    font-weight: bold;
   }
 }
 .input_with_icon{
@@ -873,4 +876,14 @@ sup{
   .check_span{
     display: none; margin-right: 10px;
   }
+}
+.cards_cnt_in_work{}
+.popup_dots_list{
+  margin: -30px -30px 0; height: 500px; overflow-y: auto; display: none; width: 1060px;
+}
+.popup_dots_list_btns{
+  text-align: right; padding: 20px 30px 0;
+}
+.popup_dots_list_preview{
+  width: 1000px; padding: 50px; text-align: center;
 }

@@ -16,4 +16,8 @@ return array(
         'title' => 'ВЕГИХ',
         'class' => 'vegix'
     ],
+    'lkpiteroilcardru' => [
+        'title' => 'ПитерОйл',
+        'class' => 'piteroil'
+    ],
 );
