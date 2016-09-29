@@ -1,41 +1,66 @@
-<table class="table_form form_add_dot">
-    <tr>
-        <td class="gray right" width="170">Название группы:</td>
-        <td>
-            <input type="text" name="add_dots_group_name" class="input_big">
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>
-            <span class="btn btn_reverse btn_add_dots_group_go">+ Добавить группу</span>
-            <span class="btn btn_red fancy_close">Отмена</span>
-        </td>
-    </tr>
-</table>
+<div class="popup_dots_list_preview">
+    <span class="btn btn_green">Загрузить точки</span>
+</div>
+<div class="popup_dots_list"></div>
+<div class="popup_dots_list_btns">
+    <span class="btn btn_reverse btn_add_dots_to_group_go">+ Добавить точки</span>
+    <span class="btn btn_red pre_fancy_close">Отмена</span>
+</div>
 
 <script>
     $(function(){
-        $('.btn_add_dots_group_go').on('click', function(){
-            var params = {
-                name:        $('[name=add_dots_group_name]').val()
-            };
+        $('.pre_fancy_close').on('click', function () {
+            $.fancybox.close();
+            setTimeout(function () {
+                $('.popup_dots_list').empty().hide();
+                $('.popup_dots_list_preview').show();
+            }, 500);
+        });
 
-            if(params.name == ''){
-                message(0, 'Введите название группы');
+        $('.popup_dots_list_preview .btn').on('click', function () {
+            var block = $('.popup_dots_list');
+
+            $('.popup_dots_list_preview').hide();
+            block.show().addClass('block_loading');
+            setTimeout(function () {
+                $.fancybox.update();
+            }, 100);
+
+            var groupId = $('.tabs_group_dots .tab_v.active [name=group_id]').val();
+
+            $.post('/control/show_dots', { postfix: 'popup_dots_list', show_checkbox:1, group_id:groupId }, function (data) {
+                block.removeClass('block_loading');
+
+                block.html(data);
+            });
+        });
+
+        $('.btn_add_dots_to_group_go').on('click', function () {
+            var block = $('.popup_dots_list');
+            var groupId = $('.tabs_group_dots .tab_v.active [name=group_id]').val();
+            var posIds = [];
+
+            $('[name=pos_id]:checked', block).each(function () {
+                posIds.push($(this).val());
+            });
+
+            if(posIds.length == 0){
+                message(0, 'Не выбрано ни одной точки');
                 return false;
             }
 
-            $.post('/clients/add_dots_group', {params:params}, function(data){
+            $.post('/control/add_dots_to_group', {pos_ids:posIds, group_id:groupId}, function (data) {
                 if(data.success){
-                    message(1, 'Группа успешно добавлена');
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 500);
-                }else{
-                    message(0, data.data ? data.data : 'Ошибка добавления группы');
+                    message(1, 'Точки успешно добавлены');
+
+                    var tab = $('.tabs_group_dots .tab_v.active');
+
+                    loadGroupDots(tab, true);
+                }  else {
+                    message(0, 'Ошибка добавления точек');
                 }
+                $('.pre_fancy_close').click();
             });
-        });
+        })
     });
 </script>

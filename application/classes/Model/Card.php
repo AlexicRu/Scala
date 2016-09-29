@@ -39,10 +39,10 @@ class Model_Card extends Model
 	 *
 	 * @param $contractId
 	 * @param $cardId
-	 * @param $query
+	 * @param $params
 	 * @return array|int
 	 */
-	public static function getCards($contractId = false, $cardId = false, $query = false)
+	public static function getCards($contractId = false, $cardId = false, $params = false)
 	{
 		if(empty($contractId) && empty($cardId)){
 			return [];
@@ -64,9 +64,17 @@ class Model_Card extends Model
 			$sql .= " and card_id = ".Oracle::quote($cardId);
 		}
 
-		if(!empty($query)){
-			$sql .= " and (card_id like '%".Oracle::quote($query)."%' or upper(holder) like '%".mb_strtoupper(Oracle::quote($query))."%')";
+		if(!empty($params['query'])){
+			$sql .= " and (card_id like '%".Oracle::quote($params['query'])."%' or upper(holder) like '%".mb_strtoupper(Oracle::quote($params['query']))."%')";
 		}
+
+        if(!empty($params['status'])){
+            if($params['status'] == 'work'){
+                $sql .= ' and CARD_STATE != '.Model_Card::CARD_STATE_BLOCKED;
+            } else {
+                $sql .= ' and CARD_STATE = '.Model_Card::CARD_STATE_BLOCKED;
+            }
+        }
 
 		$cards = $db->query($sql);
 

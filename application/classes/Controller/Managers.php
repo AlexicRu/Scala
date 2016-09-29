@@ -106,7 +106,7 @@ class Controller_Managers extends Controller_Common {
         if(empty($newManagerId)){
             $this->jsonResult(false);
         }
-        $this->jsonResult(true, $newManagerId);
+        $this->jsonResult(true, Model_Manager::getManager($newManagerId));
     }
 
     /**

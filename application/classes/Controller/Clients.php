@@ -82,6 +82,7 @@ class Controller_Clients extends Controller_Common {
 
 		$tab = $this->request->post('tab');
 		$query = $this->request->post('query');
+		$params = $this->request->post('params') ?: [];
 
 		$contract = Model_Contract::getContract($contractId);
 
@@ -110,8 +111,12 @@ class Controller_Clients extends Controller_Common {
 			case 'cards':
                 $cards = Model_Card::getCards($contractId);
 				$foundCards = false;
-				if(!empty($query)){
-					$foundCards = Model_Card::getCards($contractId, false, $query);
+
+				if(!empty($query) ){
+				    $params['query'] = $query;
+                }
+				if(!empty($params) ){
+					$foundCards = Model_Card::getCards($contractId, false, $params);
 				}
 
 				$popupCardAdd = Common::popupForm('Добавление новой карты', 'card/add');
@@ -119,7 +124,7 @@ class Controller_Clients extends Controller_Common {
 				$content = View::factory('/ajax/clients/contract/cards')
                     ->bind('cards', $cards)
                     ->bind('foundCards', $foundCards)
-                    ->bind('query', $query)
+                    ->bind('params', $params)
 					->bind('popupCardAdd', $popupCardAdd)
                 ;
 				break;
@@ -515,34 +520,5 @@ class Controller_Clients extends Controller_Common {
         }
 
         $this->jsonResult(true, ['items' => $history, 'more' => $more]);
-    }
-
-    /**
-     * добавляем группу точек
-     */
-    public function action_add_dots_group()
-    {
-        $params = $this->request->post('params');
-
-        $result = Model_Contract::addDotsGroup($params);
-
-        if(!empty($result)){
-            $this->jsonResult(false);
-        }
-
-        $this->jsonResult(true);
-    }
-
-    public function action_edit_dots_group()
-    {
-        $params = $this->request->post('params');
-
-        $result = Model_Contract::editDotsGroup($params);
-
-        if(!empty($result)){
-            $this->jsonResult(false);
-        }
-
-        $this->jsonResult(true);
     }
 }

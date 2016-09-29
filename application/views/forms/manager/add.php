@@ -96,15 +96,19 @@
                 message(1, 'Менеджер успешно добавлен');
                 $.fancybox.close();
 
-                var managerId = data.data;
+                var managerId = data.data.MANAGER_ID;
                 var tpl = $('<div class="tab_v tab_v_small"><div></div></div>');
                 var tplContent = $('<div class="tab_v_content"></div>');
 
                 tpl
                     .attr('tab', 'manager' + managerId)
-                    .find('div').html('<span class="gray">['+ managerId +']</span> {'+ params.login +'}')
+                    .find('div').html('<span class="gray">['+ managerId +']</span> '+ data.data.M_NAME)
                 ;
                 tplContent.attr('tab_content', 'manager' + managerId);
+
+                tpl.on('click', function () {
+                    loadManager($(this));
+                });
 
                 $('.tabs_managers .tabs_v .scroll').prepend(tpl);
                 $('.tabs_managers .tabs_v_content').prepend(tplContent);

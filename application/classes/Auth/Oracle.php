@@ -30,6 +30,11 @@ class Auth_Oracle extends Auth {
             return false;
         }
 
+        if ($user['AGENT_STATE'] != 1){
+            Messages::put('Доступ запрещен', 'error');
+            return false;
+        }
+
         if($user['STATE_ID'] != 1){
             Messages::put('Доступ запрещен', 'error');
             return false;

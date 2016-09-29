@@ -1,13 +1,25 @@
-<div class="ajax_block_dots_<?=$groupId?>_out">
+<?if(!empty($showCheckbox)){?>
+    <input type="hidden" name="show_dots_<?=$postfix?>" value="1">
+<?}?>
+<?if(!empty($groupId)){?>
+    <input type="hidden" name="group_id_<?=$postfix?>" value="1">
+<?}?>
+<div class="ajax_block_dots_list_<?=$postfix?>_out">
 
 </div>
 
 <script>
     $(function(){
-        paginationAjax('/control/load_group_dots/', 'ajax_block_dots_<?=$groupId?>', renderAjaxPaginationDots<?=$groupId?>, {group_id: <?=$groupId?>});
+        var params = {};
+
+        if($('[name=group_id_<?=$postfix?>]').length){
+            params.group_id = $('[name=group_id_<?=$postfix?>]').val();
+        }
+
+        paginationAjax('/control/load_dots/', 'ajax_block_dots_list_<?=$postfix?>', renderAjaxPaginationDotsList<?=$postfix?>, params);
     });
 
-    function renderAjaxPaginationDots<?=$groupId?>(data, block)
+    function renderAjaxPaginationDotsList<?=$postfix?>(data, block)
     {
         if(block.find('> table').size() == 0){
             block.append('<table class="table table_small table_fullscreen"></table>');
@@ -15,17 +27,18 @@
 
             block.append('<tr>' +
                 '<th class="dot_td_check"></th>' +
-                '<th>ID</th>' +
-                '<th><nobr>ID EMI</nobr></th>' +
-                '<th><nobr>ID TO</nobr></th>' +
-                '<th><nobr>POS name</nobr></th>' +
-                '<th>Владелец</th>' +
-                '<th>Адрес</th>' +
+                '<th><input type="text" name="dots_filter_id" placeholder="ID" class="input_tiny"></th>' +
+                '<th><input type="text" name="dots_filter_id_emi" placeholder="ID EMI" class="input_tiny"></th>' +
+                '<th><input type="text" name="dots_filter_id_to" placeholder="ID TO" class="input_tiny"></th>' +
+                '<th><input type="text" name="dots_filter_pos_name" placeholder="POS name" class="input_small"></th>' +
+                '<th><input type="text" name="dots_filter_owner" placeholder="Владелец"></th>' +
+                '<th style="width:300px;"><input type="text" name="dots_filter_address" placeholder="Адрес">'+
+                    '<button class="btn btn_small btn_icon fr" onclick="filterDots<?=$postfix?>($(this))"><i class="icon-find"></i></button>'+
+                '</th>' +
                 '<th class="dot_td_edit"></th>' +
             '</tr>');
-        }else{
-            block = block.find('table');
         }
+        var subBlock = block.find('tbody');
 
         for(var i in data){
             var tpl = $('<tr>' +
@@ -48,14 +61,37 @@
             tpl.find('.dot_td_address').text(data[i].POS_ADDRESS);
             tpl.find('.dot_td_edit').html('<span class="btn btn_green btn_small btn_icon"><i class="icon-pen"></span>');
 
-            block.append(tpl);
+            subBlock.append(tpl);
             renderCheckbox(tpl.find('.dot_td_check [type=checkbox]'));
         }
 
-        if($('.tabs_group_dots .action_del').is(':visible')){
-            $('.dot_td_check, .dot_td_edit').show();
+        if($('.tabs_group_dots .action_del', block).is(':visible')){
+            $('.dot_td_edit', block).show();
+        }
+        if($('.tabs_group_dots .action_del', block).is(':visible') || $('[name=show_dots_<?=$postfix?>]').length){
+            $('.dot_td_check', block).show();
+        }
+    }
+    
+    function filterDots<?=$postfix?>(btn)
+    {
+        var block = btn.closest('.ajax_block_dots_list_<?=$postfix?>_out');
+
+        var params = {
+            POS_ID:     $('[name=dots_filter_id]', block).val(),
+            ID_EMITENT: $('[name=dots_filter_id_emi]', block).val(),
+            ID_TO:      $('[name=dots_filter_id_to]', block).val(),
+            POS_NAME:   $('[name=dots_filter_pos_name]', block).val(),
+            OWNER:      $('[name=dots_filter_owner]', block).val(),
+            POS_ADDRESS: $('[name=dots_filter_address]', block).val()
+        };
+
+        if($('[name=group_id_<?=$postfix?>]').length){
+            params.group_id = $('[name=group_id_<?=$postfix?>]').val();
         }
 
-        renderScroll($('.tabs_group_dots .scroll'));
+        block.empty().addClass('block_loading');
+
+        paginationAjax('/control/load_dots/', 'ajax_block_dots_list_<?=$postfix?>', renderAjaxPaginationDotsList<?=$postfix?>, params);
     }
 </script>

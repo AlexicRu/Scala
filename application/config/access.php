@@ -49,6 +49,10 @@ return [
             Access::ROLE_ROOT,
             Access::ROLE_ADMIN,
         ],
+        'clients_bill_print' => [
+            'a_1',
+            'a_10',
+        ],
         // custom
         'view_contract_balances' => [
             Access::ROLE_ROOT
@@ -136,5 +140,8 @@ return [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
         ],
+        'view_penalties' => [
+            Access::ROLE_USER
+        ]
     ]
 ];

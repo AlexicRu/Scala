@@ -25,7 +25,10 @@ class Controller_Control extends Controller_Common {
 
         $user = Auth::instance()->get_user();
 
-        $params = ['agent_id' => $user['AGENT_ID']];
+        $params = [
+            'agent_id' => $user['AGENT_ID'],
+            'not_admin' => true
+        ];
 
         $params = array_merge($params, $filter);
 
@@ -86,7 +89,7 @@ class Controller_Control extends Controller_Common {
         $dotsGroups = Model_Dot::getGroups($filter);
 
         $popupAddDotsGroup = Common::popupForm('Добавление группы точек', 'control/add_dots_group');
-        $popupAddDot = Common::popupForm('Добавление точки', 'control/add_dot');
+        $popupAddDot = Common::popupForm('Добавление точек', 'control/add_dot');
 
         $popupEditDotsGroup = Common::popupForm('Редактирование группы точек', 'control/edit_dots_group');
 
@@ -100,13 +103,13 @@ class Controller_Control extends Controller_Common {
     }
 
     /**
-     * оболочка для постраничной загрузки списка точек
+     * оболочка для постраничной загрузки списка точек группы
      */
     public function action_group_dots()
     {
         $groupId = $this->request->param('id');
 
-        $html = View::factory('/ajax/control/dots')
+        $html = View::factory('/ajax/control/dots_in_group')
             ->bind('groupId', $groupId)
         ;
 
@@ -131,5 +134,122 @@ class Controller_Control extends Controller_Common {
         }
 
         $this->jsonResult(true, ['items' => $dots, 'more' => $more]);
+    }
+
+    /**
+     * удаляем группы точек
+     */
+    public function action_del_group_dots()
+    {
+        $groups = $this->request->post('groups');
+
+        $deleted = $notDeleted = [];
+
+        if(is_array($groups)) {
+            foreach($groups as $group) {
+                list($dots, $more) = Model_Dot::getGroupDots(['group_id' => $group]);
+
+                if(empty($dots)) {
+                    $deleted[$group] = Oracle::CODE_SUCCESS == Model_Contract::editDotsGroup(['group_id' => $group], Model_Contract::DOTS_GROUP_ACTION_DEL);
+                }else{
+                    $notDeleted[$group] = true;
+                }
+            }
+        }
+
+        $this->jsonResult(true, ['deleted' => $deleted, 'not_deleted' => $notDeleted]);
+    }
+
+    /**
+     * добавляем группу точек
+     */
+    public function action_add_dots_group()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Contract::addDotsGroup($params);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * редактирование группы точек
+     */
+    public function action_edit_dots_group()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Contract::editDotsGroup($params);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * показываем таб списка точек, сами точки будут аяксом постранично грузиться
+     */
+    public function action_show_dots()
+    {
+        $postfix = $this->request->post('postfix') ?: '';
+        $showCheckbox = $this->request->post('show_checkbox') ?: '';
+        $groupId = $this->request->post('group_id') ?: '';
+
+        $html = View::factory('/ajax/control/dots')
+            ->bind('postfix', $postfix)
+            ->bind('showCheckbox', $showCheckbox)
+            ->bind('groupId', $groupId)
+        ;
+
+        $this->html($html);
+    }
+
+    /**
+     * аяксовая постраничная загрузка точек
+     */
+    public function action_load_dots()
+    {
+        $params = [
+            'POS_ID'        => $this->request->post('POS_ID'),
+            'ID_EMITENT'    => $this->request->post('ID_EMITENT'),
+            'ID_TO'         => $this->request->post('ID_TO'),
+            'POS_NAME'      => $this->request->post('POS_NAME'),
+            'OWNER'         => $this->request->post('OWNER'),
+            'POS_ADDRESS'   => $this->request->post('POS_ADDRESS'),
+            'group_id' 		=> $this->request->post('group_id'),
+            'offset' 		=> $this->request->post('offset'),
+            'pagination'    => true
+        ];
+
+        list($dots, $more) = Model_Dot::getDots($params);
+
+        if(empty($dots)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, ['items' => $dots, 'more' => $more]);
+    }
+
+    /**
+     * добавляем точки к конкретной группе
+     */
+    public function action_add_dots_to_group()
+    {
+        $posIds = $this->request->post('pos_ids');
+        $groupId = $this->request->post('group_id');
+
+        $result = Model_Dot::addDotsToGroup($groupId, $posIds);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
     }
 }

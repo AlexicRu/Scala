@@ -109,7 +109,7 @@ function renderScroll(elem)
 
         var height = block.find('.tab_v_content.active').outerHeight() - preScrollHeight;
 
-        elem.css('height', height).show();
+        elem.css('height', height);
     }, 500);
 }
 
@@ -144,7 +144,7 @@ function _paginationAjaxLoad(url, outer, block, callback, params)
     if(!params){
         params = {};
     }
-    
+
     outer.find('.ajax_block_more').fadeOut();
 
     params.offset = outer.data('offset');
@@ -159,5 +159,6 @@ function _paginationAjaxLoad(url, outer, block, callback, params)
         }else{
             outer.find('.ajax_block_more').fadeIn().html('<span class="gray">Данные отсутствуют</span>');
         }
+        block.closest('.block_loading').removeClass('block_loading');
     });
 }

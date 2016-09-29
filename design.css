@@ -114,3 +114,40 @@
 .custom_view_vegix .sub_menu_items a.act {
   color: #f90e24;
 }
+.custom_view_piteroil .logo a {
+  background-image: url(/img/projects/piter.jpg);
+}
+.custom_view_piteroil aside {
+  background: #f7d463;
+}
+.custom_view_piteroil aside > a,
+.custom_view_piteroil aside .sub_menu_title {
+  color: #000000;
+}
+.custom_view_piteroil aside > a:hover,
+.custom_view_piteroil aside .sub_menu_title:hover,
+.custom_view_piteroil aside > a.act,
+.custom_view_piteroil aside .sub_menu_title.act {
+  background: #ed8e00;
+  color: #000000;
+}
+.custom_view_piteroil aside > a:hover span,
+.custom_view_piteroil aside .sub_menu_title:hover span,
+.custom_view_piteroil aside > a.act span,
+.custom_view_piteroil aside .sub_menu_title.act span {
+  color: #000000;
+}
+.custom_view_piteroil aside > a [class^="icon-"],
+.custom_view_piteroil aside .sub_menu_title [class^="icon-"] {
+  color: #000000;
+}
+.custom_view_piteroil .sub_menu_items {
+  background: rgba(0, 0, 0, 0.05);
+}
+.custom_view_piteroil .sub_menu_items a {
+  color: #444;
+}
+.custom_view_piteroil .sub_menu_items a:hover,
+.custom_view_piteroil .sub_menu_items a.act {
+  color: #000000;
+}

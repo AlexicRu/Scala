@@ -99,6 +99,11 @@ class Model_Manager extends Model
         }
         unset($params['only_managers']);
 
+        if(!empty($params['not_admin'])){
+            $sql .= " and ROLE_ID not in (".implode(', ', array_keys(Access::$adminRoles)).")";
+        }
+        unset($params['not_admin']);
+
         foreach($params as $key => $value){
             $sql .= " and ".strtoupper($key)." = '". Oracle::quote($value)."' ";
         }
