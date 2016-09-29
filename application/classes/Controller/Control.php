@@ -252,4 +252,10 @@ class Controller_Control extends Controller_Common {
 
         $this->jsonResult(true);
     }
+
+    /**
+     * страница тарифов
+     */
+    public function action_tariffs()
+    {}
 }

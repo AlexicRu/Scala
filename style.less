@@ -400,7 +400,7 @@ input[type=text], input[type=password], input[type=number], select, textarea{
 .tabs_reports{
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
-.tabs_managers{
+.tabs_managers, .tabs_tariffs{
   border:  1px solid rgba(0,0,0,.1);
 
   .tabs_v{
@@ -746,7 +746,7 @@ table{
   }
 }
 .sub_menu_items{
-  display: none; background: rgba(255,255,255,.05); font-size: 16px; padding-top: 9px;
+  display: none; background: rgba(255,255,255,.05); font-size: 16px; padding-top: 9px; line-height: 1.1;
   >div{
     padding: 0 10px 13px 55px;
   }
@@ -897,8 +897,34 @@ hr{
   color: #999999; text-align: right; vertical-align: top; padding-top: 15px;
 }
 fieldset{
-  border:1px solid rgba(0,0,0,.1); border-radius:5px;
+  border:1px solid rgba(0,0,0,.1); border-radius:5px; margin-bottom: 20px;
 }
 .inline_block{
   display: inline-block; vertical-align: top;
+}
+.row_btns{
+  padding-top: 20px; border-top: 1px solid rgba(0,0,0,.1); margin-top: 20px;
+}
+.t_sections_list{
+  fieldset{
+    min-height: 100px; position: relative; padding-right: 60px;
+  }
+}
+.ts_remove{
+  position: absolute; top:0; right: 10px;
+}
+.ts_conditions{
+  margin-bottom: 10px;
+}
+.tsc_item{
+  position: relative; min-height: 50px;
+  &.line_inner{
+    padding: 20px;
+  }
+  .ts_remove{
+    top:10px;
+  }
+}
+.center{
+  text-align: center;
 }

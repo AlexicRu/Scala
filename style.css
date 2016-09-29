@@ -658,27 +658,34 @@ textarea.input_tiny {
 .tabs_reports {
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
-.tabs_managers {
+.tabs_managers,
+.tabs_tariffs {
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
-.tabs_managers .tabs_v {
+.tabs_managers .tabs_v,
+.tabs_tariffs .tabs_v {
   width: 260px;
 }
-.tabs_managers .tabs_block {
+.tabs_managers .tabs_block,
+.tabs_tariffs .tabs_block {
   padding: 0;
 }
-.tabs_managers .tabs_content {
+.tabs_managers .tabs_content,
+.tabs_tariffs .tabs_content {
   border-right: none;
   border-bottom: none;
   border-left: none;
 }
-.tabs_managers .tab {
+.tabs_managers .tab,
+.tabs_tariffs .tab {
   background: none;
 }
-.tabs_managers .tab.active {
+.tabs_managers .tab.active,
+.tabs_tariffs .tab.active {
   border-top-color: transparent;
 }
-.tabs_managers .tab:first-child {
+.tabs_managers .tab:first-child,
+.tabs_tariffs .tab:first-child {
   border-left-color: transparent;
 }
 .tabs_v_content {
@@ -1088,6 +1095,7 @@ table {
   background: rgba(255, 255, 255, 0.05);
   font-size: 16px;
   padding-top: 9px;
+  line-height: 1.1;
 }
 .sub_menu_items > div {
   padding: 0 10px 13px 55px;
@@ -1278,8 +1286,40 @@ hr {
 fieldset {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 5px;
+  margin-bottom: 20px;
 }
 .inline_block {
   display: inline-block;
   vertical-align: top;
+}
+.row_btns {
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+.t_sections_list fieldset {
+  min-height: 100px;
+  position: relative;
+  padding-right: 60px;
+}
+.ts_remove {
+  position: absolute;
+  top: 0;
+  right: 10px;
+}
+.ts_conditions {
+  margin-bottom: 10px;
+}
+.tsc_item {
+  position: relative;
+  min-height: 50px;
+}
+.tsc_item.line_inner {
+  padding: 20px;
+}
+.tsc_item .ts_remove {
+  top: 10px;
+}
+.center {
+  text-align: center;
 }
