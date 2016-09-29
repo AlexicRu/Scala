@@ -655,6 +655,9 @@ textarea.input_tiny {
 .tabs_v.tabs_v_dots {
   width: 300px;
 }
+.tabs_reports {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
 .tabs_managers {
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -711,7 +714,7 @@ textarea.input_tiny {
 }
 .tab_v [class^="icon-"] {
   position: absolute;
-  top: 25px;
+  top: 15px;
   left: 25px;
 }
 .tab_v .label {
@@ -1146,6 +1149,7 @@ sup.required {
 .selected_clients_list {
   min-height: 50px;
   padding-bottom: 10px;
+  padding-top: 10px;
 }
 .scl_item {
   display: inline-block;
@@ -1257,4 +1261,25 @@ sup.required {
   width: 1000px;
   padding: 50px;
   text-align: center;
+}
+hr {
+  background: rgba(0, 0, 0, 0.1);
+  line-height: 0;
+  height: 1px;
+  margin: 20px 0;
+  border: none;
+}
+.td_title {
+  color: #999999;
+  text-align: right;
+  vertical-align: top;
+  padding-top: 15px;
+}
+fieldset {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+.inline_block {
+  display: inline-block;
+  vertical-align: top;
 }

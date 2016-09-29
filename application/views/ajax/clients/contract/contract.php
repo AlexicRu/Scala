@@ -88,7 +88,7 @@
         <?if(Access::allow('view_penalties')){?>
         <br>
         <b class="f18">Штрафы:</b><br>
-        <fieldset>
+        <fieldset class="inline_block">
             <legend>По счету</legend>
             <table>
                 <tr>
@@ -108,7 +108,8 @@
                     </td>
                 </tr>
             </table>
-        </fieldset><fieldset>
+        </fieldset>
+        <fieldset class="inline_block">
             <legend>По карте</legend>
             <table>
                 <tr>
