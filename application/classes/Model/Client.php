@@ -83,8 +83,7 @@ class Model_Client extends Model
 			empty($params['Y_ADDRESS']) ||
 			empty($params['PHONE']) ||
 			empty($params['EMAIL']) ||
-			empty($params['INN']) ||
-			empty($params['KPP'])
+			empty($params['INN'])
 		){
 			return false;
 		}

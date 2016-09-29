@@ -58,7 +58,7 @@ class Model_Dot extends Model
         ";
         
         if(!empty($params['group_id'])){
-            $sql .= ' and not exists (select 1 from v_pos_groups_items pg where pg.group_id = '.intval($params['group_id']).')';
+            //$sql .= ' and not exists (select 1 from '.Oracle::$prefix.'V_POS_GROUPS_ITEMS pg where pg.group_id = '.intval($params['group_id']).')';
         }
 
         if(!empty($params['POS_ID'])){
@@ -68,16 +68,16 @@ class Model_Dot extends Model
             $sql .= ' and t.ID_EMITENT = '.intval($params['ID_EMITENT']);
         }
         if(!empty($params['ID_TO'])){
-            $sql .= ' and t.ID_TO like "%'.Oracle::quote($params['ID_TO']).'%"';
+            $sql .= " and t.ID_TO like '%".Oracle::quote($params['ID_TO'])."%'";
         }
         if(!empty($params['POS_NAME'])){
-            $sql .= ' and t.POS_NAME like "%'.Oracle::quote($params['POS_NAME']).'%"';
+            $sql .= " and t.POS_NAME like '%".Oracle::quote($params['POS_NAME'])."%'";
         }
         if(!empty($params['OWNER'])){
-            $sql .= ' and t.OWNER like "%'.Oracle::quote($params['OWNER']).'%"';
+            $sql .= " and t.OWNER like '%".Oracle::quote($params['OWNER'])."%'";
         }
         if(!empty($params['POS_ADDRESS'])){
-            $sql .= ' and t.POS_ADDRESS like "%'.Oracle::quote($params['POS_ADDRESS']).'%"';
+            $sql .= " and t.POS_ADDRESS like '%".Oracle::quote($params['POS_ADDRESS'])."%'";
         }
 
         return $db->pagination($sql, $params);
@@ -102,11 +102,11 @@ class Model_Dot extends Model
         $data = [
             'p_pos_group_id' => $groupId,
             'p_action'       => 1,
-            'p_pos_id'       => $posIds,
+            'p_pos_id'       => [$posIds, SQLT_NUM],
             'p_manager_id'   => $user['MANAGER_ID'],
             'p_error_code' 	 => 'out',
         ];
-print_r($data);die;
+
         return $db->procedure('ctrl_pos_group_collection', $data);
     }
 }

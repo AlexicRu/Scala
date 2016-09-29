@@ -22,8 +22,7 @@ $(function(){
             params.Y_ADDRESS == '' ||
             params.PHONE == '' ||
             params.EMAIL == '' ||
-            params.INN == '' ||
-            params.KPP == ''
+            params.INN == ''
         ){
             $.jGrowl('Заполните обязательные поля', { header: 'Ошибка!' });
             return false;
