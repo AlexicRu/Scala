@@ -137,7 +137,8 @@ return [
             Access::ROLE_USER_SECOND,
         ],
         'view_penalties' => [
-            Access::ROLE_USER
+            Access::ROLE_USER,
+            Access::ROLE_USER_SECOND
         ]
     ]
 ];
