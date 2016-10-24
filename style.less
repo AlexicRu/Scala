@@ -397,7 +397,10 @@ input[type=text], input[type=password], input[type=number], select, textarea{
     width: 300px;
   }
 }
-.tabs_managers{
+.tabs_reports{
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.tabs_managers, .tabs_tariffs{
   border:  1px solid rgba(0,0,0,.1);
 
   .tabs_v{
@@ -441,7 +444,7 @@ input[type=text], input[type=password], input[type=number], select, textarea{
     border-bottom: none; cursor: default;
   }
   [class^="icon-"]{
-    position: absolute; top:25px; left:25px;
+    position: absolute; top:15px; left:25px;
   }
   .label{
     position: absolute; right: 20px; top:23px;
@@ -743,7 +746,7 @@ table{
   }
 }
 .sub_menu_items{
-  display: none; background: rgba(255,255,255,.05); font-size: 16px; padding-top: 9px;
+  display: none; background: rgba(255,255,255,.05); font-size: 16px; padding-top: 9px; line-height: 1.1;
   >div{
     padding: 0 10px 13px 55px;
   }
@@ -796,7 +799,7 @@ sup{
   width: 50px;
 }
 .selected_clients_list{
-  min-height: 50px; padding-bottom: 10px;
+  min-height: 50px; padding-bottom: 10px; padding-top: 10px;
 }
 .scl_item{
   display: inline-block;
@@ -886,4 +889,42 @@ sup{
 }
 .popup_dots_list_preview{
   width: 1000px; padding: 50px; text-align: center;
+}
+hr{
+  background: rgba(0,0,0,.1); line-height: 0; height: 1px; margin: 20px 0; border: none;
+}
+.td_title{
+  color: #999999; text-align: right; vertical-align: top; padding-top: 15px;
+}
+fieldset{
+  border:1px solid rgba(0,0,0,.1); border-radius:5px; margin-bottom: 20px;
+}
+.inline_block{
+  display: inline-block; vertical-align: top;
+}
+.row_btns{
+  padding-top: 20px; border-top: 1px solid rgba(0,0,0,.1); margin-top: 20px;
+}
+.t_sections_list{
+  fieldset{
+    min-height: 100px; position: relative; padding-right: 60px;
+  }
+}
+.ts_remove{
+  position: absolute; top:0; right: 10px;
+}
+.ts_conditions{
+  margin-bottom: 10px;
+}
+.tsc_item{
+  position: relative; min-height: 50px;
+  &.line_inner{
+    padding: 20px;
+  }
+  .ts_remove{
+    top:10px;
+  }
+}
+.center{
+  text-align: center;
 }

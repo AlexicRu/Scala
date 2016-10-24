@@ -64,7 +64,11 @@ class Oracle{
 			if($param == 'out'){
 				oci_bind_by_name($res, ':'.$key, $param, 255);
 			}else{
-				oci_bind_by_name($res, ':'.$key, $param);
+			    if(is_array($param)){
+                    oci_bind_array_by_name($res, ':' . $key, $param[0], count($param[0]), -1, $param[1]);
+                }else {
+                    oci_bind_by_name($res, ':' . $key, $param);
+                }
 			}
 		}
 

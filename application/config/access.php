@@ -29,9 +29,6 @@ return [
             'u_7',
             'a_10',
         ],
-        'reports_index' => [
-            Access::ROLE_ROOT
-        ],
         'support_index' => [
             Access::ROLE_ROOT
         ],
@@ -65,7 +62,6 @@ return [
         // functions
         'reports_index' => [
             Access::ROLE_USER,
-            Access::ROLE_USER_SECOND,
         ],
         'control_index' => [
             Access::ROLE_USER,

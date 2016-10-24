@@ -71,7 +71,7 @@
                 <td class="gray right">КПП:</td>
                 <td>
                     <span toggle_block="edit_client" uid="client_kpp"><?=($client['KPP'] ?: '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_kpp" class="dn"><nobr><input type="text" name="KPP" required value="<?=$client['KPP']?>">*</nobr></span>
+                    <span toggle_block="edit_client" uid="client_kpp" class="dn"><nobr><input type="text" name="KPP" value="<?=$client['KPP']?>">*</nobr></span>
                 </td>
             </tr>
             <tr>
