@@ -10,5 +10,11 @@ return [
         '.*\.vegih\.com',
         'piteroilcard\.ru',
         '.*\.piteroilcard\.ru',
+        'skala-card\.ru',
+        '.*\.skala-card\.ru',
+        'interoil51\.ru',
+        '.*\.interoil51\.ru',
+        'neftregion\.ru',
+        '.*\.neftregion\.ru',
     ],
 ];
