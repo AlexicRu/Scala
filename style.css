@@ -721,7 +721,7 @@ textarea.input_tiny {
 }
 .tab_v [class^="icon-"] {
   position: absolute;
-  top: 15px;
+  top: 25px;
   left: 25px;
 }
 .tab_v .label {

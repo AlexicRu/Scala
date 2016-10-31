@@ -91,7 +91,7 @@
 }
 .custom_view_vegix aside > a,
 .custom_view_vegix aside .sub_menu_title {
-  color: white;
+  color: #f90e24;
 }
 .custom_view_vegix aside > a:hover,
 .custom_view_vegix aside .sub_menu_title:hover,
@@ -151,40 +151,64 @@
 .custom_view_piteroil .sub_menu_items a.act {
   color: #000000;
 }
-.custom_view_interoil {
-  background: #fffbf5;
-}
-.custom_view_interoil header {
+.custom_view_interoil .logo {
   background: #320a09;
 }
 .custom_view_interoil .logo a {
   background-image: url(/img/projects/interoil.png);
 }
 .custom_view_interoil aside {
-  background: #bc771e;
+  background: #fffbf5;
 }
 .custom_view_interoil aside > a,
 .custom_view_interoil aside .sub_menu_title {
-  color: white;
+  color: #af4821;
 }
 .custom_view_interoil aside > a:hover,
 .custom_view_interoil aside .sub_menu_title:hover,
 .custom_view_interoil aside > a.act,
 .custom_view_interoil aside .sub_menu_title.act {
-  background: #8a7a66;
-  color: white;
+  background: #f8f1e8;
+  color: #af4821;
 }
 .custom_view_interoil aside > a:hover span,
 .custom_view_interoil aside .sub_menu_title:hover span,
 .custom_view_interoil aside > a.act span,
 .custom_view_interoil aside .sub_menu_title.act span {
-  color: white;
+  color: #af4821;
 }
 .custom_view_interoil aside > a [class^="icon-"],
 .custom_view_interoil aside .sub_menu_title [class^="icon-"] {
-  color: rgba(255, 255, 255, 0.5);
+  color: #af4821;
 }
 .custom_view_interoil .sub_menu_items a:hover,
 .custom_view_interoil .sub_menu_items a.act {
+  color: #af4821;
+}
+.custom_view_neftregion .logo a {
+  background-image: url(/img/projects/parlamentk.png);
+}
+.custom_view_neftregion aside {
+  background: #0e1d29;
+}
+.custom_view_neftregion aside > a,
+.custom_view_neftregion aside .sub_menu_title {
   color: white;
+}
+.custom_view_neftregion aside > a:hover,
+.custom_view_neftregion aside .sub_menu_title:hover,
+.custom_view_neftregion aside > a.act,
+.custom_view_neftregion aside .sub_menu_title.act {
+  background: #0e86ad;
+  color: white;
+}
+.custom_view_neftregion aside > a:hover span,
+.custom_view_neftregion aside .sub_menu_title:hover span,
+.custom_view_neftregion aside > a.act span,
+.custom_view_neftregion aside .sub_menu_title.act span {
+  color: white;
+}
+.custom_view_neftregion aside > a [class^="icon-"],
+.custom_view_neftregion aside .sub_menu_title [class^="icon-"] {
+  color: rgba(255, 255, 255, 0.5);
 }
