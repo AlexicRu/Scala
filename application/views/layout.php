@@ -35,7 +35,9 @@
 			<div class="avatar" <?/*style="background-image: url(/img/pic/01.png)"*/?>><i class="icon-user"></i></div>
 			<div class="personal_name">
 			<?
-			if(!empty($user['MANAGER_NAME']) && !empty($user['MANAGER_SURNAME']) && !empty($user['MANAGER_MIDDLENAME'])){
+			if(!empty($user['M_NAME'])){
+				echo $user['M_NAME'];
+			}elseif(!empty($user['MANAGER_NAME']) && !empty($user['MANAGER_SURNAME']) && !empty($user['MANAGER_MIDDLENAME'])){
 				echo $user['MANAGER_NAME'].' '.$user['MANAGER_SURNAME'].' '.$user['MANAGER_MIDDLENAME'];
 			}elseif(!empty($user['FIRM_NAME'])){
 				echo $user['FIRM_NAME'];

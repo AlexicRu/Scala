@@ -24,7 +24,7 @@ class Model_Manager extends Model
             return false;
         }
 
-        $userWho = Auth::instance()->get_user();
+            $userWho = Auth::instance()->get_user();
 
         $db = Oracle::init();
 
@@ -56,6 +56,7 @@ class Model_Manager extends Model
             $data = [
                 'p_manager_id' 	    => $user['MANAGER_ID'],
                 'p_new_password'    => empty($params['manager_settings_password'])      ? '' : $params['manager_settings_password'],
+                'p_manager_who_id'  => $userWho['MANAGER_ID'],
                 'p_error_code' 	    => 'out',
             ];
 

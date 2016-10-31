@@ -20,4 +20,12 @@ return array(
         'title' => 'ПитерОйл',
         'class' => 'piteroil'
     ],
+    'lkinteroil51ru' => [
+        'title' => 'ИнтерОйл',
+        'class' => 'interoil'
+    ],
+    'lkneftregionru' => [
+        'title' => 'Парламент-к',
+        'class' => 'neftregion'
+    ],
 );

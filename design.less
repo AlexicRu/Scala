@@ -131,3 +131,36 @@
     }
   }
 }
+.custom_view_interoil{
+  background: #fffbf5;
+  header{
+    background: rgb(50, 10, 9);
+  }
+  .logo{
+    a{
+      background-image: url(/img/projects/interoil.png);
+    }
+  }
+  aside{
+    background: #bc771e;
+    >a, .sub_menu_title{
+      color: white;
+      &:hover, &.act{
+        background: #8a7a66; color: white;
+        span{
+          color: white;
+        }
+      }
+      [class^="icon-"]{
+        color: rgba(255,255,255,.5);
+      }
+    }
+  }
+  .sub_menu_items{
+    a{
+      &:hover, &.act{
+        color:white;
+      }
+    }
+  }
+}
