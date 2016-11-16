@@ -404,9 +404,12 @@ class Model_Contract extends Model
 
         $db = Oracle::init();
 
+        $userWho = Auth::instance()->get_user();
+
         $data = [
             'p_contract_id' 	=> $contractId,
             'p_invoice_sum' 	=> str_replace(',', '.', $sum),
+            'p_manager_id' 	    => $userWho['MANAGER_ID'],
             'p_invoice_num' 	=> 'out',
         ];
 

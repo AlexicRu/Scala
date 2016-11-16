@@ -102,6 +102,9 @@
                     message(1, 'Новость успешно добавлена');
                 <?}?>
                 $.fancybox.close();
+                setTimeout(function () {
+                    window.location.reload();
+                }, 500);
             }else{
                 <?if(!empty($detail['NEWS_ID'])){?>
                     message(0, 'Ошибка редактирования новости');

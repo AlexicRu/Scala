@@ -49,9 +49,17 @@
             <tr>
                 <td class="gray right" width="130">Блокировка:</td>
                 <td>
-                    <span toggle_block="block2"><?=$contractSettings['AUTOBLOCK_LIMIT']?></span>
+                    <span toggle_block="block2">
+                        <?if($contractSettings['scheme'] == Model_Contract::PAYMENT_SCHEME_UNLIMITED){?>
+                            Отсутствует
+                        <?}else{?>
+                            <?=$contractSettings['AUTOBLOCK_LIMIT']?>
+                        <?}?>
+                    </span>
                     <span toggle_block="block2" class="dn"><input type="text" name="AUTOBLOCK_LIMIT" class="input_small" value="<?=$contractSettings['AUTOBLOCK_LIMIT']?>" <?if ($contractSettings['scheme'] != Model_Contract::PAYMENT_SCHEME_LIMIT){echo 'disabled';}?>></span>
-                    <?=Text::RUR?>
+                    <?if($contractSettings['scheme'] != Model_Contract::PAYMENT_SCHEME_UNLIMITED){?>
+                        <?=Text::RUR?>
+                    <?}?>
                 </td>
             </tr>
             <tr>

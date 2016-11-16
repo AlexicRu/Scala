@@ -80,7 +80,7 @@
   aside{
     background: #fff;
     >a, .sub_menu_title{
-      color: white;
+      color: #f90e24;
       &:hover, &.act{
         background: #0e86ad; color: white;
         span{
@@ -127,6 +127,58 @@
       color:#444;
       &:hover, &.act{
         color:#000000;
+      }
+    }
+  }
+}
+.custom_view_interoil{
+  .logo{
+    background: rgb(50, 10, 9);
+    a{
+      background-image: url(/img/projects/interoil.png);
+    }
+  }
+  aside{
+    background: #fffbf5;
+    >a, .sub_menu_title{
+      color: #af4821;
+      &:hover, &.act{
+        background: #f8f1e8; color: #af4821;
+        span{
+          color: #af4821;
+        }
+      }
+      [class^="icon-"]{
+        color: #af4821;
+      }
+    }
+  }
+  .sub_menu_items{
+    a{
+      &:hover, &.act{
+        color:#af4821;
+      }
+    }
+  }
+}
+.custom_view_neftregion{
+  .logo{
+    a{
+      background-image: url(/img/projects/parlamentk.png);
+    }
+  }
+  aside{
+    background: #0e1d29;
+    >a, .sub_menu_title{
+      color: white;
+      &:hover, &.act{
+        background: #0e86ad; color: white;
+        span{
+          color: white;
+        }
+      }
+      [class^="icon-"]{
+        color: rgba(255,255,255,.5);
       }
     }
   }

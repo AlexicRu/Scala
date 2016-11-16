@@ -102,7 +102,7 @@ class Model_Dot extends Model
         $data = [
             'p_pos_group_id' => $groupId,
             'p_action'       => 1,
-            'p_pos_id'       => [$posIds, SQLT_NUM],
+            'p_pos_id'       => [$posIds, SQLT_INT],
             'p_manager_id'   => $user['MANAGER_ID'],
             'p_error_code' 	 => 'out',
         ];

@@ -42,6 +42,16 @@ class Auth_Oracle extends Auth {
 
         // Finish the login
         $this->complete_login($user);
+
+        $db = Oracle::init();
+
+        $data = [
+            'p_manager_id' => $user['MANAGER_ID'],
+            'p_params' => $_SERVER['REMOTE_ADDR']
+        ];
+
+        $db->procedure('auth_user', $data);
+
         return true;
     }
 
