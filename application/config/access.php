@@ -62,12 +62,16 @@ return [
         // functions
         'reports_index' => [
             Access::ROLE_USER,
+            Access::ROLE_ADMIN,
         ],
         'control_index' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
             Access::ROLE_MANAGER_SALE_SUPPORT,
+        ],
+        'control_tariffs' => [
+            Access::ROLE_ADMIN,
         ],
         'control_managers' => [
             Access::ROLE_USER,

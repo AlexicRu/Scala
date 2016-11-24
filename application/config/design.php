@@ -1,8 +1,12 @@
 <?php defined('SYSPATH') or die('No direct script access');
 return array(
     'default'   => [
+        'title' => 'GloPro',
+        'class' => 'glopro',
+    ],
+    'lkskalacardru' => [
         'title' => 'СКАЛА',
-        'class' => 'scala',
+        'class' => 'scala'
     ],
     'lkoilstru' => [
         'title' => 'OilST',

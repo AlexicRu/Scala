@@ -47,7 +47,7 @@ class Auth_Oracle extends Auth {
 
         $data = [
             'p_manager_id' => $user['MANAGER_ID'],
-            'p_params' => $_SERVER['REMOTE_ADDR']
+            'p_params' => $_SERVER['HTTP_USER_AGENT'].';'.$_SERVER['REMOTE_ADDR']
         ];
 
         $db->procedure('auth_user', $data);

@@ -119,7 +119,7 @@ abstract class Controller_Common extends Controller_Template {
         $design = Kohana::$config->load('design')->as_array();
 
         if(!empty($_SERVER['SERVER_NAME'])){
-            $url = str_replace('.', '', $_SERVER['SERVER_NAME']);
+            $url = str_replace(['.', '-'], '', $_SERVER['SERVER_NAME']);
 
             if(isset($design[$url])){
                 $customView = $design[$url]['class'];

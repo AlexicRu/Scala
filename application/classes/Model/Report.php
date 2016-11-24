@@ -118,4 +118,55 @@ class Model_Report extends Model
 
         return $controls;
     }
+
+    /**
+     * получаем список доступных отчетов дл менеджера
+     */
+    public static function getAvailableReports()
+    {
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $sql = "select *
+            from ".Oracle::$prefix."V_WEB_REPORTS_AVAILABLE t 
+            where t.agent_id in (0, {$user['AGENT_ID']}) 
+            and t.role_id in (0, {$user['role']})
+            and t.manager_id in (0, {$user['MANAGER_ID']})
+        ";
+
+		$reports = $db->query($sql);
+
+		return $reports;
+    }
+
+    /**
+     * получаем настройки для шаблона отчета
+     *
+     * @param $reportId
+     */
+    public static function getReportTemplateSettings($reportId)
+    {
+        if(empty($reportId)){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $sql = "select * from ".Oracle::$prefix."V_WEB_REPORTS_FORM t where t.report_id = ".Oracle::quote($reportId);
+
+        $settings = $db->row($sql);
+
+        return $settings;
+    }
+
+    /**
+     * создаем шаблон отчета
+     *
+     * @param $templateSettings
+     */
+    public static function buildTemplate($templateSettings)
+    {
+        return '<pre>'.print_r($templateSettings, 1).'</pre>';
+    }
 }
