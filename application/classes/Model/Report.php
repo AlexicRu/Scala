@@ -5,14 +5,30 @@ use Jaspersoft\Client\Client;
 
 class Model_Report extends Model
 {
+    const REPORT_GROUP_SUPPLIER = 1;
+    const REPORT_GROUP_CLIENT   = 2;
+    const REPORT_GROUP_ANALYTIC = 3;
+    const REPORT_GROUP_OTHERS   = 4;
+
     const REPORT_TYPE_DAILY         = 'daily';
     const REPORT_TYPE_BALANCE_SHEET = 'balance_sheet';
     const REPORT_TYPE_BILL          = 'bill';
+
+    const REPORT_CONSTRUCTOR_TYPE_PERIOD     = 'period';
+    const REPORT_CONSTRUCTOR_TYPE_ADDITIONAL = 'additional';
+    const REPORT_CONSTRUCTOR_TYPE_FORMAT     = 'format';
 
     public static $reportTypes = [
         self::REPORT_TYPE_DAILY         => 'kf/kf_client_total_detail',
         self::REPORT_TYPE_BALANCE_SHEET => 'kf/kf_manager_osv',
         self::REPORT_TYPE_BILL          => 'ru/aN_invoice_client'
+    ];
+
+    public static $reportGroups = [
+        self::REPORT_GROUP_SUPPLIER => ['name' => 'Поставщики', 'icon' => 'icon-dailes'],
+        self::REPORT_GROUP_CLIENT   => ['name' => 'Клиентские', 'icon' => 'icon-dailes'],
+        self::REPORT_GROUP_ANALYTIC => ['name' => 'Аналитические', 'icon' => 'icon-analytics'],
+        self::REPORT_GROUP_OTHERS   => ['name' => 'Прочие', 'icon' => 'icon-summary'],
     ];
 
     public static $formatHeaders = [
@@ -155,7 +171,7 @@ class Model_Report extends Model
 
         $sql = "select * from ".Oracle::$prefix."V_WEB_REPORTS_FORM t where t.report_id = ".Oracle::quote($reportId);
 
-        $settings = $db->row($sql);
+        $settings = $db->tree($sql, 'PROPERTY_TYPE');
 
         return $settings;
     }
@@ -167,6 +183,9 @@ class Model_Report extends Model
      */
     public static function buildTemplate($templateSettings)
     {
-        return '<pre>'.print_r($templateSettings, 1).'</pre>';
+        $html = View::factory('/forms/reports/constructor')
+            ->bind('fields', $templateSettings)
+        ;
+        return $html;
     }
 }

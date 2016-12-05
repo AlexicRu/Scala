@@ -11,7 +11,17 @@ class Controller_Reports extends Controller_Common {
 
 	public function action_index()
 	{
-        $reports = Model_Report::getAvailableReports();
+        $reportsList = Model_Report::getAvailableReports();
+
+        $reports = [];
+
+        foreach(Model_Report::$reportGroups as $reportGroupId => $reportGroup){
+            foreach($reportsList as $report){
+                if($report['REPORT_GROUP_ID'] == $reportGroupId){
+                    $reports[$reportGroupId][] = $report;
+                }
+            }
+        }
 
         $this->tpl
             ->bind('reports', $reports)

@@ -29,4 +29,25 @@ class Common
 
 		return $content;
 	}
+
+    /**
+     * генерация шаблона конкретного типа поля
+     *
+     * @param $type
+     * @param $name
+     * @param $value
+     */
+	public static function buildFormField($type, $name, $value = false)
+    {
+        try {
+            $content = View::factory('/forms/_fields/' . $type)
+                ->bind('name', $name)
+                ->bind('value', $value)
+            ;
+        } catch (Exception $e){
+            return $type;
+        }
+
+        return $content;
+    }
 }

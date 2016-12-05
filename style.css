@@ -1323,3 +1323,9 @@ fieldset {
 .center {
   text-align: center;
 }
+.report_template_block {
+  display: none;
+}
+.vaTop {
+  vertical-align: top;
+}
