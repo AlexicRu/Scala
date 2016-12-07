@@ -1,126 +1,61 @@
 <h1>Тарифы</h1>
 
-<div class="tabs_vertical_block tabs_switcher tabs_tariffs">
-    <div class="tabs_v">
-        <div class="tab_v tab_v_small active" tab="1"><div>
-                <a href="#">Тариф 1</a>
-            </div></div>
-        <div class="tab_v tab_v_small" tab="4"><div>
-                <a href="#">Тариф 2</a>
-            </div></div>
-        <div class="tab_v tab_v_small" tab="2"><div>
-                <a href="#">Тариы 3</a>
-            </div></div>
-    </div>
-    <div class="tabs_v_content">
-        <div class="tab_v_content active tariffs_block" tab_content="1">
-            <table>
-                <tr>
-                    <td class="gray right" width="200">Название:</td>
-                    <td>
-                        <input type="text" class="input_big">
-                    </td>
-                </tr>
-            </table>
+<?if(empty($tariffs)){?>
+    <div class="error_block">Нет доступных тарифов</div>
+<?}else{?>
 
-            <div class="t_sections_list">
-                <fieldset>
-                    <legend>Секция 1</legend>
-                    <span class="btn btn_small btn_icon btn_red ts_remove"><i class="icon-cancel"></i></span>
-
-                    <div class="ts_conditions">
-                        <div class="tsc_item line_inner">
-                            <span class="btn btn_small btn_icon btn_red ts_remove"><i class="icon-cancel"></i></span>
-
-                            <div class="line_inner_100">Условие:</div>
-                            <select>
-                                <option>Условие 1</option>
-                            </select>
-                            <select>
-                                <option>=</option>
-                                <option>содержит</option>
-                            </select>
-                            <input type="text">
-                        </div>
-                        <div class="tsc_item line_inner">
-                            <span class="btn btn_small btn_icon btn_red ts_remove"><i class="icon-cancel"></i></span>
-
-                            <div class="line_inner_100">Условие:</div>
-                            <select>
-                                <option>Условие 2</option>
-                            </select>
-                            <select>
-                                <option>=</option>
-                                <option>содержит</option>
-                            </select>
-                            <input type="text">
-                        </div>
+    <div class="tabs_vertical_block tabs_switcher tabs_tariffs">
+        <div class="tabs_v">
+            <?foreach($tariffs as $tariff){?>
+                <div class="tab_v tab_v_small" tab="<?=$tariff['TARIF_ID']?>" version="<?=$tariff['LAST_VERSION']?>">
+                    <div>
+                        <a href="#"><?=$tariff['TARIF_NAME']?></a>
                     </div>
-
-                    <span class="btn btn_add_condition btn_small">+ Добавить условие</span>
-
-                    <br><br>
-
-                    <b class="f18">Параметры:</b>
-                    <table>
-                        <tr>
-                            <td class="gray right" width="100">Тип:</td>
-                            <td>
-                                <select>
-                                    <option>тип 1</option>
-                                </select>
-                            </td>
-                            <td class="gray right" width="100">Параметр:</td>
-                            <td>
-                                <select>
-                                    <option>параметр 1</option>
-                                </select>
-                            </td>
-                            <td class="gray right" width="100">Размер:</td>
-                            <td>
-                                <input type="text">
-                            </td>
-                        </tr>
-                    </table>
-                </fieldset>
-            </div>
-            <span class="btn btn_add_section">+ Добавить секцию</span>
-
-            <div class="row_btns">
-                <span class="btn btn_green"><i class="icon-ok"></i> Сохранить</span>
-            </div>
+                </div>
+            <?}?>
         </div>
-        <div class="tab_v_content" tab_content="2">2</div>
-        <div class="tab_v_content" tab_content="3">3</div>
+        <div class="tabs_v_content">
+            <?foreach($tariffs as $tariff){?>
+                <div class="tab_v_content tariffs_block" tab_content="<?=$tariff['TARIF_ID']?>"></div>
+            <?}?>
+        </div>
     </div>
-</div>
+
+<?}?>
 
 <script>
     $(function(){
-        $('.btn_add_section').on('click', function () {
+        $(".tabs_tariffs [tab]").on('click', function(){
             var t = $(this);
-            var block = t.closest('.tariffs_block');
-            var list = block.find('.t_sections_list');
+            var tab = t.attr('tab');
 
-            var tpl = $('<fieldset><legend>Секция</legend><span class="btn btn_small btn_icon btn_red ts_remove"><i class="icon-cancel"></i></span></fieldset>');
-
-            tpl.appendTo(list);
-        });
-        $('.btn_add_condition').on('click', function () {
-            var t = $(this);
-            var block = t.closest('.tariffs_block');
-            var list = block.find('.ts_conditions');
-
-            var tpl = $('<div class="tsc_item line_inner"><span class="btn btn_small btn_icon btn_red ts_remove"><i class="icon-cancel"></i></span></div>');
-
-            tpl.appendTo(list);
+            loadTariff(tab);
         });
 
-        $(document).on('click', '.ts_remove', function () {
+        var clicked = false;
+        $(".tabs_tariffs [tab]").each(function(){
+            if(clicked){
+                return;
+            }
             var t = $(this);
-            var fieldset = t.closest('fieldset, .tsc_item');
 
-            fieldset.remove();
+            if(!t.attr('style')){
+                clicked = true;
+                t.click();
+            }
         });
     });
+
+    function loadTariff(tariff, force)
+    {
+        var block = $('.tariffs_block[tab_content='+ tariff +']');
+
+        if(block.text() == '' || force == true){
+            block.empty().addClass('block_loading');
+
+            $.post('/control/load_tariff/' + tariff, { version: $('[tab='+ tariff +']').attr('version') }, function(data){
+                block.html(data).removeClass('block_loading');
+            });
+        }
+    }
 </script>

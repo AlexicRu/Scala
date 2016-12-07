@@ -40,7 +40,7 @@ class Controller_Managers extends Controller_Common {
 
 		}
 
-		$managerSettingsForm = View::factory('/forms/manager/settings');
+		$managerSettingsForm = View::factory('forms/manager/settings');
 
 		$this->tpl
 			->bind('managerSettingsForm', $managerSettingsForm)

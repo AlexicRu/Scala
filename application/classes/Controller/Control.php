@@ -56,7 +56,7 @@ class Controller_Control extends Controller_Common {
             $this->html('<div class="error_block">Ошибка</div>');
         }
 
-        $managerSettingsForm = View::factory('/forms/manager/settings');
+        $managerSettingsForm = View::factory('forms/manager/settings');
 
         $managerSettingsForm
             ->set('manager', $manager)
@@ -67,7 +67,7 @@ class Controller_Control extends Controller_Common {
 
         $popupManagerAddClients = Common::popupForm('Добавление клиентов', 'manager/add_clients');
 
-        $html = View::factory('/ajax/control/manager')
+        $html = View::factory('ajax/control/manager')
             ->bind('managerId', $managerId)
             ->bind('manager', $manager)
             ->bind('managerSettingsForm', $managerSettingsForm)
@@ -109,7 +109,7 @@ class Controller_Control extends Controller_Common {
     {
         $groupId = $this->request->param('id');
 
-        $html = View::factory('/ajax/control/dots_in_group')
+        $html = View::factory('ajax/control/dots_in_group')
             ->bind('groupId', $groupId)
         ;
 
@@ -201,7 +201,7 @@ class Controller_Control extends Controller_Common {
         $showCheckbox = $this->request->post('show_checkbox') ?: '';
         $groupId = $this->request->post('group_id') ?: '';
 
-        $html = View::factory('/ajax/control/dots')
+        $html = View::factory('ajax/control/dots')
             ->bind('postfix', $postfix)
             ->bind('showCheckbox', $showCheckbox)
             ->bind('groupId', $groupId)
@@ -257,5 +257,67 @@ class Controller_Control extends Controller_Common {
      * страница тарифов
      */
     public function action_tariffs()
-    {}
+    {
+        $this->scripts[] = '/js/control/tariffs.js';
+
+        $tariffs = Model_Tariff::getAvailableTariffs();
+
+        $this->tpl
+            ->bind('tariffs', $tariffs)
+        ;
+    }
+
+    /**
+     * загрудаем выбранный тариф
+     */
+    public function action_load_tariff()
+    {
+        $tariffId = $this->request->param('id');
+        $lastVersion = $this->request->post('version');
+
+        $tariff = Model_Tariff::getAvailableTariffs(['tariff_id' => $tariffId]);
+        if(!empty($tariff)){
+            $tariff = reset($tariff);
+        }
+
+        $tariffSettings = Model_Tariff::getTariffSettings($tariffId, $lastVersion);
+
+        $this->html(Model_Tariff::buildTemplate($tariff, $tariffSettings));
+    }
+
+    /**
+     * грузим свеженький шаблон шаблон условий
+     */
+    public function action_get_tariff_reference_tpl()
+    {
+        $usedConditions = $this->request->post('used_conditions');
+        $uidSection = $this->request->post('uid_section');
+
+        $reference = Model_Tariff::getReference();
+
+        foreach($reference as $referenceBlock){
+            $referenceItem = reset($referenceBlock);
+
+            if(!in_array($referenceItem['CONDITION_ID'], $usedConditions)){
+                $conditionId = $referenceItem['CONDITION_ID'];
+                $compareId = $referenceItem['COMPARE_ID'];
+                break;
+            }
+        }
+
+        if(empty($conditionId)){
+            $this->jsonResult(false);
+        }
+
+        $uid = $uidSection.'_'.$conditionId;
+
+        $html = strval(Common::buildReference($uid, $reference));
+
+        $this->jsonResult(true, [
+            'html' => $html,
+            'condition_id' => $conditionId,
+            'compare_id' => $compareId,
+            'uid' => $uid
+        ]);
+    }
 }

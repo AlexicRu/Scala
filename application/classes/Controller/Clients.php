@@ -100,7 +100,7 @@ class Controller_Clients extends Controller_Common {
 				$popupContractNoticeSettings = Common::popupForm('Настройка уведомлений', 'contract/notice_settings', ['settings' => $noticeSettings]);
 				$popupContractHistory = Common::popupForm('История по договору', 'contract/history');
 
-				$content = View::factory('/ajax/clients/contract/contract')
+				$content = View::factory('ajax/clients/contract/contract')
 					->bind('contract', $contract)
 					->bind('contractSettings', $contractSettings)
 					->bind('contractTariffs', $contractTariffs)
@@ -121,7 +121,7 @@ class Controller_Clients extends Controller_Common {
 
 				$popupCardAdd = Common::popupForm('Добавление новой карты', 'card/add');
 
-				$content = View::factory('/ajax/clients/contract/cards')
+				$content = View::factory('ajax/clients/contract/cards')
                     ->bind('cards', $cards)
                     ->bind('foundCards', $foundCards)
                     ->bind('params', $params)
@@ -135,7 +135,7 @@ class Controller_Clients extends Controller_Common {
                 $popupContractBillAdd = Common::popupForm('Выставить счет', 'contract/bill_add');
                 $popupContractBillPrint = Common::popupForm('Печать счетов', 'contract/bill_print');
 
-				$content = View::factory('/ajax/clients/contract/account')
+				$content = View::factory('ajax/clients/contract/account')
                     ->bind('balance', $balance)
 					->bind('turnover', $turnover)
 					->bind('popupContractPaymentAdd', $popupContractPaymentAdd)
@@ -144,11 +144,11 @@ class Controller_Clients extends Controller_Common {
                 ;
 				break;
 			case 'reports':
-				$content = View::factory('/ajax/clients/contract/reports');
+				$content = View::factory('ajax/clients/contract/reports');
 				break;
 		}
 
-		$html = View::factory('/ajax/clients/contract/_tabs')
+		$html = View::factory('ajax/clients/contract/_tabs')
 			->bind('content', $content)
 			->bind('balance', $balance)
 			->bind('tab', $tab)
@@ -197,7 +197,7 @@ class Controller_Clients extends Controller_Common {
 				'servicesList'		=> $servicesList
 		], 'card_edit_'.$cardId);
 
-        $html = View::factory('/ajax/clients/card')
+        $html = View::factory('ajax/clients/card')
             ->bind('card', $card)
             ->bind('oilRestrictions', $oilRestrictions)
             ->bind('lastFilling', $lastFilling)

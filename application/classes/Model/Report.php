@@ -183,7 +183,7 @@ class Model_Report extends Model
      */
     public static function buildTemplate($templateSettings)
     {
-        $html = View::factory('/forms/reports/constructor')
+        $html = View::factory('forms/reports/constructor')
             ->bind('fields', $templateSettings)
         ;
         return $html;
