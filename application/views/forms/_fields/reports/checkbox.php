@@ -1,6 +1,8 @@
-<input type="checkbox" name="<?=$name?>">
+<input type="checkbox" class="form_field" name="<?=$name?>" field="<?=$type?>">
 <script>
     $(function () {
-        renderCheckbox($('[name=<?=$name?>]'));
+        $('[name=<?=$name?>]').each(function () {
+            renderCheckbox($(this));
+        });
     });
 </script>

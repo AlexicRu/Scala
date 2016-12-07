@@ -71,3 +71,97 @@ function initWYSIWYG(elem)
         }
     });
 }
+
+function renderDatePicker(elem)
+{
+    if(elem.data('rendered')){
+        return false;
+    }
+
+    var options = {
+        dateFormat: "dd.mm.yy",
+        buttonImage: "/img/icon_calendar.png",
+        showOn: "button",
+        buttonImageOnly: true,
+        changeMonth:true,
+        changeYear:true,
+        yearRange: "2000:2099"
+    };
+
+    if(elem.attr('maxDate') == 1){
+        options.maxDate = new Date();
+    }
+
+    elem.wrap('<span class="datepicker_out" />');
+
+    if(elem.hasClass('input_big')){
+        elem.closest('.datepicker_out').addClass('datepicker_big');
+    }
+
+    elem.data('rendered', true).datepicker(options);
+}
+
+function renderScroll(elem)
+{
+    setTimeout(function () {
+        var block = elem.closest('.tabs_vertical_block');
+        var preScrollHeight = block.find('.before_scroll').size() ? block.find('.before_scroll').height() : 0;
+
+        var height = block.find('.tab_v_content.active').outerHeight() - preScrollHeight;
+
+        elem.css('height', height);
+    }, 500);
+}
+
+function paginationAjax(url, name, callback, params)
+{
+    var outer = $('.' + name + '_out');
+    var block = $('<div class="' + name + '" />');
+    var more = $('<div class="ajax_block_more"><button class="btn btn_small">Загрузить еще...</button></div>');
+
+    outer.append(block);
+    outer.append(more);
+    outer.data('offset', 0);
+
+    _paginationAjaxLoad(url, outer, block, callback, params);
+    more.on('click', function(){
+        _paginationAjaxLoad(url, outer, block, callback, params);
+    });
+}
+
+function _paginationAjaxLoad(url, outer, block, callback, params)
+{
+    if(!params){
+        params = {};
+    }
+
+    outer.find('.ajax_block_more').fadeOut();
+
+    params.offset = outer.data('offset');
+
+    $.post(url, params, function(data){
+        if(data.success){
+            callback(data.data.items, block);
+            if(data.data.more){
+                outer.find('.ajax_block_more').fadeIn();
+            }
+            outer.data('offset', parseInt(outer.data('offset')) + data.data.items.length);
+        }else{
+            outer.find('.ajax_block_more').fadeIn().html('<span class="gray">Данные отсутствуют</span>');
+        }
+        block.closest('.block_loading').removeClass('block_loading');
+    });
+}
+
+function setFormFieldValue(field, value)
+{
+    var type = field.attr('field');
+
+    switch(type){
+        case 'number_input':
+            field.val(value);
+            break;
+        default:
+            field.append(' | ' + value);
+    }
+}

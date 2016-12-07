@@ -13,7 +13,7 @@
                 <?=Model_Tariff::buildReference($uid, $reference)?>
                 <script>
                     $(function () {
-                        changeCondition('<?=$uid?>', <?=$condition['CONDITION_ID']?>, <?=$condition['COMPARE_ID']?>);
+                        changeCondition('<?=$uid?>', <?=$condition['CONDITION_ID']?>, <?=$condition['COMPARE_ID']?>, <?=$condition['CONDITION_VALUE']?>);
                     });
                 </script>
             </div>

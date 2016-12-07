@@ -863,8 +863,11 @@ table.table_form .table_form td {
 }
 .ui-datepicker-trigger {
   position: absolute;
-  top: 12px;
+  top: 7px;
   right: 10px;
+}
+.datepicker_big .ui-datepicker-trigger {
+  top: 12px;
 }
 .f20 {
   font-size: 20px;
@@ -1336,5 +1339,8 @@ fieldset {
   display: inline-block;
 }
 .disc_param_select {
+  display: none;
+}
+.web_form_element {
   display: none;
 }

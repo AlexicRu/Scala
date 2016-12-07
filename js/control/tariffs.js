@@ -29,9 +29,9 @@ function onChangeCondition(t) {
     var conditionId = t.val();
     var block = t.closest('.reference_block');
 
-    block.find('.reference_compare[condition_id]').hide();
+    block.find('.reference_compare[condition_id], .web_form_element').hide();
 
-    block.find('.reference_compare[condition_id='+ conditionId +']').show();
+    block.find('.reference_compare[condition_id='+ conditionId +'], .web_form_element[condition_id='+ conditionId +']').show();
 
     var section = t.closest('[uid_section]');
     var uidSection = section.attr('uid_section');
@@ -39,7 +39,7 @@ function onChangeCondition(t) {
     checkUsedConditions(uidSection);
 }
 
-function changeCondition(uid, conditionId, compareId)
+function changeCondition(uid, conditionId, compareId, conditionValue)
 {
     var block = $('.reference_block[uid='+ uid +']');
     var conditionSelect = block.find('[name=CONDITION_ID]');
@@ -48,8 +48,13 @@ function changeCondition(uid, conditionId, compareId)
     conditionSelect.trigger('change');
 
     var compareSelect = block.find('[name=COMPARE_ID][condition_id='+ conditionId +']');
-
     compareSelect.val(compareId);
+
+    if(conditionValue) {
+        var webForm = block.find('.web_form_element[condition_id=' + conditionId + ']');
+
+        setFormFieldValue(webForm.find('.form_field'), conditionValue);
+    }
 }
 
 function checkUsedConditions(uidSection)

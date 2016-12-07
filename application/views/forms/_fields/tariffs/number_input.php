@@ -1,0 +1,1 @@
+<input type="text" class="form_field" name="<?=$name?>" field="<?=$type?>">
