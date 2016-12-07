@@ -1,7 +1,28 @@
 var usedConditions = [];
 
 $(function () {
+    $(document).on('click', '.ts_remove', function () {
+        if(!confirm('Удаляем?')) {
+            return;
+        }
 
+        var t = $(this);
+        var fieldset = t.closest('fieldset, .tsc_item');
+        var uidSection;
+        var btnAddCondition;
+
+        if(t.closest('.tsc_item').length){
+            uidSection = t.closest('[uid_section]');
+            btnAddCondition = uidSection.find('.btn_add_condition');
+        }
+
+        fieldset.remove();
+
+        if(uidSection) {
+            btnAddCondition.show();
+            checkUsedConditions(uidSection.attr('uid_section'));
+        }
+    });
 });
 
 function onChangeCondition(t) {
@@ -76,6 +97,52 @@ function addSectionCondition(t)
             message(0, 'Доступные условия закончились');
             tpl.remove();
             $('.btn_add_condition', block).hide();
+        }
+    });
+}
+
+function changeParam(uid, discType, discParam)
+{
+    var block = $('.params_block[uid='+ uid +']');
+    var typeSelect = block.find('[name=DISC_TYPE]');
+
+    if(discType) {
+        typeSelect.val(discType);
+
+        block.find('[name=DISC_PARAM][disc_type='+ discType +']').val(discParam);
+    }
+    typeSelect.trigger('change');
+}
+
+function onChangeParam(t) {
+    var distType = t.val();
+    var block = t.closest('.params_block');
+
+    block.find('.disc_param_select[dist_type]').hide();
+
+    block.find('.disc_param_select[dist_type='+ distType +']').show();
+}
+
+function addSection(t)
+{
+    var block = t.closest('.tariffs_block');
+    var list = block.find('.t_sections_list');
+    var tariffId = block.find('[name=tarif_id]').val();
+    var sectionNum = parseInt(block.find('fieldset[section_num]:last').attr('section_num')) + 1;
+
+    var uidSection = tariffId + '_' + sectionNum;
+
+    /**/
+
+    var tpl = $('<div />');
+
+    tpl.appendTo(list);
+
+    $.post('/control/get_tariff_section_tpl', { uid_section: uidSection, section_num: sectionNum}, function (data) {
+        if(data.success){
+            tpl.removeClass('block_loading').append(data.data.html);
+        }else{
+            message(0, 'Доступные условия закончились');
         }
     });
 }

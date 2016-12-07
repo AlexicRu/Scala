@@ -298,7 +298,7 @@ class Controller_Control extends Controller_Common {
         foreach($reference as $referenceBlock){
             $referenceItem = reset($referenceBlock);
 
-            if(!in_array($referenceItem['CONDITION_ID'], $usedConditions)){
+            if(empty($usedConditions) || !in_array($referenceItem['CONDITION_ID'], $usedConditions)){
                 $conditionId = $referenceItem['CONDITION_ID'];
                 $compareId = $referenceItem['COMPARE_ID'];
                 break;
@@ -311,13 +311,30 @@ class Controller_Control extends Controller_Common {
 
         $uid = $uidSection.'_'.$conditionId;
 
-        $html = strval(Common::buildReference($uid, $reference));
+        $html = strval(Model_Tariff::buildReference($uid, $reference));
 
         $this->jsonResult(true, [
             'html' => $html,
             'condition_id' => $conditionId,
             'compare_id' => $compareId,
             'uid' => $uid
+        ]);
+    }
+
+    /**
+     * подгружаем пустой шаблон секции
+     */
+    public function action_get_tariff_section_tpl()
+    {
+        $uidSection = $this->request->post('uid_section');
+        $sectionNum = $this->request->post('section_num');
+
+        $section = ['SECTION_NUM' => $sectionNum];
+
+        $html = strval(Model_Tariff::buildSection($uidSection, $section));
+
+        $this->jsonResult(true, [
+            'html' => $html,
         ]);
     }
 }

@@ -50,23 +50,4 @@ class Common
 
         return $content;
     }
-
-    /**
-     * рисуем справочник
-     *
-     * @param bool $uid
-     * @param bool $reference
-     */
-    public static function buildReference($uid, $reference = false)
-    {
-        if(empty($reference)){
-            $reference = Model_Tariff::getReference();
-        }
-
-        $content = View::factory('forms/reference')
-            ->bind('uid', $uid)
-            ->bind('reference', $reference)
-        ;
-        return $content;
-    }
 }
