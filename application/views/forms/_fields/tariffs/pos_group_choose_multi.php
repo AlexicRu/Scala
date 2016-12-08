@@ -1,3 +1,11 @@
 <span class="form_field" field="<?=$type?>">
-    pos_group_choose_multi
+    <input type="text" name="<?=$name?>" class="combobox combobox_multi" url="/control/list_pos_group">
 </span>
+
+<script>
+    $(function () {
+        $('[name=<?=$name?>]').each(function () {
+            renderComboBoxMulti($(this));
+        });
+    });
+</script>

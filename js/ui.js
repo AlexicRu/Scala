@@ -13,6 +13,18 @@ function renderElements()
     $("input[type=radio]").each(function(){
         renderRadio($(this));
     });
+    $("input[type=text].combobox").each(function(){
+        renderComboBox($(this));
+    });
+
+
+    $(document).on('click', function(e){
+        var t = $(e.target);
+
+        if(t.closest('.combobox_multi_wrapper').length == 0){
+            $('.combobox_multi_wrapper .combobox_multi_result').hide().html('');
+        }
+    });
 }
 
 function renderCheckbox(check)
@@ -162,4 +174,93 @@ function renderSwitch(check)
             inner.removeClass('switch_checked');
         }
     }).data('rendered', true);
+}
+
+var ajaxComboBoxMulti;
+function renderComboBoxMulti(combo)
+{
+    if(combo.data('rendered')){
+        return false;
+    }
+
+    combo.data('rendered', true);
+
+    var url = combo.attr('url');
+
+    combo.wrap('<div class="combobox_multi_outer" />');
+
+    var outer = combo.closest('.combobox_multi_outer');
+
+    outer.wrap('<div class="combobox_multi_wrapper" />');
+
+    var wrapper = combo.closest('.combobox_multi_wrapper');
+
+    outer.append('<div class="combobox_multi_result" />');
+    wrapper.append('<div class="combobox_multi_selected" />');
+
+    var result = outer.find('.combobox_multi_result');
+    var selected = wrapper.find('.combobox_multi_selected');
+
+    combo.on('keyup', function () {
+        var t = $(this);
+        var val = t.val();
+
+        result.hide().html('');
+
+        if(val.length <= 1){
+            return;
+        }
+
+        if(ajaxComboBoxMulti){
+            ajaxComboBoxMulti.abort();
+        }
+
+        ajaxComboBoxMulti = $.post(url, { search:val }, function(data){
+            if(data.success){
+                for(var i in data.data){
+                    var tpl = $('<div class="combobox_multi_result_item" onclick="selectComboBoxMultiResult($(this))"></div>');
+                    tpl.attr('value', data.data[i].value);
+                    tpl.text(data.data[i].name);
+
+                    if(selected.find('.combobox_multi_selected_item[value='+ data.data[i].value +']').length){
+                        tpl.addClass('combobox_multi_result_item_selected');
+                    }
+
+                    tpl.appendTo(result);
+                }
+                result.show();
+            }
+
+            ajaxComboBoxMulti = false;
+        });
+    });
+}
+
+function selectComboBoxMultiResult(item)
+{
+    item.toggleClass('combobox_multi_result_item_selected');
+
+    var value = item.attr('value');
+
+    var wrapper = item.closest('.combobox_multi_wrapper');
+    var selected = wrapper.find('.combobox_multi_selected');
+
+    var selectedItem = selected.find('.combobox_multi_selected_item[value='+ value +']');
+
+    if(selectedItem.length){
+        uncheckComboBoxMultiItem(selectedItem);
+        return;
+    }
+
+    var tpl = $('<div class="combobox_multi_selected_item"><span class="combobox_multi_selected_item_name" /><span class="combobox_multi_selected_item_close" onclick="uncheckComboBoxMultiItem($(this))">×</span></div>');
+
+    tpl.find('.combobox_multi_selected_item_name').text(item.text());
+    tpl.attr('value', value);
+
+    selected.append(tpl);
+}
+
+function uncheckComboBoxMultiItem(item)
+{
+    item.closest('.combobox_multi_selected_item').remove();
 }

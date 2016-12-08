@@ -1323,6 +1323,9 @@ fieldset {
 .tsc_item .ts_remove {
   top: 10px;
 }
+.tsc_item .line_inner_100 {
+  vertical-align: top;
+}
 .center {
   text-align: center;
 }

@@ -1,3 +1,11 @@
 <span class="form_field" field="<?=$type?>">
-    service_choose_multi
+    <input type="text" name="<?=$name?>" class="combobox combobox_multi" url="/control/list_service">
 </span>
+
+<script>
+    $(function () {
+        $('[name=<?=$name?>]').each(function () {
+            renderComboBoxMulti($(this));
+        });
+    });
+</script>
