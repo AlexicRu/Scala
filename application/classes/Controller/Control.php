@@ -259,6 +259,7 @@ class Controller_Control extends Controller_Common {
     public function action_tariffs()
     {
         $this->scripts[] = '/js/control/tariffs.js';
+        $this->scripts[] = '/js/plugins/jquery.mask.js';
 
         $tariffs = Model_Tariff::getAvailableTariffs();
 
@@ -336,80 +337,5 @@ class Controller_Control extends Controller_Common {
         $this->jsonResult(true, [
             'html' => $html,
         ]);
-    }
-
-    /**
-     * получаем список точек для combobox
-     */
-    public function action_list_pos_group()
-    {
-        $search = $this->request->post('search');
-
-        $res = Model_Dot::getGroups(['search' => $search]);
-
-        if(empty($res)){
-            $this->jsonResult(false);
-        }
-
-        $return = [];
-
-        foreach($res as $item){
-            $return[] = [
-                'name' => $item['GROUP_NAME'],
-                'value' => $item['GROUP_ID'],
-            ];
-        }
-
-        $this->jsonResult(true, $return);
-    }
-
-    /**
-     * получаем список стран для combobox
-     */
-    public function action_list_country()
-    {
-        $search = $this->request->post('search');
-
-        $res = Listing::getCountries($search);
-
-        if(empty($res)){
-            $this->jsonResult(false);
-        }
-
-        $return = [];
-
-        foreach($res as $item){
-            $return[] = [
-                'name' => $item['NAME_RU'],
-                'value' => $item['ID'],
-            ];
-        }
-
-        $this->jsonResult(true, $return);
-    }
-
-    /**
-     * получаем список стран для combobox
-     */
-    public function action_list_service()
-    {
-        $search = $this->request->post('search');
-
-        $res = Listing::getServices($search);
-
-        if(empty($res)){
-            $this->jsonResult(false);
-        }
-
-        $return = [];
-
-        foreach($res as $item){
-            $return[] = [
-                'name' => $item['LONG_DESC'],
-                'value' => $item['SERVICE_ID'],
-            ];
-        }
-
-        $this->jsonResult(true, $return);
     }
 }

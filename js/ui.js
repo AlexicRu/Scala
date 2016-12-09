@@ -24,6 +24,9 @@ function renderElements()
         if(t.closest('.combobox_multi_wrapper').length == 0){
             $('.combobox_multi_wrapper .combobox_multi_result').hide().html('');
         }
+        if(t.closest('.combobox_outer').length == 0){
+            $('.combobox_outer .combobox_result').hide().html('');
+        }
     });
 }
 
@@ -263,4 +266,77 @@ function selectComboBoxMultiResult(item)
 function uncheckComboBoxMultiItem(item)
 {
     item.closest('.combobox_multi_selected_item').remove();
+}
+
+var ajaxComboBox;
+function renderComboBox(combo)
+{
+    if(combo.data('rendered')){
+        return false;
+    }
+
+    combo.data('rendered', true);
+
+    var url = combo.attr('url');
+
+    combo.wrap('<div class="combobox_outer" />');
+
+    var outer = combo.closest('.combobox_outer');
+
+    outer.append('<div class="combobox_result" />');
+
+    var result = outer.find('.combobox_result');
+
+    outer.append('<input type="hidden" name="combobox_value">');
+
+    var hiddenValue = outer.find('[name=combobox_value]');
+
+    combo.on('keyup', function () {
+        var t = $(this);
+        var val = t.val();
+
+        result.hide().html('');
+
+        if(val.length <= 1){
+            return;
+        }
+
+        if(ajaxComboBox){
+            ajaxComboBox.abort();
+        }
+
+        ajaxComboBox = $.post(url, { search:val }, function(data){
+            if(data.success){
+                for(var i in data.data){
+                    var tpl = $('<div class="combobox_result_item" onclick="selectComboBoxResult($(this))"></div>');
+                    tpl.attr('value', data.data[i].value);
+                    tpl.text(data.data[i].name);
+
+                    if(hiddenValue.val() == data.data[i].value){
+                        tpl.addClass('combobox_result_item_selected');
+                    }
+
+                    tpl.appendTo(result);
+                }
+                result.show();
+            }
+
+            ajaxComboBox = false;
+        });
+    });
+}
+
+function selectComboBoxResult(item)
+{
+    item.toggleClass('combobox_result_item_selected');
+
+    var value = item.attr('value');
+    var outer = item.closest('.combobox_outer');
+    var combo = outer.find('.combobox');
+    var hiddenValue = outer.find('[name=combobox_value]');
+
+    combo.val(item.text());
+    hiddenValue.val(value);
+
+    $('.combobox_result', outer).hide().html('');
 }

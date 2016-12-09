@@ -1,3 +1,11 @@
 <span class="form_field" field="<?=$type?>">
-    manager_choose_single - выбор одного менеджера из списка всех менеджеров, которых видит текущий
+    <input type="text" name="<?=$name?>" class="combobox combobox_multi" url="/help/list_manager">
 </span>
+
+<script>
+    $(function () {
+        $('[name=<?=$name?>]').each(function () {
+            renderComboBox($(this));
+        });
+    });
+</script>

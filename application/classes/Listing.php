@@ -55,4 +55,56 @@ class Listing
 
         return $db->query($db->limit($sql, 0, self::$limit));
     }
+
+    /**
+     * список карт
+     *
+     * @param $search
+     * @return array|bool|int
+     */
+    public static function getCards($search)
+    {
+        if(empty($search)){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $sql = "select * from ".Oracle::$prefix."V_WEB_CARDS_ALL t where t.agent_id = ".$user['AGENT_ID'];
+
+        if(!empty($search)){
+            $sql .= " and t.CARD_ID like '%".Oracle::quote($search)."%'";
+        }
+
+        $sql .= " order by t.card_id";
+
+        return $db->query($db->limit($sql, 0, self::$limit));
+    }
+
+    /**
+     * список поставщиков
+     *
+     * @param $search
+     * @return array|bool|int
+     */
+    public static function getSuppliers($search)
+    {
+        if(empty($search)){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $sql = "select * from ".Oracle::$prefix."V_WEB_SUPPLIERS_LIST t where t.agent_id = ".$user['AGENT_ID'];
+
+        if(!empty($search)){
+            $sql .= " and upper(t.SUPPLIER_NAME) like '%".mb_strtoupper(Oracle::quote($search))."%'";
+        }
+
+        return $db->query($db->limit($sql, 0, self::$limit));
+    }
 }

@@ -1,5 +1,5 @@
 <span class="form_field" field="<?=$type?>">
-    <input type="text" name="<?=$name?>" class="combobox combobox_multi" url="/control/list_country">
+    <input type="text" name="<?=$name?>" class="combobox combobox_multi" url="/help/list_country">
 </span>
 
 <script>

@@ -105,6 +105,11 @@ class Model_Manager extends Model
         }
         unset($params['not_admin']);
 
+        if(!empty($params['role_id'])){
+            $sql .= " and ROLE_ID in (".implode(', ', $params['role_id']).")";
+        }
+        unset($params['role_id']);
+
         foreach($params as $key => $value){
             $sql .= " and ".strtoupper($key)." = '". Oracle::quote($value)."' ";
         }

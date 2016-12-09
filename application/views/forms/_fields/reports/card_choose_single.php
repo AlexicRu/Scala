@@ -1,3 +1,11 @@
 <span class="form_field" field="<?=$type?>">
-    card_choose_single - выбор одной карты из списка всех карт, доступных менеджеру
+    <input type="text" name="<?=$name?>" class="combobox combobox_multi" url="/help/list_card">
 </span>
+
+<script>
+    $(function () {
+        $('[name=<?=$name?>]').each(function () {
+            renderComboBox($(this));
+        });
+    });
+</script>
