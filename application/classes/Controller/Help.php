@@ -2,14 +2,30 @@
 
 class Controller_Help extends Controller_Common
 {
+    protected $_search;
+    protected $_ids;
+    protected $_user;
+
+    public function before()
+    {
+        parent::before();
+
+        $this->_search = $this->request->post('search');
+        $this->_ids = $this->request->post('ids');
+
+        if(!empty($this->_ids)){
+            $this->_ids = explode(',', $this->_ids);
+        }
+
+        $this->_user = Auth::instance()->get_user();
+    }
+
     /**
      * получаем список точек для combobox
      */
     public function action_list_pos_group()
     {
-        $search = $this->request->post('search');
-
-        $res = Model_Dot::getGroups(['search' => $search]);
+        $res = Model_Dot::getGroups(['search' => $this->_search, 'ids' => $this->_ids]);
 
         if(empty($res)){
             $this->jsonResult(false);
@@ -32,9 +48,7 @@ class Controller_Help extends Controller_Common
      */
     public function action_list_country()
     {
-        $search = $this->request->post('search');
-
-        $res = Listing::getCountries($search);
+        $res = Listing::getCountries($this->_search, $this->_ids);
 
         if(empty($res)){
             $this->jsonResult(false);
@@ -57,9 +71,7 @@ class Controller_Help extends Controller_Common
      */
     public function action_list_service()
     {
-        $search = $this->request->post('search');
-
-        $res = Listing::getServices($search);
+        $res = Listing::getServices($this->_search, $this->_ids);
 
         if(empty($res)){
             $this->jsonResult(false);
@@ -82,9 +94,7 @@ class Controller_Help extends Controller_Common
      */
     public function action_list_card()
     {
-        $search = $this->request->post('search');
-
-        $res = Listing::getCards($search);
+        $res = Listing::getCards($this->_search, $this->_ids);
 
         if(empty($res)){
             $this->jsonResult(false);
@@ -107,9 +117,7 @@ class Controller_Help extends Controller_Common
      */
     public function action_list_client()
     {
-        $search = $this->request->post('search');
-
-        $res = Model_Client::getClientsList($search);
+        $res = Model_Client::getClientsList($this->_search, ['ids' => $this->_ids]);
 
         if(empty($res)){
             $this->jsonResult(false);
@@ -132,9 +140,7 @@ class Controller_Help extends Controller_Common
      */
     public function action_list_supplier()
     {
-        $search = $this->request->post('search');
-
-        $res = Listing::getSuppliers($search);
+        $res = Listing::getSuppliers($this->_search, $this->_ids);
 
         if(empty($res)){
             $this->jsonResult(false);
@@ -157,11 +163,11 @@ class Controller_Help extends Controller_Common
      */
     public function action_list_manager()
     {
-        $search = $this->request->post('search');
-
         $res = Model_Manager::getManagersList([
-            'search' => $search,
-            'only_managers' => true
+            'search' => $this->_search,
+            'only_managers' => true,
+            'agent_id' => $this->_user['AGENT_ID'],
+            'manager_id' => $this->_ids
         ]);
 
         if(empty($res)){
@@ -185,14 +191,14 @@ class Controller_Help extends Controller_Common
      */
     public function action_list_manager_sale()
     {
-        $search = $this->request->post('search');
-
         $res = Model_Manager::getManagersList([
-            'search' => $search,
+            'search' => $this->_search,
             'role_id' => [
                 Access::ROLE_MANAGER_SALE,
                 Access::ROLE_MANAGER_SALE_SUPPORT,
-            ]
+            ],
+            'agent_id' => $this->_user['AGENT_ID'],
+            'manager_id' => $this->_ids
         ]);
 
         if(empty($res)){

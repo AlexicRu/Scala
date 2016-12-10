@@ -153,15 +153,28 @@ function _paginationAjaxLoad(url, outer, block, callback, params)
     });
 }
 
-function setFormFieldValue(field, value)
-{
+function setFormFieldValue(field, value) {
     var type = field.attr('field');
+    var isCombobox = field.find('.combobox').length;
+    var isComboboxMulti = field.find('.combobox_multi').length;
+    var isCheckbox = field.find('[type=checkbox]').length;
 
-    switch(type){
-        case 'number_input':
-            field.val(value);
+    switch (type) {
+        case 'period':
             break;
         default:
-            field.append(' | ' + value);
+            if(isComboboxMulti){
+                setComboboxMultiValue(field.find('.combobox_multi'), value);
+            }else if(isCombobox){
+                setComboboxValue(field.find('.combobox'), value);
+            }else if(isCheckbox){
+                if(value){
+                    field.prop('checked', true);
+                }else{
+                    field.prop('checked', false);
+                }
+            }else{
+                field.val(value);
+            }
     }
 }

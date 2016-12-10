@@ -8,11 +8,12 @@ class Listing
      * список стран
      *
      * @param $search
+     * @param ids
      * @return array|bool|int
      */
-    public static function getCountries($search)
+    public static function getCountries($search, $ids = [])
     {
-        if(empty($search)){
+        if(empty($search) && empty($ids)){
             return false;
         }
 
@@ -24,6 +25,10 @@ class Listing
             $sql .= " and upper(t.NAME_RU) like '%".mb_strtoupper(Oracle::quote($search))."%'";
         }
 
+        if(!empty($ids)){
+            $sql .= " and t.id in (".implode(',', $ids).")";
+        }
+
         $sql .= " order by t.name_ru";
 
         return $db->query($db->limit($sql, 0, self::$limit));
@@ -33,11 +38,12 @@ class Listing
      * список услуг
      *
      * @param $search
+     * @param ids
      * @return array|bool|int
      */
-    public static function getServices($search)
+    public static function getServices($search, $ids = [])
     {
-        if(empty($search)){
+        if(empty($search) && empty($ids)){
             return false;
         }
 
@@ -51,6 +57,10 @@ class Listing
             $sql .= " and upper(t.long_desc) like '%".mb_strtoupper(Oracle::quote($search))."%'";
         }
 
+        if(!empty($ids)){
+            $sql .= " and t.SERVICE_ID in (".implode(',', $ids).")";
+        }
+
         $sql .= " order by t.long_desc";
 
         return $db->query($db->limit($sql, 0, self::$limit));
@@ -60,11 +70,12 @@ class Listing
      * список карт
      *
      * @param $search
+     * @param ids
      * @return array|bool|int
      */
-    public static function getCards($search)
+    public static function getCards($search, $ids = [])
     {
-        if(empty($search)){
+        if(empty($search) && empty($ids)){
             return false;
         }
 
@@ -78,6 +89,10 @@ class Listing
             $sql .= " and t.CARD_ID like '%".Oracle::quote($search)."%'";
         }
 
+        if(!empty($ids)){
+            $sql .= " and t.CARD_ID in (".implode(',', $ids).")";
+        }
+
         $sql .= " order by t.card_id";
 
         return $db->query($db->limit($sql, 0, self::$limit));
@@ -87,11 +102,12 @@ class Listing
      * список поставщиков
      *
      * @param $search
+     * @param ids
      * @return array|bool|int
      */
-    public static function getSuppliers($search)
+    public static function getSuppliers($search, $ids = [])
     {
-        if(empty($search)){
+        if(empty($search) && empty($ids)){
             return false;
         }
 
@@ -103,6 +119,10 @@ class Listing
 
         if(!empty($search)){
             $sql .= " and upper(t.SUPPLIER_NAME) like '%".mb_strtoupper(Oracle::quote($search))."%'";
+        }
+
+        if(!empty($ids)){
+            $sql .= " and t.ID in (".implode(',', $ids).")";
         }
 
         return $db->query($db->limit($sql, 0, self::$limit));

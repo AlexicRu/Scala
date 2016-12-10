@@ -204,6 +204,10 @@ function renderComboBoxMulti(combo)
     var result = outer.find('.combobox_multi_result');
     var selected = wrapper.find('.combobox_multi_selected');
 
+    wrapper.append('<input type="hidden" name="combobox_multi_value">');
+
+    var hiddenValue = wrapper.find('[name=combobox_multi_value]');
+
     combo.on('keyup', function () {
         var t = $(this);
         var val = t.val();
@@ -255,12 +259,25 @@ function selectComboBoxMultiResult(item)
         return;
     }
 
+    renderComboBoxMultiSelectedItem(value, item.text(), wrapper);
+}
+
+function renderComboBoxMultiSelectedItem(value, text, wrapper)
+{
+    var selected = wrapper.find('.combobox_multi_selected');
+    var hiddenValue = wrapper.find('[name=combobox_multi_value]');
+
     var tpl = $('<div class="combobox_multi_selected_item"><span class="combobox_multi_selected_item_name" /><span class="combobox_multi_selected_item_close" onclick="uncheckComboBoxMultiItem($(this))">×</span></div>');
 
-    tpl.find('.combobox_multi_selected_item_name').text(item.text());
+    tpl.find('.combobox_multi_selected_item_name').text(text);
     tpl.attr('value', value);
 
     selected.append(tpl);
+
+    var values = hiddenValue.val() != '' ? hiddenValue.val().split(',') : [];
+    values.push(value);
+
+    hiddenValue.val(values.join(','));
 }
 
 function uncheckComboBoxMultiItem(item)
@@ -339,4 +356,30 @@ function selectComboBoxResult(item)
     hiddenValue.val(value);
 
     $('.combobox_result', outer).hide().html('');
+}
+
+function setComboboxValue(combo, value)
+{
+    var outer = combo.closest('.combobox_outer');
+    var hiddenValue = outer.find('[name=combobox_value]');
+
+    $.post(combo.attr('url'), { ids:value }, function(data){
+        if(data.success){
+            combo.val(data.data[0].name);
+            hiddenValue.val(data.data[0].value);
+        }
+    });
+}
+
+function setComboboxMultiValue(combo, value)
+{
+    var wrapper = combo.closest('.combobox_multi_wrapper');
+
+    $.post(combo.attr('url'), { ids:value }, function(data){
+        if(data.success){
+            for(var i in data.data){
+                renderComboBoxMultiSelectedItem(data.data[0].value, data.data[0].name, wrapper);
+            }
+        }
+    });
 }

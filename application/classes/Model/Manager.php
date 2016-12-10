@@ -24,7 +24,7 @@ class Model_Manager extends Model
             return false;
         }
 
-            $userWho = Auth::instance()->get_user();
+        $userWho = Auth::instance()->get_user();
 
         $db = Oracle::init();
 
@@ -105,13 +105,12 @@ class Model_Manager extends Model
         }
         unset($params['not_admin']);
 
-        if(!empty($params['role_id'])){
-            $sql .= " and ROLE_ID in (".implode(', ', $params['role_id']).")";
-        }
-        unset($params['role_id']);
-
         foreach($params as $key => $value){
-            $sql .= " and ".strtoupper($key)." = '". Oracle::quote($value)."' ";
+            if(is_array($value)){
+                $sql .= " and " . strtoupper($key) . " = '" . implode(',', $value) . "' ";
+            }else {
+                $sql .= " and " . strtoupper($key) . " = '" . Oracle::quote($value) . "' ";
+            }
         }
 
         $sql .= ' order by MANAGER_NAME';
