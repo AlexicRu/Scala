@@ -1347,3 +1347,28 @@ fieldset {
 .web_form_element {
   display: none;
 }
+.up_arrow {
+  display: inline-block;
+  cursor: pointer;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 7.5px 10px 7.5px;
+  border-color: transparent transparent #0e86ad transparent;
+}
+.down_arrow {
+  display: inline-block;
+  cursor: pointer;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 7.5px 0 7.5px;
+  border-color: #0e86ad transparent transparent transparent;
+}
+.alarm {
+  background: transparent;
+  transition: all 0.5s ease;
+}
+.alarm.alarm_show {
+  background: #FEEFB3;
+}

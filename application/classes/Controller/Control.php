@@ -338,4 +338,20 @@ class Controller_Control extends Controller_Common {
             'html' => $html,
         ]);
     }
+
+    /**
+     * сохраняем тариф
+     */
+    public function action_edit_tariff()
+    {
+        $params = $this->request->post('params');
+        $tariffId = $this->request->post('tariff_id');
+
+        $res = Model_Tariff::edit($tariffId, $params);
+
+        if(empty($res)){
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true);
+    }
 }

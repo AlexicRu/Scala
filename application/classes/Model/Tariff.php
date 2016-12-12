@@ -213,4 +213,19 @@ class Model_Tariff extends Model
         ;
         return $content;
     }
+
+    /**
+     * редактируем тариф
+     *
+     * @param $tariffId
+     * @param $params
+     */
+    public static function edit($tariffId, $params)
+    {
+        if(empty($tariffId) || empty($params)){
+            return false;
+        }
+
+        return true;
+    }
 }

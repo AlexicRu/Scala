@@ -22,6 +22,17 @@ function message(type, text)
     $.jGrowl(text, { header: type });
 }
 
+function alarm(block) {
+    block.addClass('alarm');
+    block.addClass('alarm_show');
+    setTimeout(function () {
+        block.removeClass('alarm_show');
+        setTimeout(function () {
+            block.removeClass('alarm');
+        }, 500);
+    }, 2000)
+}
+
 function errorStr(str , error)
 {
     if(parseInt(error) != error){

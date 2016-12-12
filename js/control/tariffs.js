@@ -145,9 +145,122 @@ function addSection(t)
 
     $.post('/control/get_tariff_section_tpl', { uid_section: uidSection, section_num: sectionNum}, function (data) {
         if(data.success){
-            tpl.removeClass('block_loading').append(data.data.html);
+            tpl.removeClass('block_loading').replaceWith(data.data.html);
         }else{
             message(0, 'Доступные условия закончились');
+        }
+    });
+}
+
+function sectionMove(way, btn)
+{
+    var section = btn.closest('.section_wrapper');
+    var swap;
+
+    if(way == 'up') {
+        swap = section.prev();
+        section.insertBefore(swap);
+    }else{
+        swap = section.next();
+        section.insertAfter(swap);
+    }
+}
+
+function saveTariff(btn)
+{
+    var wrapper = btn.closest('.tariff_wrapper');
+
+    var tariffId = wrapper.find('[name=tarif_id]').val();
+    var params = {
+        name: wrapper.find('[name=tarif_name]').val(),
+        sections: []
+    };
+
+    if(params.name == ''){
+        message(0, 'Заполните название тарифа');
+        return;
+    }
+
+    var breakOut = false;
+
+    wrapper.find('.section_wrapper').each(function () {
+        var t = $(this);
+
+        var section = {
+            conditions:[],
+            params:{
+                DISC_TYPE: t.find('[name=DISC_TYPE]').val(),
+                DISC_PARAM: t.find('[name=DISC_PARAM]:visible').val(),
+                DISC_VALUE: t.find('[name=DISC_VALUE]').val(),
+                CLOSE_CALCULATION: t.find('[name=CLOSE_CALCULATION]').is(':checked')
+            }
+        };
+
+        if(section.params.DISC_VALUE == ''){
+            message(0, 'Заполните значение параметров секции тарифа');
+            alarm(t);
+            breakOut = true;
+            return;
+        }
+
+        var conditions = t.find('.tsc_item');
+
+        if(conditions.length == 0){
+            if(section.params.DISC_VALUE == ''){
+                message(0, 'Добавьте условия в секцию тарифа');
+                alarm(t);
+                breakOut = true;
+                return;
+            }
+        }
+
+        conditions.each(function () {
+            var _t = $(this);
+
+            var conditionValue = '';
+
+            var formField = t.find('.form_field:visible');
+
+            if(formField.find('.combobox_multi').length){
+                conditionValue = formField.find('[name=combobox_multi_value]').val();
+            }else if(formField.find('.combobox').length){
+                conditionValue = formField.find('[name=combobox_value]').val();
+            }else{
+                conditionValue = formField.val();
+            }
+
+            if(conditionValue == ''){
+                message(0, 'Добавьте значение условия секции тарифа');
+                alarm(_t);
+                breakOut = true;
+                return;
+            }
+
+            var condition = {
+                CONDITION_ID: _t.find('[name=CONDITION_ID]').val(),
+                COMPARE_ID: _t.find('[name=COMPARE_ID]:visible').val(),
+                CONDITION_VALUE: conditionValue
+            };
+
+            section.conditions.push(condition);
+        });
+
+        if(breakOut){
+            return false;
+        }
+
+        params.sections.push(section);
+    });
+
+    if(breakOut){
+        return false;
+    }
+
+    $.post('/control/edit_tariff', {tariff_id: tariffId, params: params}, function (data) {
+        if(data.success){
+            message(1, 'Тариф успешно сохранен');
+        }else{
+            message(0, 'Ошибка сохранения тарифа');
         }
     });
 }
