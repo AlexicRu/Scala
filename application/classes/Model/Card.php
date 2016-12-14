@@ -214,8 +214,12 @@ class Model_Card extends Model
 		$db = Oracle::init();
 
 		$card = Model_Card::getCard($cardId);
+        $user = Auth::instance()->get_user();
 
-		$where = ["card_id = ".Oracle::quote($cardId)];
+		$where = [
+		    "card_id = ".Oracle::quote($cardId),
+		    "agent_id = ".$user['AGENT_ID'],
+        ];
 
 		if(!empty($card['CONTRACT_ID'])){
 			$where[] = "contract_id = ".Oracle::quote($card['CONTRACT_ID']);

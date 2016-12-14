@@ -21,6 +21,10 @@ class Model_Dot extends Model
             $sql .= " and upper(t.group_name) like '%".mb_strtoupper(Oracle::quote($filter['search']))."%'";
         }
 
+        if(!empty($filter['ids'])){
+            $sql .= " and t.group_id in (".implode(',', $filter['ids']).")";
+        }
+
         return $db->query($sql);
     }
 

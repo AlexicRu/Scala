@@ -1,0 +1,1 @@
+<span class="btn btn_toggle" format="pdf"><i class="icon-pdf icon_big"></i> PDF</span>

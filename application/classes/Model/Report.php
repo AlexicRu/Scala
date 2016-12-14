@@ -5,14 +5,30 @@ use Jaspersoft\Client\Client;
 
 class Model_Report extends Model
 {
+    const REPORT_GROUP_SUPPLIER = 1;
+    const REPORT_GROUP_CLIENT   = 2;
+    const REPORT_GROUP_ANALYTIC = 3;
+    const REPORT_GROUP_OTHERS   = 4;
+
     const REPORT_TYPE_DAILY         = 'daily';
     const REPORT_TYPE_BALANCE_SHEET = 'balance_sheet';
     const REPORT_TYPE_BILL          = 'bill';
+
+    const REPORT_CONSTRUCTOR_TYPE_PERIOD     = 'period';
+    const REPORT_CONSTRUCTOR_TYPE_ADDITIONAL = 'additional';
+    const REPORT_CONSTRUCTOR_TYPE_FORMAT     = 'format';
 
     public static $reportTypes = [
         self::REPORT_TYPE_DAILY         => 'kf/kf_client_total_detail',
         self::REPORT_TYPE_BALANCE_SHEET => 'kf/kf_manager_osv',
         self::REPORT_TYPE_BILL          => 'ru/aN_invoice_client'
+    ];
+
+    public static $reportGroups = [
+        self::REPORT_GROUP_SUPPLIER => ['name' => 'Поставщики', 'icon' => 'icon-dailes'],
+        self::REPORT_GROUP_CLIENT   => ['name' => 'Клиентские', 'icon' => 'icon-dailes'],
+        self::REPORT_GROUP_ANALYTIC => ['name' => 'Аналитические', 'icon' => 'icon-analytics'],
+        self::REPORT_GROUP_OTHERS   => ['name' => 'Прочие', 'icon' => 'icon-summary'],
     ];
 
     public static $formatHeaders = [
@@ -117,5 +133,59 @@ class Model_Report extends Model
         }
 
         return $controls;
+    }
+
+    /**
+     * получаем список доступных отчетов дл менеджера
+     */
+    public static function getAvailableReports()
+    {
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $sql = "select *
+            from ".Oracle::$prefix."V_WEB_REPORTS_AVAILABLE t 
+            where t.agent_id in (0, {$user['AGENT_ID']}) 
+            and t.role_id in (0, {$user['role']})
+            and t.manager_id in (0, {$user['MANAGER_ID']})
+        ";
+
+		$reports = $db->query($sql);
+
+		return $reports;
+    }
+
+    /**
+     * получаем настройки для шаблона отчета
+     *
+     * @param $reportId
+     */
+    public static function getReportTemplateSettings($reportId)
+    {
+        if(empty($reportId)){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $sql = "select * from ".Oracle::$prefix."V_WEB_REPORTS_FORM t where t.report_id = ".Oracle::quote($reportId);
+
+        $settings = $db->tree($sql, 'PROPERTY_TYPE');
+
+        return $settings;
+    }
+
+    /**
+     * создаем шаблон отчета
+     *
+     * @param $templateSettings
+     */
+    public static function buildTemplate($templateSettings)
+    {
+        $html = View::factory('forms/reports/constructor')
+            ->bind('fields', $templateSettings)
+        ;
+        return $html;
     }
 }

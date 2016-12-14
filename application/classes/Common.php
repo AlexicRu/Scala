@@ -11,7 +11,7 @@ class Common
 	 */
 	public static function popupForm($header, $form, $data = [], $formName = '')
 	{
-		$formBody = View::factory('/forms/'.$form);
+		$formBody = View::factory('forms/'.$form);
 
 		if(!empty($data) && is_array($data)){
 			foreach($data as $key => $value){
@@ -21,7 +21,7 @@ class Common
 
 		$id = $formName ?: str_replace('/', "_", $form);
 
-		$content = View::factory('/includes/popup')
+		$content = View::factory('includes/popup')
 			->bind('popupHeader', $header)
 			->bind('popupBody', $formBody)
 			->bind('popupId', $id)
@@ -29,4 +29,27 @@ class Common
 
 		return $content;
 	}
+
+    /**
+     * генерация шаблона конкретного типа поля
+     *
+     * @param $prefix
+     * @param $type
+     * @param $name
+     * @param $value
+     */
+	public static function buildFormField($prefix, $type, $name, $value = false)
+    {
+        try {
+            $content = View::factory('forms/_fields/' . $prefix . '/' . $type)
+                ->bind('type', $type)
+                ->bind('name', $name)
+                ->bind('value', $value)
+            ;
+        } catch (Exception $e){
+            return $type;
+        }
+
+        return $content;
+    }
 }

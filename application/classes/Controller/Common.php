@@ -1,10 +1,12 @@
 <?php defined('SYSPATH') or die('No direct script access.');
  
 abstract class Controller_Common extends Controller_Template {
- 
+
     public $template = 'layout';
     public $title = [];
     public $errors = [];
+    public $scripts = [];
+    public $styles = [];
     public $tpl = '';
 
     public function before()
@@ -26,7 +28,7 @@ abstract class Controller_Common extends Controller_Template {
 
             //подключаем меню
             $menu = Kohana::$config->load('menu');
-            $content = View::factory('/includes/menu')
+            $content = View::factory('includes/menu')
                 ->bind('menu', $menu);
 
             View::set_global('menu', $content);
@@ -44,7 +46,7 @@ abstract class Controller_Common extends Controller_Template {
 
             //рендерим шаблон страницы
             if (!in_array($controller, ['Index'])) {
-                $this->tpl = View::factory('/pages/' . strtolower($controller) . '/' . $action);
+                $this->tpl = View::factory('pages/' . strtolower($controller) . '/' . $action);
             }
 
             $this->_checkCustomDesign();
@@ -65,6 +67,8 @@ abstract class Controller_Common extends Controller_Template {
      */
     public function after()
     {
+        $this->_appendFiles();
+
         if(!$this->request->is_ajax()) {
             $this->_appendFilesAfter();
         }
@@ -82,7 +86,7 @@ abstract class Controller_Common extends Controller_Template {
         if(Auth::instance()->logged_in()) {
             View::set_global('notices', Model_Message::getList(['not_read' => true]));
         }
-        
+
         $this->template->content = $this->tpl;
 
         parent::after();
@@ -119,7 +123,7 @@ abstract class Controller_Common extends Controller_Template {
         $design = Kohana::$config->load('design')->as_array();
 
         if(!empty($_SERVER['SERVER_NAME'])){
-            $url = str_replace('.', '', $_SERVER['SERVER_NAME']);
+            $url = str_replace(['.', '-'], '', $_SERVER['SERVER_NAME']);
 
             if(isset($design[$url])){
                 $customView = $design[$url]['class'];
@@ -165,6 +169,17 @@ abstract class Controller_Common extends Controller_Template {
             ];
         }
     }
+
+    private function _appendFiles()
+    {
+        foreach($this->styles as $style){
+            $this->template->styles[] =  $style;
+        }
+        foreach($this->scripts as $script){
+            $this->template->scripts[] =  $script;
+        }
+    }
+
     private function _appendFilesAfter()
     {
         if(Auth::instance()->logged_in()) {
