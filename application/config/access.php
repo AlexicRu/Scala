@@ -40,6 +40,7 @@ return [
         ],
         'clients_bill_add' => [
             'a_1',
+            'a_6',
             'a_10',
         ],
         'news_news_edit' => [
@@ -48,6 +49,7 @@ return [
         ],
         'clients_bill_print' => [
             'a_1',
+            'a_6',
             'a_10',
         ],
         // custom
