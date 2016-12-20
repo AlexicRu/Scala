@@ -544,12 +544,33 @@ select.input_small,
 textarea.input_small {
   width: 140px;
 }
+input[type=text].input_mini,
+input[type=password].input_mini,
+input[type=number].input_mini,
+select.input_mini,
+textarea.input_mini {
+  width: 110px;
+}
 input[type=text].input_tiny,
 input[type=password].input_tiny,
 input[type=number].input_tiny,
 select.input_tiny,
 textarea.input_tiny {
   width: 70px;
+}
+input[type=text].input_wide,
+input[type=password].input_wide,
+input[type=number].input_wide,
+select.input_wide,
+textarea.input_wide {
+  width: 250px;
+}
+input[type=text].input_grand,
+input[type=password].input_grand,
+input[type=number].input_grand,
+select.input_grand,
+textarea.input_grand {
+  width: 500px;
 }
 .more_info {
   margin-bottom: 30px;
@@ -1287,7 +1308,7 @@ hr {
   padding-top: 15px;
 }
 fieldset {
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   margin-bottom: 20px;
 }

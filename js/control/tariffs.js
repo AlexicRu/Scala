@@ -16,7 +16,11 @@ $(function () {
             btnAddCondition = uidSection.find('.btn_add_condition');
         }
 
-        fieldset.remove();
+        if(fieldset.closest('.section_wrapper')) {
+            fieldset.closest('.section_wrapper').remove();
+        }else{
+            fieldset.remove();
+        }
 
         if(uidSection) {
             btnAddCondition.show();
@@ -134,6 +138,9 @@ function addSection(t)
     var list = block.find('.t_sections_list');
     var tariffId = block.find('[name=tarif_id]').val();
     var sectionNum = parseInt(block.find('fieldset[section_num]:last').attr('section_num')) + 1;
+    if(isNaN(sectionNum)){
+        sectionNum = 1;
+    }
 
     var uidSection = tariffId + '_' + sectionNum;
 

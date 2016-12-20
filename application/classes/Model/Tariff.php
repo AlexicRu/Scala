@@ -197,7 +197,7 @@ class Model_Tariff extends Model
      * рисуем секцию
      *
      * @param $uidSection
-     *      * @param $section
+     * @param $section
      * @param $tariff
      * @param $conditions
      * @param $reference
@@ -220,10 +220,75 @@ class Model_Tariff extends Model
      * @param $tariffId
      * @param $params
      */
-    public static function edit($tariffId, $params)
+    public static function edit($params,  $tariffId = 0)
     {
-        if(empty($tariffId) || empty($params)){
+        if(empty($params)){
             return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        //редактирование тарифа
+        $data = [
+            'p_tarif_id' 	=> $tariffId,
+            'p_tarif_name' 	=> $params['name'],
+            'p_tarif_descr' => '',
+            'p_tarif_agent' => $user['AGENT_ID'],
+            'p_manager_id' 	=> $user['MANAGER_ID'],
+            'p_version_id' 	=> 'out',
+            'p_error_code' 	=> 'out',
+        ];
+
+        $res = $db->procedure('ctrl_tarif_edit', $data, true);
+
+        if($res['p_error_code'] != Oracle::CODE_SUCCESS){
+            return false;
+        }
+
+        $versionId = $res['p_version_id'];
+
+        foreach($params['sections'] as $sectionNum => $section){
+            //редактирование условий
+            foreach($section['conditions'] as $conditionNum => $condition){
+                $data = [
+                    'p_tarif_id' 	    => $tariffId,
+                    'p_version_id' 	    => $versionId,
+                    'p_section_num'     => $sectionNum,
+                    'p_condition_num'   => $conditionNum,
+                    'p_condition_id' 	=> $condition['CONDITION_ID'],
+                    'p_compare_id' 	    => $condition['COMPARE_ID'],
+                    'p_condition_value' => $condition['CONDITION_VALUE'],
+                    'p_manager_id'      => $user['MANAGER_ID'],
+                    'p_error_code' 	    => 'out',
+                ];
+
+                $res = $db->procedure('ctrl_tarif_sections', $data);
+
+                if($res == Oracle::CODE_ERROR){
+                    return false;
+                }
+            }
+
+            //редактирование параметров
+            $data = [
+                'p_tarif_id' 	        => $tariffId,
+                'p_version_id' 	        => $versionId,
+                'p_section_num'         => $sectionNum,
+                'p_disc_type' 	        => $section['params']['DISC_TYPE'],
+                'p_disc_param' 	        => $section['params']['DISC_PARAM'],
+                'p_disc_value'          => $section['params']['DISC_VALUE'],
+                'p_close_calculation'   => (int)$section['params']['CLOSE_CALCULATION'],
+                'p_manager_id'      => $user['MANAGER_ID'],
+                'p_error_code' 	        => 'out',
+            ];
+
+            $res = $db->procedure('ctrl_tarif_params', $data);
+
+            if($res == Oracle::CODE_ERROR){
+                return false;
+            }
         }
 
         return true;

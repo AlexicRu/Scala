@@ -52,7 +52,7 @@ if(!empty($fields[Model_Report::REPORT_CONSTRUCTOR_TYPE_FORMAT])){
         <td>
             <br>
             <span class="btn"><i class="icon-download"></i> Сформировать</span>
-            <span class="btn btn_orange"><i class="icon-notifications"></i> На почту</span>
+            <!-- span class="btn btn_orange"><i class="icon-notifications"></i> На почту</span -->
         </td>
     </tr>
 </table>

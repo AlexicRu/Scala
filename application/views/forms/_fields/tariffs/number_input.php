@@ -1,1 +1,1 @@
-<input type="text" class="form_field" name="<?=$name?>" field="<?=$type?>">
+<input type="text" class="form_field input_mini" name="<?=$name?>" field="<?=$type?>">

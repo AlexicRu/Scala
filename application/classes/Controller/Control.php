@@ -347,7 +347,7 @@ class Controller_Control extends Controller_Common {
         $params = $this->request->post('params');
         $tariffId = $this->request->post('tariff_id');
 
-        $res = Model_Tariff::edit($tariffId, $params);
+        $res = Model_Tariff::edit($params, $tariffId);
 
         if(empty($res)){
             $this->jsonResult(false);
