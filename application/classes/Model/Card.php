@@ -369,15 +369,13 @@ class Model_Card extends Model
 	 *
 	 * @return array|int
 	 */
-	public static function getServicesList($cardId)
+	public static function getServicesList()
 	{
-		if(empty($cardId)){
-			return false;
-		}
-
 		$db = Oracle::init();
 
-		$sql = "select * from ".Oracle::$prefix."V_WEB_SERVICES_LIST where card_bin = ".intval(substr($cardId, 0, 6));
+        $user = Auth::instance()->get_user();
+
+		$sql = "select * from ".Oracle::$prefix."V_WEB_SERVICE_LIST where agent_id = ".$user['AGENT_ID']." order by DESC_FOREIGN";
 
 		return $db->query($sql);
 	}

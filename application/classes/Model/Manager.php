@@ -291,14 +291,14 @@ class Model_Manager extends Model
                 'p_error_code' 		=> 'out',
             ];
 
-            $res = $db->procedure('ctrl_manager_client_add', $data);
+            $res = $db->procedure('ctrl_manager_client_add', $data, true);
 
-            if($res == Oracle::CODE_ERROR){
-                return false;
+            if($res['p_error_code'] != Oracle::CODE_SUCCESS){
+                return $res['p_error_code'];
             }
         }
 
-        return true;
+        return Oracle::CODE_SUCCESS;
     }
 
     /**

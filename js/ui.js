@@ -375,11 +375,15 @@ function setComboboxMultiValue(combo, value)
 {
     var wrapper = combo.closest('.combobox_multi_wrapper');
 
-    $.post(combo.attr('url'), { ids:value }, function(data){
-        if(data.success){
-            for(var i in data.data){
-                renderComboBoxMultiSelectedItem(data.data[0].value, data.data[0].name, wrapper);
+    var list = value.split(',');
+
+    for(var i in list){
+        $.post(combo.attr('url'), { ids:list[i] }, function(data){
+            if(data.success){
+                for(var i in data.data){
+                    renderComboBoxMultiSelectedItem(data.data[0].value, data.data[0].name, wrapper);
+                }
             }
-        }
-    });
+        });
+    }
 }

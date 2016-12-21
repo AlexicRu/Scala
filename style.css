@@ -523,6 +523,11 @@ textarea.textarea_big {
 }
 input[type=text],
 input[type=password],
+input[type=number] {
+  width: 150px;
+}
+input[type=text],
+input[type=password],
 input[type=number],
 select,
 textarea {
@@ -542,7 +547,7 @@ input[type=password].input_small,
 input[type=number].input_small,
 select.input_small,
 textarea.input_small {
-  width: 140px;
+  width: 130px;
 }
 input[type=text].input_mini,
 input[type=password].input_mini,
@@ -563,7 +568,7 @@ input[type=password].input_wide,
 input[type=number].input_wide,
 select.input_wide,
 textarea.input_wide {
-  width: 250px;
+  width: 200px;
 }
 input[type=text].input_grand,
 input[type=password].input_grand,
@@ -1330,6 +1335,7 @@ fieldset {
   position: absolute;
   top: 20px;
   right: 10px;
+  z-index: 10;
 }
 .ts_conditions {
   margin-bottom: 10px;
@@ -1361,6 +1367,10 @@ fieldset {
 }
 .reference_block {
   display: inline-block;
+}
+.reference_block td {
+  vertical-align: top;
+  padding: 0 10px 0 0;
 }
 .disc_param_select {
   display: none;

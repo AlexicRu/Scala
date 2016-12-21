@@ -14,7 +14,7 @@ class Model_Tariff extends Model
     public static $paramsTypes = [
         self::TARIFF_PARAM_TYPE_DISCOUNT    => 'Скидка',
         self::TARIFF_PARAM_TYPE_MARKUP      => 'Наценка',
-        self::TARIFF_PARAM_TYPE_FIX_PRICE   => 'Фиксированная',
+        self::TARIFF_PARAM_TYPE_FIX_PRICE   => 'Фиксированная цена',
         self::TARIFF_PARAM_TYPE_SUPPLIER    => 'От условий поставщика',
     ];
 
@@ -27,7 +27,7 @@ class Model_Tariff extends Model
     public static $paramsTypesParams = [
         self::TARIFF_PARAM_TYPE_DISCOUNT    => [self::TARIFF_PARAM_PARAM_PERCENT, self::TARIFF_PARAM_PARAM_CURRENCY],
         self::TARIFF_PARAM_TYPE_MARKUP      => [self::TARIFF_PARAM_PARAM_PERCENT, self::TARIFF_PARAM_PARAM_CURRENCY],
-        self::TARIFF_PARAM_TYPE_FIX_PRICE   => [self::TARIFF_PARAM_PARAM_PERCENT, self::TARIFF_PARAM_PARAM_CURRENCY],
+        self::TARIFF_PARAM_TYPE_FIX_PRICE   => [self::TARIFF_PARAM_PARAM_CURRENCY],
         self::TARIFF_PARAM_TYPE_SUPPLIER    => [self::TARIFF_PARAM_PARAM_PERCENT, self::TARIFF_PARAM_PARAM_CURRENCY, self::TARIFF_PARAM_PARAM_DISCOUNT],
     ];
 
@@ -53,6 +53,8 @@ class Model_Tariff extends Model
         if(!empty($params['tariff_id'])){
             $sql .= " and t.tarif_id = ".$params['tariff_id'];
         }
+
+        $sql .= ' order by t.TARIF_NAME asc';
 
         $tariffs = $db->query($sql);
 
@@ -250,6 +252,8 @@ class Model_Tariff extends Model
         $versionId = $res['p_version_id'];
 
         foreach($params['sections'] as $sectionNum => $section){
+            $sectionNum += 1; //так как начали с 0, а нужны нормальные числа
+
             //редактирование условий
             foreach($section['conditions'] as $conditionNum => $condition){
                 $data = [
