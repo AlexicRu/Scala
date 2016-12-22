@@ -189,7 +189,8 @@ class Controller_Clients extends Controller_Common {
 
         $oilRestrictions = Model_Card::getOilRestrictions($cardId);
         $lastFilling = Model_Card::getLastFilling($cardId);
-		$servicesList = Model_Card::getServicesList();
+        Listing::$limit = 999;
+		$servicesList = Listing::getServices(['tube_id' => $card['TUBE_ID']]);
 
 		$popupCardEdit = Common::popupForm('Редактирование карты', 'card/edit', [
 				'card' 				=> $card,

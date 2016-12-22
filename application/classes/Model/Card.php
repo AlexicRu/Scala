@@ -365,22 +365,6 @@ class Model_Card extends Model
 	}
 
 	/**
-	 * получаем список доступных видов сервиса
-	 *
-	 * @return array|int
-	 */
-	public static function getServicesList()
-	{
-		$db = Oracle::init();
-
-        $user = Auth::instance()->get_user();
-
-		$sql = "select * from ".Oracle::$prefix."V_WEB_SERVICE_LIST where agent_id = ".$user['AGENT_ID']." order by DESC_FOREIGN";
-
-		return $db->query($sql);
-	}
-
-	/**
 	 * изъятие карты
 	 *
 	 * @param $params

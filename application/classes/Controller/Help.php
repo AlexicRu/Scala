@@ -71,7 +71,7 @@ class Controller_Help extends Controller_Common
      */
     public function action_list_service()
     {
-        $res = Listing::getServices($this->_search, $this->_ids);
+        $res = Listing::getServices(['search' => $this->_search, 'ids' => $this->_ids]);
 
         if(empty($res)){
             $this->jsonResult(false);
