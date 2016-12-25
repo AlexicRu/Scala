@@ -520,6 +520,7 @@ textarea.textarea_big {
   vertical-align: top;
   padding-left: 15px;
   padding-right: 15px;
+  width: auto;
 }
 input[type=text],
 input[type=password],
