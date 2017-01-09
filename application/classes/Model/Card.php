@@ -365,24 +365,6 @@ class Model_Card extends Model
 	}
 
 	/**
-	 * получаем список доступных видов сервиса
-	 *
-	 * @return array|int
-	 */
-	public static function getServicesList($cardId)
-	{
-		if(empty($cardId)){
-			return false;
-		}
-
-		$db = Oracle::init();
-
-		$sql = "select * from ".Oracle::$prefix."V_WEB_SERVICES_LIST where card_bin = ".intval(substr($cardId, 0, 6));
-
-		return $db->query($sql);
-	}
-
-	/**
 	 * изъятие карты
 	 *
 	 * @param $params

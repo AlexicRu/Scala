@@ -146,7 +146,7 @@ Cookie::$salt = 'edrge5rg1e5rg4e98rg4sd648er4gerg';
  * defaults for the URI.
  */
 
-Route::set('news', 'news/<id>', array('id' => '\d'))
+Route::set('news', 'news/<id>', array('id' => '[\d]+'))
     ->defaults(array(
         'controller' => 'news',
         'action'     => 'news_detail',

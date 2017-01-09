@@ -70,7 +70,7 @@ class Controller_Managers extends Controller_Common {
     {
         $managerId = $this->request->post('manager_id');
 
-        $clients = Model_Client::getClientsList(false, ['manager_id' => $managerId]);
+        $clients = Model_Client::getClientsList(null, ['manager_id' => $managerId]);
 
         if($clients === false){
             $this->jsonResult(0);
@@ -118,10 +118,10 @@ class Controller_Managers extends Controller_Common {
 
         $result = Model_Manager::addClients($params);
 
-        if(empty($result)){
-            $this->jsonResult(false);
+        if($result == Oracle::CODE_SUCCESS){
+            $this->jsonResult(true);
         }
-        $this->jsonResult(true);
+        $this->jsonResult(false, $result);
     }
 
     /**

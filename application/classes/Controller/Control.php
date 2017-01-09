@@ -261,10 +261,13 @@ class Controller_Control extends Controller_Common {
         $this->scripts[] = '/js/control/tariffs.js';
         $this->scripts[] = '/js/plugins/jquery.mask.js';
 
-        $tariffs = Model_Tariff::getAvailableTariffs();
+        $filter = $this->request->query('filter') ?: ['only_managers' => 1];
+
+        $tariffs = Model_Tariff::getAvailableTariffs($filter);
 
         $this->tpl
             ->bind('tariffs', $tariffs)
+            ->bind('filter', $filter)
         ;
     }
 
@@ -274,6 +277,11 @@ class Controller_Control extends Controller_Common {
     public function action_load_tariff()
     {
         $tariffId = $this->request->param('id');
+
+        if($tariffId == -1){
+            $this->html(Model_Tariff::buildTemplate([], []));
+        }
+
         $lastVersion = $this->request->post('version');
 
         $tariff = Model_Tariff::getAvailableTariffs(['tariff_id' => $tariffId]);
@@ -347,7 +355,7 @@ class Controller_Control extends Controller_Common {
         $params = $this->request->post('params');
         $tariffId = $this->request->post('tariff_id');
 
-        $res = Model_Tariff::edit($tariffId, $params);
+        $res = Model_Tariff::edit($params, $tariffId);
 
         if(empty($res)){
             $this->jsonResult(false);

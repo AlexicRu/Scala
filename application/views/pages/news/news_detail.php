@@ -9,7 +9,7 @@
 </h1>
 
 <div class="news_elem block">
-    <h2><?=$detail['TITLE']?></h2>
+    <h2><?if($detail['AGENT_ID'] == 0){?><i class="icon-user"></i> <?}?><?=$detail['TITLE']?></h2>
     <div class="n_date gray"><?=$detail['DATE_CREATE_WEB']?></div>
     <?if(!empty($detail['PICTURE'])){?>
         <div class="n_img_detail"><img src="<?=$detail['PICTURE']?>"></div>

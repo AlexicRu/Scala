@@ -28,7 +28,7 @@
     <tr>
         <td></td>
         <td colspan="5">
-            <label><input type="checkbox" name="CLOSE_CALCULATION" <?=(isset($params['CLOSE_CALCULATION']) && $params['CLOSE_CALCULATION'] == 1 ? 'checked' : '')?>> Завершить расчет</label>
+            <label><input type="checkbox" name="CLOSE_CALCULATION" <?=(!isset($params['CLOSE_CALCULATION']) || !empty($params['CLOSE_CALCULATION']) ? 'checked' : '')?>> Завершить расчет</label>
         </td>
     </tr>
 </table>

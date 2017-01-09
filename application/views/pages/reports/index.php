@@ -20,7 +20,7 @@
                         <tr>
                             <td class="gray right" width="150">Отчет:</td>
                             <td>
-                                <select class="report_select select_big">
+                                <select class="report_select select_big select_long">
                                     <?foreach($reportsList as $report){?>
                                         <option value="<?=$report['REPORT_ID']?>"><?=$report['WEB_NAME']?></option>
                                     <?}?>

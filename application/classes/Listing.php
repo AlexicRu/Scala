@@ -37,28 +37,27 @@ class Listing
     /**
      * список услуг
      *
-     * @param $search
-     * @param ids
+     * @param $params
      * @return array|bool|int
      */
-    public static function getServices($search, $ids = [])
+    public static function getServices($params)
     {
-        if(empty($search) && empty($ids)){
-            return false;
-        }
-
         $db = Oracle::init();
 
         $user = Auth::instance()->get_user();
 
         $sql = "select * from ".Oracle::$prefix."V_WEB_SERVICE_LIST t where t.agent_id = ".$user['AGENT_ID'];
 
-        if(!empty($search)){
-            $sql .= " and upper(t.long_desc) like '%".mb_strtoupper(Oracle::quote($search))."%'";
+        if(!empty($params['search'])){
+            $sql .= " and upper(t.long_desc) like '%".mb_strtoupper(Oracle::quote($params['search']))."%'";
         }
 
-        if(!empty($ids)){
-            $sql .= " and t.SERVICE_ID in (".implode(',', $ids).")";
+        if(!empty($params['ids'])){
+            $sql .= " and t.SERVICE_ID in (".implode(',', $params['ids']).")";
+        }
+
+        if(!empty($params['TUBE_ID'])){
+            $sql .= " and t.TUBE_ID = ".intval($params['TUBE_ID']);
         }
 
         $sql .= " order by t.long_desc";

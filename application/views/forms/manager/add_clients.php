@@ -130,7 +130,13 @@
                 $('.found_clients_list', block).html('');
                 block.find('input').val('');
             }else{
-                message(0, 'Ошибка добавления клиентов');
+                var txt = '';
+
+                if(data.data == 3){
+                    txt = '. Клиент уже закреплен за другим менеджером по продажам';
+                }
+
+                message(0, 'Ошибка добавления клиентов' + txt);
             }
         });
     }

@@ -1,4 +1,5 @@
-<div class="reference_block" uid="<?=$uid?>">
+<table class="reference_block" uid="<?=$uid?>">
+    <tr>
     <?
     $referenceList = [];
 
@@ -10,6 +11,7 @@
         ];
     }
     ?>
+        <td>
     <select name="CONDITION_ID">
         <?foreach($referenceList as $referenceItem){?>
             <option value="<?=$referenceItem['CONDITION_ID']?>">
@@ -17,6 +19,8 @@
             </option>
         <?}?>
     </select>
+        </td>
+        <td>
 
     <?foreach($reference as $referenceBlock){
         $referenceFirst = reset($referenceBlock);?>
@@ -27,9 +31,16 @@
                 </option>
             <?}?>
         </select>
-        <span class="web_form_element" condition_id="<?=$referenceFirst['CONDITION_ID']?>"><?=Common::buildFormField('tariffs', $referenceFirst['WEB_FORM'], $referenceFirst['WEB_FORM'])?></span>
     <?}?>
-</div>
+        </td>
+        <td>
+            <?foreach($reference as $referenceBlock){
+                $referenceFirst = reset($referenceBlock);?>
+                <span class="web_form_element" condition_id="<?=$referenceFirst['CONDITION_ID']?>"><?=Common::buildFormField('tariffs', $referenceFirst['WEB_FORM'], $referenceFirst['WEB_FORM'])?></span>
+            <?}?>
+        </td>
+    </tr>
+</table>
 
 <script>
     $(function () {

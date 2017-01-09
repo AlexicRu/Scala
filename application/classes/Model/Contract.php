@@ -80,7 +80,7 @@ class Model_Contract extends Model
 			$sql .= " and contract_id = ".Oracle::quote($contractId);
 		}
 
-		$sql .= 'order by date_begin, state_id';
+		$sql .= 'order by date_begin desc, state_id';
 
 		$contracts = $db->query($sql);
 

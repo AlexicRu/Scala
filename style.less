@@ -320,16 +320,28 @@ a.btn, a.btn:hover{
   margin-bottom: 15px; display: inline-block; color: #0e86ad;
 }
 input[type=text].input_big, input[type=password].input_big, input[type=number].input_big, select.select_big, textarea.textarea_big{
-  height: 46px; background: white; font-family: SegoeUILight; border: 1px solid #d8d9da; border-radius: 5px; color: black; font-size: 18px; vertical-align: top; padding-left: 15px; padding-right: 15px;
+  height: 46px; background: white; font-family: SegoeUILight; border: 1px solid #d8d9da; border-radius: 5px; color: black; font-size: 18px; vertical-align: top; padding-left: 15px; padding-right: 15px; width: auto;
+}
+input[type=text], input[type=password], input[type=number]{
+  width: 150px;
 }
 input[type=text], input[type=password], input[type=number], select, textarea{
   height: 34px; background: white; font-family: SegoeUILight; border: 1px solid #d8d9da; border-radius: 5px; color: black; font-size: 16px; vertical-align: top; padding-left: 10px; padding-right: 10px;
 
   &.input_small{
-    width: 140px;
+    width: 130px;
+  }
+  &.input_mini{
+    width: 110px;
   }
   &.input_tiny{
     width: 70px;
+  }
+  &.input_wide{
+    width: 200px;
+  }
+  &.input_grand{
+    width: 500px;
   }
 }
 .more_info{
@@ -902,7 +914,7 @@ hr{
   color: #999999; text-align: right; vertical-align: top; padding-top: 15px;
 }
 fieldset{
-  border:1px solid rgba(0,0,0,.1); border-radius:5px; margin-bottom: 20px;
+  border:2px solid rgba(0,0,0,.1); border-radius:5px; margin-bottom: 20px;
 }
 .inline_block{
   display: inline-block; vertical-align: top;
@@ -916,7 +928,7 @@ fieldset{
   }
 }
 .ts_remove{
-  position: absolute; top:20px; right: 10px;
+  position: absolute; top:20px; right: 10px; z-index: 10;
 }
 .ts_conditions{
   margin-bottom: 10px;
@@ -947,6 +959,9 @@ fieldset{
 }
 .reference_block{
   display: inline-block;
+  td{
+    vertical-align: top; padding: 0 10px 0 0;
+  }
 }
 .disc_param_select{
   display: none;

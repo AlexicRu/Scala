@@ -1,5 +1,4 @@
-![alt tag](http://lk.glopro.ru/img/logo.svg)
-
+![alt tag](http://lk.glopro.ru/img/GloPro-logo-pack/GloPro-main-logo.png)
 
 Management system for fuel cards holders
 
