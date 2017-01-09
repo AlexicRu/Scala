@@ -63,8 +63,13 @@ return [
     'deny' => [ //для всех остальных ролей будет разрешено
         // functions
         'reports_index' => [
-            Access::ROLE_USER,
+            Access::ROLE_MANAGER,
             Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
+            Access::ROLE_MANAGER_SALE,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
         'control_index' => [
             Access::ROLE_USER,
