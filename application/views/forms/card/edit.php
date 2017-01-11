@@ -13,7 +13,7 @@ $postfix = $card['CARD_ID'];
             <input type="text" name="card_edit_holder" class="input_big" value="<?=$card['HOLDER']?>" maxlength="200">
         </td>
     </tr>
-    <?if(in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_EMV_CAN])){?>
+    <?if(!empty($card['CHANGE_LIMIT_AVAILABLE'])){?>
     <tr>
         <td class="gray right v_top" width="170">Ограничения по топливу:</td>
         <td>
@@ -27,7 +27,7 @@ $postfix = $card['CARD_ID'];
                                 <div class="form_elem" limit_service><nobr>
                                     <select name="limit_service">
                                         <?foreach($servicesList as $service){?>
-                                            <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $restrict['SERVICE_ID']){?>selected<?}?>><?=$service['DESC_FOREIGN']?></option>
+                                            <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $restrict['SERVICE_ID']){?>selected<?}?>><?=$service['FOREIGN_DESC']?></option>
                                         <?}?>
                                     </select>
                                     <button class="btn btn_small btn_red btn_card_edit_del_serviсe" onclick="cardEditDelService_<?=$postfix?>($(this))">&times;</button>
@@ -79,7 +79,7 @@ $postfix = $card['CARD_ID'];
 <script>
     var services_<?=$postfix?> = {
         <?foreach($servicesList as $service){?>
-        "<?=$service['SERVICE_ID']?>": "<?=$service['DESC_FOREIGN']?>",
+        "<?=$service['SERVICE_ID']?>": "<?=$service['FOREIGN_DESC']?>",
         <?}?>
     };
     var limitParams_<?=$postfix?> = {

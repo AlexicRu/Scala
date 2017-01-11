@@ -103,7 +103,12 @@ foreach($cards as $card){
                 loadContract('cards', $(".cards_search").val());
             }
         });
-
+/*
+ 0 - не отображать кнопку "Блокировать"/"Разблокировать"
+ 1 - отображать кнопку "Блокировать"/"Разблокировать",
+ 2 - отображать, но при блокировании такой карты писать: "Заявка на блокировку/разблокировку отправлена менеджеру. Карта будет заблокирована/разблокирована в течение 48 часов!" (писать блокирока или разблокировка в зависимости от действия)
+ при изъятии такой карты писать: "Карта откреплена от договора! Проверьте статус в сторонней системе!"
+* */
         $(document).off('click', '.btn_card_toggle').on('click', '.btn_card_toggle', function(){
             var t = $(this);
 
@@ -132,13 +137,17 @@ foreach($cards as $card){
                             tab.append('<span class="label label_error label_small">Заблокирована</span>');
                             cnt_in_work.text(parseInt(cnt_in_work.text()) - 1);
                             cnt_blocked.text(parseInt(cnt_blocked.text()) + 1);
+
+                            var blockAvailableText = 'Заявка на блокировку отправлена менеджеру. Карта будет заблокирована в течение 48 часов!';
                         }else{
                             tab.find('.label_error').remove();
                             cnt_in_work.text(parseInt(cnt_in_work.text()) + 1);
                             cnt_blocked.text(parseInt(cnt_blocked.text()) - 1);
-                        }
 
-                        message(1, 'Статус карты изменен');
+                            var blockAvailableText = 'Заявка на разблокировку отправлена менеджеру. Карта будет разблокирована в течение 48 часов!';
+                         }
+
+                        message(1, t.attr('block_available') == 2 ? blockAvailableText : 'Статус карты изменен');
                     } else {
                         message(0, 'Ошибка обновления');
                     }
@@ -169,7 +178,7 @@ foreach($cards as $card){
      * изъятие карты
      * @param cardId
      */
-    function cardWithdraw(cardId)
+    function cardWithdraw(cardId, blockAvailable)
     {
         if(!confirm('Изъять карту из договора?')){
             return false;
@@ -182,7 +191,7 @@ foreach($cards as $card){
         $.post('/clients/card_withdraw', {params:params}, function (data) {
             if (data.success) {
 
-                message(1, 'Успешное изъятие');
+                message(1, blockAvailable == 2 ? 'Карта откреплена от договора! Проверьте статус в сторонней системе!' : 'Успешное изъятие');
                 loadContract('cards');
             } else {
                 message(0, 'Ошибка изъятия');

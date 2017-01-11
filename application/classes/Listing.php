@@ -46,7 +46,12 @@ class Listing
 
         $user = Auth::instance()->get_user();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_SERVICE_LIST t where t.agent_id = ".$user['AGENT_ID'];
+        $description = 'LONG_DESC';
+        if(array_key_exists('TUBE_ID', $params)){
+            $description = 'FOREIGN_DESC';
+        }
+
+        $sql = "select distinct t.SERVICE_ID, t.{$description} from ".Oracle::$prefix."V_WEB_SERVICE_LIST t where t.agent_id = ".$user['AGENT_ID'];
 
         if(!empty($params['search'])){
             $sql .= " and upper(t.long_desc) like '%".mb_strtoupper(Oracle::quote($params['search']))."%'";
@@ -60,7 +65,7 @@ class Listing
             $sql .= " and t.TUBE_ID = ".intval($params['TUBE_ID']);
         }
 
-        $sql .= " order by t.long_desc";
+        $sql .= " order by t.{$description}";
 
         return $db->query($db->limit($sql, 0, self::$limit));
     }

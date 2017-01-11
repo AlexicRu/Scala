@@ -5,21 +5,19 @@ $user = Auth::instance()->get_user();
 ?>
 
 <div class="fr">
-    <?if(in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_EMV_CAN, Model_Card::CARD_TYPE_PAYFLEX_CAN]) || Access::allow('clients_card_toggle')){?>
+    <?if(in_array($card['BLOCK_AVAILABLE'], [1,2]) || Access::allow('clients_card_toggle')){?>
         <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
-            <button class="btn btn_green btn_card_toggle"><span style="display: none"><i class="icon-block"></i> Заблокировать</span><span><i class="icon-backblock"></i> Разблокировать</span></button>
+            <button class="btn btn_green btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span style="display: none"><i class="icon-block"></i> Заблокировать</span><span><i class="icon-backblock"></i> Разблокировать</span></button>
         <?}else{?>
-            <button class="btn btn_red btn_card_toggle"><span><i class="icon-block"></i> Заблокировать</span><span style="display: none"><i class="icon-backblock"></i> Разблокировать</span></button>
+            <button class="btn btn_red btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span><i class="icon-block"></i> Заблокировать</span><span style="display: none"><i class="icon-backblock"></i> Разблокировать</span></button>
         <?}?>
     <?}?>
     <?if(Access::allow('clients_card_withdraw')){?>
-        &nbsp; <a href="#" class="btn btn_orange" onclick="cardWithdraw('<?=$card['CARD_ID']?>')"><i class="icon-cancel"></i> Изъять</a>
+        &nbsp; <a href="#" class="btn btn_orange" onclick="cardWithdraw('<?=$card['CARD_ID']?>', <?=$card['BLOCK_AVAILABLE']?>)"><i class="icon-cancel"></i> Изъять</a>
     <?}?>
-    <?/*if(!in_array($card['CARD_TYPE'], [Model_Card::CARD_TYPE_PAYFLEX_CAN, Model_Card::CARD_TYPE_PAYFLEX_CANT])){*/?>
-        <?if(Access::allow('clients_card_edit')){?>
-            &nbsp; <a href="#card_edit_<?=$card['CARD_ID']?>" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
-        <?}?>
-    <?/*}*/?>
+    <?if(Access::allow('clients_card_edit')){?>
+        &nbsp; <a href="#card_edit_<?=$card['CARD_ID']?>" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
+    <?}?>
 </div>
 
 <b class="f18">Обороты за текущий период:</b><br>

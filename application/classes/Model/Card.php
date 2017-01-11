@@ -17,11 +17,6 @@ class Model_Card extends Model
 	const CARD_LIMIT_TYPE_MONTH		= 3;
 	const CARD_LIMIT_TYPE_ONCE		= 4;
 
-	const CARD_TYPE_EMV_CAN 		= 1; //Карта EMV с возможностью смены лимитов/блокировки в сторонней системе
-	const CARD_TYPE_EMV_CANT 		= 2; //Карта EMV без возможности смены лимитов/блокировки в сторонней системе
-	const CARD_TYPE_PAYFLEX_CAN 	= 3; //Карта PayFlex с возможностью блокировки в сторонней системе
-	const CARD_TYPE_PAYFLEX_CANT 	= 4; //Карта PayFlex без возможности блокировки в сторонней системе
-
 	public static $cardLimitsParams = [
 		self::CARD_LIMIT_PARAM_VOLUME 	=> 'л.',
 		self::CARD_LIMIT_PARAM_RUR 		=> Text::RUR,

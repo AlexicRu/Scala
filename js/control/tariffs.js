@@ -7,20 +7,20 @@ $(function () {
         }
 
         var t = $(this);
-        var fieldset = t.closest('fieldset, .tsc_item');
+        var fieldset = t.parent();
         var uidSection;
         var btnAddCondition;
 
-        if(t.closest('.tsc_item').length){
+        if(fieldset.hasClass('tsc_item')){
             uidSection = t.closest('[uid_section]');
             btnAddCondition = uidSection.find('.btn_add_condition');
+        }else{
+            if(fieldset.closest('.section_wrapper')) {
+                fieldset = fieldset.closest('.section_wrapper');
+            }
         }
 
-        if(fieldset.closest('.section_wrapper')) {
-            fieldset.closest('.section_wrapper').remove();
-        }else{
-            fieldset.remove();
-        }
+        fieldset.remove();
 
         if(uidSection) {
             btnAddCondition.show();
@@ -63,6 +63,7 @@ function changeCondition(uid, conditionId, compareId, conditionValue)
 
 function checkUsedConditions(uidSection)
 {
+    return true;
     var usedConditionsInSection = [];
     var section = $('[uid_section='+ uidSection +']');
 
@@ -213,12 +214,10 @@ function saveTariff(btn)
         var conditions = t.find('.tsc_item');
 
         if(conditions.length == 0){
-            if(section.params.DISC_VALUE == ''){
-                message(0, 'Добавьте условия в секцию тарифа');
-                alarm(t);
-                breakOut = true;
-                return;
-            }
+            message(0, 'Добавьте условия в секцию тарифа');
+            alarm(t);
+            breakOut = true;
+            return;
         }
 
         conditions.each(function () {
