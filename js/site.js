@@ -65,7 +65,7 @@ $(function(){
     $('.mark_read').on('click', function () {
         $.post('/messages/make_read', {}, function (data) {
             if(data.success){
-                message(1, 'Сообщения отмечены прочинанными');
+                message(1, 'Сообщения отмечены прочитанными');
                 $('.notices').fadeOut();
                 $('.mail span span').remove();
                 $('.unread0').removeClass('unread0');
