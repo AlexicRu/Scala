@@ -19,7 +19,7 @@
         paginationAjax('/control/load_dots/', 'ajax_block_dots_list_<?=$postfix?>', renderAjaxPaginationDotsList<?=$postfix?>, params);
     });
 
-    function renderAjaxPaginationDotsList<?=$postfix?>(data, block)
+    function renderAjaxPaginationDotsList<?=$postfix?>(data, block, params)
     {
         if(block.find('> table').size() == 0){
             block.append('<table class="table table_small table_fullscreen"></table>');
@@ -27,7 +27,7 @@
 
             block.append('<tr>' +
                 '<th class="dot_td_check"></th>' +
-                '<th><input type="text" name="dots_filter_id" placeholder="ID" class="input_tiny"></th>' +
+                '<th><input type="text" name="dots_filter_project_name" placeholder="PROJECT NAME" class="input_small"></th>' +
                 '<th><input type="text" name="dots_filter_id_emi" placeholder="ID EMI" class="input_tiny"></th>' +
                 '<th><input type="text" name="dots_filter_id_to" placeholder="ID TO" class="input_tiny"></th>' +
                 '<th><input type="text" name="dots_filter_pos_name" placeholder="POS name" class="input_small"></th>' +
@@ -38,12 +38,32 @@
                 '<th class="dot_td_edit"></th>' +
             '</tr>');
         }
+
+        if(params.ID_EMITENT){
+            block.find('[name=dots_filter_id_emi]').val(params.ID_EMITENT);
+        }
+        if(params.ID_TO){
+            block.find('[name=dots_filter_id_to]').val(params.ID_TO);
+        }
+        if(params.OWNER){
+            block.find('[name=dots_filter_owner]').val(params.OWNER);
+        }
+        if(params.POS_ADDRESS){
+            block.find('[name=dots_filter_address]').val(params.POS_ADDRESS);
+        }
+        if(params.POS_NAME){
+            block.find('[name=dots_filter_pos_name]').val(params.POS_NAME);
+        }
+        if(params.PROJECT_NAME){
+            block.find('[name=dots_filter_project_name]').val(params.PROJECT_NAME);
+        }
+
         var subBlock = block.find('tbody');
 
         for(var i in data){
             var tpl = $('<tr>' +
                 '<td class="dot_td_check" />' +
-                '<td class="dot_td_id" />' +
+                '<td class="dot_td_project_name" />' +
                 '<td class="dot_td_id_emi" />' +
                 '<td class="dot_td_id_to" />' +
                 '<td class="dot_td_pos_name"/>' +
@@ -53,7 +73,7 @@
             '</tr>');
 
             tpl.find('.dot_td_check').html('<input type="checkbox" name="pos_id" value="'+ data[i].POS_ID +'">');
-            tpl.find('.dot_td_id').text(data[i].POS_ID);
+            tpl.find('.dot_td_project_name').text(data[i].PROJECT_NAME);
             tpl.find('.dot_td_id_emi').text(data[i].ID_EMITENT);
             tpl.find('.dot_td_id_to').text(data[i].ID_TO);
             tpl.find('.dot_td_pos_name').text(data[i].POS_NAME);
@@ -78,7 +98,7 @@
         var block = btn.closest('.ajax_block_dots_list_<?=$postfix?>_out');
 
         var params = {
-            POS_ID:     $('[name=dots_filter_id]', block).val(),
+            PROJECT_NAME:     $('[name=dots_filter_project_name]', block).val(),
             ID_EMITENT: $('[name=dots_filter_id_emi]', block).val(),
             ID_TO:      $('[name=dots_filter_id_to]', block).val(),
             POS_NAME:   $('[name=dots_filter_pos_name]', block).val(),

@@ -87,6 +87,7 @@ class Model_Manager extends Model
         if(!empty($params['search'])){
             $params['search'] = mb_strtoupper($params['search']);
             $sql .= " and (
+                upper(LOGIN) like '%". Oracle::quote($params['search'])."%' or 
                 upper(MANAGER_NAME) like '%". Oracle::quote($params['search'])."%' or 
                 upper(MANAGER_SURNAME) like '%". Oracle::quote($params['search'])."%' or 
                 upper(MANAGER_MIDDLENAME) like '%". Oracle::quote($params['search'])."%' or

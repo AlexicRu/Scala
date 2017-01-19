@@ -15,7 +15,7 @@
 
             block.append('<tr>' +
                 '<th class="dot_td_check"></th>' +
-                '<th>ID</th>' +
+                '<th><nobr>PROJECT NAME</nobr></th>' +
                 '<th><nobr>ID EMI</nobr></th>' +
                 '<th><nobr>ID TO</nobr></th>' +
                 '<th><nobr>POS name</nobr></th>' +
@@ -30,7 +30,7 @@
         for(var i in data){
             var tpl = $('<tr>' +
                 '<td class="dot_td_check" />' +
-                '<td class="dot_td_id" />' +
+                '<td class="dot_td_project_name" />' +
                 '<td class="dot_td_id_emi" />' +
                 '<td class="dot_td_id_to" />' +
                 '<td class="dot_td_pos_name"/>' +
@@ -40,7 +40,7 @@
             '</tr>');
 
             tpl.find('.dot_td_check').html('<input type="checkbox" name="pos_id" value="'+ data[i].POS_ID +'">');
-            tpl.find('.dot_td_id').text(data[i].POS_ID);
+            tpl.find('.dot_td_project_name').text(data[i].PROJECT_NAME);
             tpl.find('.dot_td_id_emi').text(data[i].ID_EMITENT);
             tpl.find('.dot_td_id_to').text(data[i].ID_TO);
             tpl.find('.dot_td_pos_name').text(data[i].POS_NAME);

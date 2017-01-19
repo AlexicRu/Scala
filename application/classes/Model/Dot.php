@@ -57,16 +57,21 @@ class Model_Dot extends Model
     {
         $db = Oracle::init();
 
+        $user = Auth::instance()->get_user();
+
         $sql = "
-            select * from ".Oracle::$prefix."V_WEB_POS_LIST t where 1 = 1
+            select * from ".Oracle::$prefix."V_WEB_POS_LIST t where t.agent_id = ".$user['AGENT_ID']." 
         ";
         
         if(!empty($params['group_id'])){
-            //$sql .= ' and not exists (select 1 from '.Oracle::$prefix.'V_POS_GROUPS_ITEMS pg where pg.group_id = '.intval($params['group_id']).')';
+            $sql .= ' and not exists (select 1 from '.Oracle::$prefix.'V_WEB_POS_GROUP_ITEMS pg where pg.group_id = '.intval($params['group_id']).' and pg.POS_ID = t.POS_ID)';
         }
 
         if(!empty($params['POS_ID'])){
             $sql .= ' and t.POS_ID = '.intval($params['POS_ID']);
+        }
+        if(!empty($params['PROJECT_NAME'])){
+            $sql .= " and upper(t.PROJECT_NAME) like '%".mb_strtoupper(Oracle::quote($params['PROJECT_NAME']))."%'";
         }
         if(!empty($params['ID_EMITENT'])){
             $sql .= ' and t.ID_EMITENT = '.intval($params['ID_EMITENT']);
@@ -75,15 +80,15 @@ class Model_Dot extends Model
             $sql .= " and t.ID_TO like '%".Oracle::quote($params['ID_TO'])."%'";
         }
         if(!empty($params['POS_NAME'])){
-            $sql .= " and t.POS_NAME like '%".Oracle::quote($params['POS_NAME'])."%'";
+            $sql .= " and upper(t.POS_NAME) like '%".mb_strtoupper(Oracle::quote($params['POS_NAME']))."%'";
         }
         if(!empty($params['OWNER'])){
-            $sql .= " and t.OWNER like '%".Oracle::quote($params['OWNER'])."%'";
+            $sql .= " and upper(t.OWNER) like '%".mb_strtoupper(Oracle::quote($params['OWNER']))."%'";
         }
         if(!empty($params['POS_ADDRESS'])){
-            $sql .= " and t.POS_ADDRESS like '%".Oracle::quote($params['POS_ADDRESS'])."%'";
+            $sql .= " and upper(t.POS_ADDRESS) like '%".mb_strtoupper(Oracle::quote($params['POS_ADDRESS']))."%'";
         }
-
+echo $sql;die;
         return $db->pagination($sql, $params);
     }
 

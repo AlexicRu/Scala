@@ -38,13 +38,14 @@ class Common
      * @param $name
      * @param $value
      */
-	public static function buildFormField($prefix, $type, $name, $value = false)
+	public static function buildFormField($prefix, $type, $name, $value = false, $classes = false)
     {
         try {
-            $content = View::factory('forms/_fields/' . $prefix . '/' . $type)
+            $content = View::factory('forms/_fields/' . ($prefix ? $prefix.'/' : '') . $type)
                 ->bind('type', $type)
                 ->bind('name', $name)
                 ->bind('value', $value)
+                ->bind('classes', $classes)
             ;
         } catch (Exception $e){
             return $type;

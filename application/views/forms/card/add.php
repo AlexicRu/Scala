@@ -2,7 +2,7 @@
     <tr>
         <td class="gray right" width="170">Номер карты:</td>
         <td>
-            <input type="number" name="add_card_id" class="input_big">
+            <?=Common::buildFormField(false, 'card_available_choose_single', 'add_card_id', false, 'input_big')?>
         </td>
     </tr>
     <tr>

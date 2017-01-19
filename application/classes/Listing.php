@@ -103,6 +103,38 @@ class Listing
     }
 
     /**
+     * список карт
+     *
+     * @param $search
+     * @param ids
+     * @return array|bool|int
+     */
+    public static function getCardsAvailable($search, $ids = [])
+    {
+        if(empty($search) && empty($ids)){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $sql = "select * from ".Oracle::$prefix."V_WEB_CRD_AVAILABLE t where t.agent_id = ".$user['AGENT_ID'];
+
+        if(!empty($search)){
+            $sql .= " and t.CARD_ID like '%".Oracle::quote($search)."%'";
+        }
+
+        if(!empty($ids)){
+            $sql .= " and t.CARD_ID in (".implode(',', $ids).")";
+        }
+
+        $sql .= " order by t.card_id";
+
+        return $db->query($db->limit($sql, 0, self::$limit));
+    }
+
+    /**
      * список поставщиков
      *
      * @param $search
