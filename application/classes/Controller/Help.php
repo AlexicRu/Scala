@@ -90,11 +90,34 @@ class Controller_Help extends Controller_Common
     }
 
     /**
-     * получаем список стран для combobox
+     * получаем список карт для combobox
      */
     public function action_list_card()
     {
         $res = Listing::getCards($this->_search, $this->_ids);
+
+        if(empty($res)){
+            $this->jsonResult(false);
+        }
+
+        $return = [];
+
+        foreach($res as $item){
+            $return[] = [
+                'name' => $item['CARD_ID'],
+                'value' => $item['CARD_ID'],
+            ];
+        }
+
+        $this->jsonResult(true, $return);
+    }
+
+    /**
+     * получаем список доступных карт для combobox
+     */
+    public function action_list_cards_available()
+    {
+        $res = Listing::getCardsAvailable($this->_search, $this->_ids);
 
         if(empty($res)){
             $this->jsonResult(false);

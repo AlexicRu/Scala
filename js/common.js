@@ -152,7 +152,7 @@ function _paginationAjaxLoad(url, outer, block, callback, params)
 
     $.post(url, params, function(data){
         if(data.success){
-            callback(data.data.items, block);
+            callback(data.data.items, block, params);
             if(data.data.more){
                 outer.find('.ajax_block_more').fadeIn();
             }

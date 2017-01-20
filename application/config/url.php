@@ -16,5 +16,7 @@ return [
         '.*\.neftregion\.ru',
         'skala-card\.ru',
         '.*\.skala-card\.ru',
+        'modulcard\.ru',
+        '.*\.modulcard\.ru',
     ],
 ];

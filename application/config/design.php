@@ -12,6 +12,10 @@ return array(
         'title' => 'OilST',
         'class' => 'oilst'
     ],
+    'lkmodulcardru' => [
+        'title' => 'MODULCARD',
+        'class' => 'modulcard'
+    ],
     'mo-47gloproru' => [
         'title' => 'ФСК Мостоотряд-47',
         'class' => 'mo47'

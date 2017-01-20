@@ -43,36 +43,55 @@
 .custom_view_scala .logo a {
   background-image: url(/img/logo.svg);
 }
-.custom_view_oilst .logo a {
+.custom_view_oilst .logo a,
+.custom_view_modulcard .logo a {
   background-image: url(/img/projects/oilst.png);
 }
-.custom_view_oilst aside {
+.custom_view_oilst aside,
+.custom_view_modulcard aside {
   background: #bc771e;
 }
 .custom_view_oilst aside > a,
-.custom_view_oilst aside .sub_menu_title {
+.custom_view_modulcard aside > a,
+.custom_view_oilst aside .sub_menu_title,
+.custom_view_modulcard aside .sub_menu_title {
   color: white;
 }
 .custom_view_oilst aside > a:hover,
+.custom_view_modulcard aside > a:hover,
 .custom_view_oilst aside .sub_menu_title:hover,
+.custom_view_modulcard aside .sub_menu_title:hover,
 .custom_view_oilst aside > a.act,
-.custom_view_oilst aside .sub_menu_title.act {
+.custom_view_modulcard aside > a.act,
+.custom_view_oilst aside .sub_menu_title.act,
+.custom_view_modulcard aside .sub_menu_title.act {
   background: #8a7a66;
   color: white;
 }
 .custom_view_oilst aside > a:hover span,
+.custom_view_modulcard aside > a:hover span,
 .custom_view_oilst aside .sub_menu_title:hover span,
+.custom_view_modulcard aside .sub_menu_title:hover span,
 .custom_view_oilst aside > a.act span,
-.custom_view_oilst aside .sub_menu_title.act span {
+.custom_view_modulcard aside > a.act span,
+.custom_view_oilst aside .sub_menu_title.act span,
+.custom_view_modulcard aside .sub_menu_title.act span {
   color: white;
 }
 .custom_view_oilst aside > a [class^="icon-"],
-.custom_view_oilst aside .sub_menu_title [class^="icon-"] {
+.custom_view_modulcard aside > a [class^="icon-"],
+.custom_view_oilst aside .sub_menu_title [class^="icon-"],
+.custom_view_modulcard aside .sub_menu_title [class^="icon-"] {
   color: rgba(255, 255, 255, 0.5);
 }
 .custom_view_oilst .sub_menu_items a:hover,
-.custom_view_oilst .sub_menu_items a.act {
+.custom_view_modulcard .sub_menu_items a:hover,
+.custom_view_oilst .sub_menu_items a.act,
+.custom_view_modulcard .sub_menu_items a.act {
   color: white;
+}
+.custom_view_modulcard .logo a {
+  background-image: url(/img/projects/logo_white_mini.png);
 }
 .custom_view_mo47 .logo a {
   background-image: url(/img/projects/mo47.png);

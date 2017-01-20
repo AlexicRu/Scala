@@ -222,6 +222,7 @@ class Controller_Control extends Controller_Common {
             'POS_NAME'      => $this->request->post('POS_NAME'),
             'OWNER'         => $this->request->post('OWNER'),
             'POS_ADDRESS'   => $this->request->post('POS_ADDRESS'),
+            'PROJECT_NAME'  => $this->request->post('PROJECT_NAME'),
             'group_id' 		=> $this->request->post('group_id'),
             'offset' 		=> $this->request->post('offset'),
             'pagination'    => true

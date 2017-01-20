@@ -259,24 +259,28 @@ class Model_Tariff extends Model
             foreach ($params['sections'] as $sectionNum => $section) {
                 $sectionNum += 1; //так как начали с 0, а нужны нормальные числа
 
-                //редактирование условий
-                foreach ($section['conditions'] as $conditionNum => $condition) {
-                    $data = [
-                        'p_tarif_id' => $tariffId,
-                        'p_version_id' => $versionId,
-                        'p_section_num' => $sectionNum,
-                        'p_condition_num' => $conditionNum,
-                        'p_condition_id' => $condition['CONDITION_ID'],
-                        'p_compare_id' => $condition['COMPARE_ID'],
-                        'p_condition_value' => $condition['CONDITION_VALUE'],
-                        'p_manager_id' => $user['MANAGER_ID'],
-                        'p_error_code' => 'out',
-                    ];
+                if(!empty($section['conditions'])) {
+                    //редактирование условий
+                    foreach ($section['conditions'] as $conditionNum => $condition) {
+                        $conditionNum += 1; //так как начали с 0, а нужны нормальные числа
 
-                    $res = $db->procedure('ctrl_tarif_sections', $data);
+                        $data = [
+                            'p_tarif_id' => $tariffId,
+                            'p_version_id' => $versionId,
+                            'p_section_num' => $sectionNum,
+                            'p_condition_num' => $conditionNum,
+                            'p_condition_id' => $condition['CONDITION_ID'],
+                            'p_compare_id' => $condition['COMPARE_ID'],
+                            'p_condition_value' => $condition['CONDITION_VALUE'],
+                            'p_manager_id' => $user['MANAGER_ID'],
+                            'p_error_code' => 'out',
+                        ];
 
-                    if ($res == Oracle::CODE_ERROR) {
-                        return false;
+                        $res = $db->procedure('ctrl_tarif_sections', $data);
+
+                        if ($res == Oracle::CODE_ERROR) {
+                            return false;
+                        }
                     }
                 }
 
