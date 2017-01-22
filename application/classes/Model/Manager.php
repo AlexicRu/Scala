@@ -116,7 +116,11 @@ class Model_Manager extends Model
 
         $sql .= ' order by M_NAME';
 
-        $users = $db->query($sql);
+        if(!empty($params['limit'])){
+            $users = $db->query($db->limit($sql, 0, $params['limit']));
+        }else {
+            $users = $db->query($sql);
+        }
 
         if(empty($users)){
             return false;

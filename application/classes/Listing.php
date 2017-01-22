@@ -163,4 +163,29 @@ class Listing
 
         return $db->query($db->limit($sql, 0, self::$limit));
     }
+
+    /**
+     * список контрактов поставщиков
+     *
+     * @param $search
+     * @return array|bool|int
+     */
+    public static function getSuppliersContracts($supplierId, $search)
+    {
+        if(empty($supplierId) || empty($search)){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $sql = "select * from ".Oracle::$prefix."V_WEB_SUPPLIERS_CONTRACTS t where t.agent_id = ".$user['AGENT_ID']." and t.supplier_id = ".$supplierId;
+
+        if(!empty($search)){
+            $sql .= " and upper(t.CONTRACT_NAME) like '%".mb_strtoupper(Oracle::quote($search))."%'";
+        }
+
+        return $db->query($db->limit($sql, 0, self::$limit));
+    }
 }

@@ -58,9 +58,9 @@ class Model_Contract extends Model
 	/**
 	 * получаем список контрактов
 	 */
-	public static function getContracts($clientId = false, $contractId = false)
+	public static function getContracts($clientId = false, $params = false)
 	{
-		if(empty($clientId) && empty($contractId)){
+		if(empty($clientId) && empty($params)){
 			return [];
 		}
 
@@ -76,15 +76,24 @@ class Model_Contract extends Model
 			$sql .= " and client_id = ".Oracle::quote($clientId);
 		}
 
-		if(!empty($contractId)){
-			$sql .= " and contract_id = ".Oracle::quote($contractId);
+		if(!empty($params['contract_id'])){
+		    if(!is_array($params['contract_id'])){
+                $params['contract_id'] = [(int)$params['contract_id']];
+            }
+			$sql .= " and contract_id in (".implode(',', $params['contract_id']).") ";
 		}
 
-		$sql .= 'order by date_begin desc, state_id';
+        if(!empty($params['search'])){
+            $sql .= " and upper(contract_name) like '%".Oracle::quote($params['search'])."%' ";
+        }
 
-		$contracts = $db->query($sql);
+		$sql .= ' order by date_begin desc, state_id ';
 
-		return $contracts;
+		if(!empty($params['limit'])){
+            return $db->query($db->limit($sql, 0, $params['limit']));
+        }
+
+        return $db->query($sql);
 	}
 
 	/**
@@ -94,7 +103,7 @@ class Model_Contract extends Model
 	 */
 	public static function getContract($contractId)
 	{
-		$contract = self::getContracts(false, $contractId);
+		$contract = self::getContracts(false, ['contract_id' => $contractId]);
 
 		if(!empty($contractId)){
 			return reset($contract);
