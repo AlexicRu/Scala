@@ -208,15 +208,19 @@ function renderComboBoxMulti(combo)
 
     var hiddenValue = wrapper.find('[name=combobox_multi_value]');
 
+    var preLoad = true;
+
     combo.on('keyup', function () {
         var t = $(this);
         var val = t.val();
 
         result.hide().html('');
 
-        if(val.length <= 1){
+        if(val.length < 1 && preLoad == false){
             return;
         }
+
+        preLoad= false;
 
         if(ajaxComboBoxMulti){
             ajaxComboBoxMulti.abort();
@@ -240,6 +244,11 @@ function renderComboBoxMulti(combo)
 
             ajaxComboBoxMulti = false;
         });
+    }).on('focus', function () {
+        if (preLoad || hiddenValue.val() == '') {
+            preLoad = true;
+            combo.trigger('keyup');
+        }
     });
 }
 
@@ -308,15 +317,19 @@ function renderComboBox(combo)
 
     var hiddenValue = outer.find('[name=combobox_value]');
 
+    var preLoad = true;
+
     combo.on('keyup', function () {
         var t = $(this);
         var val = t.val();
 
         result.hide().html('');
 
-        if(val.length <= 1){
+        if(val.length < 1 && preLoad == false){
             return;
         }
+
+        preLoad= false;
 
         if(ajaxComboBox){
             ajaxComboBox.abort();
@@ -340,6 +353,11 @@ function renderComboBox(combo)
 
             ajaxComboBox = false;
         });
+    }).on('focus', function () {
+        if (preLoad || hiddenValue.val() == '') {
+            preLoad = true;
+            combo.trigger('keyup');
+        }
     });
 }
 
@@ -375,7 +393,7 @@ function setComboboxMultiValue(combo, value)
 {
     var wrapper = combo.closest('.combobox_multi_wrapper');
 
-    var list = value.split(',');
+    var list = value ? value.split(',') : [];
 
     for(var i in list){
         $.post(combo.attr('url'), { ids:list[i] }, function(data){

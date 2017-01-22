@@ -22,7 +22,7 @@
         </td>
         <td class="gray right" width="100">Значение:</td>
         <td>
-            <input type="text" name="DISC_VALUE" value="<?=(isset($params['DISC_VALUE']) ? $params['DISC_VALUE'] : '')?>">
+            <input type="number" name="DISC_VALUE" value="<?=(isset($params['DISC_VALUE']) ? $params['DISC_VALUE'] : '')?>">
         </td>
     </tr>
     <tr>

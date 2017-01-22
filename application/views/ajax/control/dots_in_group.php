@@ -10,11 +10,11 @@
     function renderAjaxPaginationDots<?=$groupId?>(data, block)
     {
         if(block.find('> table').size() == 0){
-            block.append('<table class="table table_small table_fullscreen"></table>');
+            block.append('<table class="table table_small table_fullscreen check_all_block"></table>');
             block = block.find('table');
 
             block.append('<tr>' +
-                '<th class="dot_td_check"></th>' +
+                '<th class="dot_td_check"><input type="checkbox" onchange="checkAllRows($(this), \'pos_id\')"></th>' +
                 '<th><nobr>PROJECT NAME</nobr></th>' +
                 '<th><nobr>ID EMI</nobr></th>' +
                 '<th><nobr>ID TO</nobr></th>' +
@@ -23,6 +23,7 @@
                 '<th>Адрес</th>' +
                 '<th class="dot_td_edit"></th>' +
             '</tr>');
+            renderCheckbox(block.find('.dot_td_check [type=checkbox]'));
         }else{
             block = block.find('table');
         }

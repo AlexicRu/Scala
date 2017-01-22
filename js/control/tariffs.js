@@ -43,9 +43,14 @@ function onChangeCondition(t) {
     checkUsedConditions(uidSection);
 }
 
-function changeCondition(uid, conditionId, compareId, conditionValue)
+function changeCondition(uid, conditionId, compareId, conditionValue, elem)
 {
-    var block = $('.reference_block[uid='+ uid +']');
+    var block;
+    if(elem != undefined) {
+        block = $('.reference_block[uid=' + uid + ']', elem);
+    } else {
+        block = $('.reference_block[uid=' + uid + ']');
+    }
     var conditionSelect = block.find('[name=CONDITION_ID]');
 
     conditionSelect.val(conditionId);
@@ -102,7 +107,7 @@ function addSectionCondition(t)
         if(data.success){
             tpl.removeClass('block_loading').append(data.data.html);
 
-            changeCondition(data.data.uid, data.data.condition_id, data.data.compare_id);
+            changeCondition(data.data.uid, data.data.condition_id, data.data.compare_id, false, tpl);
         }else{
             message(0, 'Доступные условия закончились');
             tpl.remove();

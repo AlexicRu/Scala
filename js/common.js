@@ -189,3 +189,23 @@ function setFormFieldValue(field, value) {
             }
     }
 }
+
+function checkAllRows(t, name)
+{
+    var block = t.closest('.check_all_block');
+
+    var checked = t.prop('checked');
+
+    block.find('[name='+ name +']').each(function () {
+        var _t = $(this);
+        if(checked){
+            if(!_t.prop('checked')){
+                _t.prop('checked', true).trigger('change');
+            }
+        }else{
+            if(_t.prop('checked')){
+                _t.prop('checked', false).trigger('change');
+            }
+        }
+    });
+}

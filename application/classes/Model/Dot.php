@@ -25,6 +25,11 @@ class Model_Dot extends Model
             $sql .= " and t.group_id in (".implode(',', $filter['ids']).")";
         }
 
+        $sql .= ' order by group_name ';
+
+        if(!empty($filter['limit'])){
+            return $db->query($db->limit($sql, 0, $filter['limit']));
+        }
         return $db->query($sql);
     }
 
@@ -42,7 +47,7 @@ class Model_Dot extends Model
         $db = Oracle::init();
 
         $sql = "
-            select * from ".Oracle::$prefix."V_WEB_POS_GROUP_ITEMS t where t.group_id = ".$params['group_id']
+            select * from ".Oracle::$prefix."V_WEB_POS_GROUP_ITEMS t where t.group_id = ".$params['group_id']." order by id_to";
         ;
 
         return $db->pagination($sql, $params);
@@ -88,7 +93,7 @@ class Model_Dot extends Model
         if(!empty($params['POS_ADDRESS'])){
             $sql .= " and upper(t.POS_ADDRESS) like '%".mb_strtoupper(Oracle::quote($params['POS_ADDRESS']))."%'";
         }
-echo $sql;die;
+
         return $db->pagination($sql, $params);
     }
 

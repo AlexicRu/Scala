@@ -225,7 +225,7 @@ class Model_Contract extends Model
 
 		$user = Auth::instance()->get_user();
 
-		$sql = "select * from ".Oracle::$prefix."v_tarifs_list where manager_id = ".Oracle::quote($user['MANAGER_ID']);
+		$sql = "select * from ".Oracle::$prefix."v_tarifs_list where manager_id = ".Oracle::quote($user['MANAGER_ID'])." order by tarif_name";
 
 		return $db->query($sql);
 	}

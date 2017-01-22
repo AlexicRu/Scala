@@ -289,6 +289,7 @@ aside .sub_menu_title [class^="icon-"] {
   right: -10px;
   padding: 2px 5px;
   display: inline-block;
+  font-family: SegoeUILight, Tahoma;
 }
 a.btn,
 a.btn:hover {
@@ -304,7 +305,7 @@ a.btn:hover {
   display: inline-block;
   background: transparent;
   cursor: pointer;
-  font-family: SegoeUILight;
+  font-family: SegoeUILight, Tahoma;
   text-align: center;
   transition: all 0.3s ease;
 }

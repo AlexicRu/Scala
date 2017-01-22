@@ -114,7 +114,7 @@ class Model_Manager extends Model
             }
         }
 
-        $sql .= ' order by MANAGER_NAME';
+        $sql .= ' order by M_NAME';
 
         $users = $db->query($sql);
 

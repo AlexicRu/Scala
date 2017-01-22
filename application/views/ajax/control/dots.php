@@ -2,7 +2,7 @@
     <input type="hidden" name="show_dots_<?=$postfix?>" value="1">
 <?}?>
 <?if(!empty($groupId)){?>
-    <input type="hidden" name="group_id_<?=$postfix?>" value="1">
+    <input type="hidden" name="group_id_<?=$postfix?>" value="<?=$groupId?>">
 <?}?>
 <div class="ajax_block_dots_list_<?=$postfix?>_out">
 
@@ -22,11 +22,11 @@
     function renderAjaxPaginationDotsList<?=$postfix?>(data, block, params)
     {
         if(block.find('> table').size() == 0){
-            block.append('<table class="table table_small table_fullscreen"></table>');
+            block.append('<table class="table table_small table_fullscreen check_all_block"></table>');
             block = block.find('table');
 
             block.append('<tr>' +
-                '<th class="dot_td_check"></th>' +
+                '<th class="dot_td_check"><input type="checkbox" onchange="checkAllRows($(this), \'pos_id\')" style="display: none;"></th>' +
                 '<th><input type="text" name="dots_filter_project_name" placeholder="PROJECT NAME" class="input_small"></th>' +
                 '<th><input type="text" name="dots_filter_id_emi" placeholder="ID EMI" class="input_tiny"></th>' +
                 '<th><input type="text" name="dots_filter_id_to" placeholder="ID TO" class="input_tiny"></th>' +
@@ -37,6 +37,7 @@
                 '</th>' +
                 '<th class="dot_td_edit"></th>' +
             '</tr>');
+            renderCheckbox(block.find('.dot_td_check [type=checkbox]'));
         }
 
         if(params.ID_EMITENT){
