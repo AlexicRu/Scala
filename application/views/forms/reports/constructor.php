@@ -5,7 +5,7 @@ if(!empty($fields[Model_Report::REPORT_CONSTRUCTOR_TYPE_PERIOD])){
         <tr>
             <td class="gray right" width="150"><?=$field['PROPERTY_NAME']?>:</td>
             <td>
-                <?=Common::buildFormField('reports', $field['PROPERTY_FORM'], $field['PROPERTY_FORM'])?>
+                <?=Common::buildFormField('reports', $field['PROPERTY_FORM'], $field['PROPERTY_FORM'], false, ['weight' => $field['PROPERTY_WEIGHT']])?>
             </td>
         </tr>
         <?}
@@ -17,13 +17,13 @@ if(!empty($fields[Model_Report::REPORT_CONSTRUCTOR_TYPE_ADDITIONAL])){
         <tr>
             <td class="td_title" width="150">Дополнительные параметры:</td>
             <td>
-                <table>
+                <table class="report_additional_params">
                     <?
                     foreach($fields[Model_Report::REPORT_CONSTRUCTOR_TYPE_ADDITIONAL] as $field){?>
                         <tr>
                             <td class="gray right vaTop" width="150"><?=$field['PROPERTY_NAME']?>:</td>
                             <td>
-                                <?=Common::buildFormField('reports', $field['PROPERTY_FORM'], $field['PROPERTY_FORM'])?>
+                                <?=Common::buildFormField('reports', $field['PROPERTY_FORM'], $field['PROPERTY_FORM'], false, ['weight' => $field['PROPERTY_WEIGHT']])?>
                             </td>
                         </tr>
                     <?}
@@ -51,7 +51,7 @@ if(!empty($fields[Model_Report::REPORT_CONSTRUCTOR_TYPE_FORMAT])){
         <td width="150"></td>
         <td>
             <br>
-            <span class="btn"><i class="icon-download"></i> Сформировать</span>
+            <span class="btn" onclick="generateReport($(this))"><i class="icon-download"></i> Сформировать</span>
             <!-- span class="btn btn_orange"><i class="icon-notifications"></i> На почту</span -->
         </td>
     </tr>

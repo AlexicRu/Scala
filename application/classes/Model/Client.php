@@ -29,6 +29,10 @@ class Model_Client extends Model
 
 		$sql .= " order by client_id desc ";
 
+		if(!empty($params['limit'])){
+            $sql = $db->limit($sql, 0, $params['limit']);
+        }
+
 		$result = $db->tree($sql, 'CLIENT_ID');
 
 		$clients = [];

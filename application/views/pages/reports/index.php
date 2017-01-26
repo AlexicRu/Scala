@@ -1,3 +1,5 @@
+<script src="/js/reports/reports.js"></script>
+
 <h1>Отчеты</h1>
 
 <?if(empty($reports)){?>

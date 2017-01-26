@@ -368,7 +368,9 @@ class Controller_Clients extends Controller_Common {
 	public function action_card_operations_history()
 	{
 		$cardId = $this->request->param('id');
+		$contractId = $this->request->query('contract_id');
 		$params = [
+		    'CONTRACT_ID'   => $contractId,
 			'offset' 		=> $this->request->post('offset'),
 			'pagination'	=> true
 		];

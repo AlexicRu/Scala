@@ -62,6 +62,6 @@ $user = Auth::instance()->get_user();
 
 <script>
     $(function(){
-        paginationAjax('/clients/card_operations_history/<?=$card['CARD_ID']?>', 'ajax_block_operations_history_<?=$card['CARD_ID']?>', renderAjaxPaginationOperationsHistory);
+        paginationAjax('/clients/card_operations_history/<?=$card['CARD_ID']?>?contract_id=' + $('[name=contracts_list]').val(), 'ajax_block_operations_history_<?=$card['CARD_ID']?>', renderAjaxPaginationOperationsHistory);
     });
 </script>

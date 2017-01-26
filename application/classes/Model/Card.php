@@ -208,7 +208,9 @@ class Model_Card extends Model
 
 		$db = Oracle::init();
 
-		$card = Model_Card::getCard($cardId);
+        $contractId = !empty($params['CONTRACT_ID']) ? $params['CONTRACT_ID'] : false;
+
+		$card = Model_Card::getCard($cardId, $contractId);
         $user = Auth::instance()->get_user();
 
 		$where = [

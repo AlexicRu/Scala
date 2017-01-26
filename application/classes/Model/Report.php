@@ -56,13 +56,6 @@ class Model_Report extends Model
      */
     public static function generate($params)
     {
-        if(
-            empty($params['type']) || !in_array($params['type'], array_keys(Model_Report::$reportTypes)) ||
-            empty($params['contract_id'])
-        ){
-            return false;
-        }
-
         $config = Kohana::$config->load('jasper');
 
         $client = new Client(
@@ -75,16 +68,20 @@ class Model_Report extends Model
 
         $format = empty($params['format']) ? 'xls' : $params['format'];
 
-        $type = self::$reportTypes[$params['type']];
+        $type = !empty(self::$reportTypes[$params['type']]) ? self::$reportTypes[$params['type']] : $params['type'];
 
         if($params['type'] == self::REPORT_TYPE_BILL){
             $user = Auth_Oracle::instance()->get_user();
             $type = str_replace('ru/aN', 'ru/a'.$user['AGENT_ID'], $type);
         }
 
-        $report = $client->reportService()->runReport('/reports/'.$type, $format, null, null, $controls);
+        try {
+            $report = $client->reportService()->runReport('/reports/' . str_replace('\\', '/', $type), $format, null, null, $controls);
+        } catch (Exception $e){
+            throw new HTTP_Exception_500('Отчет не сформировался. '.$e->getMessage().$e->getCode());
+        }
 
-        $name = 'report_'.$params['type'].'_'.date('Y_m_d').'.'.$format;
+        $name = 'report_'.str_replace('\\', '_', $params['type']).'_'.date('Y_m_d').'.'.$format;
 
         $headers = self::$formatHeaders[$format];
         foreach($headers as &$header){
@@ -130,6 +127,10 @@ class Model_Report extends Model
                     'INVOICE_NUMBER'       => [$params['invoice_number']],
                 ];
                 break;
+            default:
+                unset($params['type']);
+                unset($params['format']);
+                $controls = $params;
         }
 
         return $controls;
@@ -187,5 +188,74 @@ class Model_Report extends Model
             ->bind('fields', $templateSettings)
         ;
         return $html;
+    }
+
+    /**
+     * подготавливаем параметры отчета
+     *
+     * @param $params
+     */
+    public static function prepare($params)
+    {
+        if(empty($params)){
+            return [];
+        }
+
+        $settings = [
+            'format' => $params['format']
+        ];
+
+        $weight = 0;
+
+        foreach ($params['additional'] as $additional){
+            $weight += $additional['value'] ? $additional['weight'] : 0;
+        }
+
+        $db = Oracle::init();
+
+        $sql = "select * from ".Oracle::$prefix."V_WEB_REPORTS_PARAMS t where t.report_id = {$params['report_id']} and t.template_weight = {$weight}";
+
+        $report = $db->query($sql);
+
+        $row = reset($report);
+        $settings['type'] = $row['FULL_PATH'];
+
+        $user = Auth_Oracle::instance()->get_user();
+
+        foreach($report as $param){
+            $value = false;
+
+            switch($param['PARAM_NAME']){
+                case 'date_begin':
+                    $value = $params['period_start'];
+                    break;
+                case 'date_end':
+                    $value = $params['period_end'];
+                    break;
+                case 'date_begin_time':
+                    $value = $params['period_start'].' 00:00:00';
+                    break;
+                case 'date_end_time':
+                    $value = $params['period_end'].' 23:59:59';
+                    break;
+                case 'manager_id':
+                    $value = $user['MANAGER_ID'];
+                    break;
+                case 'agent_id':
+                    $value = $user['AGENT_ID'];
+                    break;
+                default:
+                    foreach($params['additional'] as $additional){
+                        if($additional['name'] == $param['PARAM_NAME']){
+                            $value = $additional['value'];
+                            break;
+                        }
+                    }
+            }
+
+            $settings[$param['PARAM_VARIABLE_NAME']] = $value;
+        }
+
+        return $settings;
     }
 }

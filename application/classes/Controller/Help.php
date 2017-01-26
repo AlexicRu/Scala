@@ -140,7 +140,7 @@ class Controller_Help extends Controller_Common
      */
     public function action_list_client()
     {
-        $res = Model_Client::getClientsList($this->_search, ['ids' => $this->_ids]);
+        $res = Model_Client::getClientsList($this->_search, ['ids' => $this->_ids, 'limit' => 10]);
 
         if(empty($res)){
             $this->jsonResult(false);
