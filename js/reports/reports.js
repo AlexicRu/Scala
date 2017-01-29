@@ -20,7 +20,7 @@ function generateReport(btn)
         'build':        1,
         'report_id':    reportId,
         'period_start': $('[name=period_start]', block).val(),
-        'period_end':   $('[name=period_start]', block).val(),
+        'period_end':   $('[name=period_end]', block).val(),
         'format':       $('[format].active', block).attr('format'),
         'additional':   []
     };

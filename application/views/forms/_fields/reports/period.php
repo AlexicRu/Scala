@@ -5,7 +5,11 @@
 
 <script>
     $(function () {
-        renderDatePicker($('[name=<?=$name?>_start]'));
-        renderDatePicker($('[name=<?=$name?>_end]'));
+        $('[name=<?=$name?>_start]').each(function () {
+            renderDatePicker($(this));
+        });
+        $('[name=<?=$name?>_end]').each(function () {
+            renderDatePicker($(this));
+        });
     });
 </script>
