@@ -207,9 +207,11 @@ class Model_Report extends Model
 
         $weight = 0;
 
-        foreach ($params['additional'] as $additional){
-            $weight += $additional['value'] ? $additional['weight'] : 0;
-        }
+        if(!empty($params['additional'])){
+		foreach ($params['additional'] as $additional){
+  			$weight += $additional['value'] ? $additional['weight'] : 0;
+ 		}
+	}
 
         $db = Oracle::init();
 
