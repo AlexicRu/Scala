@@ -205,7 +205,7 @@ function saveTariff(btn)
                 DISC_TYPE: t.find('[name=DISC_TYPE]').val(),
                 DISC_PARAM: t.find('[name=DISC_PARAM]:visible').val(),
                 DISC_VALUE: t.find('[name=DISC_VALUE]').val(),
-                CLOSE_CALCULATION: t.find('[name=CLOSE_CALCULATION]').is(':checked')
+                CLOSE_CALCULATION: t.find('[name=CLOSE_CALCULATION]').is(':checked') ? 1 : 0
             }
         };
 
