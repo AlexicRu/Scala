@@ -103,7 +103,7 @@ function addSectionCondition(t)
 
     tpl.appendTo(list);
 
-    $.post('/control/get_tariff_reference_tpl', { uid_section: uidSection, used_conditions: usedConditions[uidSection]}, function (data) {
+    $.post('/control/get_tariff_reference_tpl', { uid_section: uidSection, used_conditions: usedConditions[uidSection], index: $('.tsc_item', block).length}, function (data) {
         if(data.success){
             tpl.removeClass('block_loading').append(data.data.html);
 

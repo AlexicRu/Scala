@@ -302,6 +302,7 @@ class Controller_Control extends Controller_Common {
     {
         $usedConditions = $this->request->post('used_conditions');
         $uidSection = $this->request->post('uid_section');
+        $index = $this->request->post('index');
 
         $reference = Model_Tariff::getReference();
 
@@ -319,7 +320,7 @@ class Controller_Control extends Controller_Common {
             $this->jsonResult(false);
         }
 
-        $uid = $uidSection.'_'.$conditionId;
+        $uid = $uidSection.'_'.$index;
 
         $html = strval(Model_Tariff::buildReference($uid, $reference));
 
