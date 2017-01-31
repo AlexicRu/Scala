@@ -43,8 +43,8 @@
             onChangeParam($(this));
         });
 
-        <?if(!empty($section['params'])){?>
-            changeParam('<?=$uid?>', <?=$section['params']['DISC_TYPE']?>, <?=$section['params']['DISC_PARAM']?>);
+        <?if(!empty($params)){?>
+            changeParam('<?=$uid?>', <?=$params['DISC_TYPE']?>, <?=$params['DISC_PARAM']?>);
         <?}else{?>
             changeParam('<?=$uid?>');
         <?}?>
