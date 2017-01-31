@@ -230,7 +230,7 @@ function saveTariff(btn)
 
             var conditionValue = '';
 
-            var formField = t.find('.form_field:visible');
+            var formField = _t.find('.form_field:visible');
 
             if(formField.find('.combobox_multi').length){
                 conditionValue = formField.find('[name=combobox_multi_value]').val();
