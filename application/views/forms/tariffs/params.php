@@ -13,7 +13,7 @@
             <?foreach(Model_Tariff::$paramsTypesParams as $paramsTypeId => $paramsParams){?>
                 <select name="DISC_PARAM" class="disc_param_select" dist_type="<?=$paramsTypeId?>">
                     <?foreach($paramsParams as $paramsParamsId => $paramsParam){?>
-                        <option value="<?=$paramsParamsId?>">
+                        <option value="<?=($paramsParamsId+1)?>">
                             <?=Model_Tariff::$paramsParams[$paramsParam]?>
                         </option>
                     <?}?>

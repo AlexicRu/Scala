@@ -210,7 +210,7 @@ function renderComboBoxMulti(combo)
 
     var preLoad = true;
 
-    combo.on('keyup', function () {
+    combo.on('keypress', function () {
         var t = $(this);
         var val = t.val();
 
@@ -247,7 +247,7 @@ function renderComboBoxMulti(combo)
     }).on('focus', function () {
         if (preLoad || hiddenValue.val() == '') {
             preLoad = true;
-            combo.trigger('keyup');
+            combo.trigger('keypress');
         }
     });
 }
@@ -331,7 +331,7 @@ function renderComboBox(combo, params)
 
     var preLoad = true;
 
-    combo.on('keyup', function () {
+    combo.on('keypress', function () {
         if(params && params['depend']){
             var dependCombo = $('[name=' + params['depend'] + ']');
             setComboboxValue(dependCombo, false);
@@ -343,6 +343,7 @@ function renderComboBox(combo, params)
         result.hide().html('');
 
         if(val.length < 1 && preLoad == false){
+            hiddenValue.val('');
             return;
         }
 
@@ -387,7 +388,13 @@ function renderComboBox(combo, params)
     }).on('focus', function () {
         if (preLoad || hiddenValue.val() == '') {
             preLoad = true;
-            combo.trigger('keyup');
+            combo.trigger('keypress');
+        }
+    }).on('blur', function () {
+        var t = $(this);
+
+        if(t.val() == ''){
+            hiddenValue.val('');
         }
     });
 }

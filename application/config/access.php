@@ -60,10 +60,6 @@ return [
             Access::ROLE_ROOT,
             'u_7',
         ],
-        'reports_index' => [
-            Access::ROLE_ROOT,
-            'u_7',
-        ],
         // custom
         'view_contract_balances' => [
             Access::ROLE_ROOT
@@ -112,6 +108,9 @@ return [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
+        ],
+        'reports_index' => [
+            Access::ROLE_USER,
         ],
         // custom
         'view_tariffs' => [

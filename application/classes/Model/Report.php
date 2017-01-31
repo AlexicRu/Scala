@@ -56,6 +56,8 @@ class Model_Report extends Model
      */
     public static function generate($params)
     {
+        set_time_limit(0);
+
         $config = Kohana::$config->load('jasper');
 
         $client = new Client(
