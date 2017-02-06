@@ -157,7 +157,7 @@ class Oracle{
 	 */
 	public static function quote($val)
 	{
-		return addslashes(trim($val));
+		return str_replace("'", "''", trim($val));
 	}
 
 	/**
