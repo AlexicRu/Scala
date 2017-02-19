@@ -150,7 +150,7 @@ class Controller_Help extends Controller_Common
 
         foreach($res as $item){
             $return[] = [
-                'name' => $item['LONG_NAME'],
+                'name' => $item['CLIENT_NAME'],
                 'value' => $item['CLIENT_ID'],
             ];
         }
