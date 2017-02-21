@@ -58,6 +58,8 @@ abstract class Controller_Common extends Controller_Template {
             echo '<script>alert("У вас недостаточно прав доступа");</script>';
             die;
         }
+
+        $this->_collectAdditionalDataForForms();
     }
 
     /**
@@ -214,6 +216,37 @@ abstract class Controller_Common extends Controller_Template {
     {
         $this->template->styles[] = '/js/plugins/dropzone/dropzone.css';
         $this->template->scripts[] = '/js/plugins/dropzone/dropzone.js';
+    }
+
+    /**
+     * через js можно собрать данные с разных форм, и если так, то их надо раскидать по нормальным полям
+     */
+    private function _collectAdditionalDataForForms()
+    {
+        $additionalFormDataPOST = $this->request->post('other_data');
+        $additionalFormDataGET = $this->request->query('other_data');
+
+        if(!empty($additionalFormDataPOST)){
+            $params = [];
+            parse_str(urldecode($additionalFormDataPOST), $params);
+
+            foreach($params as $key => $value){
+                $data = $this->request->post($key) ?: [];
+
+                $this->request->post($key, array_merge($data, $value));
+            }
+        }
+
+        if(!empty($additionalFormDataGET)){
+            $params = [];
+            parse_str(urldecode($additionalFormDataGET), $params);
+
+            foreach($params as $key => $value){
+                $data = $this->request->query($key) ?: [];
+
+                $this->request->query($key, array_merge($data, $value));
+            }
+        }
     }
 
 } // End Common

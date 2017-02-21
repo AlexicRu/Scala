@@ -10,7 +10,7 @@
     function renderAjaxPaginationDots<?=$groupId?>(data, block, params)
     {
         var canEdit = false;
-console.log(params);
+
         if(params.can_edit){
             canEdit = true;
         }

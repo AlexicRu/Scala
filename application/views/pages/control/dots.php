@@ -20,7 +20,7 @@
                         <span class="btn btn_orange btn_icon" toggle="group_dots_block"><i class="icon-cancel"></i></span>
                     </span>
                 </div>
-                <form>
+                <form class="form_dot" onsubmit="return collectForms($(this), 'form_dot')">
                     <div class="input_with_icon"><i class="icon-find"></i><input type="text" name="filter[search]" class="input_big input_messages" placeholder="Поиск..." value="<?=(!empty($filter['search']) ? $filter['search'] : '')?>"></div>
                 </form>
             </div>
@@ -28,7 +28,7 @@
             <div class="tabs_vertical_block tabs_switcher">
                 <div class="tabs_v tabs_v_dots check_box_active_reverse">
                     <div class="before_scroll">
-                        <form>
+                        <form class="form_dot" onsubmit="return collectForms($(this), 'form_dot')">
                             <div class="tab_v tab_v_filter filter_outer">
                                 <div>
                                     <div class="filter_toggle">Фильтр</div>
