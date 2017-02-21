@@ -35,11 +35,16 @@
                         <?}else{?>
                             <?foreach($dotsGroups as $key => $group){?>
                                 <div class="tab_v tab_v_small" tab="group_dot<?=$group['GROUP_ID']?>"><div>
-                                    <span class="check_span">
-                                        <input type="checkbox" name="group_id" value="<?=$group['GROUP_ID']?>">
-                                        <input type="hidden" name="group_name" value="<?=$group['GROUP_NAME']?>">
-                                        <span class="btn btn_green btn_tiny btn_icon" onclick="showEditDotsGroupPopup(<?=$group['GROUP_ID']?>)"><i class="icon-pen"></i></span>
-                                    </span>
+                                    <?if($group['GROUP_TYPE'] != Model_Dot::GROUP_TYPE_SUPPLIER || in_array($user['role'], Access::$adminRoles)){?>
+                                        <span class="check_span">
+                                            <input type="checkbox" name="group_id" value="<?=$group['GROUP_ID']?>">
+                                            <input type="hidden" name="group_name" value="<?=$group['GROUP_NAME']?>">
+                                            <input type="hidden" name="group_type" value="<?=$group['GROUP_TYPE']?>">
+
+                                            <span class="btn btn_green btn_tiny btn_icon" onclick="showEditDotsGroupPopup(<?=$group['GROUP_ID']?>)"><i class="icon-pen"></i></span>
+                                        </span>
+                                    <?}?>
+
                                     <span class="gray">[<?=$group['GROUP_ID']?>]</span>
                                     <span class="group_name"><?=$group['GROUP_NAME']?></span>
                                 </div></div>
@@ -150,6 +155,7 @@
         $('input', block).val('');
 
         $('[name=edit_dots_group_name]', block).val($('[tab=group_dot'+ groupId +'] [name=group_name]').val());
+        $('[name=edit_dots_group_type]', block).val($('[tab=group_dot'+ groupId +'] [name=group_type]').val());
         $('[name=edit_dots_group_id]', block).val(groupId);
 
         $.fancybox.open(block, {

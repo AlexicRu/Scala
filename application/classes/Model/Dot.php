@@ -2,6 +2,35 @@
 
 class Model_Dot extends Model
 {
+    const GROUP_TYPE_USER       = 1;
+    const GROUP_TYPE_SUPPLIER   = 2;
+
+    public static $groupsTypesNames = [
+        self::GROUP_TYPE_USER       => 'Пользовательская группа',
+        self::GROUP_TYPE_SUPPLIER   => 'Группа точек поставщика',
+    ];
+
+    /**
+     * обертка для getGroups
+     *
+     * @param $groupId
+     * @return bool
+     */
+    public static function getGroup($groupId)
+    {
+        if(empty($groupId)){
+            return false;
+        }
+
+        $groups = Model_Dot::getGroups(['ids' => [$groupId]]);
+
+        if(empty($groups[0])){
+            return false;
+        }
+
+        return $groups[0];
+    }
+
     /**
      * получаем список групп точек
      *
@@ -23,6 +52,10 @@ class Model_Dot extends Model
 
         if(!empty($filter['ids'])){
             $sql .= " and t.group_id in (".implode(',', $filter['ids']).")";
+        }
+
+        if(!empty($filter['group_type'])){
+            $sql .= " and t.group_type = ".Oracle::quote($filter['group_type']);
         }
 
         $sql .= ' order by group_name ';
@@ -122,5 +155,19 @@ class Model_Dot extends Model
         ];
 
         return $db->procedure('ctrl_pos_group_collection', $data);
+    }
+
+    /**
+     * полчаем список доступных групп точек
+     */
+    public static function getGroupTypesNames()
+    {
+        $user = Auth::instance()->get_user();
+
+        if(!in_array($user['role'], Access::$adminRoles)){
+            unset(self::$groupsTypesNames[self::GROUP_TYPE_SUPPLIER]);
+        }
+
+        return self::$groupsTypesNames;
     }
 }

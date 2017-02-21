@@ -109,8 +109,18 @@ class Controller_Control extends Controller_Common {
     {
         $groupId = $this->request->param('id');
 
+        $group = Model_Dot::getGroup($groupId);
+
+        $user = User::current();
+
+        $canEdit = true;
+        if($group['GROUP_TYPE'] == Model_Dot::GROUP_TYPE_SUPPLIER && !in_array($user['role'], Access::$adminRoles)){
+            $canEdit = false;
+        }
+
         $html = View::factory('ajax/control/dots_in_group')
             ->bind('groupId', $groupId)
+            ->bind('canEdit', $canEdit)
         ;
 
         $this->html($html);
@@ -141,18 +151,31 @@ class Controller_Control extends Controller_Common {
      */
     public function action_del_group_dots()
     {
-        $groups = $this->request->post('groups');
+        $groupsIds = $this->request->post('groups');
 
         $deleted = $notDeleted = [];
 
-        if(is_array($groups)) {
-            foreach($groups as $group) {
-                list($dots, $more) = Model_Dot::getGroupDots(['group_id' => $group]);
+        if(is_array($groupsIds)) {
+            $user = User::current();
 
-                if(empty($dots)) {
-                    $deleted[$group] = Oracle::CODE_SUCCESS == Model_Contract::editDotsGroup(['group_id' => $group], Model_Contract::DOTS_GROUP_ACTION_DEL);
+            $groups = Model_Dot::getGroups(['ids' => $groupsIds]);
+
+            foreach($groupsIds as $groupId) {
+
+                $canEdit = true;
+                foreach($groups as $group){
+                    if($group['GROUP_ID'] == $groupId && $group['GROUP_TYPE'] == Model_Dot::GROUP_TYPE_SUPPLIER && !in_array($user['role'], Access::$adminRoles)){
+                        $canEdit = false;
+                        break;
+                    }
+                }
+
+                list($dots, $more) = Model_Dot::getGroupDots(['group_id' => $groupId]);
+
+                if(empty($dots) && $canEdit) {
+                    $deleted[$groupId] = Oracle::CODE_SUCCESS == Model_Contract::editDotsGroup(['group_id' => $groupId], Model_Contract::DOTS_GROUP_ACTION_DEL);
                 }else{
-                    $notDeleted[$group] = true;
+                    $notDeleted[$groupId] = true;
                 }
             }
         }

@@ -525,7 +525,7 @@ class Model_Contract extends Model
         $data = [
             'p_pos_group_name'    => $params['name'],
             'p_pos_group_id'      => 'out',
-            'p_pos_group_type'    => 1,
+            'p_pos_group_type'    => empty($params['group_type']) ? Model_Dot::GROUP_TYPE_USER : $params['group_type'],
             'p_manager_id'        => $user['MANAGER_ID'],
             'p_error_code' 		  => 'out',
         ];
@@ -552,7 +552,7 @@ class Model_Contract extends Model
             'p_pos_group_id'      => $params['group_id'],
             'p_action'            => $action,
             'p_group_name'        => !empty($params['name']) ? $params['name'] : '',
-            'p_pos_group_type'    => 1,
+            'p_pos_group_type'    => empty($params['group_type']) ? Model_Dot::GROUP_TYPE_USER : $params['group_type'],
             'p_manager_id'        => $user['MANAGER_ID'],
             'p_error_code' 		  => 'out',
         ];

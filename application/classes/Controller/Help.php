@@ -25,7 +25,13 @@ class Controller_Help extends Controller_Common
      */
     public function action_list_pos_group()
     {
-        $res = Model_Dot::getGroups(['search' => $this->_search, 'ids' => $this->_ids, 'limit' => 10]);
+        $params = [
+            'search'        => $this->_search,
+            'ids'           => $this->_ids,
+            'limit'         => 10,
+            'group_type'    => Model_Dot::GROUP_TYPE_USER
+        ];
+        $res = Model_Dot::getGroups($params);
 
         if(empty($res)){
             $this->jsonResult(false);
