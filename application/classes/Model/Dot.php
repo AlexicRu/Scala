@@ -55,7 +55,10 @@ class Model_Dot extends Model
         }
 
         if(!empty($filter['group_type'])){
-            $sql .= " and t.group_type = ".Oracle::quote($filter['group_type']);
+            if(!is_array($filter['group_type'])){
+                $filter['group_type'] = [Oracle::quote($filter['group_type'])];
+            }
+            $sql .= " and t.group_type in (".implode(',', $filter['group_type']).")";
         }
 
         $sql .= ' order by group_name ';

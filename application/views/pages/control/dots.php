@@ -27,6 +27,29 @@
 
             <div class="tabs_vertical_block tabs_switcher">
                 <div class="tabs_v tabs_v_dots check_box_active_reverse">
+                    <div class="before_scroll">
+                        <form>
+                            <div class="tab_v tab_v_filter filter_outer">
+                                <div>
+                                    <div class="filter_toggle">Фильтр</div>
+                                        <div class="filter_block">
+                                            <div class="filter_row">
+                                                <?foreach(Model_Dot::$groupsTypesNames as $groupsType => $groupsTypesName){?>
+                                                    <label>
+                                                        <input type="checkbox" name="filter[group_type][]" value="<?=$groupsType?>"
+                                                            <?=(!empty($filter['group_type']) && in_array($groupsType, $filter['group_type']) ? 'checked' : '')?>
+                                                            >
+                                                        <?=$groupsTypesName?>
+                                                    </label><br>
+                                                <?}?>
+                                            </div>
+                                            <button class="btn">Применить</button>
+                                        </div>
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+
                     <div class="scroll">
                         <?if(empty($dotsGroups)){?>
                             <div class="tab_v"><div>
