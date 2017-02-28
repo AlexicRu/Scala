@@ -55,7 +55,7 @@ class Model_Tariff extends Model
         }
 
         if(!empty($params['search'])){
-            $sql .= " and upper(t.TARIF_NAME) like '%".mb_strtoupper(Oracle::quote($params['search']))."%'";
+            $sql .= " and upper(t.TARIF_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
         }
 
         $sql .= ' order by t.TARIF_NAME asc';

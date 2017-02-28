@@ -84,7 +84,7 @@ class Model_Contract extends Model
 		}
 
         if(!empty($params['search'])){
-            $sql .= " and upper(contract_name) like '%".Oracle::quote($params['search'])."%' ";
+            $sql .= " and upper(contract_name) like ".Oracle::quote('%'.$params['search'].'%')." ";
         }
 
 		$sql .= ' order by date_begin desc, state_id ';
@@ -299,7 +299,7 @@ class Model_Contract extends Model
 		";
 
 		if(!empty($contractId)){
-			$sql .= " and contract_id = '".Oracle::quote($contractId)."'";
+			$sql .= " and contract_id = ".Oracle::quote($contractId);
 		}
 
 		$sql .= " order by O_DATE desc";
@@ -369,7 +369,7 @@ class Model_Contract extends Model
 		";
 
 		if(!empty($contractId)){
-			$sql .= " and contract_id = '".Oracle::quote($contractId)."'";
+			$sql .= " and contract_id = ".Oracle::quote($contractId);
 		}
 
 		$turnover = $db->row($sql);

@@ -47,7 +47,7 @@ class Model_Dot extends Model
         ;
 
         if(!empty($filter['search'])){
-            $sql .= " and upper(t.group_name) like '%".mb_strtoupper(Oracle::quote($filter['search']))."%'";
+            $sql .= " and upper(t.group_name) like ".mb_strtoupper(Oracle::quote('%'.$filter['search'].'%'));
         }
 
         if(!empty($filter['ids'])){
@@ -112,22 +112,22 @@ class Model_Dot extends Model
             $sql .= ' and t.POS_ID = '.intval($params['POS_ID']);
         }
         if(!empty($params['PROJECT_NAME'])){
-            $sql .= " and upper(t.PROJECT_NAME) like '%".mb_strtoupper(Oracle::quote($params['PROJECT_NAME']))."%'";
+            $sql .= " and upper(t.PROJECT_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['PROJECT_NAME'].'%'));
         }
         if(!empty($params['ID_EMITENT'])){
             $sql .= ' and t.ID_EMITENT = '.intval($params['ID_EMITENT']);
         }
         if(!empty($params['ID_TO'])){
-            $sql .= " and t.ID_TO like '%".Oracle::quote($params['ID_TO'])."%'";
+            $sql .= " and t.ID_TO like ".Oracle::quote('%'.$params['ID_TO'].'%');
         }
         if(!empty($params['POS_NAME'])){
-            $sql .= " and upper(t.POS_NAME) like '%".mb_strtoupper(Oracle::quote($params['POS_NAME']))."%'";
+            $sql .= " and upper(t.POS_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['POS_NAME'].'%'));
         }
         if(!empty($params['OWNER'])){
-            $sql .= " and upper(t.OWNER) like '%".mb_strtoupper(Oracle::quote($params['OWNER']))."%'";
+            $sql .= " and upper(t.OWNER) like ".mb_strtoupper(Oracle::quote('%'.$params['OWNER'].'%'));
         }
         if(!empty($params['POS_ADDRESS'])){
-            $sql .= " and upper(t.POS_ADDRESS) like '%".mb_strtoupper(Oracle::quote($params['POS_ADDRESS']))."%'";
+            $sql .= " and upper(t.POS_ADDRESS) like ".mb_strtoupper(Oracle::quote('%'.$params['POS_ADDRESS'].'%'));
         }
 
         return $db->pagination($sql, $params);

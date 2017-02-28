@@ -87,11 +87,11 @@ class Model_Manager extends Model
         if(!empty($params['search'])){
             $params['search'] = mb_strtoupper($params['search']);
             $sql .= " and (
-                upper(LOGIN) like '%". Oracle::quote($params['search'])."%' or 
-                upper(MANAGER_NAME) like '%". Oracle::quote($params['search'])."%' or 
-                upper(MANAGER_SURNAME) like '%". Oracle::quote($params['search'])."%' or 
-                upper(MANAGER_MIDDLENAME) like '%". Oracle::quote($params['search'])."%' or
-                upper(M_NAME) like '%". Oracle::quote($params['search'])."%'
+                upper(LOGIN) like ". Oracle::quote('%'.$params['search'].'%')." or 
+                upper(MANAGER_NAME) like ". Oracle::quote('%'.$params['search'].'%')." or 
+                upper(MANAGER_SURNAME) like ". Oracle::quote('%'.$params['search'].'%')." or 
+                upper(MANAGER_MIDDLENAME) like ". Oracle::quote('%'.$params['search'].'%')." or
+                upper(M_NAME) like ". Oracle::quote('%'.$params['search'].'%')."
             )";
         }
         unset($params['search']);
@@ -110,7 +110,7 @@ class Model_Manager extends Model
             if(is_array($value)){
                 $sql .= " and " . strtoupper($key) . " = '" . implode(',', $value) . "' ";
             }else {
-                $sql .= " and " . strtoupper($key) . " = '" . Oracle::quote($value) . "' ";
+                $sql .= " and " . strtoupper($key) . " = " . Oracle::quote($value);
             }
         }
 
@@ -341,7 +341,7 @@ class Model_Manager extends Model
             )";
 
         if(!empty($params['search'])){
-            $sql .= " and upper(t.NAME) like '%" . mb_strtoupper(Oracle::quote($params['search'])) . "%'";
+            $sql .= " and upper(t.NAME) like " . mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
         }
 
         $sql .= " order by t.client_id desc ";

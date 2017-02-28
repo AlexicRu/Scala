@@ -25,8 +25,8 @@ class Model_Message extends Model
             $sql .= " and status = ".self::MESSAGE_STATUS_NOTREAD;
         }
         if(!empty($params['search'])){
-            $search = mb_strtoupper(Oracle::quote($params['search']));
-            $sql .= " and (upper(NOTIFICATION_BODY) like '%".$search."%' or subject like '%".$search."%') ";
+            $search = mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
+            $sql .= " and (upper(NOTIFICATION_BODY) like ".$search." or subject like ".$search.") ";
         }
 
         $sql .= ' order by date_time desc';

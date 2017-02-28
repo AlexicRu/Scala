@@ -60,7 +60,7 @@ class Model_Card extends Model
 		}
 
 		if(!empty($params['query'])){
-			$sql .= " and (card_id like '%".Oracle::quote($params['query'])."%' or upper(holder) like '%".mb_strtoupper(Oracle::quote($params['query']))."%')";
+			$sql .= " and (card_id like ".Oracle::quote('%'.$params['query'].'%')." or upper(holder) like ".mb_strtoupper(Oracle::quote('%'.$params['query'].'%')).")";
 		}
 
         if(!empty($params['status'])){
