@@ -8,7 +8,8 @@ class Model_Report extends Model
     const REPORT_GROUP_SUPPLIER = 1;
     const REPORT_GROUP_CLIENT   = 2;
     const REPORT_GROUP_ANALYTIC = 3;
-    const REPORT_GROUP_OTHERS   = 4;
+    const REPORT_GROUP_CARDS    = 4;
+    const REPORT_GROUP_OTHERS   = 5;
 
     const REPORT_TYPE_DAILY         = 'daily';
     const REPORT_TYPE_BALANCE_SHEET = 'balance_sheet';
@@ -28,6 +29,7 @@ class Model_Report extends Model
         self::REPORT_GROUP_SUPPLIER => ['name' => 'Поставщики', 'icon' => 'icon-dailes'],
         self::REPORT_GROUP_CLIENT   => ['name' => 'Клиентские', 'icon' => 'icon-dailes'],
         self::REPORT_GROUP_ANALYTIC => ['name' => 'Аналитические', 'icon' => 'icon-analytics'],
+        self::REPORT_GROUP_CARDS    => ['name' => 'Карты', 'icon' => 'icon-dailes'],
         self::REPORT_GROUP_OTHERS   => ['name' => 'Прочие', 'icon' => 'icon-summary'],
     ];
 
@@ -220,6 +222,7 @@ class Model_Report extends Model
         $sql = "select * from ".Oracle::$prefix."V_WEB_REPORTS_PARAMS t where t.report_id = {$params['report_id']} and t.template_weight = {$weight}";
 
         $report = $db->query($sql);
+
 
         $row = reset($report);
         $settings['type'] = $row['FULL_PATH'];

@@ -834,7 +834,8 @@ textarea.input_grand {
   width: 200px;
   white-space: normal;
 }
-table td {
+table td,
+table th {
   padding: 8px;
 }
 table.table_form input,
@@ -1404,4 +1405,7 @@ fieldset {
 }
 .alarm.alarm_show {
   background: #FEEFB3;
+}
+.scroll_horizontal {
+  overflow-y: auto;
 }

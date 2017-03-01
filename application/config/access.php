@@ -60,6 +60,11 @@ return [
             Access::ROLE_ROOT,
             'u_7',
         ],
+        'administration_index' => [
+            Access::ROLE_ROOT,
+            Access::ROLE_ADMIN,
+            'u_7',
+        ],
         // custom
         'view_contract_balances' => [
             Access::ROLE_ROOT
