@@ -67,6 +67,7 @@ class Model_Report extends Model
             $config['login'],
             $config['password']
         );
+        $client->setRequestTimeout(180);
 
         $controls = self::_prepareControls($params);
 
