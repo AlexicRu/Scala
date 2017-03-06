@@ -838,9 +838,8 @@ table td,
 table th {
   padding: 8px;
 }
-table.table_form input,
-table.table_form textarea,
-table.table_form .datepicker_out {
+table.table_form input[type=text],
+table.table_form textarea {
   width: 100%;
 }
 table.table_form tr.dark td {
