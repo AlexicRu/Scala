@@ -4,6 +4,8 @@
  * список действий и список ролей, у которых есть доступ
  *
  * у запрета приоритет
+ *
+ * controller_action - автоматом обработается до выполнения основного кода
  */
 
 return [
@@ -27,7 +29,6 @@ return [
             Access::ROLE_ROOT,
             Access::ROLE_ADMIN,
             'u_7',
-            'a_10',
         ],
         'support_index' => [
             Access::ROLE_ROOT

@@ -46,7 +46,11 @@ abstract class Controller_Common extends Controller_Template {
 
             //рендерим шаблон страницы
             if (!in_array($controller, ['Index'])) {
-                $this->tpl = View::factory('pages/' . strtolower($controller) . '/' . $action);
+                try {
+                    $this->tpl = View::factory('pages/' . strtolower($controller) . '/' . $action);
+                } catch (Exception $e) {
+                    throw new HTTP_Exception_404();
+                }
             }
 
             $this->_checkCustomDesign();

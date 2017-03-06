@@ -47,7 +47,7 @@
 
     $(function(){
         dropzone = new Dropzone('.news_edit_image', {
-            url: "/index/upload_image",
+            url: "/index/upload_file?component=image",
             autoProcessQueue: false,
             addRemoveLinks: true,
             maxFiles: 1,

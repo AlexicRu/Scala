@@ -387,4 +387,14 @@ class Controller_Control extends Controller_Common {
         }
         $this->jsonResult(true);
     }
+
+    /**
+     *
+     */
+    public function action_connect_1c()
+    {
+        $this->title[] = 'Связь с 1с';
+
+        $this->_initDropZone();
+    }
 }
