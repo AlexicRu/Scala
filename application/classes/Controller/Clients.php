@@ -299,13 +299,20 @@ class Controller_Clients extends Controller_Common {
 	 */
 	public function action_contract_payment_add()
 	{
-		$params = $this->request->post('params');
+        $payments = [$this->request->post('params')];
+		$multi = $this->request->post('multi') ?: 0;
 
-		$result = Model_Contract::payment(Model_Contract::PAYMENT_ACTION_ADD, $params);
+		if(!empty($multi)){
+            $payments = $this->request->post('payments');
+        }
 
-		if(empty($result)){
-			$this->jsonResult(false);
-		}
+        foreach($payments as $payment){
+            $result = Model_Contract::payment(Model_Contract::PAYMENT_ACTION_ADD, $payment);
+
+            if(empty($result)){
+                $this->jsonResult(false);
+            }
+        }
 
 		$this->jsonResult(true, $result);
 	}

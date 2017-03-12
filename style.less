@@ -193,6 +193,12 @@ a.btn, a.btn:hover{
       color: white;
     }
   }
+  &:disabled{
+    color:#999999!important; border-color:rgba(0,0,0,0.3)!important; background: transparent!important;
+    &:hover{
+      color:#999999!important; border-color:rgba(0,0,0,0.3)!important; background: transparent!important;
+    }
+  }
   &.btn_gray{
     color:#999999; border-color:rgba(0,0,0,0.3);
     &:hover, &.btn_reverse, &.active{
@@ -994,4 +1000,16 @@ fieldset{
 }
 .scroll_horizontal{
   overflow-y: auto;
+}
+.tbl{
+  display: table; width: 100%;
+  >div{
+    display: table-cell; vertical-align: top;
+    &.tr{
+      display: table-row;
+      >div{
+        display: table-cell;
+      }
+    }
+  }
 }

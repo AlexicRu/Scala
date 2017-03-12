@@ -302,6 +302,18 @@ class Model_Contract extends Model
 			$sql .= " and contract_id = ".Oracle::quote($contractId);
 		}
 
+        if(!empty($params['order_date'])) {
+            $sql .= " and order_date = ".Oracle::quote($params['order_date']);
+        }
+
+        if(!empty($params['order_num'])) {
+            $sql .= " and order_num = ".Oracle::quote($params['order_num']);
+        }
+
+        if(!empty($params['sumpay'])) {
+            $sql .= " and sumpay = ".Oracle::quote($params['sumpay']);
+        }
+
 		$sql .= " order by O_DATE desc";
 
 		if(!empty($params['pagination'])) {
@@ -312,7 +324,7 @@ class Model_Contract extends Model
 	}
 
 	/**
-	 * добавление нового платежа к
+	 * добавление нового платежа
 	 *
 	 * @param $action
 	 * @param $params
@@ -340,7 +352,7 @@ class Model_Contract extends Model
 			'p_error_code' 		=> 'out',
 		];
 
-		$res = $db->procedure('client_contract_payment', $data);
+		$res = $db->procedure('client_contract_payment', $data, true);
 
 		if(empty($res)){
 			return true;
@@ -400,7 +412,7 @@ class Model_Contract extends Model
 	}
 
     /**
-     * добавление нового платежа к
+     * добавление нового счета
      *
      * @param $contractId
      * @param $sum

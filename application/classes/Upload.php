@@ -22,4 +22,23 @@ class Upload extends Kohana_Upload
 
         return $directory;
     }
+
+    /**
+     * Upload constructor.
+     */
+    public static function uploadFile($component = 'file')
+    {
+        if (!empty($_FILES['file'])) {
+            $name = explode('.', $_FILES['file']['name']);
+            $filename = md5(time().'salt'.$_FILES['file']['name']).'.'.end($name);
+
+            $directory = self::generateFileDirectory($filename, $component);
+
+            if(self::save($_FILES['file'], $filename, $_SERVER["DOCUMENT_ROOT"].$directory)){
+                return $directory.$filename;
+            }
+        }
+
+        return false;
+    }
 }

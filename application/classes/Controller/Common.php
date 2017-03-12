@@ -223,6 +223,16 @@ abstract class Controller_Common extends Controller_Template {
     }
 
     /**
+     * подключаем скрипты и стили JsGrid
+     */
+    protected function _initJsGrid()
+    {
+        $this->template->styles[] = '/js/plugins/jsgrid/jsgrid.min.css';
+        $this->template->styles[] = '/js/plugins/jsgrid/jsgrid-theme.min.css';
+        $this->template->scripts[] = '/js/plugins/jsgrid/jsgrid.min.js';
+    }
+
+    /**
      * через js можно собрать данные с разных форм, и если так, то их надо раскидать по нормальным полям
      */
     private function _collectAdditionalDataForForms()

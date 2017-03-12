@@ -389,12 +389,74 @@ class Controller_Control extends Controller_Common {
     }
 
     /**
-     *
+     * страница загрузки транзакций
      */
     public function action_connect_1c()
     {
         $this->title[] = 'Связь с 1с';
 
         $this->_initDropZone();
+        $this->_initJsGrid();
+    }
+
+    /**
+     * считываем файл с платежами
+     */
+    public function action_upload_pays()
+    {
+        $file = Upload::uploadFile('pays');
+
+        if(empty($file)){
+            $this->jsonResult(false);
+        }
+
+        $rows = json_decode(file_get_contents($_SERVER["DOCUMENT_ROOT"].$file), true);
+
+        if(empty($rows['ROWS'])){
+            $this->jsonResult(false);
+        }
+
+        $contractIds = [];
+
+        foreach($rows['ROWS'] as $row){
+            $contractIds[] = $row['CONTRACT_ID'];
+        }
+
+        $contracts = Model_Contract::getContracts(false, ['contract_id' => array_unique($contractIds)]);
+
+        foreach($rows['ROWS'] as &$row){
+            /*
+             * Если значение запроса не определено, тогда на место договора в таблице макета выставляем надпись "Не определен", а в значение статус - "Неизвестно".
+             * Если значение определено, тогда на место договора в таблице макета выставляем найденное имя договора, запомнив его ID (нужно будет в дальнейшем)
+             */
+            foreach($contracts as $contract){
+                if($row['CONTRACT_ID'] == $contract['CONTRACT_ID']){
+                    $row['CONTRACT_NAME']   = $contract['CONTRACT_NAME'];
+                    $row['STATE_ID']        = $contract['STATE_ID'];
+                    $row['PAYMENT_STATUS']  = 'Проведено';
+                    $row['OPERATION_NAME']  = $row['OPERATION'] == 50 ? 'Пополнение счета' : 'Списание со счета';
+                    $row['CAN_ADD']         = 0;
+
+                    $pays = Model_Contract::getPaymentsHistory($row['CONTRACT_ID'], [
+                        'order_date'    => $row['ORDER_DATE'],
+                        'order_num'     => $row['ORDER_NUM'],
+                        'sumpay'        => $row['SUMPAY'] * ($row['OPERATION'] == 50 ? 1 : -1),
+                    ]);
+
+                    if(empty($pays)){
+                        $row['PAYMENT_STATUS'] = 'Новая';
+                        $row['CAN_ADD']        = 1;
+                    }
+
+                    break;
+                } else {
+                    $row['CONTRACT_NAME'] = 'Не определен';
+                    $row['STATE_ID'] = 'Неизвестно';
+                    $row['CAN_ADD'] = 0;
+                }
+            }
+        }
+
+        $this->jsonResult(true, $rows);
     }
 }

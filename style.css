@@ -327,6 +327,16 @@ a.btn:hover {
 .btn.active .icon-exel2 {
   color: white;
 }
+.btn:disabled {
+  color: #999999!important;
+  border-color: rgba(0, 0, 0, 0.3) !important;
+  background: transparent!important;
+}
+.btn:disabled:hover {
+  color: #999999!important;
+  border-color: rgba(0, 0, 0, 0.3) !important;
+  background: transparent!important;
+}
 .btn.btn_gray {
   color: #999999;
   border-color: rgba(0, 0, 0, 0.3);
@@ -1407,4 +1417,18 @@ fieldset {
 }
 .scroll_horizontal {
   overflow-y: auto;
+}
+.tbl {
+  display: table;
+  width: 100%;
+}
+.tbl > div {
+  display: table-cell;
+  vertical-align: top;
+}
+.tbl > div.tr {
+  display: table-row;
+}
+.tbl > div.tr > div {
+  display: table-cell;
 }
