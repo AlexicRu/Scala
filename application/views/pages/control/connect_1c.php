@@ -45,10 +45,6 @@
                 if(response.data.ROWS){
                     connect1cPayments_drawTable(response.data.ROWS);
 
-                    $('[type=checkbox]').each(function () {
-                        renderCheckbox($(this));
-                    });
-
                     $('.load_connect1c_payments_btn').prop('disabled', false);
                 }
             }
@@ -60,6 +56,12 @@
         $(".connect_1c_payments_jsGrid").jsGrid({
             width: '100%',
             sorting: true,
+
+            onRefreshed: function () {
+                $('[type=checkbox]').each(function () {
+                    renderCheckbox($(this));
+                });
+            },
 
             data: rows,
 
