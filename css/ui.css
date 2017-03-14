@@ -1,4 +1,4 @@
-@import "fonts/icons/style.css";
+@import "../fonts/icons/style.css";
 .checkbox_inner {
   display: inline-block;
   width: 18px;

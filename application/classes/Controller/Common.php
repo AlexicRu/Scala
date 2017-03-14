@@ -189,14 +189,14 @@ abstract class Controller_Common extends Controller_Template {
     private function _appendFilesAfter()
     {
         if(Auth::instance()->logged_in()) {
-            $this->template->styles[] = '/ui.css';
-            $this->template->styles[] = '/style.css';
-            $this->template->styles[] = '/design.css';
+            $this->template->styles[] = '/css/ui.css';
+            $this->template->styles[] = '/css/style.css';
+            $this->template->styles[] = '/css/design.css';
 
             $this->template->scripts[] = '/js/site.js';
         }else{
-            $this->template->styles[] = '/style.css';
-            $this->template->styles[] = '/design.css';
+            $this->template->styles[] = '/css/style.css';
+            $this->template->styles[] = '/css/design.css';
         }
     }
 
