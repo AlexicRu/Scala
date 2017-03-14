@@ -3,12 +3,10 @@
         <div class="tab_v active" tab="1"><div>
                 <a href="#"><span class="icon-dailes f20"></span> Повседневные</a>
             </div></div>
-        <?if(Access::allow('view_balance_sheet')){?>
-        <div class="tab_v" tab="4"><div>
+        <?/*<div class="tab_v" tab="4"><div>
                 <a href="#"><span class="icon-dailes f20"></span> Оборотно-сальдовая ведомость</a>
             </div></div>
-        <?}?>
-        <?/*div class="tab_v" tab="2"><div>
+        div class="tab_v" tab="2"><div>
                 <a href="#"><span class="icon-summary f20"></span> Итоговые</a>
             </div></div>
         <div class="tab_v" tab="3"><div>

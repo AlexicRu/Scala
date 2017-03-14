@@ -59,7 +59,7 @@
                             <?foreach($dotsGroups as $key => $group){?>
                                 <div class="tab_v tab_v_small" tab="group_dot<?=$group['GROUP_ID']?>"><div>
                                     <?if($group['GROUP_TYPE'] != Model_Dot::GROUP_TYPE_SUPPLIER || in_array($user['role'], Access::$adminRoles)){?>
-                                        <span class="check_span">
+                                        <span class="check_span_hidden">
                                             <input type="checkbox" name="group_id" value="<?=$group['GROUP_ID']?>">
                                             <input type="hidden" name="group_name" value="<?=$group['GROUP_NAME']?>">
                                             <input type="hidden" name="group_type" value="<?=$group['GROUP_TYPE']?>">
@@ -104,13 +104,13 @@
         $('.tabs_group_dots .tabs_v .scroll > [tab]:first').click();
 
         $("[toggle=group_dots_block]").on('click', function(){
-            $('.check_span, .dot_td_check, .dot_td_edit').toggle();
+            $('.check_span_hidden, .td_check, .td_edit').toggle();
         });
 
         $('.btn_del_dots_dots').on('click', function () {
             var dots = [];
 
-            $('.dot_td_check [type=checkbox][name=pos_id]:checked').each(function () {
+            $('.td_check [type=checkbox][name=pos_id]:checked').each(function () {
                 dots.push($(this).val());
             });
 

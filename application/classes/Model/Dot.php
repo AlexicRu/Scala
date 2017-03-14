@@ -22,7 +22,7 @@ class Model_Dot extends Model
             return false;
         }
 
-        $groups = Model_Dot::getGroups(['ids' => [$groupId]]);
+        $groups = self::getGroups(['ids' => [$groupId]]);
 
         if(empty($groups[0])){
             return false;
@@ -36,7 +36,7 @@ class Model_Dot extends Model
      *
      * @return array|int
      */
-    public static function getGroups($filter)
+    public static function getGroups($filter = [])
     {
         $db = Oracle::init();
 

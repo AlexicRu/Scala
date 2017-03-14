@@ -6,6 +6,8 @@
  * у запрета приоритет
  *
  * controller_action - автоматом обработается до выполнения основного кода
+ *
+ * руту всегда можно
  */
 
 return [
@@ -26,7 +28,6 @@ return [
             Access::ROLE_SUPERVISOR,
         ],
         'control_index' => [
-            Access::ROLE_ROOT,
             Access::ROLE_ADMIN,
             'u_7',
         ],
@@ -45,7 +46,6 @@ return [
             'a_10',
         ],
         'news_news_edit' => [
-            Access::ROLE_ROOT,
             Access::ROLE_ADMIN,
         ],
         'clients_bill_print' => [
@@ -54,20 +54,35 @@ return [
             'a_10',
         ],
         'control_tariffs' => [
-            Access::ROLE_ROOT,
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
             'u_7',
         ],
         'control_dots' => [
-            Access::ROLE_ROOT,
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
             'u_7',
         ],
-        'administration_index' => [
-            Access::ROLE_ROOT,
+        'control_connect_1c' => [
             Access::ROLE_ADMIN,
-            'u_7',
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_MANAGER,
+        ],
+        'control_cards_groups' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
+        'administration_index' => [
+            Access::ROLE_ADMIN,
         ],
         // custom
         'view_contract_balances' => [
+            Access::ROLE_ROOT
+        ],
+        'view_penalties' => [
+            Access::ROLE_ROOT
+        ],
+        'view_balance_sheet' => [
             Access::ROLE_ROOT
         ],
         'root' => [
@@ -130,14 +145,6 @@ return [
         'view_penalties_overdrafts' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
-        ],
-        'view_balance_sheet' => [
-            Access::ROLE_USER,
-            Access::ROLE_USER_SECOND,
-        ],
-        'view_penalties' => [
-            Access::ROLE_USER,
-            Access::ROLE_USER_SECOND
         ]
     ]
 ];

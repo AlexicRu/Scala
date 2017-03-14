@@ -459,4 +459,159 @@ class Controller_Control extends Controller_Common {
 
         $this->jsonResult(true, $rows);
     }
+
+    /**
+     * страница работыс группами карт
+     */
+    public function action_cards_groups()
+    {
+        $this->title[] = 'Группы карт';
+
+        $filter = $this->request->query('filter');
+
+        $cardsGroups = Model_Card::getGroups($filter);
+
+        $popupAddCards = Common::popupForm('Добавление карт', 'control/add_cards');
+        $popupAddCardsGroup = Common::popupForm('Добавление группы карт', 'control/add_cards_group');
+        $popupEditCardsGroup = Common::popupForm('Редактирование группы точек', 'control/edit_cards_group');
+
+        $this->tpl
+            ->bind('cardsGroups', $cardsGroups)
+            ->bind('filter', $filter)
+            ->bind('popupAddCards', $popupAddCards)
+            ->bind('popupAddCardsGroup', $popupAddCardsGroup)
+            ->bind('popupEditCardsGroup', $popupEditCardsGroup)
+        ;
+    }
+
+    /**
+     * добавление группы карт
+     */
+    public function action_add_cards_group()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Card::addCardsGroup($params);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * грузим список карт по группе
+     */
+    public function action_load_group_cards()
+    {
+        //если это есть значит уже грузим данные а не страницу
+        $offset = $this->request->post('offset');
+
+        if(is_null($offset)){
+
+            $groupId = $this->request->param('id');
+
+            $user = User::current();
+
+            $canEdit = true;
+            if (!in_array($user['role'], Access::$adminRoles)) {
+                $canEdit = false;
+            }
+
+            $html = View::factory('ajax/control/cards_in_group')
+                ->bind('groupId', $groupId)
+                ->bind('canEdit', $canEdit);
+
+            $this->html($html);
+        }else{
+            $params = [
+                'group_id' => $this->request->post('group_id'),
+                'offset' => $offset,
+                'pagination' => true
+            ];
+
+            list($items, $more) = Model_Card::getGroupCards($params);
+
+            if (empty($items)) {
+                $this->jsonResult(false);
+            }
+
+            $this->jsonResult(true, ['items' => $items, 'more' => $more]);
+        }
+    }
+
+    /**
+     * редактирование группы карт
+     */
+    public function action_edit_cards_group()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Card::editCardsGroup($params);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * показываем карты, сами карты будут аяксом постранично грузиться
+     */
+    public function action_show_group_cards()
+    {
+        $postfix = $this->request->post('postfix') ?: '';
+        $showCheckbox = $this->request->post('show_checkbox') ?: '';
+        $groupId = $this->request->post('group_id') ?: '';
+
+        $html = View::factory('ajax/control/show_group_cards')
+            ->bind('postfix', $postfix)
+            ->bind('showCheckbox', $showCheckbox)
+            ->bind('groupId', $groupId)
+        ;
+
+        $this->html($html);
+    }
+
+    /**
+     * аяксовая постраничная загрузка точек
+     */
+    public function action_load_cards()
+    {
+        $params = [
+            'CARD_ID'           => $this->request->post('CARD_ID'),
+            'HOLDER'            => $this->request->post('HOLDER'),
+            'DESCRIPTION_RU'    => $this->request->post('DESCRIPTION_RU'),
+            'group_id' 		    => $this->request->post('group_id'),
+            'offset' 		    => $this->request->post('offset'),
+            'pagination'        => true
+        ];
+
+        list($dots, $more) = Model_Card::getAvailableGroupCards($params);
+
+        if(empty($dots)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, ['items' => $dots, 'more' => $more]);
+    }
+
+    /**
+     * добавляем точки к конкретной группе
+     */
+    public function action_add_cards_to_group()
+    {
+        $cardsIds = $this->request->post('cards_ids');
+        $groupId = $this->request->post('group_id');
+
+        $result = Model_Card::addCardsToGroup($groupId, $cardsIds);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
 }
