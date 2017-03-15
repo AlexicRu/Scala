@@ -31,6 +31,7 @@ return [
             Access::ROLE_ADMIN,
             'u_7',
         ],
+
         'support_index' => [
             Access::ROLE_ROOT
         ],
@@ -80,7 +81,12 @@ return [
             Access::ROLE_ROOT
         ],
         'view_penalties' => [
-            Access::ROLE_ROOT
+            Access::ROLE_ROOT,
+            Access::ROLE_MANAGER_SALE,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
+            Access::ROLE_MANAGER,
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
         ],
         'view_balance_sheet' => [
             Access::ROLE_ROOT
