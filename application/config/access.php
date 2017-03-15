@@ -31,6 +31,7 @@ return [
             Access::ROLE_ADMIN,
             'u_7',
         ],
+
         'support_index' => [
             Access::ROLE_ROOT
         ],
