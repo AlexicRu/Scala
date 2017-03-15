@@ -65,7 +65,7 @@ class Listing
             $sql .= " and t.TUBE_ID = ".intval($params['TUBE_ID']);
         }
 
-        $sql .= " order by t.{$description}";
+        $sql .= " order by t.$description}";
 
         return $db->query($db->limit($sql, 0, self::$limit));
     }
