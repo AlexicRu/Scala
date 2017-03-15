@@ -117,6 +117,7 @@
                 </tr>
             </table>
         </fieldset>
+            <?/*?>
         <fieldset class="inline_block">
             <legend>По карте</legend>
             <table>
@@ -150,6 +151,7 @@
                 </tr>
             </table>
         </fieldset>
+<?*/?>
         <?}?>
     </div>
     <div class="col line_inner">
