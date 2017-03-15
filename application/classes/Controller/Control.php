@@ -109,8 +109,18 @@ class Controller_Control extends Controller_Common {
     {
         $groupId = $this->request->param('id');
 
+        $group = Model_Dot::getGroup($groupId);
+
+        $user = User::current();
+
+        $canEdit = true;
+        if($group['GROUP_TYPE'] == Model_Dot::GROUP_TYPE_SUPPLIER && !in_array($user['role'], Access::$adminRoles)){
+            $canEdit = false;
+        }
+
         $html = View::factory('ajax/control/dots_in_group')
             ->bind('groupId', $groupId)
+            ->bind('canEdit', $canEdit)
         ;
 
         $this->html($html);
@@ -141,18 +151,31 @@ class Controller_Control extends Controller_Common {
      */
     public function action_del_group_dots()
     {
-        $groups = $this->request->post('groups');
+        $groupsIds = $this->request->post('groups');
 
         $deleted = $notDeleted = [];
 
-        if(is_array($groups)) {
-            foreach($groups as $group) {
-                list($dots, $more) = Model_Dot::getGroupDots(['group_id' => $group]);
+        if(is_array($groupsIds)) {
+            $user = User::current();
 
-                if(empty($dots)) {
-                    $deleted[$group] = Oracle::CODE_SUCCESS == Model_Contract::editDotsGroup(['group_id' => $group], Model_Contract::DOTS_GROUP_ACTION_DEL);
+            $groups = Model_Dot::getGroups(['ids' => $groupsIds]);
+
+            foreach($groupsIds as $groupId) {
+
+                $canEdit = true;
+                foreach($groups as $group){
+                    if($group['GROUP_ID'] == $groupId && $group['GROUP_TYPE'] == Model_Dot::GROUP_TYPE_SUPPLIER && !in_array($user['role'], Access::$adminRoles)){
+                        $canEdit = false;
+                        break;
+                    }
+                }
+
+                list($dots, $more) = Model_Dot::getGroupDots(['group_id' => $groupId]);
+
+                if(empty($dots) && $canEdit) {
+                    $deleted[$groupId] = Oracle::CODE_SUCCESS == Model_Contract::editDotsGroup(['group_id' => $groupId], Model_Contract::DOTS_GROUP_ACTION_DEL);
                 }else{
-                    $notDeleted[$group] = true;
+                    $notDeleted[$groupId] = true;
                 }
             }
         }
@@ -302,6 +325,7 @@ class Controller_Control extends Controller_Common {
     {
         $usedConditions = $this->request->post('used_conditions');
         $uidSection = $this->request->post('uid_section');
+        $index = $this->request->post('index');
 
         $reference = Model_Tariff::getReference();
 
@@ -319,7 +343,7 @@ class Controller_Control extends Controller_Common {
             $this->jsonResult(false);
         }
 
-        $uid = $uidSection.'_'.$conditionId;
+        $uid = $uidSection.'_'.$index;
 
         $html = strval(Model_Tariff::buildReference($uid, $reference));
 
@@ -361,6 +385,233 @@ class Controller_Control extends Controller_Common {
         if(empty($res)){
             $this->jsonResult(false);
         }
+        $this->jsonResult(true);
+    }
+
+    /**
+     * страница загрузки транзакций
+     */
+    public function action_connect_1c()
+    {
+        $this->title[] = 'Связь с 1с';
+
+        $this->_initDropZone();
+        $this->_initJsGrid();
+    }
+
+    /**
+     * считываем файл с платежами
+     */
+    public function action_upload_pays()
+    {
+        $file = Upload::uploadFile('pays');
+
+        if(empty($file)){
+            $this->jsonResult(false);
+        }
+
+        $rows = json_decode(file_get_contents($_SERVER["DOCUMENT_ROOT"].$file), true);
+
+        if(empty($rows['ROWS'])){
+            $this->jsonResult(false);
+        }
+
+        $contractIds = [];
+
+        foreach($rows['ROWS'] as $row){
+            $contractIds[] = $row['CONTRACT_ID'];
+        }
+
+        $contracts = Model_Contract::getContracts(false, ['contract_id' => array_unique($contractIds)]);
+
+        foreach($rows['ROWS'] as &$row){
+            /*
+             * Если значение запроса не определено, тогда на место договора в таблице макета выставляем надпись "Не определен", а в значение статус - "Неизвестно".
+             * Если значение определено, тогда на место договора в таблице макета выставляем найденное имя договора, запомнив его ID (нужно будет в дальнейшем)
+             */
+            foreach($contracts as $contract){
+                if($row['CONTRACT_ID'] == $contract['CONTRACT_ID']){
+                    $row['CONTRACT_NAME']   = $contract['CONTRACT_NAME'];
+                    $row['STATE_ID']        = $contract['STATE_ID'];
+                    $row['PAYMENT_STATUS']  = 'Проведено';
+                    $row['OPERATION_NAME']  = $row['OPERATION'] == 50 ? 'Пополнение счета' : 'Списание со счета';
+                    $row['CAN_ADD']         = 0;
+
+                    $pays = Model_Contract::getPaymentsHistory($row['CONTRACT_ID'], [
+                        'order_date'    => $row['ORDER_DATE'],
+                        'order_num'     => $row['ORDER_NUM'],
+                        'sumpay'        => $row['SUMPAY'] * ($row['OPERATION'] == 50 ? 1 : -1),
+                    ]);
+
+                    if(empty($pays)){
+                        $row['PAYMENT_STATUS'] = 'Новая';
+                        $row['CAN_ADD']        = 1;
+                    }
+
+                    break;
+                } else {
+                    $row['CONTRACT_NAME'] = 'Не определен';
+                    $row['STATE_ID'] = 'Неизвестно';
+                    $row['CAN_ADD'] = 0;
+                }
+            }
+        }
+
+        $this->jsonResult(true, $rows);
+    }
+
+    /**
+     * страница работыс группами карт
+     */
+    public function action_cards_groups()
+    {
+        $this->title[] = 'Группы карт';
+
+        $filter = $this->request->query('filter');
+
+        $cardsGroups = Model_Card::getGroups($filter);
+
+        $popupAddCards = Common::popupForm('Добавление карт', 'control/add_cards');
+        $popupAddCardsGroup = Common::popupForm('Добавление группы карт', 'control/add_cards_group');
+        $popupEditCardsGroup = Common::popupForm('Редактирование группы точек', 'control/edit_cards_group');
+
+        $this->tpl
+            ->bind('cardsGroups', $cardsGroups)
+            ->bind('filter', $filter)
+            ->bind('popupAddCards', $popupAddCards)
+            ->bind('popupAddCardsGroup', $popupAddCardsGroup)
+            ->bind('popupEditCardsGroup', $popupEditCardsGroup)
+        ;
+    }
+
+    /**
+     * добавление группы карт
+     */
+    public function action_add_cards_group()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Card::addCardsGroup($params);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * грузим список карт по группе
+     */
+    public function action_load_group_cards()
+    {
+        //если это есть значит уже грузим данные а не страницу
+        $offset = $this->request->post('offset');
+
+        if(is_null($offset)){
+
+            $groupId = $this->request->param('id');
+
+            $user = User::current();
+
+            $canEdit = true;
+            if (!in_array($user['role'], Access::$adminRoles)) {
+                $canEdit = false;
+            }
+
+            $html = View::factory('ajax/control/cards_in_group')
+                ->bind('groupId', $groupId)
+                ->bind('canEdit', $canEdit);
+
+            $this->html($html);
+        }else{
+            $params = [
+                'group_id' => $this->request->post('group_id'),
+                'offset' => $offset,
+                'pagination' => true
+            ];
+
+            list($items, $more) = Model_Card::getGroupCards($params);
+
+            if (empty($items)) {
+                $this->jsonResult(false);
+            }
+
+            $this->jsonResult(true, ['items' => $items, 'more' => $more]);
+        }
+    }
+
+    /**
+     * редактирование группы карт
+     */
+    public function action_edit_cards_group()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Card::editCardsGroup($params);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * показываем карты, сами карты будут аяксом постранично грузиться
+     */
+    public function action_show_group_cards()
+    {
+        $postfix = $this->request->post('postfix') ?: '';
+        $showCheckbox = $this->request->post('show_checkbox') ?: '';
+        $groupId = $this->request->post('group_id') ?: '';
+
+        $html = View::factory('ajax/control/show_group_cards')
+            ->bind('postfix', $postfix)
+            ->bind('showCheckbox', $showCheckbox)
+            ->bind('groupId', $groupId)
+        ;
+
+        $this->html($html);
+    }
+
+    /**
+     * аяксовая постраничная загрузка точек
+     */
+    public function action_load_cards()
+    {
+        $params = [
+            'CARD_ID'           => $this->request->post('CARD_ID'),
+            'HOLDER'            => $this->request->post('HOLDER'),
+            'DESCRIPTION_RU'    => $this->request->post('DESCRIPTION_RU'),
+            'group_id' 		    => $this->request->post('group_id'),
+            'offset' 		    => $this->request->post('offset'),
+            'pagination'        => true
+        ];
+
+        list($dots, $more) = Model_Card::getAvailableGroupCards($params);
+
+        if(empty($dots)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, ['items' => $dots, 'more' => $more]);
+    }
+
+    /**
+     * добавляем точки к конкретной группе
+     */
+    public function action_add_cards_to_group()
+    {
+        $cardsIds = $this->request->post('cards_ids');
+        $groupId = $this->request->post('group_id');
+
+        $result = Model_Card::addCardsToGroup($groupId, $cardsIds);
+
+        if(!empty($result)){
+            $this->jsonResult(false);
+        }
+
         $this->jsonResult(true);
     }
 }

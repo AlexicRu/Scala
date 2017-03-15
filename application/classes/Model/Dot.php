@@ -2,12 +2,41 @@
 
 class Model_Dot extends Model
 {
+    const GROUP_TYPE_USER       = 1;
+    const GROUP_TYPE_SUPPLIER   = 2;
+
+    public static $groupsTypesNames = [
+        self::GROUP_TYPE_USER       => 'Пользовательская группа',
+        self::GROUP_TYPE_SUPPLIER   => 'Группа точек поставщика',
+    ];
+
+    /**
+     * обертка для getGroups
+     *
+     * @param $groupId
+     * @return bool
+     */
+    public static function getGroup($groupId)
+    {
+        if(empty($groupId)){
+            return false;
+        }
+
+        $groups = self::getGroups(['ids' => [$groupId]]);
+
+        if(empty($groups[0])){
+            return false;
+        }
+
+        return $groups[0];
+    }
+
     /**
      * получаем список групп точек
      *
      * @return array|int
      */
-    public static function getGroups($filter)
+    public static function getGroups($filter = [])
     {
         $db = Oracle::init();
 
@@ -18,13 +47,25 @@ class Model_Dot extends Model
         ;
 
         if(!empty($filter['search'])){
-            $sql .= " and upper(t.group_name) like '%".mb_strtoupper(Oracle::quote($filter['search']))."%'";
+            $sql .= " and upper(t.group_name) like ".mb_strtoupper(Oracle::quote('%'.$filter['search'].'%'));
         }
 
         if(!empty($filter['ids'])){
             $sql .= " and t.group_id in (".implode(',', $filter['ids']).")";
         }
 
+        if(!empty($filter['group_type'])){
+            if(!is_array($filter['group_type'])){
+                $filter['group_type'] = [Oracle::quote($filter['group_type'])];
+            }
+            $sql .= " and t.group_type in (".implode(',', $filter['group_type']).")";
+        }
+
+        $sql .= ' order by group_name ';
+
+        if(!empty($filter['limit'])){
+            return $db->query($db->limit($sql, 0, $filter['limit']));
+        }
         return $db->query($sql);
     }
 
@@ -42,7 +83,7 @@ class Model_Dot extends Model
         $db = Oracle::init();
 
         $sql = "
-            select * from ".Oracle::$prefix."V_WEB_POS_GROUP_ITEMS t where t.group_id = ".$params['group_id']
+            select * from ".Oracle::$prefix."V_WEB_POS_GROUP_ITEMS t where t.group_id = ".$params['group_id']." order by id_to";
         ;
 
         return $db->pagination($sql, $params);
@@ -71,24 +112,24 @@ class Model_Dot extends Model
             $sql .= ' and t.POS_ID = '.intval($params['POS_ID']);
         }
         if(!empty($params['PROJECT_NAME'])){
-            $sql .= " and upper(t.PROJECT_NAME) like '%".mb_strtoupper(Oracle::quote($params['PROJECT_NAME']))."%'";
+            $sql .= " and upper(t.PROJECT_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['PROJECT_NAME'].'%'));
         }
         if(!empty($params['ID_EMITENT'])){
             $sql .= ' and t.ID_EMITENT = '.intval($params['ID_EMITENT']);
         }
         if(!empty($params['ID_TO'])){
-            $sql .= " and t.ID_TO like '%".Oracle::quote($params['ID_TO'])."%'";
+            $sql .= " and t.ID_TO like ".Oracle::quote('%'.$params['ID_TO'].'%');
         }
         if(!empty($params['POS_NAME'])){
-            $sql .= " and upper(t.POS_NAME) like '%".mb_strtoupper(Oracle::quote($params['POS_NAME']))."%'";
+            $sql .= " and upper(t.POS_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['POS_NAME'].'%'));
         }
         if(!empty($params['OWNER'])){
-            $sql .= " and upper(t.OWNER) like '%".mb_strtoupper(Oracle::quote($params['OWNER']))."%'";
+            $sql .= " and upper(t.OWNER) like ".mb_strtoupper(Oracle::quote('%'.$params['OWNER'].'%'));
         }
         if(!empty($params['POS_ADDRESS'])){
-            $sql .= " and upper(t.POS_ADDRESS) like '%".mb_strtoupper(Oracle::quote($params['POS_ADDRESS']))."%'";
+            $sql .= " and upper(t.POS_ADDRESS) like ".mb_strtoupper(Oracle::quote('%'.$params['POS_ADDRESS'].'%'));
         }
-echo $sql;die;
+
         return $db->pagination($sql, $params);
     }
 
@@ -117,5 +158,19 @@ echo $sql;die;
         ];
 
         return $db->procedure('ctrl_pos_group_collection', $data);
+    }
+
+    /**
+     * полчаем список доступных групп точек
+     */
+    public static function getGroupTypesNames()
+    {
+        $user = Auth::instance()->get_user();
+
+        if(!in_array($user['role'], Access::$adminRoles)){
+            unset(self::$groupsTypesNames[self::GROUP_TYPE_SUPPLIER]);
+        }
+
+        return self::$groupsTypesNames;
     }
 }

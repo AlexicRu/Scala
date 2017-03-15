@@ -24,10 +24,14 @@ class Model_Client extends Model
 
 		if(!is_null($search)){
 			$search = mb_strtoupper($search);
-			$sql .= " and (upper(v.client_name) like '%".Oracle::quote($search)."%' or upper(v.long_name) like '%".Oracle::quote($search)."%' or upper(v.contract_name) like '%".Oracle::quote($search)."%' or exists (select 1 from ".Oracle::$prefix."V_WEB_CRD_LIST c where c.contract_id = v.contract_id and c.card_id like '%".Oracle::quote($search)."%'))";
+			$sql .= " and (upper(v.client_name) like ".Oracle::quote('%'.$search.'%')." or upper(v.long_name) like ".Oracle::quote('%'.$search.'%')." or upper(v.contract_name) like ".Oracle::quote('%'.$search.'%')." or exists (select 1 from ".Oracle::$prefix."V_WEB_CRD_LIST c where c.contract_id = v.contract_id and c.card_id like ".Oracle::quote('%'.$search.'%')."))";
 		}
 
 		$sql .= " order by client_id desc ";
+
+		if(!empty($params['limit'])){
+            $sql = $db->limit($sql, 0, $params['limit']);
+        }
 
 		$result = $db->tree($sql, 'CLIENT_ID');
 

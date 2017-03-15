@@ -25,7 +25,13 @@ class Controller_Help extends Controller_Common
      */
     public function action_list_pos_group()
     {
-        $res = Model_Dot::getGroups(['search' => $this->_search, 'ids' => $this->_ids]);
+        $params = [
+            'search'        => $this->_search,
+            'ids'           => $this->_ids,
+            'limit'         => 10,
+            'group_type'    => Model_Dot::GROUP_TYPE_USER
+        ];
+        $res = Model_Dot::getGroups($params);
 
         if(empty($res)){
             $this->jsonResult(false);
@@ -140,7 +146,7 @@ class Controller_Help extends Controller_Common
      */
     public function action_list_client()
     {
-        $res = Model_Client::getClientsList($this->_search, ['ids' => $this->_ids]);
+        $res = Model_Client::getClientsList($this->_search, ['ids' => $this->_ids, 'limit' => 10]);
 
         if(empty($res)){
             $this->jsonResult(false);
@@ -150,7 +156,7 @@ class Controller_Help extends Controller_Common
 
         foreach($res as $item){
             $return[] = [
-                'name' => $item['LONG_NAME'],
+                'name' => $item['CLIENT_NAME'],
                 'value' => $item['CLIENT_ID'],
             ];
         }
@@ -221,7 +227,8 @@ class Controller_Help extends Controller_Common
                 Access::ROLE_MANAGER_SALE_SUPPORT,
             ],
             'agent_id' => $this->_user['AGENT_ID'],
-            'manager_id' => $this->_ids
+            'manager_id' => $this->_ids,
+            'limit' => 10
         ]);
 
         if(empty($res)){
@@ -234,6 +241,68 @@ class Controller_Help extends Controller_Common
             $return[] = [
                 'name' => $item['M_NAME'],
                 'value' => $item['MANAGER_ID'],
+            ];
+        }
+
+        $this->jsonResult(true, $return);
+    }
+
+    /**
+     * получаем список контрактов клиентов для combobox
+     * _depend
+     */
+    public function action_list_clients_contracts()
+    {
+        $clientId = $this->request->post('client_id');
+
+        if(empty($clientId)){
+            $this->jsonResult(false);
+        }
+
+        $res = Model_Contract::getContracts(
+            $clientId,
+            [
+                'search' => $this->_search,
+                'limit' => 10,
+            ]
+        );
+
+        if(empty($res)){
+            $this->jsonResult(false);
+        }
+
+        $return = [];
+
+        foreach($res as $item){
+            $return[] = [
+                'name' => $item['CONTRACT_NAME'],
+                'value' => $item['CONTRACT_ID'],
+            ];
+        }
+
+        $this->jsonResult(true, $return);
+    }
+
+    /**
+     * получаем список контрактов поставщика для combobox
+     * _depend
+     */
+    public function action_list_suppliers_contracts()
+    {
+        $supplierId = $this->request->post('supplier_id');
+
+        $res = Listing::getSuppliersContracts($supplierId, $this->_search);
+
+        if(empty($res)){
+            $this->jsonResult(false);
+        }
+
+        $return = [];
+
+        foreach($res as $item){
+            $return[] = [
+                'name' => $item['CONTRACT_NAME'],
+                'value' => $item['CONTRACT_ID'],
             ];
         }
 

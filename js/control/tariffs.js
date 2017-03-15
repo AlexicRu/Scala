@@ -43,9 +43,14 @@ function onChangeCondition(t) {
     checkUsedConditions(uidSection);
 }
 
-function changeCondition(uid, conditionId, compareId, conditionValue)
+function changeCondition(uid, conditionId, compareId, conditionValue, elem)
 {
-    var block = $('.reference_block[uid='+ uid +']');
+    var block;
+    if(elem != undefined) {
+        block = $('.reference_block[uid=' + uid + ']', elem);
+    } else {
+        block = $('.reference_block[uid=' + uid + ']');
+    }
     var conditionSelect = block.find('[name=CONDITION_ID]');
 
     conditionSelect.val(conditionId);
@@ -98,11 +103,11 @@ function addSectionCondition(t)
 
     tpl.appendTo(list);
 
-    $.post('/control/get_tariff_reference_tpl', { uid_section: uidSection, used_conditions: usedConditions[uidSection]}, function (data) {
+    $.post('/control/get_tariff_reference_tpl', { uid_section: uidSection, used_conditions: usedConditions[uidSection], index: $('.tsc_item', block).length}, function (data) {
         if(data.success){
             tpl.removeClass('block_loading').append(data.data.html);
 
-            changeCondition(data.data.uid, data.data.condition_id, data.data.compare_id);
+            changeCondition(data.data.uid, data.data.condition_id, data.data.compare_id, false, tpl);
         }else{
             message(0, 'Доступные условия закончились');
             tpl.remove();
@@ -200,7 +205,7 @@ function saveTariff(btn)
                 DISC_TYPE: t.find('[name=DISC_TYPE]').val(),
                 DISC_PARAM: t.find('[name=DISC_PARAM]:visible').val(),
                 DISC_VALUE: t.find('[name=DISC_VALUE]').val(),
-                CLOSE_CALCULATION: t.find('[name=CLOSE_CALCULATION]').is(':checked')
+                CLOSE_CALCULATION: t.find('[name=CLOSE_CALCULATION]').is(':checked') ? 1 : 0
             }
         };
 
@@ -225,7 +230,7 @@ function saveTariff(btn)
 
             var conditionValue = '';
 
-            var formField = t.find('.form_field:visible');
+            var formField = _t.find('.form_field:visible');
 
             if(formField.find('.combobox_multi').length){
                 conditionValue = formField.find('[name=combobox_multi_value]').val();

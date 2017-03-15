@@ -22,7 +22,7 @@ class Listing
         $sql = "select * from ".Oracle::$prefix."V_WEB_DIC_COUNTRY t where 1=1";
 
         if(!empty($search)){
-            $sql .= " and upper(t.NAME_RU) like '%".mb_strtoupper(Oracle::quote($search))."%'";
+            $sql .= " and upper(t.NAME_RU) like ".mb_strtoupper(Oracle::quote('%'.$search.'%'));
         }
 
         if(!empty($ids)){
@@ -54,7 +54,7 @@ class Listing
         $sql = "select distinct t.SERVICE_ID, t.{$description} from ".Oracle::$prefix."V_WEB_SERVICE_LIST t where t.agent_id = ".$user['AGENT_ID'];
 
         if(!empty($params['search'])){
-            $sql .= " and upper(t.long_desc) like '%".mb_strtoupper(Oracle::quote($params['search']))."%'";
+            $sql .= " and upper(t.long_desc) like ".mb_strtoupper('%'.Oracle::quote($params['search']).'%');
         }
 
         if(!empty($params['ids'])){
@@ -90,7 +90,7 @@ class Listing
         $sql = "select * from ".Oracle::$prefix."V_WEB_CARDS_ALL t where t.agent_id = ".$user['AGENT_ID'];
 
         if(!empty($search)){
-            $sql .= " and t.CARD_ID like '%".Oracle::quote($search)."%'";
+            $sql .= " and t.CARD_ID like ".Oracle::quote('%'.$search.'%');
         }
 
         if(!empty($ids)){
@@ -122,7 +122,7 @@ class Listing
         $sql = "select * from ".Oracle::$prefix."V_WEB_CRD_AVAILABLE t where t.agent_id = ".$user['AGENT_ID'];
 
         if(!empty($search)){
-            $sql .= " and t.CARD_ID like '%".Oracle::quote($search)."%'";
+            $sql .= " and t.CARD_ID like ".Oracle::quote('%'.$search.'%');
         }
 
         if(!empty($ids)){
@@ -154,11 +154,36 @@ class Listing
         $sql = "select * from ".Oracle::$prefix."V_WEB_SUPPLIERS_LIST t where t.agent_id = ".$user['AGENT_ID'];
 
         if(!empty($search)){
-            $sql .= " and upper(t.SUPPLIER_NAME) like '%".mb_strtoupper(Oracle::quote($search))."%'";
+            $sql .= " and upper(t.SUPPLIER_NAME) like ".mb_strtoupper(Oracle::quote('%'.$search.'%'));
         }
 
         if(!empty($ids)){
             $sql .= " and t.ID in (".implode(',', $ids).")";
+        }
+
+        return $db->query($db->limit($sql, 0, self::$limit));
+    }
+
+    /**
+     * список контрактов поставщиков
+     *
+     * @param $search
+     * @return array|bool|int
+     */
+    public static function getSuppliersContracts($supplierId, $search)
+    {
+        if(empty($supplierId) || empty($search)){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $sql = "select * from ".Oracle::$prefix."V_WEB_SUPPLIERS_CONTRACTS t where t.agent_id = ".$user['AGENT_ID']." and t.supplier_id = ".$supplierId;
+
+        if(!empty($search)){
+            $sql .= " and upper(t.CONTRACT_NAME) like ".mb_strtoupper(Oracle::quote('%'.$search.'%'));
         }
 
         return $db->query($db->limit($sql, 0, self::$limit));

@@ -208,15 +208,19 @@ function renderComboBoxMulti(combo)
 
     var hiddenValue = wrapper.find('[name=combobox_multi_value]');
 
-    combo.on('keyup', function () {
+    var preLoad = true;
+
+    combo.on('keypress', function () {
         var t = $(this);
         var val = t.val();
 
         result.hide().html('');
 
-        if(val.length <= 1){
+        if(val.length < 1 && preLoad == false){
             return;
         }
+
+        preLoad= false;
 
         if(ajaxComboBoxMulti){
             ajaxComboBoxMulti.abort();
@@ -240,6 +244,11 @@ function renderComboBoxMulti(combo)
 
             ajaxComboBoxMulti = false;
         });
+    }).on('focus', function () {
+        if (preLoad || hiddenValue.val() == '') {
+            preLoad = true;
+            combo.trigger('keypress');
+        }
     });
 }
 
@@ -282,11 +291,23 @@ function renderComboBoxMultiSelectedItem(value, text, wrapper)
 
 function uncheckComboBoxMultiItem(item)
 {
+    var wrapper = item.closest('.combobox_multi_wrapper');
+    var selected = wrapper.find('.combobox_multi_selected');
+    var hiddenValue = wrapper.find('[name=combobox_multi_value]');
+
     item.closest('.combobox_multi_selected_item').remove();
+
+    var values = [];
+
+    selected.find('.combobox_multi_selected_item').each(function () {
+        values.push($(this).attr('value'));
+    });
+
+    hiddenValue.val(values.join(','));
 }
 
 var ajaxComboBox;
-function renderComboBox(combo)
+function renderComboBox(combo, params)
 {
     if(combo.data('rendered')){
         return false;
@@ -308,21 +329,45 @@ function renderComboBox(combo)
 
     var hiddenValue = outer.find('[name=combobox_value]');
 
-    combo.on('keyup', function () {
+    var preLoad = true;
+
+    combo.on('keypress', function () {
+        if(params && params['depend']){
+            var dependCombo = $('[name=' + params['depend'] + ']');
+            setComboboxValue(dependCombo, false);
+        }
+
         var t = $(this);
         var val = t.val();
 
         result.hide().html('');
 
-        if(val.length <= 1){
+        if(val.length < 1 && preLoad == false){
+            hiddenValue.val('');
             return;
         }
+
+        preLoad= false;
 
         if(ajaxComboBox){
             ajaxComboBox.abort();
         }
 
-        ajaxComboBox = $.post(url, { search:val }, function(data){
+        var postParams = { search:val };
+
+        if(params && params['depend_on']){
+            var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]'));
+
+            if(value == ''){
+                return;
+            }
+
+            postParams[params['depend_on']['name']] = value;
+        }
+
+        hiddenValue.val('');
+
+        ajaxComboBox = $.post(url, postParams, function(data){
             if(data.success){
                 for(var i in data.data){
                     var tpl = $('<div class="combobox_result_item" onclick="selectComboBoxResult($(this))"></div>');
@@ -340,6 +385,17 @@ function renderComboBox(combo)
 
             ajaxComboBox = false;
         });
+    }).on('focus', function () {
+        if (preLoad || hiddenValue.val() == '') {
+            preLoad = true;
+            combo.trigger('keypress');
+        }
+    }).on('blur', function () {
+        var t = $(this);
+
+        if(t.val() == ''){
+            hiddenValue.val('');
+        }
     });
 }
 
@@ -363,19 +419,32 @@ function setComboboxValue(combo, value)
     var outer = combo.closest('.combobox_outer');
     var hiddenValue = outer.find('[name=combobox_value]');
 
-    $.post(combo.attr('url'), { ids:value }, function(data){
-        if(data.success){
-            combo.val(data.data[0].name);
-            hiddenValue.val(data.data[0].value);
-        }
-    });
+    if(!value || value == ''){
+        combo.val('');
+        hiddenValue.val('');
+    }else{
+        $.post(combo.attr('url'), {ids: value}, function (data) {
+            if (data.success) {
+                combo.val(data.data[0].name);
+                hiddenValue.val(data.data[0].value);
+            }
+        });
+    }
+}
+
+function getComboboxValue(combo)
+{
+    var outer = combo.closest('.combobox_outer');
+    var hiddenValue = outer.find('[name=combobox_value]');
+
+    return hiddenValue.val();
 }
 
 function setComboboxMultiValue(combo, value)
 {
     var wrapper = combo.closest('.combobox_multi_wrapper');
 
-    var list = value.split(',');
+    var list = value ? value.split(',') : [];
 
     for(var i in list){
         $.post(combo.attr('url'), { ids:list[i] }, function(data){

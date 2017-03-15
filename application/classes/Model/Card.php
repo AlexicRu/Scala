@@ -17,6 +17,9 @@ class Model_Card extends Model
 	const CARD_LIMIT_TYPE_MONTH		= 3;
 	const CARD_LIMIT_TYPE_ONCE		= 4;
 
+    const CARDS_GROUP_ACTION_EDIT = 1;
+    const CARDS_GROUP_ACTION_DEL = 0;
+
 	public static $cardLimitsParams = [
 		self::CARD_LIMIT_PARAM_VOLUME 	=> 'л.',
 		self::CARD_LIMIT_PARAM_RUR 		=> Text::RUR,
@@ -60,7 +63,7 @@ class Model_Card extends Model
 		}
 
 		if(!empty($params['query'])){
-			$sql .= " and (card_id like '%".Oracle::quote($params['query'])."%' or upper(holder) like '%".mb_strtoupper(Oracle::quote($params['query']))."%')";
+			$sql .= " and (card_id like ".Oracle::quote('%'.$params['query'].'%')." or upper(holder) like ".mb_strtoupper(Oracle::quote('%'.$params['query'].'%')).")";
 		}
 
         if(!empty($params['status'])){
@@ -208,7 +211,9 @@ class Model_Card extends Model
 
 		$db = Oracle::init();
 
-		$card = Model_Card::getCard($cardId);
+        $contractId = !empty($params['CONTRACT_ID']) ? $params['CONTRACT_ID'] : false;
+
+		$card = Model_Card::getCard($cardId, $contractId);
         $user = Auth::instance()->get_user();
 
 		$where = [
@@ -390,4 +395,201 @@ class Model_Card extends Model
 
 		return true;
 	}
+
+    /**
+     * получаем список групп карт
+     *
+     * @return array|int
+     */
+    public static function getGroups($filter = [])
+    {
+        $db = Oracle::init();
+
+        $user = User::current();
+
+        $sql = "
+            select * from ".Oracle::$prefix."V_WEB_CARD_GROUPS t where t.agent_id = ".$user['AGENT_ID']
+        ;
+
+        if(!empty($filter['search'])){
+            $sql .= " and upper(t.group_name) like ".mb_strtoupper(Oracle::quote('%'.$filter['search'].'%'));
+        }
+
+        if(!empty($filter['ids'])){
+            $sql .= " and t.group_id in (".implode(',', $filter['ids']).")";
+        }
+
+        $sql .= ' order by group_name ';
+
+        if(!empty($filter['limit'])){
+            return $db->query($db->limit($sql, 0, $filter['limit']));
+        }
+        return $db->query($sql);
+    }
+
+    /**
+     * добавляем группу карт
+     *
+     * @param $params
+     */
+    public static function addCardsGroup($params)
+    {
+        if(empty($params['name'])){
+            return Oracle::CODE_ERROR;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_pos_group_name'    => $params['name'],
+            'p_manager_id'        => $user['MANAGER_ID'],
+            'p_group_id'          => 'out',
+            'p_error_code' 		  => 'out',
+        ];
+
+        return $db->procedure('ctrl_card_group_add', $data);
+    }
+
+    /**
+     * редактируем группу точек
+     *
+     * @param $params
+     */
+    public static function editCardsGroup($params, $action = self::CARDS_GROUP_ACTION_EDIT)
+    {
+        if(empty($params['group_id'])){
+            return Oracle::CODE_ERROR;
+        }
+
+        $db = Oracle::init();
+
+        $user = User::current();
+
+        $data = [
+            'p_group_id'          => $params['group_id'],
+            'p_action'            => $action,
+            'p_group_name'        => !empty($params['name']) ? $params['name'] : '',
+            'p_manager_id'        => $user['MANAGER_ID'],
+            'p_error_code' 		  => 'out',
+        ];
+
+        return $db->procedure('ctrl_card_group_edit', $data);
+    }
+
+    /**
+     * получаем список карт группы
+     *
+     * @param $params
+     */
+    public static function getGroupCards($params)
+    {
+        if(empty($params['group_id'])){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $sql = "
+            select * from ".Oracle::$prefix."V_WEB_CARDS_GROUP_ITEMS t where t.group_id = ".$params['group_id'];
+        ;
+
+        return $db->pagination($sql, $params);
+    }
+
+    /**
+     * обертка для getGroups
+     *
+     * @param $groupId
+     * @return bool
+     */
+    public static function getGroup($groupId)
+    {
+        if(empty($groupId)){
+            return false;
+        }
+
+        $groups = self::getGroups(['ids' => [$groupId]]);
+
+        if(empty($groups[0])){
+            return false;
+        }
+
+        return $groups[0];
+    }
+
+    /**
+     * получаем доступные для добавления карты
+     *
+     * @param $params
+     * @return mixed
+     */
+    public static function getAvailableGroupCards($params)
+    {
+        if(empty($params['group_id'])){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = User::current();
+
+        $sql = "
+            select 
+                vc.card_id, 
+                vc.holder, 
+                vc.description_ru 
+            from ".Oracle::$prefix."v_web_cards_all vc
+            where vc.agent_id = {$user['AGENT_ID']}
+                and not exists 
+                    (
+                        select 1 
+                        from ".Oracle::$prefix."v_web_cards_group_items vgi 
+                        where vgi.card_id = vc.card_id
+                         and vgi.group_id = ".(int)$params['group_id']."
+                    )
+            ";
+
+        if(!empty($params['CARD_ID'])){
+            $sql .= ' and t.CARD_ID = '.Oracle::quote($params['CARD_ID']);
+        }
+
+        if(!empty($params['HOLDER'])){
+            $sql .= ' and t.HOLDER like '.Oracle::quote('%'.$params['HOLDER'].'%');
+        }
+
+        if(!empty($params['DESCRIPTION_RU'])){
+            $sql .= ' and t.DESCRIPTION_RU like '.Oracle::quote('%'.$params['DESCRIPTION_RU'].'%');
+        }
+
+        return $db->pagination($sql, $params);
+    }
+
+    /**
+     * добавляем карты к группе
+     *
+     * @param $groupId
+     * @param $cardsIds
+     */
+    public static function addCardsToGroup($groupId, $cardsIds)
+    {
+        if(empty($groupId) || empty($cardsIds)){
+            return Oracle::CODE_ERROR;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_group_id'        => $groupId,
+            'p_action'          => 1,
+            'p_card_collection' => [$cardsIds, SQLT_CHR],
+            'p_manager_id'      => $user['MANAGER_ID'],
+            'p_error_code' 	    => 'out',
+        ];
+
+        return $db->procedure('ctrl_card_group_collection', $data);
+    }
 }

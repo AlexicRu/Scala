@@ -55,7 +55,7 @@ class Model_Tariff extends Model
         }
 
         if(!empty($params['search'])){
-            $sql .= " and t.TARIF_NAME like '%".Oracle::quote($params['search'])."%'";
+            $sql .= " and upper(t.TARIF_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
         }
 
         $sql .= ' order by t.TARIF_NAME asc';
@@ -106,7 +106,7 @@ class Model_Tariff extends Model
 
         $db = Oracle::init();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_SECTIONS t where t.tarif_id = {$tariffId} and t.version_id = {$lastVersion} order by t.SECTION_NUM";
+        $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_SECTIONS t where t.tarif_id = {$tariffId} and t.version_id = {$lastVersion} order by t.SECTION_NUM, t.CONDITION_NUM";
 
         $sections = $db->tree($sql, 'SECTION_NUM');
 
@@ -291,7 +291,7 @@ class Model_Tariff extends Model
                     'p_section_num' => $sectionNum,
                     'p_disc_type' => $section['params']['DISC_TYPE'],
                     'p_disc_param' => $section['params']['DISC_PARAM'],
-                    'p_disc_value' => $section['params']['DISC_VALUE'],
+                    'p_disc_value' => str_replace(',', '.', $section['params']['DISC_VALUE']),
                     'p_close_calculation' => (int)$section['params']['CLOSE_CALCULATION'],
                     'p_manager_id' => $user['MANAGER_ID'],
                     'p_error_code' => 'out',

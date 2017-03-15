@@ -4,6 +4,10 @@
  * список действий и список ролей, у которых есть доступ
  *
  * у запрета приоритет
+ *
+ * controller_action - автоматом обработается до выполнения основного кода
+ *
+ * руту всегда можно
  */
 
 return [
@@ -24,10 +28,8 @@ return [
             Access::ROLE_SUPERVISOR,
         ],
         'control_index' => [
-            Access::ROLE_ROOT,
             Access::ROLE_ADMIN,
             'u_7',
-            'a_10',
         ],
         'support_index' => [
             Access::ROLE_ROOT
@@ -44,7 +46,6 @@ return [
             'a_10',
         ],
         'news_news_edit' => [
-            Access::ROLE_ROOT,
             Access::ROLE_ADMIN,
         ],
         'clients_bill_print' => [
@@ -52,8 +53,36 @@ return [
             'a_6',
             'a_10',
         ],
+        'control_tariffs' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+            'u_7',
+        ],
+        'control_dots' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+            'u_7',
+        ],
+        'control_connect_1c' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_MANAGER,
+        ],
+        'control_cards_groups' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
+        'administration_index' => [
+            Access::ROLE_ADMIN,
+        ],
         // custom
         'view_contract_balances' => [
+            Access::ROLE_ROOT
+        ],
+        'view_penalties' => [
+            Access::ROLE_ROOT
+        ],
+        'view_balance_sheet' => [
             Access::ROLE_ROOT
         ],
         'root' => [
@@ -62,34 +91,9 @@ return [
     ],
     'deny' => [ //для всех остальных ролей будет разрешено
         // functions
-        'reports_index' => [
-            Access::ROLE_MANAGER,
-            Access::ROLE_ADMIN,
-            Access::ROLE_SUPERVISOR,
-            Access::ROLE_USER,
-            Access::ROLE_USER_SECOND,
-            Access::ROLE_MANAGER_SALE,
-            Access::ROLE_MANAGER_SALE_SUPPORT,
-        ],
-        'control_index' => [
-            Access::ROLE_USER,
-            Access::ROLE_USER_SECOND,
-            Access::ROLE_MANAGER_SALE,
-            Access::ROLE_MANAGER_SALE_SUPPORT,
-        ],
-        'control_tariffs' => [
-            Access::ROLE_ADMIN,
-        ],
         'control_managers' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
-            Access::ROLE_MANAGER_SALE,
-            Access::ROLE_MANAGER_SALE_SUPPORT,
-        ],
-        'control_dots' => [
-            Access::ROLE_USER,
-            Access::ROLE_USER_SECOND,
-            Access::ROLE_ADMIN,
             Access::ROLE_MANAGER_SALE,
             Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
@@ -114,7 +118,6 @@ return [
             Access::ROLE_USER_SECOND,
         ],
         'clients_card_edit' => [
-            //Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
         ],
         'clients_payment_add' => [
@@ -127,8 +130,8 @@ return [
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
         ],
-        'manager_settings' => [
-            //Access::ROLE_USER,
+        'reports_index' => [
+            Access::ROLE_USER,
         ],
         // custom
         'view_tariffs' => [
@@ -142,14 +145,6 @@ return [
         'view_penalties_overdrafts' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
-        ],
-        'view_balance_sheet' => [
-            Access::ROLE_USER,
-            Access::ROLE_USER_SECOND,
-        ],
-        'view_penalties' => [
-            Access::ROLE_USER,
-            Access::ROLE_USER_SECOND
         ]
     ]
 ];

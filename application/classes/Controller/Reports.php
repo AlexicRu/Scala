@@ -29,13 +29,17 @@ class Controller_Reports extends Controller_Common {
 	}
 
 	/**
-	 * гшенерация отчетов
+	 * генерация отчетов
 	 *
 	 * @throws HTTP_Exception_404
 	 */
 	public function action_generate()
 	{
 		$params = $this->request->query();
+
+		if(!empty($params['build'])){
+		    $params = Model_Report::prepare($params);
+        }
 
 		$report = Model_Report::generate($params);
 

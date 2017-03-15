@@ -3,7 +3,7 @@
 <h1>
     Новости
 
-    <?if(Access::allow('news_news_edit')){?>
+    <?if(Access::allow('news_news_edit') && ($detail['AGENT_ID'] != 0 || ($detail['AGENT_ID'] == 0 && $user['AGENT_ID'] == 0))){?>
         <a href="#news_edit" class="btn fancy">Редактировать новость</a>
     <?}?>
 </h1>

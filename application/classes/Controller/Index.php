@@ -34,17 +34,12 @@ class Controller_Index extends Controller_Common {
     /**
      * грузим файлы аяксово
      */
-	public function action_upload_image()
+	public function action_upload_file()
     {
-        if (!empty($_FILES['file'])) {
-            $name = explode('.', $_FILES['file']['name']);
-            $filename = md5(time().'salt'.$_FILES['file']['name']).'.'.end($name);
+        $component = $this->request->query('component') ?: 'file';
 
-            $directory = Upload::generateImageDirectory($filename);
-
-            if(Upload::save($_FILES['file'], $filename, $_SERVER["DOCUMENT_ROOT"].$directory)){
-                $this->jsonResult(true, ['file' => $directory.$filename]);
-            }
+        if ($file = Upload::uploadFile($component)) {
+            $this->jsonResult(true, ['file' => $file]);
         }
 
         $this->jsonResult(false);

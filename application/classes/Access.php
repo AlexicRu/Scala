@@ -55,11 +55,13 @@ class Access
         $deny = $access['deny'];
 
         if(
+            // если задано разрешение и нет роли/агента/юзера, то нельзя
             (isset($allow[$action]) && (
                 !in_array($user['role'], $allow[$action]) &&
                 !in_array('u_'.$user['MANAGER_ID'], $allow[$action]) &&
                 !in_array('a_'.$user['AGENT_ID'], $allow[$action])
             )) ||
+            // если задан запрет на действие и хоть где-то роль/агент/юзер, то нельзя
             (isset($deny[$action]) && (
                 in_array($user['role'], $deny[$action]) ||
                 in_array('u_'.$user['MANAGER_ID'], $deny[$action]) ||

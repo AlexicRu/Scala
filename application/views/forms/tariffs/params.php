@@ -13,7 +13,7 @@
             <?foreach(Model_Tariff::$paramsTypesParams as $paramsTypeId => $paramsParams){?>
                 <select name="DISC_PARAM" class="disc_param_select" dist_type="<?=$paramsTypeId?>">
                     <?foreach($paramsParams as $paramsParamsId => $paramsParam){?>
-                        <option value="<?=$paramsParamsId?>">
+                        <option value="<?=($paramsParamsId+1)?>">
                             <?=Model_Tariff::$paramsParams[$paramsParam]?>
                         </option>
                     <?}?>
@@ -22,7 +22,7 @@
         </td>
         <td class="gray right" width="100">Значение:</td>
         <td>
-            <input type="text" name="DISC_VALUE" value="<?=(isset($params['DISC_VALUE']) ? $params['DISC_VALUE'] : '')?>">
+            <input type="number" name="DISC_VALUE" value="<?=(isset($params['DISC_VALUE']) ? $params['DISC_VALUE'] : '')?>">
         </td>
     </tr>
     <tr>
@@ -43,8 +43,8 @@
             onChangeParam($(this));
         });
 
-        <?if(!empty($section['params'])){?>
-            changeParam('<?=$uid?>', <?=$section['params']['DISC_TYPE']?>, <?=$section['params']['DISC_PARAM']?>);
+        <?if(!empty($params)){?>
+            changeParam('<?=$uid?>', <?=$params['DISC_TYPE']?>, <?=$params['DISC_PARAM']?>);
         <?}else{?>
             changeParam('<?=$uid?>');
         <?}?>

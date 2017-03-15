@@ -58,9 +58,9 @@ class Model_Contract extends Model
 	/**
 	 * получаем список контрактов
 	 */
-	public static function getContracts($clientId = false, $contractId = false)
+	public static function getContracts($clientId = false, $params = false)
 	{
-		if(empty($clientId) && empty($contractId)){
+		if(empty($clientId) && empty($params)){
 			return [];
 		}
 
@@ -76,15 +76,24 @@ class Model_Contract extends Model
 			$sql .= " and client_id = ".Oracle::quote($clientId);
 		}
 
-		if(!empty($contractId)){
-			$sql .= " and contract_id = ".Oracle::quote($contractId);
+		if(!empty($params['contract_id'])){
+		    if(!is_array($params['contract_id'])){
+                $params['contract_id'] = [(int)$params['contract_id']];
+            }
+			$sql .= " and contract_id in (".implode(',', $params['contract_id']).") ";
 		}
 
-		$sql .= 'order by date_begin desc, state_id';
+        if(!empty($params['search'])){
+            $sql .= " and upper(contract_name) like ".Oracle::quote('%'.$params['search'].'%')." ";
+        }
 
-		$contracts = $db->query($sql);
+		$sql .= ' order by date_begin desc, state_id ';
 
-		return $contracts;
+		if(!empty($params['limit'])){
+            return $db->query($db->limit($sql, 0, $params['limit']));
+        }
+
+        return $db->query($sql);
 	}
 
 	/**
@@ -94,7 +103,7 @@ class Model_Contract extends Model
 	 */
 	public static function getContract($contractId)
 	{
-		$contract = self::getContracts(false, $contractId);
+		$contract = self::getContracts(false, ['contract_id' => $contractId]);
 
 		if(!empty($contractId)){
 			return reset($contract);
@@ -225,7 +234,7 @@ class Model_Contract extends Model
 
 		$user = Auth::instance()->get_user();
 
-		$sql = "select * from ".Oracle::$prefix."v_tarifs_list where manager_id = ".Oracle::quote($user['MANAGER_ID']);
+		$sql = "select * from ".Oracle::$prefix."v_tarifs_list where manager_id = ".Oracle::quote($user['MANAGER_ID'])." order by tarif_name";
 
 		return $db->query($sql);
 	}
@@ -290,8 +299,20 @@ class Model_Contract extends Model
 		";
 
 		if(!empty($contractId)){
-			$sql .= " and contract_id = '".Oracle::quote($contractId)."'";
+			$sql .= " and contract_id = ".Oracle::quote($contractId);
 		}
+
+        if(!empty($params['order_date'])) {
+            $sql .= " and order_date = ".Oracle::quote($params['order_date']);
+        }
+
+        if(!empty($params['order_num'])) {
+            $sql .= " and order_num = ".Oracle::quote($params['order_num']);
+        }
+
+        if(!empty($params['sumpay'])) {
+            $sql .= " and sumpay = ".Oracle::quote($params['sumpay']);
+        }
 
 		$sql .= " order by O_DATE desc";
 
@@ -303,7 +324,7 @@ class Model_Contract extends Model
 	}
 
 	/**
-	 * добавление нового платежа к
+	 * добавление нового платежа
 	 *
 	 * @param $action
 	 * @param $params
@@ -331,7 +352,7 @@ class Model_Contract extends Model
 			'p_error_code' 		=> 'out',
 		];
 
-		$res = $db->procedure('client_contract_payment', $data);
+		$res = $db->procedure('client_contract_payment', $data, true);
 
 		if(empty($res)){
 			return true;
@@ -360,7 +381,7 @@ class Model_Contract extends Model
 		";
 
 		if(!empty($contractId)){
-			$sql .= " and contract_id = '".Oracle::quote($contractId)."'";
+			$sql .= " and contract_id = ".Oracle::quote($contractId);
 		}
 
 		$turnover = $db->row($sql);
@@ -391,7 +412,7 @@ class Model_Contract extends Model
 	}
 
     /**
-     * добавление нового платежа к
+     * добавление нового счета
      *
      * @param $contractId
      * @param $sum
@@ -516,7 +537,7 @@ class Model_Contract extends Model
         $data = [
             'p_pos_group_name'    => $params['name'],
             'p_pos_group_id'      => 'out',
-            'p_pos_group_type'    => 1,
+            'p_pos_group_type'    => empty($params['group_type']) ? Model_Dot::GROUP_TYPE_USER : $params['group_type'],
             'p_manager_id'        => $user['MANAGER_ID'],
             'p_error_code' 		  => 'out',
         ];
@@ -543,7 +564,7 @@ class Model_Contract extends Model
             'p_pos_group_id'      => $params['group_id'],
             'p_action'            => $action,
             'p_group_name'        => !empty($params['name']) ? $params['name'] : '',
-            'p_pos_group_type'    => 1,
+            'p_pos_group_type'    => empty($params['group_type']) ? Model_Dot::GROUP_TYPE_USER : $params['group_type'],
             'p_manager_id'        => $user['MANAGER_ID'],
             'p_error_code' 		  => 'out',
         ];

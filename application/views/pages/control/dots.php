@@ -20,13 +20,36 @@
                         <span class="btn btn_orange btn_icon" toggle="group_dots_block"><i class="icon-cancel"></i></span>
                     </span>
                 </div>
-                <form>
+                <form class="form_dot" onsubmit="return collectForms($(this), 'form_dot')">
                     <div class="input_with_icon"><i class="icon-find"></i><input type="text" name="filter[search]" class="input_big input_messages" placeholder="Поиск..." value="<?=(!empty($filter['search']) ? $filter['search'] : '')?>"></div>
                 </form>
             </div>
 
             <div class="tabs_vertical_block tabs_switcher">
                 <div class="tabs_v tabs_v_dots check_box_active_reverse">
+                    <div class="before_scroll">
+                        <form class="form_dot" onsubmit="return collectForms($(this), 'form_dot')">
+                            <div class="tab_v tab_v_filter filter_outer">
+                                <div>
+                                    <div class="filter_toggle">Фильтр</div>
+                                        <div class="filter_block">
+                                            <div class="filter_row">
+                                                <?foreach(Model_Dot::$groupsTypesNames as $groupsType => $groupsTypesName){?>
+                                                    <label>
+                                                        <input type="checkbox" name="filter[group_type][]" value="<?=$groupsType?>"
+                                                            <?=(!empty($filter['group_type']) && in_array($groupsType, $filter['group_type']) ? 'checked' : '')?>
+                                                            >
+                                                        <?=$groupsTypesName?>
+                                                    </label><br>
+                                                <?}?>
+                                            </div>
+                                            <button class="btn">Применить</button>
+                                        </div>
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+
                     <div class="scroll">
                         <?if(empty($dotsGroups)){?>
                             <div class="tab_v"><div>
@@ -35,11 +58,16 @@
                         <?}else{?>
                             <?foreach($dotsGroups as $key => $group){?>
                                 <div class="tab_v tab_v_small" tab="group_dot<?=$group['GROUP_ID']?>"><div>
-                                    <span class="check_span">
-                                        <input type="checkbox" name="group_id" value="<?=$group['GROUP_ID']?>">
-                                        <input type="hidden" name="group_name" value="<?=$group['GROUP_NAME']?>">
-                                        <span class="btn btn_green btn_tiny btn_icon" onclick="showEditDotsGroupPopup(<?=$group['GROUP_ID']?>)"><i class="icon-pen"></i></span>
-                                    </span>
+                                    <?if($group['GROUP_TYPE'] != Model_Dot::GROUP_TYPE_SUPPLIER || in_array($user['role'], Access::$adminRoles)){?>
+                                        <span class="check_span_hidden">
+                                            <input type="checkbox" name="group_id" value="<?=$group['GROUP_ID']?>">
+                                            <input type="hidden" name="group_name" value="<?=$group['GROUP_NAME']?>">
+                                            <input type="hidden" name="group_type" value="<?=$group['GROUP_TYPE']?>">
+
+                                            <span class="btn btn_green btn_tiny btn_icon" onclick="showEditDotsGroupPopup(<?=$group['GROUP_ID']?>)"><i class="icon-pen"></i></span>
+                                        </span>
+                                    <?}?>
+
                                     <span class="gray">[<?=$group['GROUP_ID']?>]</span>
                                     <span class="group_name"><?=$group['GROUP_NAME']?></span>
                                 </div></div>
@@ -76,13 +104,13 @@
         $('.tabs_group_dots .tabs_v .scroll > [tab]:first').click();
 
         $("[toggle=group_dots_block]").on('click', function(){
-            $('.check_span, .dot_td_check, .dot_td_edit').toggle();
+            $('.check_span_hidden, .td_check, .td_edit').toggle();
         });
 
         $('.btn_del_dots_dots').on('click', function () {
             var dots = [];
 
-            $('.dot_td_check [type=checkbox][name=pos_id]:checked').each(function () {
+            $('.td_check [type=checkbox][name=pos_id]:checked').each(function () {
                 dots.push($(this).val());
             });
 
@@ -150,6 +178,7 @@
         $('input', block).val('');
 
         $('[name=edit_dots_group_name]', block).val($('[tab=group_dot'+ groupId +'] [name=group_name]').val());
+        $('[name=edit_dots_group_type]', block).val($('[tab=group_dot'+ groupId +'] [name=group_type]').val());
         $('[name=edit_dots_group_id]', block).val(groupId);
 
         $.fancybox.open(block, {

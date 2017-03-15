@@ -6,6 +6,16 @@
         </td>
     </tr>
     <tr>
+        <td class="gray right" width="170">Тип:</td>
+        <td>
+            <select class="select_big" name="add_dots_group_type">
+                <?foreach(Model_Dot::getGroupTypesNames() as $groupsType => $groupsTypesName){?>
+                    <option value="<?=$groupsType?>"><?=$groupsTypesName?></option>
+                <?}?>
+            </select>
+        </td>
+    </tr>
+    <tr>
         <td></td>
         <td>
             <span class="btn btn_reverse btn_add_dots_group_go">+ Добавить группу</span>
@@ -18,7 +28,8 @@
     $(function(){
         $('.btn_add_dots_group_go').on('click', function(){
             var params = {
-                name:        $('[name=add_dots_group_name]').val()
+                name:        $('[name=add_dots_group_name]').val(),
+                group_type:  $('[name=add_dots_group_type]').val()
             };
 
             if(params.name == ''){

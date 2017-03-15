@@ -1,8 +1,8 @@
-<div class="popup_dots_list_preview">
+<div class="popup_list_preview">
     <span class="btn btn_green">Загрузить точки</span>
 </div>
-<div class="popup_dots_list"></div>
-<div class="popup_dots_list_btns">
+<div class="popup_list"></div>
+<div class="popup_list_btns">
     <span class="btn btn_reverse btn_add_dots_to_group_go">+ Добавить точки</span>
     <span class="btn btn_red pre_fancy_close">Отмена</span>
 </div>
@@ -12,15 +12,15 @@
         $('.pre_fancy_close').on('click', function () {
             $.fancybox.close();
             setTimeout(function () {
-                $('.popup_dots_list').empty().hide();
-                $('.popup_dots_list_preview').show();
+                $('.popup_list').empty().hide();
+                $('.popup_list_preview').show();
             }, 500);
         });
 
-        $('.popup_dots_list_preview .btn').on('click', function () {
-            var block = $('.popup_dots_list');
+        $('.popup_list_preview .btn').on('click', function () {
+            var block = $('.popup_list');
 
-            $('.popup_dots_list_preview').hide();
+            $('.popup_list_preview').hide();
             block.show().addClass('block_loading');
             setTimeout(function () {
                 $.fancybox.update();
@@ -28,7 +28,7 @@
 
             var groupId = $('.tabs_group_dots .tab_v.active [name=group_id]').val();
 
-            $.post('/control/show_dots', { postfix: 'popup_dots_list', show_checkbox:1, group_id:groupId }, function (data) {
+            $.post('/control/show_dots', { postfix: 'popup_list', show_checkbox:1, group_id:groupId }, function (data) {
                 block.removeClass('block_loading');
 
                 block.html(data);
@@ -36,7 +36,7 @@
         });
 
         $('.btn_add_dots_to_group_go').on('click', function () {
-            var block = $('.popup_dots_list');
+            var block = $('.popup_list');
             var groupId = $('.tabs_group_dots .tab_v.active [name=group_id]').val();
             var posIds = [];
 

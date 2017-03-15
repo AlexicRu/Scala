@@ -46,7 +46,11 @@ abstract class Controller_Common extends Controller_Template {
 
             //рендерим шаблон страницы
             if (!in_array($controller, ['Index'])) {
-                $this->tpl = View::factory('pages/' . strtolower($controller) . '/' . $action);
+                try {
+                    $this->tpl = View::factory('pages/' . strtolower($controller) . '/' . $action);
+                } catch (Exception $e) {
+                    throw new HTTP_Exception_404();
+                }
             }
 
             $this->_checkCustomDesign();
@@ -58,6 +62,8 @@ abstract class Controller_Common extends Controller_Template {
             echo '<script>alert("У вас недостаточно прав доступа");</script>';
             die;
         }
+
+        $this->_collectAdditionalDataForForms();
     }
 
     /**
@@ -183,14 +189,14 @@ abstract class Controller_Common extends Controller_Template {
     private function _appendFilesAfter()
     {
         if(Auth::instance()->logged_in()) {
-            $this->template->styles[] = '/ui.css';
-            $this->template->styles[] = '/style.css';
-            $this->template->styles[] = '/design.css';
+            $this->template->styles[] = '/css/ui.css';
+            $this->template->styles[] = '/css/style.css';
+            $this->template->styles[] = '/css/design.css';
 
             $this->template->scripts[] = '/js/site.js';
         }else{
-            $this->template->styles[] = '/style.css';
-            $this->template->styles[] = '/design.css';
+            $this->template->styles[] = '/css/style.css';
+            $this->template->styles[] = '/css/design.css';
         }
     }
 
@@ -214,6 +220,47 @@ abstract class Controller_Common extends Controller_Template {
     {
         $this->template->styles[] = '/js/plugins/dropzone/dropzone.css';
         $this->template->scripts[] = '/js/plugins/dropzone/dropzone.js';
+    }
+
+    /**
+     * подключаем скрипты и стили JsGrid
+     */
+    protected function _initJsGrid()
+    {
+        $this->template->styles[] = '/js/plugins/jsgrid/jsgrid.min.css';
+        $this->template->styles[] = '/js/plugins/jsgrid/jsgrid-theme.min.css';
+        $this->template->scripts[] = '/js/plugins/jsgrid/jsgrid.min.js';
+    }
+
+    /**
+     * через js можно собрать данные с разных форм, и если так, то их надо раскидать по нормальным полям
+     */
+    private function _collectAdditionalDataForForms()
+    {
+        $additionalFormDataPOST = $this->request->post('other_data');
+        $additionalFormDataGET = $this->request->query('other_data');
+
+        if(!empty($additionalFormDataPOST)){
+            $params = [];
+            parse_str(urldecode($additionalFormDataPOST), $params);
+
+            foreach($params as $key => $value){
+                $data = $this->request->post($key) ?: [];
+
+                $this->request->post($key, array_merge($data, $value));
+            }
+        }
+
+        if(!empty($additionalFormDataGET)){
+            $params = [];
+            parse_str(urldecode($additionalFormDataGET), $params);
+
+            foreach($params as $key => $value){
+                $data = $this->request->query($key) ?: [];
+
+                $this->request->query($key, array_merge($data, $value));
+            }
+        }
     }
 
 } // End Common

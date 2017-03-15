@@ -4,8 +4,8 @@
         <span class="btn btn_small btn_icon btn_red ts_remove"><i class="icon-cancel"></i></span>
 
         <div class="ts_conditions">
-            <?foreach($conditions as $condition){
-                $uid = $tariffId.'_'.$section['SECTION_NUM'].'_'.$condition['CONDITION_ID'];
+            <?foreach($conditions as $key => $condition){
+                $uid = $tariffId.'_'.$section['SECTION_NUM'].'_'.$condition['CONDITION_NUM'];
                 ?>
                 <div class="tsc_item line_inner">
                     <span class="btn btn_small btn_icon btn_red ts_remove"><i class="icon-cancel"></i></span>
