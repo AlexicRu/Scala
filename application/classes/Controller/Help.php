@@ -29,7 +29,7 @@ class Controller_Help extends Controller_Common
             'search'        => $this->_search,
             'ids'           => $this->_ids,
             'limit'         => 10,
-            'group_type'    => Model_Dot::GROUP_TYPE_USER
+            //'group_type'    => Model_Dot::GROUP_TYPE_USER
         ];
         $res = Model_Dot::getGroups($params);
 
