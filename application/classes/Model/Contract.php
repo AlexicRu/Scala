@@ -352,7 +352,7 @@ class Model_Contract extends Model
 			'p_error_code' 		=> 'out',
 		];
 
-		$res = $db->procedure('client_contract_payment', $data, true);
+		$res = $db->procedure('client_contract_payment', $data);
 
 		if(empty($res)){
 			return true;
