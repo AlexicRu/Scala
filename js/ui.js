@@ -210,7 +210,7 @@ function renderComboBoxMulti(combo)
 
     var preLoad = true;
 
-    combo.on('keypress', function () {
+    combo.on('keyup', function () {
         var t = $(this);
         var val = t.val();
 
@@ -331,7 +331,7 @@ function renderComboBox(combo, params)
 
     var preLoad = true;
 
-    combo.on('keypress', function () {
+    combo.on('keyup', function () {
         if(params && params['depend']){
             var dependCombo = $('[name=' + params['depend'] + ']');
             setComboboxValue(dependCombo, false);

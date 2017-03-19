@@ -87,6 +87,10 @@ class Model_Contract extends Model
             $sql .= " and upper(contract_name) like ".Oracle::quote('%'.$params['search'].'%')." ";
         }
 
+        if(!empty($params['agent_id'])){
+            $sql .= " and agent_id = ".(int)$params['agent_id'];
+        }
+
 		$sql .= ' order by date_begin desc, state_id ';
 
 		if(!empty($params['limit'])){
@@ -344,7 +348,7 @@ class Model_Contract extends Model
 			'p_action' 			=> $action,
 			'p_order_guid' 		=> $action != self::PAYMENT_ACTION_ADD ? $params['guid'] : null,
 			'p_order_num' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['num'] : null,
-			'p_order_date' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['date'] : null,
+			'p_order_date' 		=> $action == self::PAYMENT_ACTION_ADD ? Oracle::quote($params['date']) : null,
 			'p_value' 			=> $action != self::PAYMENT_ACTION_DELETE ? Oracle::toFloat($params['value']) : 0,
 			'p_payment_cur' 	=> $action == self::PAYMENT_ACTION_ADD ? self::CURRENCY_RUR : null,
 			'p_comment' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['comment'] : null,
@@ -352,9 +356,9 @@ class Model_Contract extends Model
 			'p_error_code' 		=> 'out',
 		];
 
-		$res = $db->procedure('client_contract_payment', $data);
+		$res = $db->procedure('client_contract_payment', $data, true);
 
-		if(empty($res)){
+		if($res == Oracle::CODE_SUCCESS){
 			return true;
 		}
 
