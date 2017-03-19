@@ -234,7 +234,7 @@ class Model_Contract extends Model
 
 		$user = Auth::instance()->get_user();
 
-		$sql = "select * from ".Oracle::$prefix."v_tarifs_list where manager_id = ".Oracle::quote($user['MANAGER_ID'])." order by tarif_name";
+        $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_LIST where agent_id = ".Oracle::quote($user['AGENT_ID'])." order by tarif_name";
 
 		return $db->query($sql);
 	}
@@ -352,7 +352,7 @@ class Model_Contract extends Model
 			'p_error_code' 		=> 'out',
 		];
 
-		$res = $db->procedure('client_contract_payment', $data, true);
+		$res = $db->procedure('client_contract_payment', $data);
 
 		if(empty($res)){
 			return true;

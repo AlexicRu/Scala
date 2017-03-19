@@ -43,6 +43,7 @@ return [
         ],
         'clients_bill_add' => [
             'a_1',
+            'a_2',
             'a_6',
             'a_10',
         ],
@@ -51,6 +52,7 @@ return [
         ],
         'clients_bill_print' => [
             'a_1',
+            'a_2',
             'a_6',
             'a_10',
         ],
