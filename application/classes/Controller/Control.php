@@ -447,7 +447,7 @@ class Controller_Control extends Controller_Common {
                     $row['PAYMENT_STATUS']  = 'Проведено';
 
                     $pays = Model_Contract::getPaymentsHistory($row['CONTRACT_ID'], [
-                        'order_date'    => $row['ORDER_DATE'],
+                        'order_date'    => [$row['ORDER_DATE'], $row['PAYMENT_DATE']],
                         'order_num'     => $row['ORDER_NUM'],
                         'sumpay'        => $row['SUMPAY'] * ($row['OPERATION'] == 50 ? 1 : -1),
                     ]);

@@ -254,4 +254,30 @@ class Oracle{
 	{
 		return str_replace(',', '.', $number);
 	}
+
+    /**
+     * переводим строку в дату
+     *
+     * @param $string
+     * @return false|string
+     */
+	public static function toDate($string)
+    {
+        $dateTime = DateTime::createFromFormat('d.m.Y H:i:s', $string);
+
+        return "'".$dateTime->format('d.m.Y')."'";
+    }
+
+    /**
+     * переводим строку в оракловую дату
+     *
+     * @param $string
+     * @return string
+     */
+    public static function toDateOracle($string)
+    {
+        $dateTime = DateTime::createFromFormat('d.m.Y H:i:s', $string);
+
+        return "to_date('".$dateTime->format('d.m.Y')."', 'dd.mm.yyyy')";
+    }
 }

@@ -189,7 +189,7 @@ class Model_Card extends Model
 			return $res;
 		}
 
-		if($action != self::CARD_ACTION_ADD) {
+		if($action != self::CARD_ACTION_ADD && Access::allow('clients_card_edit_limits')) {
             //редактируем лимитов если таковые пришли в запросе
             self::editCardLimits($params['card_id'], empty($params['limits']) ? false : $params['limits']);
         }

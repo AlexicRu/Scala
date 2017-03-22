@@ -247,7 +247,7 @@ function renderComboBoxMulti(combo)
     }).on('focus', function () {
         if (preLoad || hiddenValue.val() == '') {
             preLoad = true;
-            combo.trigger('keypress');
+            combo.trigger('keyup');
         }
     });
 }
@@ -388,7 +388,7 @@ function renderComboBox(combo, params)
     }).on('focus', function () {
         if (preLoad || hiddenValue.val() == '') {
             preLoad = true;
-            combo.trigger('keypress');
+            combo.trigger('keyup');
         }
     }).on('blur', function () {
         var t = $(this);

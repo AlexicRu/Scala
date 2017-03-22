@@ -238,13 +238,13 @@ class Model_Tariff extends Model
 
         //редактирование тарифа
         $data = [
-            'p_tarif_id' 	=> $tariffId,
-            'p_tarif_name' 	=> $params['name'],
-            'p_tarif_descr' => '',
-            'p_tarif_agent' => $user['AGENT_ID'],
-            'p_manager_id' 	=> $user['MANAGER_ID'],
-            'p_version_id' 	=> 'out',
-            'p_error_code' 	=> 'out',
+            'p_tarif_id' 	    => $tariffId,
+            'p_tarif_name' 	    => $params['name'],
+            'p_tarif_descr'     => '',
+            'p_tarif_agent'     => $user['AGENT_ID'],
+            'p_manager_id' 	    => $user['MANAGER_ID'],
+            'p_version_id' 	    => 'out',
+            'p_error_code' 	    => 'out',
         ];
 
         $res = $db->procedure('ctrl_tarif_edit', $data, true);
@@ -254,6 +254,12 @@ class Model_Tariff extends Model
         }
 
         $versionId = $res['p_version_id'];
+
+        //добавление
+        if($tariffId == 0){
+            $tariffId = $versionId;
+            $versionId = 1;
+        }
 
         if(!empty($params['sections'])) {
             foreach ($params['sections'] as $sectionNum => $section) {

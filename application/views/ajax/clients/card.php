@@ -31,7 +31,7 @@ $user = Auth::instance()->get_user();
 
 <b class="f18">Ограничения по топливу:</b>
 <?if(!empty($oilRestrictions)){?>
-    <table>
+    <table class="tbl_spacing">
         <?foreach($oilRestrictions as $restrictions){
             $restrict = reset($restrictions);
             ?>

@@ -91,7 +91,7 @@ class Model_Contract extends Model
             $sql .= " and agent_id = ".(int)$params['agent_id'];
         }
 
-		$sql .= ' order by date_begin desc, state_id ';
+		$sql .= ' order by ct_date desc, state_id ';
 
 		if(!empty($params['limit'])){
             return $db->query($db->limit($sql, 0, $params['limit']));
@@ -306,8 +306,16 @@ class Model_Contract extends Model
 			$sql .= " and contract_id = ".Oracle::quote($contractId);
 		}
 
-        if(!empty($params['order_date'])) {
-            $sql .= " and order_date = ".Oracle::quote($params['order_date']);
+        if (!empty($params['order_date'])) {
+		    if (!is_array($params['order_date'])) {
+                $params['order_date'] = [$params['order_date']];
+            }
+
+		    foreach ($params['order_date'] as &$date) {
+		        $date = ' order_date = '.Oracle::toDate($date);
+            }
+
+            $sql .= ' and ( '.implode(' or ', $params['order_date'] ).' ) ';
         }
 
         if(!empty($params['order_num'])) {
@@ -320,7 +328,7 @@ class Model_Contract extends Model
 
 		$sql .= " order by O_DATE desc";
 
-		if(!empty($params['pagination'])) {
+        if(!empty($params['pagination'])) {
 			return $db->pagination($sql, $params);
 		}
 
@@ -356,7 +364,7 @@ class Model_Contract extends Model
 			'p_error_code' 		=> 'out',
 		];
 
-		$res = $db->procedure('client_contract_payment', $data, true);
+		$res = $db->procedure('client_contract_payment', $data);
 
 		if($res == Oracle::CODE_SUCCESS){
 			return true;
