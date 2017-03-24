@@ -87,7 +87,11 @@ class Model_Contract extends Model
             $sql .= " and upper(contract_name) like ".Oracle::quote('%'.$params['search'].'%')." ";
         }
 
-		$sql .= ' order by date_begin desc, state_id ';
+        if(!empty($params['agent_id'])){
+            $sql .= " and agent_id = ".(int)$params['agent_id'];
+        }
+
+		$sql .= ' order by ct_date desc, state_id ';
 
 		if(!empty($params['limit'])){
             return $db->query($db->limit($sql, 0, $params['limit']));
@@ -302,8 +306,16 @@ class Model_Contract extends Model
 			$sql .= " and contract_id = ".Oracle::quote($contractId);
 		}
 
-        if(!empty($params['order_date'])) {
-            $sql .= " and order_date = ".Oracle::quote($params['order_date']);
+        if (!empty($params['order_date'])) {
+		    if (!is_array($params['order_date'])) {
+                $params['order_date'] = [$params['order_date']];
+            }
+
+		    foreach ($params['order_date'] as &$date) {
+		        $date = ' order_date = '.Oracle::toDate($date);
+            }
+
+            $sql .= ' and ( '.implode(' or ', $params['order_date'] ).' ) ';
         }
 
         if(!empty($params['order_num'])) {
@@ -316,7 +328,7 @@ class Model_Contract extends Model
 
 		$sql .= " order by O_DATE desc";
 
-		if(!empty($params['pagination'])) {
+        if(!empty($params['pagination'])) {
 			return $db->pagination($sql, $params);
 		}
 
@@ -344,7 +356,7 @@ class Model_Contract extends Model
 			'p_action' 			=> $action,
 			'p_order_guid' 		=> $action != self::PAYMENT_ACTION_ADD ? $params['guid'] : null,
 			'p_order_num' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['num'] : null,
-			'p_order_date' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['date'] : null,
+			'p_order_date' 		=> $action == self::PAYMENT_ACTION_ADD ? Oracle::quote($params['date']) : null,
 			'p_value' 			=> $action != self::PAYMENT_ACTION_DELETE ? Oracle::toFloat($params['value']) : 0,
 			'p_payment_cur' 	=> $action == self::PAYMENT_ACTION_ADD ? self::CURRENCY_RUR : null,
 			'p_comment' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['comment'] : null,
@@ -354,7 +366,7 @@ class Model_Contract extends Model
 
 		$res = $db->procedure('client_contract_payment', $data);
 
-		if(empty($res)){
+		if($res == Oracle::CODE_SUCCESS){
 			return true;
 		}
 

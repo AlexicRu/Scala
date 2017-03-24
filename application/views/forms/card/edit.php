@@ -13,7 +13,7 @@ $postfix = $card['CARD_ID'];
             <input type="text" name="card_edit_holder" class="input_big" value="<?=$card['HOLDER']?>" maxlength="200">
         </td>
     </tr>
-    <?if(!empty($card['CHANGE_LIMIT_AVAILABLE'])){?>
+    <?if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card_edit_limits')){?>
     <tr>
         <td class="gray right v_top" width="170">Ограничения по топливу:</td>
         <td>

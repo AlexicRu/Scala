@@ -864,6 +864,10 @@ table.table_form td.v_top {
 table.table_form .table_form td {
   background: #f6f6f6;
 }
+table.tbl_spacing {
+  border-spacing: 2px;
+  border-collapse: inherit;
+}
 .right {
   text-align: right;
 }

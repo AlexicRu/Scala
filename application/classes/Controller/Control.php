@@ -417,28 +417,37 @@ class Controller_Control extends Controller_Common {
         }
 
         $contractIds = [];
+        $user = User::current();
 
         foreach($rows['ROWS'] as $row){
             $contractIds[] = $row['CONTRACT_ID'];
         }
 
-        $contracts = Model_Contract::getContracts(false, ['contract_id' => array_unique($contractIds)]);
+        $contracts = Model_Contract::getContracts(false, [
+            'contract_id'   => array_unique($contractIds),
+            'agent_id'      => $user['AGENT_ID']
+        ]);
 
         foreach($rows['ROWS'] as &$row){
             /*
              * Если значение запроса не определено, тогда на место договора в таблице макета выставляем надпись "Не определен", а в значение статус - "Неизвестно".
              * Если значение определено, тогда на место договора в таблице макета выставляем найденное имя договора, запомнив его ID (нужно будет в дальнейшем)
              */
+
+            $row['OPERATION_NAME']  = $row['OPERATION'] == 50 ? 'Пополнение счета' : 'Списание со счета';
+            $row['CAN_ADD']         = 0;
+            $row['CONTRACT_NAME']   = 'Не определен';
+            $row['STATE_ID']        = 'Неизвестно';
+            $row['PAYMENT_STATUS']  = 'Неизвестно';
+
             foreach($contracts as $contract){
                 if($row['CONTRACT_ID'] == $contract['CONTRACT_ID']){
                     $row['CONTRACT_NAME']   = $contract['CONTRACT_NAME'];
                     $row['STATE_ID']        = $contract['STATE_ID'];
                     $row['PAYMENT_STATUS']  = 'Проведено';
-                    $row['OPERATION_NAME']  = $row['OPERATION'] == 50 ? 'Пополнение счета' : 'Списание со счета';
-                    $row['CAN_ADD']         = 0;
 
                     $pays = Model_Contract::getPaymentsHistory($row['CONTRACT_ID'], [
-                        'order_date'    => $row['ORDER_DATE'],
+                        'order_date'    => [$row['ORDER_DATE'], $row['PAYMENT_DATE']],
                         'order_num'     => $row['ORDER_NUM'],
                         'sumpay'        => $row['SUMPAY'] * ($row['OPERATION'] == 50 ? 1 : -1),
                     ]);
@@ -449,10 +458,6 @@ class Controller_Control extends Controller_Common {
                     }
 
                     break;
-                } else {
-                    $row['CONTRACT_NAME'] = 'Не определен';
-                    $row['STATE_ID'] = 'Неизвестно';
-                    $row['CAN_ADD'] = 0;
                 }
             }
         }

@@ -125,7 +125,7 @@ return [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
         ],
-        'clients_card_edit' => [
+        'clients_card_edit_limits' => [
             Access::ROLE_USER_SECOND,
         ],
         'clients_payment_add' => [
