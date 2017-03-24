@@ -54,7 +54,7 @@ class Listing
         $sql = "select distinct t.SERVICE_ID, t.{$description} from ".Oracle::$prefix."V_WEB_SERVICE_LIST t where t.agent_id = ".$user['AGENT_ID'];
 
         if(!empty($params['search'])){
-            $sql .= " and upper(t.long_desc) like ".mb_strtoupper('%'.Oracle::quote($params['search']).'%');
+            $sql .= " and upper(t.long_desc) like ".mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
         }
 
         if(!empty($params['ids'])){
