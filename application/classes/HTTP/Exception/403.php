@@ -10,6 +10,8 @@ class HTTP_Exception_403 extends Kohana_HTTP_Exception_403
 
         $response->body($view->render());
 
+        (new Sentry())->error403();
+
         return $response;
     }
 }

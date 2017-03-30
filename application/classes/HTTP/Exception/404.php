@@ -13,6 +13,8 @@ class HTTP_Exception_404 extends Kohana_HTTP_Exception_404
 
         $response->body($view->render());
 
+        (new Sentry())->error404();
+
         return $response;
     }
 }
