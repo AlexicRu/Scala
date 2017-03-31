@@ -22,7 +22,7 @@ class Model_Report extends Model
     public static $reportTypes = [
         self::REPORT_TYPE_DAILY         => 'kf/kf_client_total_detail',
         self::REPORT_TYPE_BALANCE_SHEET => 'kf/kf_manager_osv',
-        self::REPORT_TYPE_BILL          => 'ru/aN_invoice_client'
+        self::REPORT_TYPE_BILL          => 'Ru/aN_invoice_client'
     ];
 
     public static $reportGroups = [
@@ -77,7 +77,7 @@ class Model_Report extends Model
 
         if($params['type'] == self::REPORT_TYPE_BILL){
             $user = Auth_Oracle::instance()->get_user();
-            $type = str_replace('ru/aN', 'ru/a'.$user['AGENT_ID'], $type);
+            $type = str_replace('Ru/aN', 'Ru/a'.$user['AGENT_ID'], $type);
         }
 
         try {
