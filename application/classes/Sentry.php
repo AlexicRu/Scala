@@ -11,18 +11,19 @@ class Sentry
         $this->_client = new Raven_Client($config['sentry_dsn']);
     }
 
-    public function error404()
+    public function error404($message = '')
     {
-        $this->_client->captureMessage('403 error');
+        //todo временно
+        //$this->_client->captureMessage('404 error. '.$message);
     }
 
-    public function error403()
+    public function error403($message = '')
     {
-        $this->_client->captureMessage('404 error');
+        $this->_client->captureMessage('403 error. '.$message);
     }
 
-    public function error500()
+    public function error500($message = '')
     {
-        $this->_client->captureMessage('500 error');
+        $this->_client->captureMessage('500 error. '.$message);
     }
 }

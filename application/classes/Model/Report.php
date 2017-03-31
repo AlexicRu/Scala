@@ -83,7 +83,7 @@ class Model_Report extends Model
         try {
             $report = $client->reportService()->runReport('/reports/' . str_replace('\\', '/', $type), $format, null, null, $controls);
         } catch (Exception $e){
-            throw new HTTP_Exception_500('Отчет не сформировался. '.$e->getMessage().$e->getCode());
+            throw new HTTP_Exception_500('Отчет не сформировался. Code: '.$e->getCode().'. Message: '.$e->getMessage());
         }
 
         $name = 'report_'.str_replace('\\', '_', $params['type']).'_'.date('Y_m_d').'.'.$format;

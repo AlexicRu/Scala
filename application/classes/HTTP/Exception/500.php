@@ -13,7 +13,7 @@ class HTTP_Exception_500 extends Kohana_HTTP_Exception_500
 
         $response->body($view->render());
 
-        (new Sentry())->error500();
+        (new Sentry())->error500($view->message);
 
         return $response;
     }

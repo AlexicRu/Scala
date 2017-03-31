@@ -30,8 +30,6 @@ class Controller_Reports extends Controller_Common {
 
 	/**
 	 * генерация отчетов
-	 *
-	 * @throws HTTP_Exception_404
 	 */
 	public function action_generate()
 	{
@@ -42,10 +40,6 @@ class Controller_Reports extends Controller_Common {
         }
 
 		$report = Model_Report::generate($params);
-
-		if(empty($report)){
-			throw new HTTP_Exception_500('Отчет не сформировался');
-		}
 
 		foreach($report['headers'] as $header){
 			header($header);
