@@ -13,8 +13,7 @@ class Sentry
 
     public function error404($message = '')
     {
-        //todo временно
-        //$this->_client->captureMessage('404 error. '.$message);
+        $this->_client->captureMessage('404 error. '.$message);
     }
 
     public function error403($message = '')
