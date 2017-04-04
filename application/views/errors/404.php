@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru-RU">
 <head>
+    <?=Common::getFaviconRawData()?>
+
 	<meta charset="UTF-8">
 	<title>404 - страница не найдена</title>
 

@@ -174,6 +174,8 @@ abstract class Controller_Common extends Controller_Template {
                 '/js/common.js',
             ];
         }
+
+        $this->template->favicon = Common::getFaviconRawData();
     }
 
     private function _appendFiles()
