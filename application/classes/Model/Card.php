@@ -86,7 +86,7 @@ class Model_Card extends Model
 	{
 		$card = self::getCards($contractId, $cardId);
 
-		if(!empty($cardId)){
+		if(!empty($card)){
 			return reset($card);
 		}
 

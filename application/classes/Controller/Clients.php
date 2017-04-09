@@ -32,6 +32,7 @@ class Controller_Clients extends Controller_Common {
 	public function action_client()
 	{
 		$clientId = $this->request->param('id');
+		$contractId = $this->request->query('contract_id') ?: false;
 
 		Access::check('client', $clientId);
 
@@ -47,6 +48,7 @@ class Controller_Clients extends Controller_Common {
 
 		$this->tpl
 			->bind('client', $client)
+			->bind('contractId', $contractId)
 			->bind('contracts', $contracts)
 			->bind('popupContractAdd', $popupContractAdd)
 			->bind('popupCabinetCreate', $popupCabinetCreate)

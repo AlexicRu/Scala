@@ -323,7 +323,7 @@ class Model_Contract extends Model
         }
 
         if(!empty($params['sumpay'])) {
-            $sql .= " and sumpay = ".Oracle::quote($params['sumpay']);
+            $sql .= " and sumpay = ".Oracle::toFloat($params['sumpay']);
         }
 
 		$sql .= " order by O_DATE desc";

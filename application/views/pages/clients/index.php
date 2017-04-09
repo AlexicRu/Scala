@@ -30,7 +30,7 @@ if(!empty($clients)){
                         <?foreach($client['contracts'] as $contract){?>
                             <tr>
                                 <td><span class="label <?=Model_Contract::$statusContractClasses[$contract['CONTRACT_STATE']]?>"><?=Model_Contract::$statusContractNames[$contract['CONTRACT_STATE']]?></span></td>
-                                <td><?=$contract['CONTRACT_NAME']?></td>
+                                <td><a href="/clients/client/<?=$client['CLIENT_ID']?>?contract_id=<?=$contract['CONTRACT_ID']?>"><?=$contract['CONTRACT_NAME']?></td>
                                 <td><span class="gray">Счет:</span> <?=number_format($contract['BALANCE'], 2, ',', ' ')?> <?=Text::RUR?></td>
                                 <td><span class="gray">Карты:</span> <?=$contract['ALL_CARDS']?></td>
                             </tr>
