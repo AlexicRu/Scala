@@ -42,7 +42,7 @@
             },
             success: function(file, response)
             {
-                if(response.data.ROWS){
+                if(response.data && response.data.ROWS){
                     connect1cPayments_drawTable(response.data.ROWS);
 
                     $('.load_connect1c_payments_btn').prop('disabled', false);
