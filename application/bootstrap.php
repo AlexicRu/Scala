@@ -1,5 +1,8 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+require_once __DIR__.'/../includes/Raven/Autoloader.php';
+Raven_Autoloader::register();
+
 // -- Environment setup --------------------------------------------------------
 
 // Load the core Kohana class
@@ -82,9 +85,12 @@ if (isset($_SERVER['SERVER_PROTOCOL']))
  * Note: If you supply an invalid environment name, a PHP warning will be thrown
  * saying "Couldn't find constant Kohana::<INVALID_ENV_NAME>"
  */
-if (isset($_SERVER['KOHANA_ENV']))
-{
-	Kohana::$environment = constant('Kohana::'.strtoupper($_SERVER['KOHANA_ENV']));
+
+if (strpos($_SERVER['HTTP_HOST'], 'dev.') !== 0) {
+    // We are live!
+    Kohana::$environment = Kohana::PRODUCTION;
+} elseif (isset($_SERVER['KOHANA_ENV'])) {
+    Kohana::$environment = constant('Kohana::'.strtoupper($_SERVER['KOHANA_ENV']));
 }
 
 /**
@@ -102,9 +108,12 @@ if (isset($_SERVER['KOHANA_ENV']))
  * - boolean  caching     enable or disable internal caching                 FALSE
  * - boolean  expose      set the X-Powered-By header                        FALSE
  */
+
+
 Kohana::init(array(
-	'base_url'   => '/',
-	'index_file' => false
+	'base_url'      => '/',
+	'index_file'    => false,
+    'errors'        => false,
 ));
 
 /**
@@ -116,6 +125,8 @@ Kohana::$log->attach(new Log_File(APPPATH.'logs'));
  * Attach a file reader to config. Multiple readers are supported.
  */
 Kohana::$config->attach(new Config_File);
+
+$config = Kohana::$config->load('config');
 
 /**
  * Enable modules. Modules are referenced by a relative or absolute path.
@@ -139,7 +150,11 @@ Kohana::modules(array(
  * If you have not defined a cookie salt in your Cookie class then
  * uncomment the line below and define a preferrably long salt.
  */
-Cookie::$salt = 'edrge5rg1e5rg4e98rg4sd648er4gerg';
+Cookie::$salt = $config['cookie_salt'];
+
+//логирование ошибок
+$sentryClient = new Raven_Client($config['sentry_dsn']);
+$sentryClient->install();
 
 /**
  * Set the routes. Each route must have a minimum of a name, a URI and a set of

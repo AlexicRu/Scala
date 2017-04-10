@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru-RU">
 <head>
+
+    <?=$favicon?>
+
 	<meta charset="UTF-8">
 
 	<title><?=$title?></title>

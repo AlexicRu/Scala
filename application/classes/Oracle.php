@@ -32,21 +32,25 @@ class Oracle{
 		return self::$_instance;
 	}
 
-	public function query($sql, $type='select'){
-		if($type == 'select'){
-			$ret = array();
-			$res = oci_parse(self::$_conn, $sql);
-			
-			oci_execute($res);
-			while ($row = oci_fetch_array($res, OCI_ASSOC+OCI_RETURN_NULLS)) {
-				$ret[] = $row;
-			}
-			return $ret;
-		}else{
-			$res = oci_parse(self::$_conn, $sql);
-			oci_execute($res);
-			return 1;
-		}
+	public function query($sql, $type='select')
+    {
+        try {
+            if ($type == 'select') {
+                $ret = array();
+                $res = oci_parse(self::$_conn, $sql);
+
+                oci_execute($res);
+                while ($row = oci_fetch_array($res, OCI_ASSOC + OCI_RETURN_NULLS)) {
+                    $ret[] = $row;
+                }
+                return $ret;
+            } else {
+                $res = oci_parse(self::$_conn, $sql);
+                return oci_execute($res);
+            }
+        } catch (Exception $e) {
+            return false;
+        }
 	}
 
 	/**

@@ -86,7 +86,7 @@ class Model_Card extends Model
 	{
 		$card = self::getCards($contractId, $cardId);
 
-		if(!empty($cardId)){
+		if(!empty($card)){
 			return reset($card);
 		}
 
@@ -191,7 +191,7 @@ class Model_Card extends Model
 
 		if($action != self::CARD_ACTION_ADD && Access::allow('clients_card_edit_limits')) {
             //редактируем лимитов если таковые пришли в запросе
-            self::editCardLimits($params['card_id'], empty($params['limits']) ? false : $params['limits']);
+            self::editCardLimits($params['card_id'], empty($params['limits']) ? [] : $params['limits']);
         }
 
 		return true;
@@ -293,7 +293,7 @@ class Model_Card extends Model
 	 * @param $params
 	 * @return bool
 	 */
-	public static function editCardLimits($cardId, $limits)
+	public static function editCardLimits($cardId, $limits = [])
 	{
 		if(empty($cardId)){
 			return false;

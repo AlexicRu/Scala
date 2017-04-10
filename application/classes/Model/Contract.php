@@ -323,7 +323,7 @@ class Model_Contract extends Model
         }
 
         if(!empty($params['sumpay'])) {
-            $sql .= " and sumpay = ".Oracle::quote($params['sumpay']);
+            $sql .= " and sumpay = ".Oracle::toFloat($params['sumpay']);
         }
 
 		$sql .= " order by O_DATE desc";
@@ -441,7 +441,7 @@ class Model_Contract extends Model
 
         $data = [
             'p_contract_id' 	=> $contractId,
-            'p_invoice_sum' 	=> str_replace(',', '.', $sum),
+            'p_invoice_sum' 	=> str_replace([',', ' '], ['.', ''], $sum),
             'p_manager_id' 	    => $userWho['MANAGER_ID'],
             'p_invoice_num' 	=> 'out',
         ];
