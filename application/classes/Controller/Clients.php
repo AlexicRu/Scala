@@ -303,20 +303,21 @@ class Controller_Clients extends Controller_Common {
 	{
         $payments = [$this->request->post('params')];
 		$multi = $this->request->post('multi') ?: 0;
+        $message = '';
 
 		if(!empty($multi)){
             $payments = $this->request->post('payments');
         }
 
         foreach($payments as $payment){
-            $result = Model_Contract::payment(Model_Contract::PAYMENT_ACTION_ADD, $payment);
+            list($result, $message) = Model_Contract::payment(Model_Contract::PAYMENT_ACTION_ADD, $payment);
 
             if(empty($result)){
-                $this->jsonResult(false);
+                $this->jsonResult(false, $message);
             }
         }
 
-		$this->jsonResult(true, $result);
+		$this->jsonResult(true, $message);
 	}
 
 	/**
@@ -326,13 +327,13 @@ class Controller_Clients extends Controller_Common {
 	{
 		$params = $this->request->post('params');
 
-		$result = Model_Contract::payment(Model_Contract::PAYMENT_ACTION_DELETE, $params);
+		list($result, $message) = Model_Contract::payment(Model_Contract::PAYMENT_ACTION_DELETE, $params);
 
 		if(empty($result)){
 			$this->jsonResult(false);
 		}
 
-		$this->jsonResult(true, $result);
+		$this->jsonResult(true);
 	}
 
 	/**

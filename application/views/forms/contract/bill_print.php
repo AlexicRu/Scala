@@ -17,6 +17,11 @@
             tpl.append('<b class="line_inner_100">' + data[i].NUM_REPORT + '</b>');
             tpl.append('<nobr class="line_inner_100">' + number_format(data[i].INVOICE_SUM, 2, ',', ' ') + ' <?=Text::RUR?></nobr>');
             tpl.append('<a href="/reports/generate?type=<?=Model_Report::REPORT_TYPE_BILL?>&format=pdf&contract_id=' + data[i].CONTRACT_ID + '&invoice_number=' + data[i].INVOICE_NUMBER + '" class="btn" target="_blank"><i class="icon-download"></i> Скачать</a>');
+
+            if (data[i].PAY_COMMENT) {
+                tpl.append('<div class="full_comment">Комментарий: '+ data[i].PAY_COMMENT +'</div>');
+            }
+
             block.append(tpl);
         }
     }

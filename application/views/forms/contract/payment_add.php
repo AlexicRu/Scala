@@ -60,10 +60,10 @@
 
             $.post('/clients/contract_payment_add', {params:params}, function(data){
                 if(data.success){
-                    message(1, 'Платеж успешно добавлен');
+                    message(1, data.data);
                     loadContract('account');
                 }else{
-                    message(0, 'Ошибка добавления платежа');
+                    message(0, data.data);
                 }
             });
         });
