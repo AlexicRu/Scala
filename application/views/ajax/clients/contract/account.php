@@ -74,6 +74,11 @@
                     tpl.find('b.line_inner_150').text('№' + data[i].ORDER_NUM);
                     tpl.find('span.gray:last').text('Сумма');
                     tpl.find('b:last').html(number_format(data[i].SUMPAY, 2, ',', ' ') + ' <?=Text::RUR?>');
+
+                    if (data[i].PAY_COMMENT) {
+                        tpl.append('<div class="full_comment"><i>Комментарий:</i> '+ data[i].PAY_COMMENT +'</div>');
+                    }
+
                     block.append(tpl);
                 }
             }

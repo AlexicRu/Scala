@@ -308,4 +308,31 @@ class Controller_Help extends Controller_Common
 
         $this->jsonResult(true, $return);
     }
+
+    /**
+     * получаем список доступных тарифов
+     */
+    public function action_list_contract_tariffs()
+    {
+        $contractTariffs = Model_Contract::getTariffs([
+            'tarif_name' => $this->_search,
+            'ids'        => $this->_ids,
+            'limit'      => 10
+        ]);
+
+        if (empty($contractTariffs)) {
+            $this->jsonResult(false);
+        }
+
+        $return = [];
+
+        foreach($contractTariffs as $item){
+            $return[] = [
+                'name' => $item['TARIF_NAME'],
+                'value' => $item['ID'],
+            ];
+        }
+
+        $this->jsonResult(true, $return);
+    }
 }

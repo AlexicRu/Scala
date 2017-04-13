@@ -232,15 +232,29 @@ class Model_Contract extends Model
 	/**
 	 * Получаем список тарифов
 	 */
-	public static function getTariffs()
+	public static function getTariffs($params = [])
 	{
 		$db = Oracle::init();
 
 		$user = Auth::instance()->get_user();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_LIST where agent_id = ".Oracle::quote($user['AGENT_ID'])." order by tarif_name";
+        $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_LIST where agent_id = ".Oracle::quote($user['AGENT_ID']);
 
-		return $db->query($sql);
+        if (!empty($params['tarif_name'])) {
+            $sql .= " and upper(tarif_name) like ".mb_strtoupper(Oracle::quote('%'.$params['tarif_name'].'%'));
+        }
+
+        if (!empty($params['ids'])) {
+            $sql .= " and id in (".implode(',', array_map('intval', $params['ids'])).")";
+        }
+
+        $sql .= " order by tarif_name";
+
+		if (!empty($params['limit'])) {
+            return $db->query($db->limit($sql, 0, $params['limit']));
+        }
+
+        return $db->query($sql);
 	}
 
 	/**

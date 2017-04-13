@@ -163,11 +163,7 @@
                     <td>
                         <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_ONLINE']?></span>
                         <span toggle_block="block2" class="dn">
-                            <select name="TARIF_ONLINE">
-                                <?foreach($contractTariffs as $tariff){?>
-                                    <option value="<?=$tariff['ID']?>" <?if($tariff['ID'] == $contractSettings['TARIF_ONLINE']){echo 'selected';}?>><?=$tariff['TARIF_NAME']?></option>
-                                <?}?>
-                            </select>
+                            <?=Common::buildFormField(false, 'contract_tariffs', 'TARIF_ONLINE', $contractSettings['TARIF_ONLINE'])?>
                         </span>
                     </td>
                 </tr>
@@ -176,11 +172,7 @@
                     <td>
                         <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_OFFLINE']?></span>
                         <span toggle_block="block2" class="dn">
-                            <select name="TARIF_OFFLINE">
-                                <?foreach($contractTariffs as $tariff){?>
-                                    <option value="<?=$tariff['ID']?>" <?if($tariff['ID'] == $contractSettings['TARIF_OFFLINE']){echo 'selected';}?>><?=$tariff['TARIF_NAME']?></option>
-                                <?}?>
-                            </select>
+                            <?=Common::buildFormField(false, 'contract_tariffs', 'TARIF_OFFLINE', $contractSettings['TARIF_OFFLINE'])?>
                         </span>
                     </td>
                 </tr>
@@ -224,8 +216,8 @@
                         STATE_ID:       $("[name=STATE_ID]").val()
                     },
                     settings:{
-                        TARIF_ONLINE:           $("[name=TARIF_ONLINE]").val(),
-                        TARIF_OFFLINE:          $("[name=TARIF_OFFLINE]").val(),
+                        TARIF_ONLINE:           getComboboxValue($('[name=TARIF_ONLINE].combobox')),
+                        TARIF_OFFLINE:          getComboboxValue($('[name=TARIF_OFFLINE].combobox')),
                         AUTOBLOCK_LIMIT:        $("[name=AUTOBLOCK_LIMIT]").val(),
                         PENALTIES:              $("[name=PENALTIES]").val(),
                         OVERDRAFT:              $("[name=OVERDRAFT]").val(),

@@ -10,7 +10,9 @@
 
 <script>
     $(function(){
-        var params = {};
+        var params = {
+            show_all_btn:true
+        };
 
         if($('[name=group_id_<?=$postfix?>]').length){
             params.group_id = $('[name=group_id_<?=$postfix?>]').val();
@@ -19,7 +21,7 @@
         paginationAjax('/control/load_dots/', 'ajax_block_dots_list_<?=$postfix?>', renderAjaxPaginationDotsList<?=$postfix?>, params);
     });
 
-    function renderAjaxPaginationDotsList<?=$postfix?>(data, block, params)
+    function renderFilterDotsList<?=$postfix?>(block, params)
     {
         if(block.find('> table').size() == 0){
             block.append('<table class="table table_small table_fullscreen check_all_block"></table>');
@@ -58,6 +60,24 @@
         if(params.PROJECT_NAME){
             block.find('[name=dots_filter_project_name]').val(params.PROJECT_NAME);
         }
+    }
+
+    function renderAjaxPaginationDotsListError<?=$postfix?>(block, params)
+    {
+        renderFilterDotsList<?=$postfix?>(block, params);
+
+        var subBlock = block.find('tbody');
+
+        var tpl = $('<tr>' +
+            '<td colspan="8" class="center"><i>Данные отсутствуют</i></td>' +
+        '</tr>');
+
+        subBlock.append(tpl);
+    }
+
+    function renderAjaxPaginationDotsList<?=$postfix?>(data, block, params)
+    {
+        renderFilterDotsList<?=$postfix?>(block, params);
 
         var subBlock = block.find('tbody');
 
@@ -104,7 +124,8 @@
             ID_TO:      $('[name=dots_filter_id_to]', block).val(),
             POS_NAME:   $('[name=dots_filter_pos_name]', block).val(),
             OWNER:      $('[name=dots_filter_owner]', block).val(),
-            POS_ADDRESS: $('[name=dots_filter_address]', block).val()
+            POS_ADDRESS: $('[name=dots_filter_address]', block).val(),
+            onError: renderAjaxPaginationDotsListError<?=$postfix?>
         };
 
         if($('[name=group_id_<?=$postfix?>]').length){
