@@ -119,13 +119,14 @@
         var block = btn.closest('.ajax_block_dots_list_<?=$postfix?>_out');
 
         var params = {
-            PROJECT_NAME:     $('[name=dots_filter_project_name]', block).val(),
-            ID_EMITENT: $('[name=dots_filter_id_emi]', block).val(),
-            ID_TO:      $('[name=dots_filter_id_to]', block).val(),
-            POS_NAME:   $('[name=dots_filter_pos_name]', block).val(),
-            OWNER:      $('[name=dots_filter_owner]', block).val(),
-            POS_ADDRESS: $('[name=dots_filter_address]', block).val(),
-            onError: renderAjaxPaginationDotsListError<?=$postfix?>
+            PROJECT_NAME:   $('[name=dots_filter_project_name]', block).val(),
+            ID_EMITENT:     $('[name=dots_filter_id_emi]', block).val(),
+            ID_TO:          $('[name=dots_filter_id_to]', block).val(),
+            POS_NAME:       $('[name=dots_filter_pos_name]', block).val(),
+            OWNER:          $('[name=dots_filter_owner]', block).val(),
+            POS_ADDRESS:    $('[name=dots_filter_address]', block).val(),
+            show_all_btn:   true,
+            onError:        renderAjaxPaginationDotsListError<?=$postfix?>
         };
 
         if($('[name=group_id_<?=$postfix?>]').length){

@@ -134,7 +134,7 @@ function paginationAjax(url, name, callback, params)
 
     more.appendTo(btnBlock);
 
-    if (params.show_all_btn) {
+    if (params && params.show_all_btn) {
         all.appendTo(btnBlock);
     }
 
