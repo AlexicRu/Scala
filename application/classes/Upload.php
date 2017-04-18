@@ -41,4 +41,24 @@ class Upload extends Kohana_Upload
 
         return false;
     }
+
+    /**
+     * убираем метку BOM и читаем файл
+     *
+     * @param $text
+     * @return mixed
+     */
+    public static function readFile($file)
+    {
+        $text = file_get_contents($file);
+
+        if (empty($text)) {
+            return '';
+        }
+
+        $bom = pack('H*','EFBBBF');
+        $text = preg_replace("/^$bom/", '', $text);
+
+        return $text;
+    }
 }

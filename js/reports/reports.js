@@ -45,7 +45,7 @@ function generateReport(btn)
         if(field.attr('type') == 'checkbox'){
             value = field.is(':checked') ? 1 : 0;
         }else if(field.hasClass('combobox_multi')){
-            //todo
+            value = getComboboxMultiValue(field);
         }else if(field.hasClass('combobox')){
             var dependField = field.attr('depend');
 

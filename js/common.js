@@ -128,14 +128,26 @@ function paginationAjax(url, name, callback, params)
 {
     var outer = $('.' + name + '_out');
     var block = $('<div class="' + name + '" />');
-    var more = $('<div class="ajax_block_more"><button class="btn btn_small">Загрузить еще...</button></div>');
+    var btnBlock = $('<div class="ajax_block_more" />');
+    var more = $('<button class="btn btn_small">Загрузить еще...</button>');
+    var all = $('<button class="btn btn_small">Загрузить все</button>');
+
+    more.appendTo(btnBlock);
+
+    if (params && params.show_all_btn) {
+        all.appendTo(btnBlock);
+    }
 
     outer.append(block);
-    outer.append(more);
+    outer.append(btnBlock);
     outer.data('offset', 0);
 
     _paginationAjaxLoad(url, outer, block, callback, params);
     more.on('click', function(){
+        _paginationAjaxLoad(url, outer, block, callback, params);
+    });
+    all.on('click', function(){
+        params.show_all = true;
         _paginationAjaxLoad(url, outer, block, callback, params);
     });
 }
@@ -145,20 +157,33 @@ function _paginationAjaxLoad(url, outer, block, callback, params)
     if(!params){
         params = {};
     }
-
     outer.find('.ajax_block_more').fadeOut();
-
     params.offset = outer.data('offset');
+
+    var onError = false;
+    if (params.onError != undefined && typeof params.onError === 'function') {
+        onError = params.onError;
+        params.onError = false;
+    }
 
     $.post(url, params, function(data){
         if(data.success){
             callback(data.data.items, block, params);
             if(data.data.more){
-                outer.find('.ajax_block_more').fadeIn();
+                //ALL
+                if (params.show_all) {
+                    _paginationAjaxLoad(url, outer, block, callback, params);
+                } else {
+                    outer.find('.ajax_block_more').fadeIn();
+                }
             }
             outer.data('offset', parseInt(outer.data('offset')) + data.data.items.length);
         }else{
-            outer.find('.ajax_block_more').fadeIn().html('<span class="gray">Данные отсутствуют</span>');
+            if (onError) {
+                onError(block, params);
+            } else {
+                outer.find('.ajax_block_more').fadeIn().html('<span class="gray">Данные отсутствуют</span>');
+            }
         }
         block.closest('.block_loading').removeClass('block_loading');
     });

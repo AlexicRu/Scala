@@ -232,15 +232,29 @@ class Model_Contract extends Model
 	/**
 	 * Получаем список тарифов
 	 */
-	public static function getTariffs()
+	public static function getTariffs($params = [])
 	{
 		$db = Oracle::init();
 
 		$user = Auth::instance()->get_user();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_LIST where agent_id = ".Oracle::quote($user['AGENT_ID'])." order by tarif_name";
+        $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_LIST where agent_id = ".Oracle::quote($user['AGENT_ID']);
 
-		return $db->query($sql);
+        if (!empty($params['tarif_name'])) {
+            $sql .= " and upper(tarif_name) like ".mb_strtoupper(Oracle::quote('%'.$params['tarif_name'].'%'));
+        }
+
+        if (!empty($params['ids'])) {
+            $sql .= " and id in (".implode(',', array_map('intval', $params['ids'])).")";
+        }
+
+        $sql .= " order by tarif_name";
+
+		if (!empty($params['limit'])) {
+            return $db->query($db->limit($sql, 0, $params['limit']));
+        }
+
+        return $db->query($sql);
 	}
 
 	/**
@@ -344,7 +358,7 @@ class Model_Contract extends Model
 	public static function payment($action, $params)
 	{
 		if(!in_array($action, array_keys(self::$paymentsActions)) || empty($params['contract_id'])){
-			return false;
+			return [false, 'Некорректные входные данные'];
 		}
 
 		$db = Oracle::init();
@@ -366,11 +380,20 @@ class Model_Contract extends Model
 
 		$res = $db->procedure('client_contract_payment', $data);
 
+		//текст только по добавлению, при удалении он не важен
 		if($res == Oracle::CODE_SUCCESS){
-			return true;
+			return [true, 'Платеж успешно добавлен'];
 		}
 
-		return false;
+		$error = 'Ошибка добавления платежа';
+
+		switch($res){
+            case Oracle::CODE_ERROR_EXISTS:
+                $error = 'Платеж уже существует';
+                break;
+        }
+
+		return [false, $error];
 	}
 
 	/**

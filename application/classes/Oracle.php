@@ -2,8 +2,9 @@
 
 class Oracle{
 
-	const CODE_SUCCESS = 0;
-	const CODE_ERROR = 1;
+	const CODE_SUCCESS      = 0;
+	const CODE_ERROR        = 1;
+	const CODE_ERROR_EXISTS = 2;
 
 	public static $prefix = 's_dev.';
 	private static $_conn = null;

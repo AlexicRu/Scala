@@ -10,7 +10,9 @@
 
 <script>
     $(function(){
-        var params = {};
+        var params = {
+            show_all_btn:true
+        };
 
         if($('[name=group_id_<?=$postfix?>]').length){
             params.group_id = $('[name=group_id_<?=$postfix?>]').val();
@@ -19,7 +21,7 @@
         paginationAjax('/control/load_cards/', 'ajax_block_group_cards_list_<?=$postfix?>', renderAjaxPaginationGroupCardsList<?=$postfix?>, params);
     });
 
-    function renderAjaxPaginationGroupCardsList<?=$postfix?>(data, block, params)
+    function renderFilterGroupCardsList<?=$postfix?>(block, params)
     {
         if(block.find('> table').size() == 0){
             block.append('<table class="table table_small table_fullscreen check_all_block"></table>');
@@ -29,10 +31,11 @@
                 '<th class="td_check"><input type="checkbox" onchange="checkAllRows($(this), \'card_id\')" style="display: none;"></th>' +
                 '<th><input type="text" name="group_card_filter_card_id" placeholder="CARD ID" class="input_small"></th>' +
                 '<th><input type="text" name="group_card_filter_holder" placeholder="Владелец"></th>' +
-                '<th style="width:400px;"><input type="text" name="group_card_filter_description_ru" placeholder="Описание"></th>' +
-                '<th class="td_edit">' +
+                '<th style="width:400px;">' +
+                    '<input type="text" name="group_card_filter_description_ru" placeholder="Описание">' +
                     '<button class="btn btn_small btn_icon fr" onclick="filterGroupCards<?=$postfix?>($(this))"><i class="icon-find"></i></button>'+
                 '</th>' +
+                '<th class="td_edit" />' +
             '</tr>');
             renderCheckbox(block.find('.td_check [type=checkbox]'));
         }
@@ -46,6 +49,24 @@
         if(params.DESCRIPTION_RU){
             block.find('[name=group_card_filter_description_ru]').val(params.DESCRIPTION_RU);
         }
+    }
+
+    function renderAjaxPaginationGroupCardsListError<?=$postfix?>(block, params)
+    {
+        renderFilterGroupCardsList<?=$postfix?>(block, params);
+
+        var subBlock = block.find('tbody');
+
+        var tpl = $('<tr>' +
+            '<td colspan="4" class="center"><i>Данные отсутствуют</i></td>' +
+            '</tr>');
+
+        subBlock.append(tpl);
+    }
+
+    function renderAjaxPaginationGroupCardsList<?=$postfix?>(data, block, params)
+    {
+        renderFilterGroupCardsList<?=$postfix?>(block, params);
 
         var subBlock = block.find('tbody');
 
@@ -81,9 +102,10 @@
         var block = btn.closest('.ajax_block_group_cards_list_<?=$postfix?>_out');
 
         var params = {
-            CARD_ID:            $('[name=group_card_filter_project_name]', block).val(),
-            HOLDER:             $('[name=group_card_filter_id_emi]', block).val(),
-            DESCRIPTION_RU:     $('[name=group_card_filter_id_to]', block).val(),
+            CARD_ID:            $('[name=group_card_filter_card_id]', block).val(),
+            HOLDER:             $('[name=group_card_filter_holder]', block).val(),
+            DESCRIPTION_RU:     $('[name=group_card_filter_description_ru]', block).val(),
+            onError: renderAjaxPaginationGroupCardsListError<?=$postfix?>
         };
 
         if($('[name=group_id_<?=$postfix?>]').length){

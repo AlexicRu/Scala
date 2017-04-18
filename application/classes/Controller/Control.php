@@ -410,7 +410,7 @@ class Controller_Control extends Controller_Common {
             $this->jsonResult(false);
         }
 
-        $rows = json_decode(file_get_contents($_SERVER["DOCUMENT_ROOT"].$file), true);
+        $rows = json_decode(Upload::readFile($_SERVER["DOCUMENT_ROOT"].$file), true);
 
         if(empty($rows['ROWS'])){
             $this->jsonResult(false);

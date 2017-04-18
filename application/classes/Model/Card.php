@@ -552,15 +552,15 @@ class Model_Card extends Model
             ";
 
         if(!empty($params['CARD_ID'])){
-            $sql .= ' and t.CARD_ID = '.Oracle::quote($params['CARD_ID']);
+            $sql .= ' and vc.CARD_ID like '.Oracle::quote('%'.$params['CARD_ID'].'%');
         }
 
         if(!empty($params['HOLDER'])){
-            $sql .= ' and t.HOLDER like '.Oracle::quote('%'.$params['HOLDER'].'%');
+            $sql .= ' and vc.HOLDER like '.Oracle::quote('%'.$params['HOLDER'].'%');
         }
 
         if(!empty($params['DESCRIPTION_RU'])){
-            $sql .= ' and t.DESCRIPTION_RU like '.Oracle::quote('%'.$params['DESCRIPTION_RU'].'%');
+            $sql .= ' and vc.DESCRIPTION_RU like '.Oracle::quote('%'.$params['DESCRIPTION_RU'].'%');
         }
 
         return $db->pagination($sql, $params);

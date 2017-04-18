@@ -440,6 +440,16 @@ function getComboboxValue(combo)
     return hiddenValue.val();
 }
 
+function getComboboxMultiValue(combo)
+{
+    var wrapper = combo.closest('.combobox_multi_wrapper');
+    var hiddenValue = wrapper.find('[name=combobox_multi_value]');
+
+    var hiddenArray = hiddenValue.val().split(',');
+
+    return hiddenArray;
+}
+
 function setComboboxMultiValue(combo, value)
 {
     var wrapper = combo.closest('.combobox_multi_wrapper');

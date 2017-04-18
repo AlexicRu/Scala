@@ -141,12 +141,8 @@ class Listing
      * @param ids
      * @return array|bool|int
      */
-    public static function getSuppliers($search, $ids = [])
+    public static function getSuppliers($search = '', $ids = [])
     {
-        if(empty($search) && empty($ids)){
-            return false;
-        }
-
         $db = Oracle::init();
 
         $user = Auth::instance()->get_user();
