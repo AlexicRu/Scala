@@ -258,7 +258,9 @@ class Model_Report extends Model
 
                             if (is_array($additional['value'])) {
                                 $additional['value'] = array_filter($additional['value']);
-                                array_unshift($additional['value'], -1); //привет джасперу
+                                if(!empty($additional['value'])){
+                                    array_unshift($additional['value'], -1); //привет джасперу
+                                }
                             }
 
                             $value = $additional['value'];
