@@ -41,6 +41,7 @@ class ReportService
                                 $interactive = true, $onePagePerSheet = false, $freshData = true, $saveDataSnapshot = false, $transformerKey = null)
     {
 		$url = $this->restUrl2 . '/reports' . $uri . '.' . $format;
+
         if (empty($inputControls))
             $url .= '?' . Util::query_suffix(compact("pages", "attachmentsPrefix", "interactive", "onePagePerSheet", "freshData", "saveDataSnapshot", "transformerKey"));
         else

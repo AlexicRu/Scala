@@ -29,6 +29,7 @@ return [
         ],
         'control_index' => [
             Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
             'u_7',
         ],
 
@@ -69,7 +70,7 @@ return [
         'control_connect_1c' => [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
-            Access::ROLE_MANAGER,
+
         ],
         'control_cards_groups' => [
             Access::ROLE_ADMIN,
@@ -124,6 +125,7 @@ return [
         'clients_card_add' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
+            Access::ROLE_MANAGER_SALE,
         ],
         'clients_card_edit_limits' => [
             Access::ROLE_USER_SECOND,
@@ -140,6 +142,7 @@ return [
         ],
         'reports_index' => [
             Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
         ],
         // custom
         'view_tariffs' => [
