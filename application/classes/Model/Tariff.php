@@ -44,7 +44,7 @@ class Model_Tariff extends Model
             $params['agent_id'] = $user['AGENT_ID'];
         }
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_LIST t where t.tarif_id != 0";
+        $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_LIST t where t.tarif_id not in (0,-1)";
 
         if(!empty($params['agent_id'])){
             $sql .= " and t.agent_id = ".$params['agent_id'];
