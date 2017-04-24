@@ -82,9 +82,9 @@ class Model_Dot extends Model
 
         $db = Oracle::init();
 
+        $user = Auth::instance()->get_user();
         $sql = "
-            select * from ".Oracle::$prefix."V_WEB_POS_GROUP_ITEMS t where t.group_id = ".$params['group_id']." order by id_to";
-        ;
+            select * from ".Oracle::$prefix."V_WEB_POS_GROUP_ITEMS t where t.group_id = ".$params['group_id']." and t.agent_id = ".$user['AGENT_ID']." order by id_to";
 
         return $db->pagination($sql, $params);
     }
