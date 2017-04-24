@@ -229,6 +229,9 @@ class Oracle{
 			$params['limit'] = 10;
 		}
 
+		$params['offset'] = (int)$params['offset'];
+		$params['limit'] = (int)$params['limit'];
+
 		$from = $params['offset'];
 		$to = $params['limit']+$params['offset'];
 

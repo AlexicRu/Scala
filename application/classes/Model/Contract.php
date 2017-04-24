@@ -123,8 +123,26 @@ class Model_Contract extends Model
 	 */
 	public static function getContractSettings($contractId)
 	{
+	    $emptyContractSettings = [
+            'CONTRACT_ID'           => false,
+            'TARIF_ONLINE'          => false,
+            'TARIF_NAME_ONLINE'     => false,
+            'TARIF_OFFLINE'         => false,
+            'TARIF_NAME_OFFLINE'    => false,
+            'AUTOBLOCK_FLAG'        => false,
+            'AUTOBLOCK_LIMIT'       => false,
+            'PENALTIES_FLAG'        => false,
+            'PENALTIES'             => false,
+            'OVERDRAFT'             => false,
+            'INVOICE_CURRENCY'      => false,
+            'CURRENCY_NAME_RU'      => false,
+            'INVOICE_PERIOD_TYPE'   => false,
+            'INVOICE_PERIOD_VALUE'  => false,
+            'scheme'                => false
+        ];
+
 		if(empty($contractId)){
-			return [];
+			return $emptyContractSettings;
 		}
 
 		$db = Oracle::init();

@@ -2,21 +2,25 @@
 <html lang="ru-RU">
 <head>
 
-    <?=$favicon?>
+    <?=(!empty($favicon) ? $favicon : '')?>
 
 	<meta charset="UTF-8">
 
-	<title><?=$title?></title>
+	<title><?=(!empty($title) ? $title : '')?></title>
 
-	<?foreach($styles as $style){?>
-		<link href="<?=$style?>" rel="stylesheet">
-	<?}?>
-	<?foreach($scripts as $script){?>
-		<script src="<?=$script?>"></script>
-	<?}?>
+    <?if (!empty($styles)) {
+    	foreach($styles as $style){?>
+		    <link href="<?=$style?>" rel="stylesheet">
+	    <?}
+    }?>
+	<?if (!empty($scripts)) {
+        foreach($scripts as $script){?>
+            <script src="<?=$script?>"></script>
+        <?}
+    }?>
 </head>
 
-<body class="custom_view_<?=$customView?>">
+<body class="custom_view_<?=(!empty($customView) ? $customView : 'glopro')?>">
 	<header>
 		<div class="logo">
 			<a href="/"></a>
