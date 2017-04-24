@@ -7,7 +7,8 @@ return array(
         'dots'          => 'Точки обслуживания',
         'tariffs'       => 'Тарифы',
         'connect_1c'    => 'Связь с 1С',
-        'cards_groups'   => 'Группы карт',
+        'cards_groups'  => 'Группы карт',
+        'suppliers'     => 'Поставщики',
     ]],
     'administration'    => ['title' => 'Сервис', 'icon' => 'icon-set', 'children' => [
         'transactions'  => 'Транзакции'

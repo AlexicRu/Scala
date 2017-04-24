@@ -261,6 +261,17 @@ class Oracle{
 	}
 
     /**
+     * возвращает инт
+     *
+     * @param $number
+     * @return int
+     */
+	public static function toInt($number)
+    {
+        return (int)$number;
+    }
+
+    /**
      * переводим строку в дату
      *
      * @param $string

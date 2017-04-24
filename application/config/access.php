@@ -79,6 +79,9 @@ return [
         'administration_index' => [
             Access::ROLE_ADMIN,
         ],
+        'control_suppliers' => [
+            Access::ROLE_ROOT,
+        ],
         // custom
         'view_contract_balances' => [
             Access::ROLE_ROOT
