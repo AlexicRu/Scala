@@ -89,12 +89,16 @@ class Model_News extends Model
 
         $db = Oracle::init();
 
+        $path = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
+
+        $image = (!empty($params['image']) && is_file($path.$params['image'])) ? $params['image'] : '';
+
         $data = [
             'p_type_id' 	    => 0,
             'p_announce' 	    => 'анонс',
             'p_title' 		    => $params['title'],
             'p_content' 	    => $params['text'],
-            'p_picture' 	    => empty($params['image']) ? '' : $params['image'],
+            'p_picture' 	    => $image,
             'p_is_published' 	=> 1,
             'p_error_code' 	    => 'out',
         ];
