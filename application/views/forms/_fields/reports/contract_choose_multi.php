@@ -1,4 +1,4 @@
-<?$dependFieldName = 'client_contract_choose_single';?>
+<?$dependFieldName = 'client_contract_choose_multi';?>
 
 <span class="form_field" field="<?=$type?>">
     <input type="text" name="<?=$name?>" class="combobox input_wide" url="/help/list_client" autocomplete="off" depend="<?=$dependFieldName?>">
