@@ -180,7 +180,7 @@ function renderSwitch(check)
 }
 
 var ajaxComboBoxMulti;
-function renderComboBoxMulti(combo)
+function renderComboBoxMulti(combo, params)
 {
     if(combo.data('rendered')){
         return false;
@@ -211,6 +211,11 @@ function renderComboBoxMulti(combo)
     var preLoad = true;
 
     combo.on('keyup', function () {
+        if(params && params['depend']){
+            var dependCombo = $('[name=' + params['depend'] + ']');
+            setComboboxValue(dependCombo, false);
+        }
+
         var t = $(this);
         var val = t.val();
 
@@ -226,7 +231,19 @@ function renderComboBoxMulti(combo)
             ajaxComboBoxMulti.abort();
         }
 
-        ajaxComboBoxMulti = $.post(url, { search:val }, function(data){
+        var postParams = { search:val };
+
+        if(params && params['depend_on']){
+            var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]'));
+
+            if(value == ''){
+                return;
+            }
+
+            postParams[params['depend_on']['name']] = value;
+        }
+
+        ajaxComboBoxMulti = $.post(url, postParams, function(data){
             if(data.success){
                 for(var i in data.data){
                     var tpl = $('<div class="combobox_multi_result_item" onclick="selectComboBoxMultiResult($(this))"></div>');
