@@ -619,49 +619,4 @@ class Controller_Control extends Controller_Common {
 
         $this->jsonResult(true);
     }
-
-    /**
-     * страница поставщиков
-     */
-    public function action_suppliers()
-    {
-        $this->title[] = 'Поставщики';
-    }
-
-    /**
-     * аяксово грузим поставщиков
-     */
-    public function action_suppliers_list()
-    {
-        $params = [
-            'offset' 		    => $this->request->post('offset'),
-            'pagination'        => true
-        ];
-
-        list($dots, $more) = Model_Supplier::getList($params);
-
-        if(empty($dots)){
-            $this->jsonResult(false);
-        }
-
-        $this->jsonResult(true, ['items' => $dots, 'more' => $more]);
-    }
-
-    /**
-     * Детальная страница по поставщику
-     */
-    public function action_supplier_detail()
-    {
-        $supplierId = $this->request->param('id');
-
-        $supplier = Model_Supplier::getSupplier($supplierId);
-
-        if (empty($supplier)) {
-            throw new HTTP_Exception_404();
-        }
-
-        $this->tpl
-            ->bind('supplier', $supplier)
-        ;
-    }
 }

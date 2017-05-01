@@ -7,16 +7,16 @@
 
 <script>
     $(function(){
-        paginationAjax('/control/suppliers_list/', 'ajax_block_suppliers', renderAjaxPaginationSuppliers, {show_all_btn: true});
+        paginationAjax('/suppliers/suppliers_list/', 'ajax_block_suppliers', renderAjaxPaginationSuppliers, {show_all_btn: true});
     });
 
     function renderAjaxPaginationSuppliers(data, block)
     {
         for(var i in data){
             var tpl = $('<div class="block supplier">' +
-                    '<div class="s_logo" />' +
-                    '<div class="s_name" />' +
-                    '<div class="s_btn"><a class="btn">Перейти</a></div>' +
+                '<div class="s_logo" />' +
+                '<div class="s_name" />' +
+                '<div class="s_btn"><a class="btn">Перейти</a></div>' +
                 '</div>');
 
             tpl.data('supplier_id', data[i].ID);
