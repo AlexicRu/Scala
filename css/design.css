@@ -249,3 +249,34 @@
 .custom_view_neftregion aside .sub_menu_title [class^="icon-"] {
   color: rgba(255, 255, 255, 0.5);
 }
+.custom_view_alberit .logo a {
+  background-image: url(/img/projects/alberit.png);
+}
+.custom_view_alberit aside {
+  background: #292929;
+}
+.custom_view_alberit aside > a,
+.custom_view_alberit aside .sub_menu_title {
+  color: white;
+}
+.custom_view_alberit aside > a:hover,
+.custom_view_alberit aside .sub_menu_title:hover,
+.custom_view_alberit aside > a.act,
+.custom_view_alberit aside .sub_menu_title.act {
+  background: #fdc900;
+  color: #292929;
+}
+.custom_view_alberit aside > a:hover span,
+.custom_view_alberit aside .sub_menu_title:hover span,
+.custom_view_alberit aside > a.act span,
+.custom_view_alberit aside .sub_menu_title.act span {
+  color: #292929;
+}
+.custom_view_alberit aside > a [class^="icon-"],
+.custom_view_alberit aside .sub_menu_title [class^="icon-"] {
+  color: rgba(255, 255, 255, 0.5);
+}
+.custom_view_alberit .sub_menu_items a:hover,
+.custom_view_alberit .sub_menu_items a.act {
+  color: rgba(255, 255, 255, 0.5);
+}

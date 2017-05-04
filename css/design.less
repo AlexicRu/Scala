@@ -198,3 +198,32 @@
     }
   }
 }
+.custom_view_alberit{
+  .logo{
+    a{
+      background-image: url(/img/projects/alberit.png);
+    }
+  }
+  aside{
+    background: #292929;
+    >a, .sub_menu_title{
+      color: white;
+      &:hover, &.act{
+        background: #fdc900; color: #292929;
+        span{
+          color: #292929;
+        }
+      }
+      [class^="icon-"]{
+        color: rgba(255,255,255,.5);
+      }
+    }
+  }
+  .sub_menu_items{
+    a{
+      &:hover, &.act{
+        color: rgba(255,255,255,.5);
+      }
+    }
+  }
+}
