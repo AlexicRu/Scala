@@ -229,6 +229,9 @@ class Oracle{
 			$params['limit'] = 10;
 		}
 
+		$params['offset'] = (int)$params['offset'];
+		$params['limit'] = (int)$params['limit'];
+
 		$from = $params['offset'];
 		$to = $params['limit']+$params['offset'];
 
@@ -259,6 +262,17 @@ class Oracle{
 	{
 		return str_replace(',', '.', $number);
 	}
+
+    /**
+     * возвращает инт
+     *
+     * @param $number
+     * @return int
+     */
+	public static function toInt($number)
+    {
+        return (int)$number;
+    }
 
     /**
      * переводим строку в дату

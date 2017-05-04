@@ -161,6 +161,11 @@ $sentryClient->install();
  * defaults for the URI.
  */
 
+Route::set('suppliers', 'suppliers/<id>', array('id' => '[\d]+'))
+    ->defaults(array(
+        'controller' => 'suppliers',
+        'action'     => 'supplier_detail',
+    ));
 Route::set('news', 'news/<id>', array('id' => '[\d]+'))
     ->defaults(array(
         'controller' => 'news',

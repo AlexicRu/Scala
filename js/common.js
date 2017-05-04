@@ -169,6 +169,9 @@ function _paginationAjaxLoad(url, outer, block, callback, params)
     $.post(url, params, function(data){
         if(data.success){
             callback(data.data.items, block, params);
+
+            outer.data('offset', parseInt(outer.data('offset')) + data.data.items.length);
+
             if(data.data.more){
                 //ALL
                 if (params.show_all) {
@@ -177,7 +180,6 @@ function _paginationAjaxLoad(url, outer, block, callback, params)
                     outer.find('.ajax_block_more').fadeIn();
                 }
             }
-            outer.data('offset', parseInt(outer.data('offset')) + data.data.items.length);
         }else{
             if (onError) {
                 onError(block, params);

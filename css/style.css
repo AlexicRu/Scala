@@ -439,6 +439,10 @@ a.btn:hover {
 .block.no_padding {
   padding: 0;
 }
+.block.supplier {
+  display: inline-block;
+  vertical-align: top;
+}
 .table {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-top: 0;
@@ -1438,4 +1442,32 @@ fieldset {
 }
 .tbl > div.tr > div {
   display: table-cell;
+}
+.supplier {
+  min-height: 145px;
+  width: 350px;
+  position: relative;
+  margin: 0 20px 20px 0;
+  padding-left: 120px;
+}
+.s_name {
+  margin-bottom: 60px;
+}
+.s_logo {
+  float: left;
+  margin-left: -90px;
+  width: 70px;
+  height: 70px;
+  background: url(/img/GloPro-logo-pack/GloPro-main-logo.svg) no-repeat center;
+  background-size: contain;
+  display: inline-block;
+}
+.s_logo.s_logo_empty {
+  border-radius: 50%;
+  background: #eee;
+}
+.s_btn {
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
 }
