@@ -21,7 +21,7 @@
 
             tpl.data('supplier_id', data[i].ID);
             tpl.find('.s_name').text(data[i].SUPPLIER_NAME);
-            tpl.find('.s_btn a').attr('href', '/control/suppliers/' + data[i].ID);
+            tpl.find('.s_btn a').attr('href', '/suppliers/' + data[i].ID);
 
             if (data[i].SUPPLIER_LOGO) {
                 tpl.find('.s_logo').css('background-image', 'url("'+ data[i].SUPPLIER_LOGO +'")');

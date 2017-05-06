@@ -79,7 +79,7 @@ return [
         'administration_index' => [
             Access::ROLE_ADMIN,
         ],
-        'control_suppliers' => [
+        'suppliers_index' => [
             Access::ROLE_ROOT,
         ],
         // custom
