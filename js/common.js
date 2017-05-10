@@ -12,14 +12,16 @@ $(function() {
 
 function message(type, text)
 {
+    var header = '';
+
     if(type == 0){
-        type = 'Ошибка!';
+        header = 'Ошибка!';
     }
     if(type == 1){
-        type = 'Успех!';
+        header = 'Успех!';
     }
 
-    $.jGrowl(text, { header: type });
+    $.jGrowl(text, { header: header , theme: 'jgrowl-glopro', group: 'jgrowl-group-' + type});
 }
 
 function alarm(block) {

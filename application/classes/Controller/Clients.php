@@ -68,7 +68,7 @@ class Controller_Clients extends Controller_Common {
 		if(empty($result)){
 			$this->jsonResult(false);
 		}
-		$this->jsonResult(true, $result);
+		$this->jsonResult(true);
 	}
 
 	/**

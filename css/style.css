@@ -1444,20 +1444,22 @@ fieldset {
   display: table-cell;
 }
 .supplier {
-  min-height: 145px;
-  width: 350px;
+  min-height: 120px;
+  width: 480px;
   position: relative;
-  margin: 0 20px 20px 0;
-  padding-left: 120px;
+  margin: 0 40px 40px 0;
+  padding-left: 140px;
 }
 .s_name {
   margin-bottom: 60px;
+  font-weight: bold;
+  font-size: 18px;
 }
 .s_logo {
   float: left;
-  margin-left: -90px;
-  width: 70px;
-  height: 70px;
+  margin-left: -110px;
+  width: 80px;
+  height: 80px;
   background: url(/img/GloPro-logo-pack/GloPro-main-logo.svg) no-repeat center;
   background-size: contain;
   display: inline-block;
@@ -1470,4 +1472,74 @@ fieldset {
   position: absolute;
   bottom: 20px;
   right: 30px;
+}
+.s_info {
+  margin-top: 10px;
+}
+.supplier-detail__name {
+  padding-left: 130px;
+  min-height: 100px;
+  padding-top: 10px;
+}
+.supplier-detail__avatar {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  float: left;
+  margin-left: -130px;
+  margin-top: -10px;
+}
+.supplier-detail__avatar-empty {
+  border-radius: 50%;
+  background: #ddd;
+}
+.supplier-detail__avatar-pic {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background: transparent no-repeat center;
+  background-size: contain;
+}
+.supplier-detail__avatar-dropzone.dropzone .dz-preview {
+  margin: 10px;
+  min-height: 80px;
+}
+.supplier-detail__avatar-dropzone.dropzone .dz-preview .dz-image {
+  width: 75px;
+  height: 75px;
+}
+.supplier-detail__avatar-dropzone.dropzone .dz-preview .dz-progress {
+  width: 50px;
+  margin-left: -25px;
+}
+.supplier-detail__avatar-dropzone.dropzone .dz-preview .dz-details {
+  padding: 5px;
+}
+.supplier-detail__avatar-dropzone.dropzone .dz-message {
+  margin: 1em 0;
+}
+.supplier-detail__id {
+  float: right;
+  color: #999;
+}
+.supplier-detail__info td {
+  vertical-align: top;
+}
+.line {
+  margin: 20px 0 30px 0;
+  height: 1px;
+  background: #dfdfdf;
+}
+div.jGrowl div.jGrowl-notification.jgrowl-glopro {
+  width: 300px;
+  font-size: 16px;
+  color: white;
+  opacity: 1;
+  padding: 15px 20px;
+}
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-0 {
+  background-color: #a94442;
+}
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-1 {
+  background-color: #3c763d;
 }

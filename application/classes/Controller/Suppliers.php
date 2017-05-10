@@ -46,8 +46,23 @@ class Controller_Suppliers extends Controller_Common {
             throw new HTTP_Exception_404();
         }
 
+        $this->_initDropZone();
+
         $this->tpl
             ->bind('supplier', $supplier)
         ;
+    }
+
+    public function action_supplier_edit()
+    {
+        $supplierId = $this->request->param('id');
+        $params = $this->request->post('params');
+
+        $result = Model_Supplier::editSupplier($supplierId, $params);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true, $result);
     }
 }

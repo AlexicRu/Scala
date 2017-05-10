@@ -44,7 +44,7 @@ div.center div.jGrowl-notification, div.center div.jGrowl-closer {
 }
 
 div.jGrowl div.jGrowl-notification, div.jGrowl div.jGrowl-closer {
-    background: #000!important;
+    background: #000;
     opacity: .85;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=85);
@@ -58,7 +58,7 @@ div.jGrowl div.jGrowl-notification, div.jGrowl div.jGrowl-closer {
     text-align: left;
     display: none;
     border-radius: 5px;
-    color:#fff!important;
+    color:#fff;
 }
 
 div.jGrowl div.jGrowl-notification {
