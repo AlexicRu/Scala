@@ -73,25 +73,27 @@ class Model_Supplier extends Model
         $user = Auth::instance()->get_user();
 
         $data = [
-            'p_supplier_id' => $supplierId,
-            'p_name' 		=> $params['NAME'],
-            'p_long_name' 	=> $params['LONG_NAME'] ?: $params['NAME'],
-            'p_inn' 		=> $params['INN'],
-            'p_kpp' 		=> $params['KPP'],
-            'p_ogrn' 		=> $params['OGRN'],
-            'p_okpo' 		=> $params['OKPO'],
-            'p_y_address' 	=> $params['Y_ADDRESS'],
-            'p_f_address' 	=> $params['F_ADDRESS'],
-            'p_p_address' 	=> $params['P_ADDRESS'],
-            'p_email' 		=> $params['EMAIL'],
-            'p_phone' 		=> $params['PHONE'],
-            'p_comments' 	=> $params['COMMENTS'],
-            'p_icon_path' 	=> $params['ICON_PATH'],
-            'p_manager_id' 	=> $user['MANAGER_ID'],
-            'p_error_code' 	=> 'out',
+            'p_supplier_id'     => $supplierId,
+            'p_supplier_name'   => $params['NAME'],
+            'p_long_name'       => $params['LONG_NAME'] ?: $params['NAME'],
+            'p_tin'             => $params['INN'],
+            'p_iec'             => $params['KPP'],
+            'p_psrn'            => $params['OGRN'],
+            'p_okpo'            => $params['OKPO'],
+            'p_y_address'       => $params['Y_ADDRESS'],
+            'p_f_address'       => $params['F_ADDRESS'],
+            'p_p_address'       => $params['P_ADDRESS'],
+            'p_email'           => $params['EMAIL'],
+            'p_phone'           => $params['PHONE'],
+            'p_comments'        => $params['COMMENTS'],
+            'p_okonh'           => $params['OKONH'],
+            'p_contact_person'  => $params['CONTACT_PERSON'],
+            'p_icon_path' 	    => $params['ICON_PATH'],
+            'p_manager_id'      => $user['MANAGER_ID'],
+            'p_error_code'      => 'out',
         ];
 
-        $res = $db->procedure('supplier_edit', $data);
+        $res = $db->procedure('splrs_edit', $data);
 
         if(empty($res)){
             return true;

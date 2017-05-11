@@ -36,19 +36,21 @@ function _saveSupplierInfo()
     var block = $(".supplier-detail__info");
 
     var params = {
-        NAME:       $('[name=NAME]', block).val(),
-        LONG_NAME:  $('[name=LONG_NAME]', block).val(),
-        Y_ADDRESS:  $('[name=Y_ADDRESS]', block).val(),
-        F_ADDRESS:  $('[name=F_ADDRESS]', block).val(),
-        P_ADDRESS:  $('[name=P_ADDRESS]', block).val(),
-        COMMENTS:   $('[name=COMMENTS]', block).val(),
-        PHONE:      $('[name=PHONE]', block).val(),
-        EMAIL:      $('[name=EMAIL]', block).val(),
-        INN:        $('[name=INN]', block).val(),
-        KPP:        $('[name=KPP]', block).val(),
-        OGRN:       $('[name=OGRN]', block).val(),
-        OKPO:       $('[name=OKPO]', block).val(),
-        ICON_PATH:  supplierLogo
+        NAME:           $('[name=NAME]', block).val(),
+        LONG_NAME:      $('[name=LONG_NAME]', block).val(),
+        Y_ADDRESS:      $('[name=Y_ADDRESS]', block).val(),
+        F_ADDRESS:      $('[name=F_ADDRESS]', block).val(),
+        P_ADDRESS:      $('[name=P_ADDRESS]', block).val(),
+        COMMENTS:       $('[name=COMMENTS]', block).val(),
+        PHONE:          $('[name=PHONE]', block).val(),
+        EMAIL:          $('[name=EMAIL]', block).val(),
+        INN:            $('[name=INN]', block).val(),
+        KPP:            $('[name=KPP]', block).val(),
+        OGRN:           $('[name=OGRN]', block).val(),
+        OKPO:           $('[name=OKPO]', block).val(),
+        OKONH:          $('[name=OKONH]', block).val(),
+        CONTACT_PERSON: $('[name=CONTACT_PERSON]', block).val(),
+        ICON_PATH:      supplierLogo
     };
 
     if(
@@ -95,5 +97,26 @@ function _saveSupplierInfo()
 
         dropzone.removeAllFiles();
         supplierLogo = false;
+    });
+}
+
+function loadSupplierContract(tab)
+{
+    var contractId = $('[name=suppliers_contracts_list]').val();
+
+    if (!tab) {
+        tab = 'contract';
+    }
+
+    var block = $('.supplier_contract');
+
+    block.empty().addClass(CLASS_LOADING);
+
+    $.post('/suppliers/contract/' + contractId, {tab: tab}, function (data) {
+        block.html(data).removeClass(CLASS_LOADING);
+
+        $('.datepicker', block).each(function () {
+            renderDatePicker($(this));
+        });
     });
 }

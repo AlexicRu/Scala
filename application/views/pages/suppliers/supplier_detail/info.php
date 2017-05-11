@@ -9,10 +9,10 @@
     </div>
 
     <h2 toggle_block="edit_supplier" uid="supplier_name"><?=$supplier['SUPPLIER_NAME']?></h2>
-    <h2 toggle_block="edit_supplier" uid="supplier_name" class="dn"><input type="text" class="input_big input_grand" value="<?=$supplier['SUPPLIER_NAME']?>">*</h2>
+    <h2 toggle_block="edit_supplier" uid="supplier_name" class="dn"><input type="text" class="input_big input_grand" name="NAME" value="<?=$supplier['SUPPLIER_NAME']?>">*</h2>
 
     <p toggle_block="edit_supplier" uid="LONG_NAME"><?=$supplier['LONG_NAME']?></p>
-    <p toggle_block="edit_supplier" uid="LONG_NAME" class="dn"><input type="text" class="input_grand" value="<?=$supplier['LONG_NAME']?>"></p>
+    <p toggle_block="edit_supplier" uid="LONG_NAME" class="dn"><input type="text" class="input_grand" name="LONG_NAME" value="<?=$supplier['LONG_NAME']?>"></p>
 </div>
 
 <div toggle_block="supplier_info" class="dn">
@@ -37,6 +37,13 @@
                 <td>
                     <span toggle_block="edit_supplier" uid="supplier_p_address"><?=($supplier['P_ADDRESS'] ?: '<i class="gray">Не заполнено</i>')?></span>
                     <span toggle_block="edit_supplier" uid="supplier_p_address" class="dn"><input type="text" name="P_ADDRESS" value="<?=$supplier['P_ADDRESS']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Контактное лицо:</td>
+                <td>
+                    <span toggle_block="edit_supplier" uid="supplier_contact_person"><?=($supplier['CONTACT_PERSON'] ?: '<i class="gray">Не заполнено</i>')?></span>
+                    <span toggle_block="edit_supplier" uid="supplier_contact_person" class="dn"><input type="text" name="CONTACT_PERSON" value="<?=$supplier['CONTACT_PERSON']?>"></span>
                 </td>
             </tr>
             <tr>
@@ -90,6 +97,13 @@
                 <td>
                     <span toggle_block="edit_supplier" uid="supplier_okpo"><?=($supplier['OKPO'] ?: '<i class="gray">Не заполнено</i>')?></span>
                     <span toggle_block="edit_supplier" uid="supplier_okpo" class="dn"><input type="text" name="OKPO" value="<?=$supplier['OKPO']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">ОКОНХ:</td>
+                <td>
+                    <span toggle_block="edit_supplier" uid="supplier_okonh"><?=($supplier['OKONH'] ?: '<i class="gray">Не заполнено</i>')?></span>
+                    <span toggle_block="edit_supplier" uid="supplier_okonh" class="dn"><input type="text" name="OKONH" value="<?=$supplier['OKONH']?>"></span>
                 </td>
             </tr>
         </table>

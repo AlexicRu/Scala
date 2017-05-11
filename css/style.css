@@ -1543,3 +1543,9 @@ div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-0 {
 div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-1 {
   background-color: #3c763d;
 }
+.supplier_contract {
+  margin-top: 30px;
+}
+.supplier_contract .tabs_block {
+  padding-top: 0;
+}

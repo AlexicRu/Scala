@@ -1,3 +1,5 @@
+var CLASS_LOADING = 'block_loading';
+
 $(function() {
     $('.message_close').on('click', function () {
         var t = $(this);
