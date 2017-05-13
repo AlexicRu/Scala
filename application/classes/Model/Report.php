@@ -1,6 +1,5 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-require_once __DIR__."/../../../includes/Jasper/autoload.php";
 use Jaspersoft\Client\Client;
 
 class Model_Report extends Model

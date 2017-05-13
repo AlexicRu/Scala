@@ -1,6 +1,8 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-require_once __DIR__.'/../includes/Raven/Autoloader.php';
+//composer autoloader
+require_once __DIR__ . '/../vendor/autoload.php';
+
 Raven_Autoloader::register();
 
 // -- Environment setup --------------------------------------------------------

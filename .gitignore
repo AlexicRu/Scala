@@ -51,3 +51,4 @@ application/config/auth.php
 application/config/jasper.php
 application/config/config.php
 test.php
+/vendor/
