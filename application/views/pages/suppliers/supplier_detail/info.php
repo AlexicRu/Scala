@@ -1,8 +1,8 @@
 <div class="supplier-detail__name">
     <h2 class="supplier-detail__id">ID: <?=$supplier['ID']?></h2>
 
-    <div class="supplier-detail__avatar <?=(empty($supplier['ICON_PATH']) ? 'supplier-detail__avatar-empty' : '')?>" <?=(!empty($supplier['ICON_PATH']) ? "style='background-image:url({$supplier['ICON_PATH']})'" : '')?>>
-        <div toggle_block="edit_supplier" class="supplier-detail__avatar-pic"></div>
+    <div class="supplier-detail__avatar <?=(empty($supplier['ICON_PATH']) ? 'supplier-detail__avatar-empty' : '')?>">
+        <div toggle_block="edit_supplier" class="supplier-detail__avatar-pic" <?=(!empty($supplier['ICON_PATH']) ? "style='background-image:url({$supplier['ICON_PATH']})'" : '')?>></div>
         <div toggle_block="edit_supplier" class="dn">
             <div class="dropzone supplier-detail__avatar-dropzone"></div>
         </div>

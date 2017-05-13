@@ -21,14 +21,10 @@
         <?}}?>
 </select>
 
-<div class="supplier_contract"></div>
+<div class="supplier-contract"></div>
 
 <script>
     $(function () {
         loadSupplierContract();
     })
 </script>
-
-<pre>
-<?print_r($supplier)?>
-</pre>

@@ -55,6 +55,9 @@ h3,
 .f24 {
   font-size: 24px;
 }
+.f50 {
+  font-size: 50px;
+}
 .blue {
   color: #0e86ad;
 }
@@ -854,6 +857,7 @@ textarea.input_grand {
 table td,
 table th {
   padding: 8px;
+  vertical-align: top;
 }
 table.table_form input[type=text],
 table.table_form textarea {
@@ -1543,9 +1547,16 @@ div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-0 {
 div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-1 {
   background-color: #3c763d;
 }
-.supplier_contract {
+.supplier-contract {
   margin-top: 30px;
 }
-.supplier_contract .tabs_block {
+.supplier-contract .tabs_block {
   padding-top: 0;
+}
+.supplier-contract__contract-data-source {
+  margin-bottom: 10px;
+}
+.supplier-contract__contract-data-source label {
+  display: block;
+  margin-bottom: 5px;
 }

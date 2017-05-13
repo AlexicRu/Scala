@@ -22,8 +22,8 @@
             tpl.find('.s_name').text(data[i].SUPPLIER_NAME).attr('href', '/suppliers/' + data[i].ID);
             tpl.find('.s_info').text(data[i].LONG_NAME);
 
-            if (data[i].SUPPLIER_LOGO) {
-                tpl.find('.s_logo').css('background-image', 'url("'+ data[i].SUPPLIER_LOGO +'")');
+            if (data[i].ICON_PATH) {
+                tpl.find('.s_logo').css('background-image', 'url("'+ data[i].ICON_PATH +'")');
             } else {
                 tpl.find('.s_logo').addClass('s_logo_empty');
             }

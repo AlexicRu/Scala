@@ -38,6 +38,9 @@ h3, .h3{font-size: 16px; font-weight: normal; margin: 0 0 5px; padding: 0; color
 .f24{
   font-size: 24px;
 }
+.f50{
+  font-size: 50px;
+}
 .blue{
   color: @color1;
 }
@@ -541,7 +544,7 @@ input[type=text], input[type=password], input[type=number], select, textarea{
 }
 table{
   td, th{
-    padding: 8px;
+    padding: 8px; vertical-align: top;
   }
   &.table_form{
     input[type=text], textarea{
@@ -1102,9 +1105,18 @@ div.jGrowl div.jGrowl-notification {
     }
   }
 }
-.supplier_contract{
+.supplier-contract{
   margin-top: 30px;
   .tabs_block{
     padding-top: 0;
+  }
+
+  &__contract{
+    &-data-source{
+      margin-bottom: 10px;
+      label{
+        display: block; margin-bottom: 5px;
+      }
+    }
   }
 }

@@ -87,12 +87,14 @@ class Controller_Suppliers extends Controller_Common {
 
         $tab = $this->request->post('tab');
         $contract = Model_Supplier_Contract::get($contractId);
+        $tubes = Model_Supplier_Contract::getTubes();
 
         switch($tab) {
             case 'contract':
 
                 $content = View::factory('ajax/suppliers/contract/contract')
                     ->bind('contract', $contract)
+                    ->bind('tubes', $tubes)
                 ;
                 break;
             case 'agreements':

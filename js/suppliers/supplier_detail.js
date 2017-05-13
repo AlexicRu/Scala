@@ -108,7 +108,7 @@ function loadSupplierContract(tab)
         tab = 'contract';
     }
 
-    var block = $('.supplier_contract');
+    var block = $('.supplier-contract');
 
     block.empty().addClass(CLASS_LOADING);
 
@@ -119,4 +119,24 @@ function loadSupplierContract(tab)
             renderDatePicker($(this));
         });
     });
+}
+
+function editSupplierContract()
+{
+    var block = $('.supplier-contract__contract');
+
+    message(0, 'Рано');
+}
+
+function checkSupplierContractDataSource()
+{
+    var block = $('.supplier-contract__contract');
+
+    var dataSource = $('[name=DATA_SOURCE]:checked').val();
+
+    if (dataSource == DATA_SOURCE_INSIDE) {
+        $('[name=TUBE_ID]').prop('disabled', true);
+    } else {
+        $('[name=TUBE_ID]').prop('disabled', false);
+    }
 }
