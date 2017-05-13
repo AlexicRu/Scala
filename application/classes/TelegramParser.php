@@ -21,43 +21,6 @@ class TelegramParser
         'logout',
     ];
 
-    /*
-Array
-(
-[update_id] => 964539797
-[message] => Array
-    (
-        [message_id] => 33
-        [from] => Array
-            (
-                [id] => 115462629
-                [first_name] => Pavel
-                [last_name] => Nikitin
-                [username] => paShamanZ
-            )
-        [chat] => Array
-            (
-                [id] => 115462629
-                [first_name] => Pavel
-                [last_name] => Nikitin
-                [username] => paShamanZ
-                [type] => private
-            )
-        [date] => 1494686163
-        [text] => /help
-        [entities] => Array
-            (
-                [0] => Array
-                    (
-                        [type] => bot_command
-                        [offset] => 0
-                        [length] => 5
-                    )
-            )
-    )
-)
-     */
-
     public function __construct($postData)
     {
         //разбираем пришедшие запросы
