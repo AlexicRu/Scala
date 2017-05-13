@@ -158,6 +158,8 @@ Cookie::$salt = $config['cookie_salt'];
 $sentryClient = new Raven_Client($config['sentry_dsn']);
 $sentryClient->install();
 
+Cache::$default = 'memcache';
+
 /**
  * Set the routes. Each route must have a minimum of a name, a URI and a set of
  * defaults for the URI.

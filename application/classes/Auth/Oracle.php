@@ -22,6 +22,13 @@ class Auth_Oracle extends Auth {
         {
             // Create a hashed password
             $password = $this->hash($password);
+        } else if (!empty($password['hash'])) {
+
+            $request = Request::current();
+
+            if ($request->controller() == 'telegram') {
+                $password = $password['hash'];
+            }
         }
 
         // If the passwords match, perform a login
@@ -43,14 +50,15 @@ class Auth_Oracle extends Auth {
         // Finish the login
         $this->complete_login($user);
 
-        $db = Oracle::init();
+        if (!empty($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['REMOTE_ADDR'])) {
+            $data = [
+                'p_manager_id' => $user['MANAGER_ID'],
+                'p_params' => $_SERVER['HTTP_USER_AGENT'] . ';' . $_SERVER['REMOTE_ADDR']
+            ];
 
-        $data = [
-            'p_manager_id' => $user['MANAGER_ID'],
-            'p_params' => $_SERVER['HTTP_USER_AGENT'].';'.$_SERVER['REMOTE_ADDR']
-        ];
-
-        $db->procedure('auth_user', $data);
+            $db = Oracle::init();
+            $db->procedure('auth_user', $data);
+        }
 
         return true;
     }
