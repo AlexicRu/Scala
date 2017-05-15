@@ -61,7 +61,7 @@ class TelegramParser
     public function execute()
     {
         try {
-            if (empty($this->_command) || empty($this->_telegramUser) || $this->_chatId != $this->_config['telegram_chat_id']) {
+            if (empty($this->_command) || empty($this->_telegramUser)) {
                 throw new Exception('<i>Некорректный запрос</i>');
             }
 
@@ -174,5 +174,15 @@ class TelegramParser
         $this->_answer[] = '<b>/help</b> - вывод помощи';
         $this->_answer[] = '<b>login</b> <i>login</i> <i>password</i> - авторизация на сутки';
         $this->_answer[] = '<b>logout</b> - разлогинивание';
+    }
+
+    /**
+     * возвращаем идентификатор чата
+     *
+     * @return bool
+     */
+    public function getChatId()
+    {
+        return $this->_chatId;
     }
 }

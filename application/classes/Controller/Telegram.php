@@ -35,7 +35,7 @@ class Controller_Telegram extends Controller_Template
 
         Request::sendMessage([
             'parse_mode' => 'HTML',
-            'chat_id' => $this->_config['telegram_chat_id'],
+            'chat_id' => $telegramParser->getChatId(),
             'text' => $response
         ]);
     }
