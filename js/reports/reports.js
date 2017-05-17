@@ -48,12 +48,20 @@ function generateReport(btn)
             value = getComboboxMultiValue(field);
         }else if(field.hasClass('combobox')){
             var dependField = field.attr('depend');
+            var skip = false;
 
             if(dependField){
                 field = $('[name='+ dependField +']', block);
+
+                if(field.hasClass('combobox_multi')){
+                    value = getComboboxMultiValue(field);
+                    skip = true;
+                }
             }
 
-            value = getComboboxValue(field);
+            if(!skip) {
+                value = getComboboxValue(field);
+            }
         }else{
             value = field.val();
         }

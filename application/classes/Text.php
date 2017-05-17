@@ -2,7 +2,7 @@
 
 class Text extends Kohana_Text
 {
-    const RUR = '&#x20bd;';
+    const RUR = '₽';
 
     /**
      * echo plural_form(42, array('арбуз', 'арбуза', 'арбузов'));

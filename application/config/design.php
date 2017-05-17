@@ -36,4 +36,8 @@ return array(
         'title' => 'Парламент-к',
         'class' => 'neftregion'
     ],
+    'lkalberitru' => [
+        'title' => 'Алберит',
+        'class' => 'alberit'
+    ],
 );

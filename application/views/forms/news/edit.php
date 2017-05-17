@@ -66,7 +66,7 @@
         initWYSIWYG(editor);
 
         <?if(!empty($detail['NEWS_ID'])){?>
-            editor.trumbowyg('html', '<?=str_replace("'", "\'", $detail['CONTENT'])?>');
+            editor.trumbowyg('html', $('.news_elem .n_body').html());
         <?}?>
 
         $('.btn_news_edit_go').on('click', function(){

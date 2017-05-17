@@ -24,13 +24,13 @@ $(function(){
             params.EMAIL == '' ||
             params.INN == ''
         ){
-            $.jGrowl('Заполните обязательные поля', { header: 'Ошибка!' });
+            message(0, 'Заполните обязательные поля');
             return false;
         }
 
         $.post('/clients/client_edit/' + clientId, { params:params }, function(data){
             if(data.success){
-                $.jGrowl('Клиент обновлен');
+                message(1, 'Клиент обновлен');
 
                 $.each( params, function( key, value ) {
                     var uid = $('[name='+ key +']').closest('[uid]');
@@ -47,7 +47,7 @@ $(function(){
                 $("[toggle='edit_client']:first").click();
 
             }else{
-                $.jGrowl('Сохранение не удалось', { header: 'Ошибка!' });
+                message(0, 'Сохранение не удалось');
             }
         });
     });

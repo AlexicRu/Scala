@@ -228,13 +228,13 @@
                 };
 
                 if(params.contract.CONTRACT_NAME == ''){
-                    $.jGrowl('Введите название', { header: 'Ошибка!' });
+                    message(0, 'Введите название');
                     return false;
                 }
 
                 $.post('/clients/contract_edit/<?=$contractSettings['CONTRACT_ID']?>', {params:params}, function(data){
                     if(data.success){
-                        $.jGrowl('Контракт обновлен', { header: 'Успех!' });
+                        message(1, 'Контракт обновлен');
 
                         var contractFullName = "Договор: [<?=$contractSettings['CONTRACT_ID']?>] " + params.contract.CONTRACT_NAME + " от " + params.contract.DATE_BEGIN + (params.contract.DATE_END != '31.12.2099' ? " до " + params.contract.DATE_END : '');
 
@@ -242,7 +242,7 @@
 
                         loadContract('contract');
                     }else{
-                        $.jGrowl('Сохранение не удалось', { header: 'Ошибка!' });
+                        message(0, 'Сохранение не удалось');
                     }
                 });
             });

@@ -1,3 +1,5 @@
+var CLASS_LOADING = 'block_loading';
+
 $(function() {
     $('.message_close').on('click', function () {
         var t = $(this);
@@ -12,14 +14,16 @@ $(function() {
 
 function message(type, text)
 {
+    var header = '';
+
     if(type == 0){
-        type = 'Ошибка!';
+        header = 'Ошибка!';
     }
     if(type == 1){
-        type = 'Успех!';
+        header = 'Успех!';
     }
 
-    $.jGrowl(text, { header: type });
+    $.jGrowl(text, { header: header , theme: 'jgrowl-glopro', group: 'jgrowl-group-' + type});
 }
 
 function alarm(block) {

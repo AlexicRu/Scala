@@ -166,9 +166,9 @@ class Listing
      * @param $search
      * @return array|bool|int
      */
-    public static function getSuppliersContracts($supplierId, $search)
+    public static function getSuppliersContracts($supplierId, $search = '')
     {
-        if(empty($supplierId) || empty($search)){
+        if(empty($supplierId)){
             return false;
         }
 

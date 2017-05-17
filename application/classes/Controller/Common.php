@@ -11,8 +11,6 @@ abstract class Controller_Common extends Controller_Template {
 
     public function before()
     {
-        Cache::$default = 'memcache';
-
         $controller = $this->request->controller();
         $action = $this->request->action();
 

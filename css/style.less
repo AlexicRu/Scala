@@ -38,6 +38,9 @@ h3, .h3{font-size: 16px; font-weight: normal; margin: 0 0 5px; padding: 0; color
 .f24{
   font-size: 24px;
 }
+.f50{
+  font-size: 50px;
+}
 .blue{
   color: @color1;
 }
@@ -541,7 +544,7 @@ input[type=text], input[type=password], input[type=number], select, textarea{
 }
 table{
   td, th{
-    padding: 8px;
+    padding: 8px; vertical-align: top;
   }
   &.table_form{
     input[type=text], textarea{
@@ -1023,13 +1026,13 @@ fieldset{
   }
 }
 .supplier{
-  min-height: 145px; width: 350px; position: relative; margin: 0 20px 20px 0; padding-left: 120px;
+  min-height: 120px; width: 480px; position: relative; margin: 0 40px 40px 0; padding-left: 140px;
 }
 .s_name{
-  margin-bottom: 60px;
+  margin-bottom: 60px; font-weight: bold; font-size: 18px;
 }
 .s_logo{
-  float: left; margin-left: -90px; width: 70px; height: 70px; background: url(/img/GloPro-logo-pack/GloPro-main-logo.svg) no-repeat center; background-size: contain; display: inline-block;
+  float: left; margin-left: -110px; width: 80px; height: 80px; background: url(/img/GloPro-logo-pack/GloPro-main-logo.svg) no-repeat center; background-size: contain; display: inline-block;
 
   &.s_logo_empty{
     border-radius: 50%; background: #eee;
@@ -1037,4 +1040,83 @@ fieldset{
 }
 .s_btn{
   position: absolute; bottom:20px; right: 30px;
+}
+.s_info{
+  margin-top: 10px;
+}
+.supplier-detail{
+  &__name{
+    padding-left: 130px; min-height: 100px; padding-top: 10px;
+  }
+  &__avatar{
+    display:inline-block; width: 100px; height: 100px; float: left; margin-left: -130px; margin-top: -10px;
+    &-empty{
+      border-radius: 50%; background: #ddd;
+    }
+    &-pic{
+      display:inline-block; width: 100px; height: 100px; background: transparent no-repeat center; background-size: contain;
+    }
+    &-dropzone{
+      &.dropzone {
+        .dz-preview {
+          margin: 10px;
+          min-height: 80px;
+        }
+        .dz-preview .dz-image {
+          width: 75px;
+          height: 75px;
+        }
+        .dz-preview .dz-progress {
+          width: 50px;
+          margin-left: -25px;
+        }
+        .dz-preview .dz-details {
+          padding: 5px;
+        }
+        .dz-message {
+          margin: 1em 0;
+        }
+      }
+    }
+  }
+  &__id{
+    float: right; color: #999;
+  }
+  &__info{
+    td{
+      vertical-align: top;
+    }
+  }
+}
+.line{
+  margin: 20px 0 30px 0; height: 1px; background: #dfdfdf;
+}
+div.jGrowl div.jGrowl-notification {
+  &.jgrowl-glopro {
+    width: 300px; font-size: 16px; color: white; opacity: 1; padding: 15px 20px;
+
+    //error
+    &.jgrowl-group-0 {
+      background-color: #a94442;
+    }
+    //success
+    &.jgrowl-group-1 {
+      background-color: #3c763d;
+    }
+  }
+}
+.supplier-contract{
+  margin-top: 30px;
+  .tabs_block{
+    padding-top: 0;
+  }
+
+  &__contract{
+    &-data-source{
+      margin-bottom: 10px;
+      label{
+        display: block; margin-bottom: 5px;
+      }
+    }
+  }
 }

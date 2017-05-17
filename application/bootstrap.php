@@ -1,6 +1,8 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-require_once __DIR__.'/../includes/Raven/Autoloader.php';
+//composer autoloader
+require_once __DIR__ . '/../vendor/autoload.php';
+
 Raven_Autoloader::register();
 
 // -- Environment setup --------------------------------------------------------
@@ -155,6 +157,8 @@ Cookie::$salt = $config['cookie_salt'];
 //логирование ошибок
 $sentryClient = new Raven_Client($config['sentry_dsn']);
 $sentryClient->install();
+
+Cache::$default = 'memcache';
 
 /**
  * Set the routes. Each route must have a minimum of a name, a URI and a set of

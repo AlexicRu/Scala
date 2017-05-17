@@ -18,5 +18,7 @@ return [
         '.*\.skala-card\.ru',
         'modulcard\.ru',
         '.*\.modulcard\.ru',
+        'alberit\.ru',
+        '.*\.alberit\.ru',
     ],
 ];
