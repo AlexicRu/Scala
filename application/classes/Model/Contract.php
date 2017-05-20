@@ -91,7 +91,7 @@ class Model_Contract extends Model
             $sql .= " and agent_id = ".(int)$params['agent_id'];
         }
 
-		$sql .= ' order by ct_date desc, state_id ';
+		$sql .= ' order by ct_date desc, state_id, contract_name ';
 
 		if(!empty($params['limit'])){
             return $db->query($db->limit($sql, 0, $params['limit']));
