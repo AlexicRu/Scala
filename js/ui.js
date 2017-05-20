@@ -1,3 +1,6 @@
+var show_all_value = -1;
+var show_all_name = '-- Все --';
+
 $(function(){
     renderElements();
 });
@@ -182,6 +185,14 @@ function renderSwitch(check)
 var ajaxComboBoxMulti;
 function renderComboBoxMulti(combo, params)
 {
+    if (params && params != '') {
+        params = JSON.parse(params);
+
+        for (var i in params) {
+            combo.data(i, params[i]);
+        }
+    }
+
     if(combo.data('rendered')){
         return false;
     }
@@ -245,6 +256,13 @@ function renderComboBoxMulti(combo, params)
 
         ajaxComboBoxMulti = $.post(url, postParams, function(data){
             if(data.success){
+                if(params && params.show_all){
+                    data.data.unshift({
+                        name: show_all_name,
+                        value: show_all_value
+                    });
+                }
+
                 for(var i in data.data){
                     var tpl = $('<div class="combobox_multi_result_item" onclick="selectComboBoxMultiResult($(this))"></div>');
                     tpl.attr('value', data.data[i].value);
@@ -304,15 +322,20 @@ function renderComboBoxMultiSelectedItem(value, text, wrapper)
     values.push(value);
 
     hiddenValue.val(values.join(','));
+
+    checkRenderTo(wrapper.find('.combobox_multi'), {value:value, text:text});
 }
 
 function uncheckComboBoxMultiItem(item)
 {
     var wrapper = item.closest('.combobox_multi_wrapper');
     var selected = wrapper.find('.combobox_multi_selected');
+    var selectedItem = item.closest('.combobox_multi_selected_item');
     var hiddenValue = wrapper.find('[name=combobox_multi_value]');
 
-    item.closest('.combobox_multi_selected_item').remove();
+    checkRenderTo(wrapper.find('.combobox_multi'), {value:selectedItem.attr('value')}, true);
+
+    selectedItem.remove();
 
     var values = [];
 
@@ -460,9 +483,18 @@ function getComboboxValue(combo)
 function getComboboxMultiValue(combo)
 {
     var wrapper = combo.closest('.combobox_multi_wrapper');
-    var hiddenValue = wrapper.find('[name=combobox_multi_value]');
+    var hiddenField = wrapper.find('[name=combobox_multi_value]');
+    var hiddenValue = hiddenField.val();
 
-    var hiddenArray = hiddenValue.val().split(',');
+    if (hiddenValue == ''){
+        return [];
+    }
+
+    var hiddenArray = hiddenValue.split(',');
+
+    if (hiddenArray.indexOf(show_all_value.toString()) != -1) {
+        return [show_all_value];
+    }
 
     return hiddenArray;
 }
@@ -474,6 +506,11 @@ function setComboboxMultiValue(combo, value)
     var list = value ? value.split(',') : [];
 
     for(var i in list){
+        if (parseInt(list[i]) == show_all_value && combo.data('show_all')){
+            renderComboBoxMultiSelectedItem(show_all_value, show_all_name, wrapper);
+            continue;
+        }
+
         $.post(combo.attr('url'), { ids:list[i] }, function(data){
             if(data.success){
                 for(var i in data.data){
@@ -481,5 +518,34 @@ function setComboboxMultiValue(combo, value)
                 }
             }
         });
+    }
+}
+
+/**
+ * дополнительный рендер результата в какой-то блок
+ */
+function checkRenderTo(combo, item, isRemove) {
+    var renderTo = combo.data('render_value_to');
+
+    if (!renderTo) {
+        return;
+    }
+
+    var block = $(renderTo);
+
+    if (combo.hasClass('combobox_multi')) {
+        //combobox_multi
+        if (isRemove) {
+            block.find('[value='+ item.value +']').remove();
+        } else {
+            var tpl = $('<div class="combobox_multi_selected_item" />');
+
+            tpl.attr('value', item.value).text(item.text);
+
+            tpl.appendTo(block);
+        }
+    } else {
+        //combobox
+        //todo
     }
 }

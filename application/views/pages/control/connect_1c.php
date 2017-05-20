@@ -2,7 +2,7 @@
     .tabs_connect_1c .tbl > div:last-child{
         width: 250px; padding-left: 20px;
     }
-    .tabs_connect_1c .jsGrid:not(:empty){
+    .tabs_connect_1c .jsGrid:not(:empty), .tabs_connect_1c .jsGrid.block_loading{
         margin-top: 30px;
     }
 </style>
@@ -38,7 +38,13 @@
             acceptedFiles: '.txt, .json',
             addedfile: function () {
                 $('.load_connect1c_payments_btn').prop('disabled', true);
-                $(".connect_1c_result_block").jsGrid("destroy");
+
+                var grid = $(".connect_1c_payments_jsGrid");
+
+                if ($('.jsgrid-table', grid).length) {
+                    grid.jsGrid("destroy");
+                }
+                grid.addClass(CLASS_LOADING);
             },
             success: function(file, response)
             {
@@ -53,7 +59,9 @@
 
     function connect1cPayments_drawTable(rows)
     {
-        $(".connect_1c_payments_jsGrid").jsGrid({
+        var grid = $(".connect_1c_payments_jsGrid");
+        grid.removeClass(CLASS_LOADING);
+        grid.jsGrid({
             width: '100%',
             sorting: true,
 

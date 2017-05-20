@@ -124,8 +124,32 @@ function loadSupplierContract(tab)
 function editSupplierContract()
 {
     var block = $('.supplier-contract__contract');
+    var contractId = $('[name=suppliers_contracts_list]').val();
 
-    message(0, 'Рано');
+    var params = {
+        CONTRACT_NAME:          $('[name=CONTRACT_NAME]', block).val(),
+        DATE_BEGIN:             $('[name=DATE_BEGIN]', block).val(),
+        DATE_END:               $('[name=DATE_END]', block).val(),
+        CONTRACT_STATE:         $('[name=CONTRACT_STATE]', block).val(),
+        DATA_SOURCE:            $('[name=DATA_SOURCE]:checked', block).val(),
+        TUBE_ID:                $('[name=TUBE_ID]', block).val(),
+        CONTRACT_SERVICES:      getComboboxMultiValue($('[name=CONTRACT_SERVICES]', block)),
+        CONTRACT_POS_GROUPS:    getComboboxMultiValue($('[name=CONTRACT_POS_GROUPS]', block)),
+    };
+
+    if (params.CONTRACT_NAME == '' || params.CONTRACT_SERVICES.length == 0 || params.CONTRACT_POS_GROUPS.length == 0) {
+        message(0, 'Заполните все поля');
+        return;
+    }
+
+    $.post('/suppliers/contract_edit/' + contractId, {params:params}, function (data) {
+        if (data.success) {
+            message(1, 'Контракт успешно обновлен');
+            //todo поменять данные
+        } else {
+            message(0, 'Ошибка обновления контракта');
+        }
+    });
 }
 
 function checkSupplierContractDataSource()

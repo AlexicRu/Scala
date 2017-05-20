@@ -90,9 +90,13 @@
 .custom_view_modulcard .sub_menu_items a.act {
   color: white;
 }
-.custom_view_modulcard .logo a {
-  background-image: url(/img/projects/logo_white_mini.png);
-}
+/*.custom_view_modulcard{
+  .logo{
+    a{
+      background-image: url(/img/projects/logo_white_mini.png);
+    }
+  }
+}*/
 .custom_view_mo47 .logo a {
   background-image: url(/img/projects/mo47.png);
 }

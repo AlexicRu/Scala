@@ -5,7 +5,10 @@
 <script>
     $(function () {
         $('[name=<?=$name?>]').each(function () {
-            renderComboBoxMulti($(this));
+            var t = $(this);
+
+            renderComboBoxMulti(t, '<?=json_encode($params)?>');
+            setFormFieldValue(t.parent(), '<?=$value?>');
         });
     });
 </script>

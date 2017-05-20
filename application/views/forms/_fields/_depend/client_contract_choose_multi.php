@@ -9,7 +9,7 @@
 <script>
     $(function () {
         $('[name=<?=$name?>]').each(function () {
-            renderComboBoxMulti($(this), {'depend_on': {'name': 'client_id', 'field': '<?=$params['depend_on']?>'}});
+            renderComboBoxMulti($(this), JSON.stringify({'depend_on': {'name': 'client_id', 'field': '<?=$params['depend_on']?>'}}));
         });
     });
 </script>

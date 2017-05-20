@@ -125,4 +125,20 @@ class Controller_Suppliers extends Controller_Common {
 
         $this->html($html);
     }
+
+    /**
+     * редактирование контракта
+     */
+    public function action_contract_edit()
+    {
+        $contractId = $this->request->param('id');
+        $params = $this->request->post('params');
+
+        $result = Model_Supplier_Contract::edit($contractId, $params);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true, $result);
+    }
 }

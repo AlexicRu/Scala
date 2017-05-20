@@ -81,4 +81,46 @@ class Model_Supplier_Contract extends Model
 
         return $db->query($sql);
     }
+
+
+    /**
+     * @param $contractId
+     * @param $params
+     */
+    public static function edit($contractId, $params)
+    {
+        if(
+            empty($contractId) ||
+            empty($params['CONTRACT_NAME'])
+        ){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_contract_id'         => $contractId,
+            'p_contract_state'      => $params['CONTRACT_STATE'],
+            'p_contract_name'       => $params['CONTRACT_NAME'],
+            'p_date_begin'          => $params['DATE_BEGIN'],
+            'p_date_end'            => $params['DATE_END'],
+            'p_contract_cur'        => Model_Contract::CURRENCY_RUR,
+            'p_contract_source'     => $params['DATA_SOURCE'],
+            'p_contract_tube'       => $params['TUBE_ID'],
+            'p_contract_service'    => $params['CONTRACT_SERVICES'],
+            'p_contract_pos_groups' => $params['CONTRACT_POS_GROUPS'],
+            'p_manager_id'          => $user['MANAGER_ID'],
+            'p_error_code'          => 'out',
+        ];
+
+        $res = $db->procedure('splrs_contract_edit', $data);
+
+        if(empty($res)){
+            return true;
+        }
+
+        return false;
+    }
 }

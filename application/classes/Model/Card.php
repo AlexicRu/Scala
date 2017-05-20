@@ -194,7 +194,7 @@ class Model_Card extends Model
 
 		if($action != self::CARD_ACTION_ADD && Access::allow('clients_card_edit_limits')) {
             //редактируем лимитов если таковые пришли в запросе
-            self::editCardLimits($params['card_id'], empty($params['limits']) ? [] : $params['limits']);
+            self::editCardLimits($params['card_id'], $params['contract_id'], empty($params['limits']) ? [] : $params['limits']);
         }
 
 		return true;
@@ -296,7 +296,7 @@ class Model_Card extends Model
 	 * @param $params
 	 * @return bool
 	 */
-	public static function editCardLimits($cardId, $limits = [])
+	public static function editCardLimits($cardId, $contractId, $limits = [])
 	{
 		if(empty($cardId)){
 			return false;
@@ -339,28 +339,42 @@ class Model_Card extends Model
 			return true;
 		}
 
+        /*
+        S1,S2,S3:P1:T1:V1:PCS1;
+        S4,S5,S6:P2:T2:V2:PCS2;
+
+        где S1,S2,S3 - ID услуг через "запятую" в рамках указанной группы ограничения
+        P1 - параметр лимита для указанной группы ограничения (1 - в литрах, 2 - в рублях)
+        T1 - тип лимита для указанной группы ограничения (1 - суточный, 2 - недельный, 3 - месячный)
+        V1 - размер лимита для указанной группы ограничения (дробная часть через "точку")
+        PCS1 - лимит на количество операций для указанной группы ограничения (по умолчанию пока "0" - без ограничений)
+         */
+        $limitsArray = [];
+
 		foreach($limits as $group => $limit){
-			foreach($limit['services'] as $service){
-				$data = [
-						'p_card_id'			=> $cardId,
-						'p_service_id'		=> $service,
-						'p_limit_group'		=> $group,
-						'p_limit_param'		=> $limit['param'],
-						'p_limit_type'		=> $limit['type'],
-						'p_limit_value'		=> str_replace(",", ".", $limit['value']),
-						'p_limit_currency'	=> Model_Contract::CURRENCY_RUR,
-						'p_limit_pcs'		=> 0, //default
-						'p_manager_id' 		=> $user['MANAGER_ID'],
-						'p_error_code' 		=> 'out',
-				];
 
-				$res = $db->procedure('card_service_edit', $data);
-
-				if(!empty($res)){
-					return false;
-				}
-			}
+		    $limitsArray[] =
+                implode(',', $limit['services']) . ':' .
+                $limit['param'] . ':' .
+                $limit['type'] . ':' .
+                str_replace(",", ".", $limit['value']) . ':' .
+                0 . ';'
+            ;
 		}
+
+        $data = [
+            'p_card_id'			=> $cardId,
+            'p_contract_id'		=> $contractId,
+            'p_limit_array'		=> $limitsArray,
+            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = $db->procedure('card_service_edit_ar', $data);
+
+        if(!empty($res)){
+            return false;
+        }
 
 		$db->procedure('card_queue_limit_add', ['p_card_id' => $cardId]);
 

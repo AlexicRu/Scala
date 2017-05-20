@@ -97,6 +97,13 @@ return [
         'view_balance_sheet' => [
             Access::ROLE_ROOT
         ],
+        'download_bill_as_xls' => [
+            Access::ROLE_ROOT,
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_MANAGER,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
+        ],
         'root' => [
             Access::ROLE_ROOT
         ]
