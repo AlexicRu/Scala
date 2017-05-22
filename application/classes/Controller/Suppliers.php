@@ -52,9 +52,12 @@ class Controller_Suppliers extends Controller_Common {
 
         $this->_initDropZone();
 
+        $popupSupplierContractAdd = Common::popupForm('Добавление нового договора', 'supplier/contract/add');
+
         $this->tpl
             ->bind('supplier', $supplier)
             ->bind('supplierContracts', $supplierContracts)
+            ->bind('popupSupplierContractAdd', $popupSupplierContractAdd)
         ;
     }
 
@@ -139,6 +142,22 @@ class Controller_Suppliers extends Controller_Common {
         if(empty($result)){
             $this->jsonResult(false, $error);
         }
+        $this->jsonResult(true);
+    }
+
+    /**
+     * добавление контракта
+     */
+    public function action_contract_add()
+    {
+        $params = $this->request->post('params');
+
+        list($result, $error) = Model_Supplier_Contract::addContract($params);
+
+        if(empty($result)){
+            $this->jsonResult(false, $error);
+        }
+
         $this->jsonResult(true);
     }
 }

@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Model_Supplier_Contract extends Model
+class Model_Supplier_Contract extends Model_Contract
 {
     const STATE_CONTRACT_WORK = 1;
     const STATE_CONTRACT_EXPIRED = 5;
@@ -106,7 +106,7 @@ class Model_Supplier_Contract extends Model
             'p_contract_name'       => $params['CONTRACT_NAME'],
             'p_date_begin'          => $params['DATE_BEGIN'],
             'p_date_end'            => $params['DATE_END'],
-            'p_contract_cur'        => Model_Contract::CURRENCY_RUR,
+            'p_contract_cur'        => self::CURRENCY_RUR,
             'p_contract_source'     => $params['DATA_SOURCE'],
             'p_contract_tube'       => $params['TUBE_ID'],
             'p_contract_service'    => [$params['CONTRACT_SERVICES'], SQLT_INT],
@@ -137,5 +137,44 @@ class Model_Supplier_Contract extends Model
         }
 
         return $return;
+    }
+
+    /**
+     * добавление договора к пользователю
+     *
+     * @param $params
+     */
+    public static function addContract($params)
+    {
+        if(empty($params['supplier_id']) || empty($params['name']) || empty($params['date_start'])){
+            return [false, 'Ошибка'];
+        }
+
+        if(!empty($params['date_end']) && strtotime($params['date_start']) > strtotime($params['date_end'])) {
+            return [false, 'Дата начала не может быть позже даты окончания'];
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_supplier_id' 	=> $params['supplier_id'],
+            'p_contract_name' 	=> $params['name'],
+            'p_date_begin' 		=> $params['date_start'],
+            'p_date_end' 		=> !empty($params['date_end']) ? $params['date_end'] : self::DEFAULT_DATE_END,
+            'p_contract_cur'    => self::CURRENCY_RUR,
+            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_contract_id' 	=> 'out',
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = $db->procedure('splrs_contract_add', $data);
+
+        if($res == Oracle::CODE_ERROR){
+            return false;
+        }
+
+        return true;
     }
 }

@@ -148,7 +148,7 @@ function editSupplierContract()
 
             loadSupplierContract();
         } else {
-            message(0, 'Ошибка обновления контракта. ' + data.data.error);
+            message(0, data.data ? data.data : 'Ошибка добавления контракта');
         }
     });
 }
