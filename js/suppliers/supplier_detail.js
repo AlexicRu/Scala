@@ -145,9 +145,10 @@ function editSupplierContract()
     $.post('/suppliers/contract_edit/' + contractId, {params:params}, function (data) {
         if (data.success) {
             message(1, 'Контракт успешно обновлен');
-            //todo поменять данные
+
+            loadSupplierContract();
         } else {
-            message(0, 'Ошибка обновления контракта');
+            message(0, 'Ошибка обновления контракта. ' + data.data.error);
         }
     });
 }

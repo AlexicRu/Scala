@@ -365,7 +365,7 @@ class Model_Card extends Model
         $data = [
             'p_card_id'			=> $cardId,
             'p_contract_id'		=> $contractId,
-            'p_limit_array'		=> $limitsArray,
+            'p_limit_array'		=> [$limitsArray, SQLT_CHR],
             'p_manager_id' 		=> $user['MANAGER_ID'],
             'p_error_code' 		=> 'out',
         ];

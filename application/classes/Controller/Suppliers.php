@@ -134,11 +134,11 @@ class Controller_Suppliers extends Controller_Common {
         $contractId = $this->request->param('id');
         $params = $this->request->post('params');
 
-        $result = Model_Supplier_Contract::edit($contractId, $params);
+        list($result, $error) = Model_Supplier_Contract::edit($contractId, $params);
 
         if(empty($result)){
-            $this->jsonResult(false);
+            $this->jsonResult(false, $error);
         }
-        $this->jsonResult(true, $result);
+        $this->jsonResult(true);
     }
 }

@@ -93,7 +93,7 @@ class Model_Supplier_Contract extends Model
             empty($contractId) ||
             empty($params['CONTRACT_NAME'])
         ){
-            return false;
+            return [false, ''];
         }
 
         $db = Oracle::init();
@@ -109,18 +109,33 @@ class Model_Supplier_Contract extends Model
             'p_contract_cur'        => Model_Contract::CURRENCY_RUR,
             'p_contract_source'     => $params['DATA_SOURCE'],
             'p_contract_tube'       => $params['TUBE_ID'],
-            'p_contract_service'    => $params['CONTRACT_SERVICES'],
-            'p_contract_pos_groups' => $params['CONTRACT_POS_GROUPS'],
+            'p_contract_service'    => [$params['CONTRACT_SERVICES'], SQLT_INT],
+            'p_contract_pos_groups' => [$params['CONTRACT_POS_GROUPS'], SQLT_INT],
             'p_manager_id'          => $user['MANAGER_ID'],
             'p_error_code'          => 'out',
         ];
 
-        $res = $db->procedure('splrs_contract_edit', $data);
+        $res = $db->procedure('splrs_contract_edit', $data, true);
 
-        if(empty($res)){
-            return true;
+        $return = [true, ''];
+
+        if($res['p_error_code'] != Oracle::CODE_SUCCESS){
+            switch ($res['p_error_code']) {
+                case 2:
+                    $error = 'Данный источник используется';
+                    break;
+                case 3:
+                    $error = 'Для услуг есть действующий договор';
+                    break;
+                case 4:
+                    $error = 'Для точек есть действующий договор';
+                    break;
+                default:
+                    $error = 'Ошибка';
+            }
+            $return = [false, $error];
         }
 
-        return false;
+        return $return;
     }
 }
