@@ -101,4 +101,35 @@ class Model_Supplier extends Model
 
         return false;
     }
+
+    /**
+     * добавление поставщика по имени
+     *
+     * @param $params
+     */
+    public static function add($params)
+    {
+        if(empty($params['name'])){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_name' 		=> $params['name'],
+            'p_manager_id' 	=> $user['MANAGER_ID'],
+            'p_client_id' 	=> 'out',
+            'p_error_code' 	=> 'out',
+        ];
+
+        $res = $db->procedure('splrs_add', $data);
+
+        if(empty($res)){
+            return true;
+        }
+
+        return false;
+    }
 }

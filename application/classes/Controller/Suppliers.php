@@ -11,7 +11,11 @@ class Controller_Suppliers extends Controller_Common {
 
 	public function action_index()
 	{
+        $popupSupplierAdd = Common::popupForm('Добавление нового поставщика', 'supplier/add');
 
+        $this->tpl
+            ->bind('popupSupplierAdd', $popupSupplierAdd)
+        ;
 	}
 
     /**
@@ -85,7 +89,7 @@ class Controller_Suppliers extends Controller_Common {
         $contractId = $this->request->param('id');
 
         if($contractId == 0){
-            $this->html('<div class="error_block">Контракты отсутствуют</div>');
+            $this->html('<div class="error_block">Договоры отсутствуют</div>');
         }
 
         $tab = $this->request->post('tab');
@@ -158,6 +162,21 @@ class Controller_Suppliers extends Controller_Common {
             $this->jsonResult(false, $error);
         }
 
+        $this->jsonResult(true);
+    }
+
+    /**
+     * создание нового поставщика
+     */
+    public function action_supplier_add()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Supplier::add($params);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
         $this->jsonResult(true);
     }
 }
