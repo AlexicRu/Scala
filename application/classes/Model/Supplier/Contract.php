@@ -169,12 +169,12 @@ class Model_Supplier_Contract extends Model_Contract
             'p_error_code' 		=> 'out',
         ];
 
-        $res = $db->procedure('splrs_contract_add', $data);
+        $res = $db->procedure('splrs_contract_add', $data, true);
 
         if($res == Oracle::CODE_ERROR){
-            return false;
+            return [false, 'Договор не создался'];
         }
 
-        return true;
+        return [true, ''];
     }
 }

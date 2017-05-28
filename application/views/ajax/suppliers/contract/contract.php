@@ -61,11 +61,11 @@
                             <div class="supplier-contract__contract-data-source">
                                 <label>
                                     <input type="radio" name="DATA_SOURCE" value="<?=Model_Supplier_Contract::DATA_SOURCE_OUTSIDE?>" <?=($contract['DATA_SOURCE'] == Model_Supplier_Contract::DATA_SOURCE_OUTSIDE ? 'checked' : '')?> onchange="checkSupplierContractDataSource()">
-                                    Внутренний источник
+                                    Внешний источник
                                 </label>
                                 <select name="TUBE_ID" <?=($contract['DATA_SOURCE'] != Model_Supplier_Contract::DATA_SOURCE_OUTSIDE ? 'disabled' : '')?>>
                                     <?foreach ($tubes as $tube) {?>
-                                        <option value="<?=$contract['TUBE_ID']?>" <?=($tube['PROJECT_ID'] == $contract['TUBE_ID'] ? 'selected' : '')?>><?=$tube['PROJECT_NAME']?></option>
+                                        <option value="<?=$tube['PROJECT_ID']?>" <?=($tube['PROJECT_ID'] == $contract['TUBE_ID'] ? 'selected' : '')?>><?=$tube['PROJECT_NAME']?></option>
                                     <?}?>
                                 </select>
                             </div>

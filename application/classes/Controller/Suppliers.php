@@ -105,9 +105,13 @@ class Controller_Suppliers extends Controller_Common {
                 ;
                 break;
             case 'agreements':
+                $agreements = Model_Supplier_Agreement::getList(['contract_id' => $contractId]);
+
+                $popupAgreementAdd = Common::popupForm('Добавление нового соглашения', 'supplier/agreement/add');
 
                 $content = View::factory('ajax/suppliers/contract/agreements')
-                    ->bind('contract', $contract)
+                    ->bind('agreements', $agreements)
+                    ->bind('popupAgreementAdd', $popupAgreementAdd)
                 ;
                 break;
         }
@@ -178,5 +182,29 @@ class Controller_Suppliers extends Controller_Common {
             $this->jsonResult(false);
         }
         $this->jsonResult(true);
+    }
+
+    /**
+     * грузим соглашение по контракту поставщика
+     */
+    public function action_agreement()
+    {
+        $agreementId = $this->request->param('id');
+        $contractId = $this->request->query('contract_id');
+
+        $agreement = Model_Supplier_Agreement::get($agreementId, $contractId);
+
+        if(empty($agreement)){
+            $this->html('<div class="error_block">Ошибка</div>');
+        }
+
+        $tariffs = Model_Tariff::getAvailableTariffs();
+
+        $html = View::factory('ajax/suppliers/agreement')
+            ->bind('agreement', $agreement)
+            ->bind('tariffs', $tariffs)
+        ;
+
+        $this->html($html);
     }
 }

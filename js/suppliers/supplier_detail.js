@@ -1,7 +1,9 @@
 var supplierLogo = false;
 var supplierId = false;
+var contractId = false;
 
 $(function () {
+    contractId = $('[name=suppliers_contracts_list]').val();
     supplierId = $('[name=supplier_id]').val();
 
     dropzone = new Dropzone('.supplier-detail__avatar-dropzone', {
@@ -19,6 +21,10 @@ $(function () {
         {
             _saveSupplierInfo();
         }
+    });
+
+    $('[name=suppliers_contracts_list]').on('change', function () {
+        contractId = $(this).val();
     });
 });
 
@@ -102,8 +108,6 @@ function _saveSupplierInfo()
 
 function loadSupplierContract(tab)
 {
-    var contractId = $('[name=suppliers_contracts_list]').val();
-
     if (!tab) {
         tab = 'contract';
     }
@@ -124,7 +128,6 @@ function loadSupplierContract(tab)
 function editSupplierContract()
 {
     var block = $('.supplier-contract__contract');
-    var contractId = $('[name=suppliers_contracts_list]').val();
 
     var params = {
         CONTRACT_NAME:          $('[name=CONTRACT_NAME]', block).val(),
@@ -164,4 +167,34 @@ function checkSupplierContractDataSource()
     } else {
         $('[name=TUBE_ID]').prop('disabled', false);
     }
+}
+
+function checkAgreementDiscountType(radio)
+{
+    var block = radio.closest('.agreement__outer');
+
+    var discountType = $('[name=DISCOUNT_TYPE]:checked').val();
+
+    if (discountType == DISCOUNT_TYPE_FROM_LOAD) {
+        $('[name=TARIF_ID]').prop('disabled', true);
+    } else {
+        $('[name=TARIF_ID]').prop('disabled', false);
+    }
+}
+
+function loadAgreement(elem)
+{
+    if($(".tabs_agreements [tab_content="+ elem.attr('tab') +"]").text() == ''){
+        $(".tabs_agreements [tab_content="+ elem.attr('tab') +"]").empty().addClass(CLASS_LOADING);
+
+        $.post('/suppliers/agreement/' + elem.attr('tab') + '/?contract_id=' + contractId, {}, function(data){
+            $(".tabs_agreements [tab_content="+ elem.attr('tab') +"]").html(data).removeClass(CLASS_LOADING);
+        });
+    }
+}
+
+function agreementSave(btn)
+{
+    var block = btn.closest('.agreement__outer');
+    var agreementId = block.attr('agreement_id');
 }
