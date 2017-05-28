@@ -26,7 +26,7 @@ class TelegramParser
         //разбираем пришедшие запросы
         if (!empty($postData['message']['text'])) {
 
-            $data = explode(' ', $postData['message']['text']);
+            $data = explode(' ', strtolower($postData['message']['text']));
 
             $this->_postData = $postData;
             $this->_command = array_shift($data);
