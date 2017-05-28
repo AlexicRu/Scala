@@ -163,7 +163,7 @@
                     <td>
                         <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_ONLINE']?></span>
                         <span toggle_block="block2" class="dn">
-                            <?=Common::buildFormField(false, 'contract_tariffs', 'TARIF_ONLINE', $contractSettings['TARIF_ONLINE'])?>
+                            <?=Common::buildFormField('contract_tariffs', 'TARIF_ONLINE', $contractSettings['TARIF_ONLINE'])?>
                         </span>
                     </td>
                 </tr>
@@ -172,7 +172,7 @@
                     <td>
                         <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_OFFLINE']?></span>
                         <span toggle_block="block2" class="dn">
-                            <?=Common::buildFormField(false, 'contract_tariffs', 'TARIF_OFFLINE', $contractSettings['TARIF_OFFLINE'])?>
+                            <?=Common::buildFormField('contract_tariffs', 'TARIF_OFFLINE', $contractSettings['TARIF_OFFLINE'])?>
                         </span>
                     </td>
                 </tr>

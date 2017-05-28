@@ -1,7 +1,7 @@
 <span class="form_field" field="<?=$type?>">
-    <input type="text" name="<?=$name?>" class="combobox input_wide" autocomplete="off"
+    <input type="text" name="<?=$name?>" class="custom_field combobox combobox_multi input_wide" url="/help/list_manager_sale" autocomplete="off"
         <?=(isset($params['weight']) ? 'weight="'.$params['weight'].'"' : '')?>
-        url="/help/list_client">
+    >
 </span>
 
 <script>

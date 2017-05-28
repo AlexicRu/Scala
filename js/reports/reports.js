@@ -33,9 +33,8 @@ function generateReport(btn)
 
     $('.report_additional_params .form_field', block).each(function () {
         var t = $(this);
-        var name = t.attr('field');
-
-        var field = $('[name='+ name +']', block);
+        var field = $('.custom_field', t);
+        var name = field.attr('name');
         var value = false;
 
         if(field.attr('depend_on')){

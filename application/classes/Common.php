@@ -33,16 +33,15 @@ class Common
     /**
      * генерация шаблона конкретного типа поля
      *
-     * @param $prefix
      * @param $type
      * @param $name
      * @param $value
      * @param $params
      */
-	public static function buildFormField($prefix, $type, $name, $value = false, $params = [])
+	public static function buildFormField($type, $name, $value = false, $params = [])
     {
         try {
-            $content = View::factory('forms/_fields/' . ($prefix ? $prefix.'/' : '') . $type)
+            $content = View::factory('forms/_fields/' . $type)
                 ->bind('type', $type)
                 ->bind('name', $name)
                 ->bind('value', $value)

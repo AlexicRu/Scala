@@ -28,13 +28,13 @@ class Controller_Suppliers extends Controller_Common {
             'pagination'        => true
         ];
 
-        list($dots, $more) = Model_Supplier::getList($params);
+        list($suppliers, $more) = Model_Supplier::getList($params);
 
-        if(empty($dots)){
+        if(empty($suppliers)){
             $this->jsonResult(false);
         }
 
-        $this->jsonResult(true, ['items' => $dots, 'more' => $more]);
+        $this->jsonResult(true, ['items' => $suppliers, 'more' => $more]);
     }
 
     /**

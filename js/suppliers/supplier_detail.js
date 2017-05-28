@@ -1,4 +1,4 @@
-var supplierLogo = false;
+var supplierLogo = '';
 var supplierId = false;
 var contractId = false;
 
@@ -59,7 +59,7 @@ function _saveSupplierInfo()
         ICON_PATH:      supplierLogo
     };
 
-    if(
+    /*if(
         params.NAME == '' ||
         params.Y_ADDRESS == '' ||
         params.PHONE == '' ||
@@ -68,7 +68,7 @@ function _saveSupplierInfo()
     ){
         message(0, 'Заполните обязательные поля');
         return false;
-    }
+    }*/
 
     $.post('/suppliers/supplier_edit/' + supplierId, { params:params }, function(data){
         if(data.success){
@@ -102,7 +102,7 @@ function _saveSupplierInfo()
         }
 
         dropzone.removeAllFiles();
-        supplierLogo = false;
+        supplierLogo = '';
     });
 }
 
