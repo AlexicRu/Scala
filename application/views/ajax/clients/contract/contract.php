@@ -63,7 +63,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="gray right">Переодичность выставления счетов:</td>
+                <td class="gray right">Периодичность выставления счетов:</td>
                 <td>
                     <?
                     if($contractSettings['INVOICE_PERIOD_TYPE'] == Model_Contract::INVOICE_PERIOD_TYPE_DAY){

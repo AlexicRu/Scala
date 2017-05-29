@@ -332,10 +332,7 @@ class Model_Card extends Model
 
 		$db = Oracle::init();
 
-		$db->procedure('card_service_refresh', ['p_card_id' => $cardId]);
-
 		if(empty($limits)){
-            $db->procedure('card_queue_limit_add', ['p_card_id' => $cardId]);
 			return true;
 		}
 
@@ -375,8 +372,6 @@ class Model_Card extends Model
         if(!empty($res)){
             return false;
         }
-
-		$db->procedure('card_queue_limit_add', ['p_card_id' => $cardId]);
 
 		return true;
 	}

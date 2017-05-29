@@ -53,4 +53,72 @@ class Model_Supplier_Agreement extends Model
         }
         return reset($agreements);
     }
+
+    /**
+     * редактирование соглашения
+     *
+     * @param $params
+     */
+    public static function edit($params)
+    {
+        if(empty($params['contract_id']) || empty($params['agreement_id'])){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_contract_id' 	=> $params['contract_id'],
+            'p_agreement_id' 	=> $params['agreement_id'],
+            'p_agreement_name' 	=> $params['agreement_name'],
+            'p_date_begin' 		=> $params['date_begin'],
+            'p_date_end' 	    => !empty($params['date_end']) ? $params['date_end'] : Model_Contract::DEFAULT_DATE_END,
+            'p_discount_type' 	=> $params['discount_type'],
+            'p_tarif_id' 		=> $params['tarif_id'],
+            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = $db->procedure('splrs_cntr_agreement_edit', $data);
+
+        if($res == Oracle::CODE_ERROR){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * добавление соглашения
+     *
+     * @param $params
+     */
+    public static function add($params)
+    {
+        if(empty($params['contract_id'])){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_contract_id' 	=> $params['contract_id'],
+            'p_agreement_name' 	=> $params['agreement_name'],
+            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_agreement_id' 	=> 'out',
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = $db->procedure('splrs_cntr_agreement_add', $data);
+
+        if($res == Oracle::CODE_ERROR){
+            return false;
+        }
+
+        return true;
+    }
 }

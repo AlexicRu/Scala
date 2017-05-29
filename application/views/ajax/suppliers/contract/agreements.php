@@ -12,7 +12,7 @@
                 <div class="tab_v" tab="<?=$agreement['AGREEMENT_ID']?>" onclick="loadAgreement($(this))">
                     <div>
                         <span class="icon-card gray"></span>
-                        [<?=$agreement['AGREEMENT_ID']?>] <?=$agreement['AGREEMENT_NAME']?>
+                        [<?=$agreement['AGREEMENT_ID']?>] <span class="agreement_name"><?=$agreement['AGREEMENT_NAME']?></span>
                     </div>
                 </div>
             <?}?>

@@ -20,7 +20,7 @@
             </select>
         </span>
     
-        <?if(Access::allow('clients_contract_edit')){?>
+        <?if(Access::allow('suppliers_contract_edit')){?>
             <div class="fr" toggle_block="toggle_contract"><button class="btn" toggle="toggle_contract"><i class="icon-pen"></i> Редактировать</button></div>
             <div class="fr dn" toggle_block="toggle_contract">
                 <button class="btn btn_green btn_reverse" onclick="editSupplierContract()"><i class="icon-ok"></i> Сохранить</button>
@@ -94,13 +94,12 @@
                 <?}?>
             </table>
         </div>
-        <?if(Access::allow('root')){?>
         <div class="col line_inner">
             <b class="f18">Баланс по договору:</b>
             <br>
-            <div class="f50"><b><?=number_format(138617, 2, ',', ' ')?></b> <?=Text::RUR?></div>
+            <div class="f50"><b><?=number_format($contract['BALANCE'], 2, ',', ' ')?></b> <?=Text::RUR?></div>
+            <i class="gray">на <?=$contract['BALANCE_DATE']?></i>
         </div>
-        <?}?>
     </div>
 </div>
 

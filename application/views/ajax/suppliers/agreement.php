@@ -54,7 +54,7 @@ $toggle = 'agreement'.$agreement['AGREEMENT_ID'];
                             </label>
                             <select name="TARIF_ID" <?=($agreement['DISCOUNT_TYPE'] != Model_Supplier_Agreement::DISCOUNT_TYPE_FROM_TARIFF ? 'disabled' : '')?>>
                                 <?foreach ($tariffs as $tariff) {?>
-                                    <option value="<?=$agreement['TARIF_ID']?>" <?=($tariff['TARIF_ID'] == $agreement['TARIF_ID'] ? 'selected' : '')?>><?=$tariff['TARIF_NAME']?></option>
+                                    <option value="<?=$tariff['TARIF_ID']?>" <?=($tariff['TARIF_ID'] == $agreement['TARIF_ID'] ? 'selected' : '')?>><?=$tariff['TARIF_NAME']?></option>
                                 <?}?>
                             </select>
                         </div>

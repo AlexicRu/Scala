@@ -207,4 +207,36 @@ class Controller_Suppliers extends Controller_Common {
 
         $this->html($html);
     }
+
+    /**
+     * редактирование соглашения
+     */
+    public function action_agreement_edit()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Supplier_Agreement::edit($params);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * добавление нового соглашения
+     */
+    public function action_agreement_add()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Supplier_Agreement::add($params);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
 }

@@ -23,6 +23,15 @@ class TelegramParser
 
     public function __construct($postData)
     {
+        $this->_telegramUser = !empty($postData['message']['from']['username']) ? $postData['message']['from']['username'] : '';
+        $this->_cacheKey .= $this->_telegramUser;
+
+        $this->_chatId = !empty($postData['message']['chat']['id']) ? $postData['message']['chat']['id'] : false;
+
+        $this->_cache = Cache::instance();
+
+        $this->_config = Kohana::$config->load('config');
+
         //разбираем пришедшие запросы
         if (!empty($postData['message']['text'])) {
 
@@ -31,15 +40,8 @@ class TelegramParser
             $this->_postData = $postData;
             $this->_command = array_shift($data);
             $this->_params = !empty($data) ? $data : [];
+        } else if(!empty($postData['message']['contact'])) {
 
-            $this->_telegramUser = !empty($postData['message']['from']['username']) ? $postData['message']['from']['username'] : '';
-            $this->_cacheKey .= $this->_telegramUser;
-
-            $this->_chatId = !empty($postData['message']['chat']['id']) ? $postData['message']['chat']['id'] : false;
-
-            $this->_cache = Cache::instance();
-
-            $this->_config = Kohana::$config->load('config');
         }
     }
 

@@ -80,7 +80,30 @@ return [
             Access::ROLE_ADMIN,
         ],
         'suppliers_index' => [
-            Access::ROLE_ROOT,
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
+        'suppliers_supplier_add' => [
+            Access::ROLE_ADMIN,
+        ],
+        'suppliers_supplier_edit' => [
+            Access::ROLE_ADMIN,
+        ],
+        'suppliers_contract_add' => [
+            Access::ROLE_ADMIN,
+        ],
+        'suppliers_contract_edit' => [
+            Access::ROLE_ADMIN,
+        ],
+        'suppliers_supplier_detail' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
+        'suppliers_agreement_add' => [
+            Access::ROLE_ADMIN,
+        ],
+        'suppliers_agreement_edit' => [
+            Access::ROLE_ADMIN,
         ],
         // custom
         'view_contract_balances' => [

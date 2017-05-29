@@ -182,13 +182,17 @@ function checkAgreementDiscountType(radio)
     }
 }
 
-function loadAgreement(elem)
+function loadAgreement(elem, force)
 {
-    if($(".tabs_agreements [tab_content="+ elem.attr('tab') +"]").text() == ''){
+    if($(".tabs_agreements [tab_content="+ elem.attr('tab') +"]").text() == '' || force == true){
         $(".tabs_agreements [tab_content="+ elem.attr('tab') +"]").empty().addClass(CLASS_LOADING);
 
         $.post('/suppliers/agreement/' + elem.attr('tab') + '/?contract_id=' + contractId, {}, function(data){
             $(".tabs_agreements [tab_content="+ elem.attr('tab') +"]").html(data).removeClass(CLASS_LOADING);
+
+            $('.datepicker').each(function () {
+                renderDatePicker($(this));
+            });
         });
     }
 }
@@ -197,4 +201,33 @@ function agreementSave(btn)
 {
     var block = btn.closest('.agreement__outer');
     var agreementId = block.attr('agreement_id');
+
+    var params = {
+        'contract_id':      contractId,
+        'agreement_id':     agreementId,
+        'agreement_name':   $('[name=AGREEMENT_NAME]', block).val(),
+        'date_begin':       $('[name=DATE_BEGIN]', block).val(),
+        'date_end':         $('[name=DATE_END]', block).val(),
+        'discount_type':    $('[name=DISCOUNT_TYPE]:checked', block).val(),
+        'tarif_id':         $('[name=TARIF_ID]', block).val()
+    };
+
+    if (
+        params.agreement_name == '' ||
+        params.date_begin == ''
+    ) {
+        message(0, 'Заполните обязательные поля');
+        return false;
+    }
+
+    $.post('/suppliers/agreement_edit', {params:params}, function (data) {
+        if (data.success) {
+            message(1, 'Соглашение успешно обновлено');
+            loadAgreement($('.tabs_agreements .tab_v.active'), true);
+
+            $('.tabs_agreements .tab_v.active .agreement_name').text(params.agreement_name);
+        } else {
+            message(0, 'Ошибка сохранения');
+        }
+    });
 }
