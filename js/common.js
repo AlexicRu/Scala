@@ -221,7 +221,7 @@ function setFormFieldValue(field, value)
                     field.prop('checked', false);
                 }
             }else{
-                field.val(value);
+                field.find('.custom_field').val(value);
             }
     }
 }

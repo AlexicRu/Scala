@@ -19,7 +19,6 @@ return [
             Access::ROLE_SUPERVISOR,
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
-            Access::ROLE_MANAGER_SALE,
             Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
         'client_cabinet_create' => [
@@ -162,6 +161,7 @@ return [
         ],
         'clients_card_edit_limits' => [
             Access::ROLE_USER_SECOND,
+            Access::ROLE_MANAGER_SALE,
         ],
         'clients_payment_add' => [
             Access::ROLE_USER,
@@ -176,6 +176,9 @@ return [
         'reports_index' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
+        ],
+        'manager_setting' => [
+            Access::ROLE_MANAGER_SALE,
         ],
         // custom
         'view_tariffs' => [

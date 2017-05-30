@@ -10,7 +10,7 @@
 
 <div class="line"></div>
 
-<select name="suppliers_contracts_list" class="select_big select_long" onchange="loadSupplierContract()">
+<select name="suppliers_contracts_list" class="select_big select_long" onchange="contractId = $(this).val(); loadSupplierContract()">
     <?if(empty($supplierContracts)){?>
         <option value="0">Нет договоров</option>
     <?}else{

@@ -237,7 +237,7 @@ function saveTariff(btn)
             }else if(formField.find('.combobox').length){
                 conditionValue = formField.find('[name=combobox_value]').val();
             }else{
-                conditionValue = formField.val();
+                conditionValue = formField.find('.custom_field').val();
             }
 
             if(conditionValue == ''){

@@ -97,8 +97,13 @@
         <div class="col line_inner">
             <b class="f18">Баланс по договору:</b>
             <br>
-            <div class="f50"><b><?=number_format($contract['BALANCE'], 2, ',', ' ')?></b> <?=Text::RUR?></div>
-            <i class="gray">на <?=$contract['BALANCE_DATE']?></i>
+            <?if(!empty($contract['BALANCE']) && is_string($contract['BALANCE'])){?>
+                <div class="f30"><b><?=$contract['BALANCE']?></b></div>
+            <?}else{?>
+                <div class="f50"><b><?=number_format($contract['BALANCE'], 2, ',', ' ')?></b> <?=Text::RUR?></div>
+                <?if (!empty($contract['BALANCE_DATE'])) {?><i class="gray">на <?=$contract['BALANCE_DATE']?></i><?}?>
+            <?}?>
+
         </div>
     </div>
 </div>

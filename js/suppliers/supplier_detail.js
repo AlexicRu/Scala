@@ -22,10 +22,6 @@ $(function () {
             _saveSupplierInfo();
         }
     });
-
-    $('[name=suppliers_contracts_list]').on('change', function () {
-        contractId = $(this).val();
-    });
 });
 
 function saveSupplierInfo()
