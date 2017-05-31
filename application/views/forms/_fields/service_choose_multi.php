@@ -1,5 +1,5 @@
 <span class="form_field" field="<?=$type?>">
-    <input type="text" name="<?=$name?>" class="custom_field combobox input_wide <?=(!empty($params['classes']) ? $params['classes'] : '')?>" url="/help/list_contract_tariffs" autocomplete="off">
+    <input type="text" name="<?=$name?>" class="custom_field combobox combobox_multi input_wide" url="/help/list_service" autocomplete="off">
 </span>
 
 <script>
@@ -7,7 +7,7 @@
         $('[name=<?=$name?>]').each(function () {
             var t = $(this);
 
-            renderComboBox(t);
+            renderComboBoxMulti(t, '<?=json_encode($params)?>');
             setFormFieldValue(t.parent(), '<?=$value?>');
         });
     });

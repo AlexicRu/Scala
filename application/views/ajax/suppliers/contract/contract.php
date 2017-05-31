@@ -20,7 +20,7 @@
             </select>
         </span>
     
-        <?if(Access::allow('clients_contract_edit')){?>
+        <?if(Access::allow('suppliers_contract_edit')){?>
             <div class="fr" toggle_block="toggle_contract"><button class="btn" toggle="toggle_contract"><i class="icon-pen"></i> Редактировать</button></div>
             <div class="fr dn" toggle_block="toggle_contract">
                 <button class="btn btn_green btn_reverse" onclick="editSupplierContract()"><i class="icon-ok"></i> Сохранить</button>
@@ -61,11 +61,11 @@
                             <div class="supplier-contract__contract-data-source">
                                 <label>
                                     <input type="radio" name="DATA_SOURCE" value="<?=Model_Supplier_Contract::DATA_SOURCE_OUTSIDE?>" <?=($contract['DATA_SOURCE'] == Model_Supplier_Contract::DATA_SOURCE_OUTSIDE ? 'checked' : '')?> onchange="checkSupplierContractDataSource()">
-                                    Внутренний источник
+                                    Внешний источник
                                 </label>
                                 <select name="TUBE_ID" <?=($contract['DATA_SOURCE'] != Model_Supplier_Contract::DATA_SOURCE_OUTSIDE ? 'disabled' : '')?>>
                                     <?foreach ($tubes as $tube) {?>
-                                        <option value="<?=$contract['TUBE_ID']?>" <?=($tube['PROJECT_ID'] == $contract['TUBE_ID'] ? 'selected' : '')?>><?=$tube['PROJECT_NAME']?></option>
+                                        <option value="<?=$tube['PROJECT_ID']?>" <?=($tube['PROJECT_ID'] == $contract['TUBE_ID'] ? 'selected' : '')?>><?=$tube['PROJECT_NAME']?></option>
                                     <?}?>
                                 </select>
                             </div>
@@ -76,25 +76,35 @@
                 <tr>
                     <td class="gray right">Услуги:</td>
                     <td>
-                        <i class="gray">Нет данных</i>
+                        <div toggle_block="toggle_contract" class="contract_service_render_value"></div>
+                        <div class="dn" toggle_block="toggle_contract">
+                            <?=Common::buildFormField('service_choose_multi', 'CONTRACT_SERVICES', $contract['CONTRACT_SERVICES'], ['show_all' => true, 'render_value_to' => '.contract_service_render_value'])?>
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td class="gray right">Группы точек:</td>
                     <td>
-                        <i class="gray">Нет данных</i>
+                        <div toggle_block="toggle_contract" class="contract_pos_groups_render_value"></div>
+                        <div class="dn" toggle_block="toggle_contract">
+                            <?=Common::buildFormField('pos_group_choose_multi', 'CONTRACT_POS_GROUPS', $contract['CONTRACT_POS_GROUPS'], ['show_all' => true, 'render_value_to' => '.contract_pos_groups_render_value'])?>
+                        </div>
                     </td>
                 </tr>
                 <?}?>
             </table>
         </div>
-        <?if(Access::allow('root')){?>
         <div class="col line_inner">
             <b class="f18">Баланс по договору:</b>
             <br>
-            <div class="f50"><b><?=number_format(138617, 2, ',', ' ')?></b> <?=Text::RUR?></div>
+            <?if(!empty($contract['BALANCE']) && is_string($contract['BALANCE'])){?>
+                <div class="f30"><b><?=$contract['BALANCE']?></b></div>
+            <?}else{?>
+                <div class="f50"><b><?=number_format($contract['BALANCE'], 2, ',', ' ')?></b> <?=Text::RUR?></div>
+                <?if (!empty($contract['BALANCE_DATE'])) {?><i class="gray">на <?=$contract['BALANCE_DATE']?></i><?}?>
+            <?}?>
+
         </div>
-        <?}?>
     </div>
 </div>
 

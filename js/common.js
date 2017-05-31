@@ -195,7 +195,12 @@ function _paginationAjaxLoad(url, outer, block, callback, params)
     });
 }
 
-function setFormFieldValue(field, value) {
+function setFormFieldValue(field, value)
+{
+    if (value == '') {
+        return;
+    }
+
     var type = field.attr('field');
     var isCombobox = field.find('.combobox').length;
     var isComboboxMulti = field.find('.combobox_multi').length;
@@ -216,7 +221,7 @@ function setFormFieldValue(field, value) {
                     field.prop('checked', false);
                 }
             }else{
-                field.val(value);
+                field.find('.custom_field').val(value);
             }
     }
 }

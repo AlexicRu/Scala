@@ -10,7 +10,7 @@
 
 <div class="line"></div>
 
-<select name="suppliers_contracts_list" class="select_big select_long" onchange="loadSupplierContract()">
+<select name="suppliers_contracts_list" class="select_big select_long" onchange="contractId = $(this).val(); loadSupplierContract()">
     <?if(empty($supplierContracts)){?>
         <option value="0">Нет договоров</option>
     <?}else{
@@ -20,6 +20,12 @@
             </option>
         <?}}?>
 </select>
+
+<?if(Access::allow('suppliers_contract_add')){?>
+    &nbsp;&nbsp;&nbsp;<a href="#supplier_contract_add" class="btn fancy">+ Создать договор</a>
+
+    <?=$popupSupplierContractAdd?>
+<?}?>
 
 <div class="supplier-contract"></div>
 

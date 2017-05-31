@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Model_Supplier_Contract extends Model
+class Model_Supplier_Contract extends Model_Contract
 {
     const STATE_CONTRACT_WORK = 1;
     const STATE_CONTRACT_EXPIRED = 5;
@@ -80,5 +80,101 @@ class Model_Supplier_Contract extends Model
         $sql = "select * from ".Oracle::$prefix."V_WEB_TUBES_LIST t where t.is_owner = 1 and t.agent_id=".$user['AGENT_ID'];
 
         return $db->query($sql);
+    }
+
+
+    /**
+     * @param $contractId
+     * @param $params
+     */
+    public static function edit($contractId, $params)
+    {
+        if(
+            empty($contractId) ||
+            empty($params['CONTRACT_NAME'])
+        ){
+            return [false, ''];
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_contract_id'         => $contractId,
+            'p_contract_state'      => $params['CONTRACT_STATE'],
+            'p_contract_name'       => $params['CONTRACT_NAME'],
+            'p_date_begin'          => $params['DATE_BEGIN'],
+            'p_date_end'            => $params['DATE_END'],
+            'p_contract_cur'        => self::CURRENCY_RUR,
+            'p_contract_source'     => $params['DATA_SOURCE'],
+            'p_contract_tube'       => $params['TUBE_ID'],
+            'p_contract_service'    => [$params['CONTRACT_SERVICES'], SQLT_INT],
+            'p_contract_pos_groups' => [$params['CONTRACT_POS_GROUPS'], SQLT_INT],
+            'p_manager_id'          => $user['MANAGER_ID'],
+            'p_error_code'          => 'out',
+        ];
+
+        $res = $db->procedure('splrs_contract_edit', $data, true);
+
+        $return = [true, ''];
+
+        if($res['p_error_code'] != Oracle::CODE_SUCCESS){
+            switch ($res['p_error_code']) {
+                case 2:
+                    $error = 'Данный источник используется';
+                    break;
+                case 3:
+                    $error = 'Для услуг есть действующий договор';
+                    break;
+                case 4:
+                    $error = 'Для точек есть действующий договор';
+                    break;
+                default:
+                    $error = 'Ошибка';
+            }
+            $return = [false, $error];
+        }
+
+        return $return;
+    }
+
+    /**
+     * добавление договора к пользователю
+     *
+     * @param $params
+     */
+    public static function addContract($params)
+    {
+        if(empty($params['supplier_id']) || empty($params['name']) || empty($params['date_start'])){
+            return [false, 'Ошибка'];
+        }
+
+        if(!empty($params['date_end']) && strtotime($params['date_start']) > strtotime($params['date_end'])) {
+            return [false, 'Дата начала не может быть позже даты окончания'];
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_supplier_id' 	=> $params['supplier_id'],
+            'p_contract_name' 	=> $params['name'],
+            'p_date_begin' 		=> $params['date_start'],
+            'p_date_end' 		=> !empty($params['date_end']) ? $params['date_end'] : self::DEFAULT_DATE_END,
+            'p_contract_cur'    => self::CURRENCY_RUR,
+            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_contract_id' 	=> 'out',
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = $db->procedure('splrs_contract_add', $data, true);
+
+        if($res == Oracle::CODE_ERROR){
+            return [false, 'Договор не создался'];
+        }
+
+        return [true, ''];
     }
 }

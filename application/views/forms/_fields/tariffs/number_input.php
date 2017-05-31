@@ -1,1 +1,0 @@
-<input type="number" class="form_field input_mini" name="<?=$name?>" field="<?=$type?>">

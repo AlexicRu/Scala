@@ -19,7 +19,6 @@ return [
             Access::ROLE_SUPERVISOR,
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
-            Access::ROLE_MANAGER_SALE,
             Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
         'client_cabinet_create' => [
@@ -80,7 +79,30 @@ return [
             Access::ROLE_ADMIN,
         ],
         'suppliers_index' => [
-            Access::ROLE_ROOT,
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
+        'suppliers_supplier_add' => [
+            Access::ROLE_ADMIN,
+        ],
+        'suppliers_supplier_edit' => [
+            Access::ROLE_ADMIN,
+        ],
+        'suppliers_contract_add' => [
+            Access::ROLE_ADMIN,
+        ],
+        'suppliers_contract_edit' => [
+            Access::ROLE_ADMIN,
+        ],
+        'suppliers_supplier_detail' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
+        'suppliers_agreement_add' => [
+            Access::ROLE_ADMIN,
+        ],
+        'suppliers_agreement_edit' => [
+            Access::ROLE_ADMIN,
         ],
         // custom
         'view_contract_balances' => [
@@ -96,6 +118,13 @@ return [
         ],
         'view_balance_sheet' => [
             Access::ROLE_ROOT
+        ],
+        'download_bill_as_xls' => [
+            Access::ROLE_ROOT,
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_MANAGER,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
         'root' => [
             Access::ROLE_ROOT
@@ -132,6 +161,7 @@ return [
         ],
         'clients_card_edit_limits' => [
             Access::ROLE_USER_SECOND,
+            Access::ROLE_MANAGER_SALE,
         ],
         'clients_payment_add' => [
             Access::ROLE_USER,
@@ -146,6 +176,9 @@ return [
         'reports_index' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
+        ],
+        'manager_setting' => [
+            Access::ROLE_MANAGER_SALE,
         ],
         // custom
         'view_tariffs' => [

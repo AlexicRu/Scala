@@ -58,6 +58,12 @@ h3,
 .f50 {
   font-size: 50px;
 }
+.f40 {
+  font-size: 40px;
+}
+.f30 {
+  font-size: 30px;
+}
 .blue {
   color: #0e86ad;
 }
@@ -1557,6 +1563,16 @@ div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-1 {
   margin-bottom: 10px;
 }
 .supplier-contract__contract-data-source label {
+  display: block;
+  margin-bottom: 5px;
+}
+.padding__20 {
+  padding: 20px;
+}
+.agreement__discount-type {
+  margin-bottom: 10px;
+}
+.agreement__discount-type label {
   display: block;
   margin-bottom: 5px;
 }

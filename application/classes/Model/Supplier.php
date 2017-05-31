@@ -59,11 +59,7 @@ class Model_Supplier extends Model
     {
         if(
             empty($supplierId) ||
-            empty($params['NAME']) ||
-            empty($params['Y_ADDRESS']) ||
-            empty($params['PHONE']) ||
-            empty($params['EMAIL']) ||
-            empty($params['INN'])
+            empty($params)
         ){
             return false;
         }
@@ -88,12 +84,43 @@ class Model_Supplier extends Model
             'p_comments'        => $params['COMMENTS'],
             'p_okonh'           => $params['OKONH'],
             'p_contact_person'  => $params['CONTACT_PERSON'],
-            'p_icon_path' 	    => $params['ICON_PATH'],
+            'p_icon_path' 	    => $params['ICON_PATH'] ?: -1,
             'p_manager_id'      => $user['MANAGER_ID'],
             'p_error_code'      => 'out',
         ];
 
         $res = $db->procedure('splrs_edit', $data);
+
+        if(empty($res)){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * добавление поставщика по имени
+     *
+     * @param $params
+     */
+    public static function add($params)
+    {
+        if(empty($params['name'])){
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_name' 		=> $params['name'],
+            'p_manager_id' 	=> $user['MANAGER_ID'],
+            'p_client_id' 	=> 'out',
+            'p_error_code' 	=> 'out',
+        ];
+
+        $res = $db->procedure('splrs_add', $data);
 
         if(empty($res)){
             return true;

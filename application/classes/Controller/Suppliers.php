@@ -11,7 +11,11 @@ class Controller_Suppliers extends Controller_Common {
 
 	public function action_index()
 	{
+        $popupSupplierAdd = Common::popupForm('Добавление нового поставщика', 'supplier/add');
 
+        $this->tpl
+            ->bind('popupSupplierAdd', $popupSupplierAdd)
+        ;
 	}
 
     /**
@@ -24,13 +28,13 @@ class Controller_Suppliers extends Controller_Common {
             'pagination'        => true
         ];
 
-        list($dots, $more) = Model_Supplier::getList($params);
+        list($suppliers, $more) = Model_Supplier::getList($params);
 
-        if(empty($dots)){
+        if(empty($suppliers)){
             $this->jsonResult(false);
         }
 
-        $this->jsonResult(true, ['items' => $dots, 'more' => $more]);
+        $this->jsonResult(true, ['items' => $suppliers, 'more' => $more]);
     }
 
     /**
@@ -52,9 +56,12 @@ class Controller_Suppliers extends Controller_Common {
 
         $this->_initDropZone();
 
+        $popupSupplierContractAdd = Common::popupForm('Добавление нового договора', 'supplier/contract/add');
+
         $this->tpl
             ->bind('supplier', $supplier)
             ->bind('supplierContracts', $supplierContracts)
+            ->bind('popupSupplierContractAdd', $popupSupplierContractAdd)
         ;
     }
 
@@ -82,7 +89,7 @@ class Controller_Suppliers extends Controller_Common {
         $contractId = $this->request->param('id');
 
         if($contractId == 0){
-            $this->html('<div class="error_block">Контракты отсутствуют</div>');
+            $this->html('<div class="error_block">Договоры отсутствуют</div>');
         }
 
         $tab = $this->request->post('tab');
@@ -98,9 +105,13 @@ class Controller_Suppliers extends Controller_Common {
                 ;
                 break;
             case 'agreements':
+                $agreements = Model_Supplier_Agreement::getList(['contract_id' => $contractId]);
+
+                $popupAgreementAdd = Common::popupForm('Добавление нового соглашения', 'supplier/agreement/add');
 
                 $content = View::factory('ajax/suppliers/contract/agreements')
-                    ->bind('contract', $contract)
+                    ->bind('agreements', $agreements)
+                    ->bind('popupAgreementAdd', $popupAgreementAdd)
                 ;
                 break;
         }
@@ -124,5 +135,108 @@ class Controller_Suppliers extends Controller_Common {
         ;
 
         $this->html($html);
+    }
+
+    /**
+     * редактирование контракта
+     */
+    public function action_contract_edit()
+    {
+        $contractId = $this->request->param('id');
+        $params = $this->request->post('params');
+
+        list($result, $error) = Model_Supplier_Contract::edit($contractId, $params);
+
+        if(empty($result)){
+            $this->jsonResult(false, $error);
+        }
+        $this->jsonResult(true);
+    }
+
+    /**
+     * добавление контракта
+     */
+    public function action_contract_add()
+    {
+        $params = $this->request->post('params');
+
+        list($result, $error) = Model_Supplier_Contract::addContract($params);
+
+        if(empty($result)){
+            $this->jsonResult(false, $error);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * создание нового поставщика
+     */
+    public function action_supplier_add()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Supplier::add($params);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true);
+    }
+
+    /**
+     * грузим соглашение по контракту поставщика
+     */
+    public function action_agreement()
+    {
+        $agreementId = $this->request->param('id');
+        $contractId = $this->request->query('contract_id');
+
+        $agreement = Model_Supplier_Agreement::get($agreementId, $contractId);
+
+        if(empty($agreement)){
+            $this->html('<div class="error_block">Ошибка</div>');
+        }
+
+        $tariffs = Model_Tariff::getAvailableTariffs();
+
+        $html = View::factory('ajax/suppliers/agreement')
+            ->bind('agreement', $agreement)
+            ->bind('tariffs', $tariffs)
+        ;
+
+        $this->html($html);
+    }
+
+    /**
+     * редактирование соглашения
+     */
+    public function action_agreement_edit()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Supplier_Agreement::edit($params);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * добавление нового соглашения
+     */
+    public function action_agreement_add()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Supplier_Agreement::add($params);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
     }
 }

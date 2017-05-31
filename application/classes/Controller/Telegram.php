@@ -1,6 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-use \Longman\TelegramBot\Request;
+use \Longman\TelegramBot\Request as TelegramRequest;
+use \Longman\TelegramBot\Entities\KeyboardButton;
 
 class Controller_Telegram extends Controller_Template
 {
@@ -25,7 +26,7 @@ class Controller_Telegram extends Controller_Template
      */
     public function action_index()
     {
-        $postData = json_decode(file_get_contents("php://input"), 1);
+        $postData = json_decode(file_get_contents("php://input"), true);
 
         $telegramParser = new TelegramParser($postData);
         //$telegramParser->debug();
@@ -33,11 +34,26 @@ class Controller_Telegram extends Controller_Template
 
         $response = $telegramParser->getResponse();
 
-        Request::sendMessage([
+        $data = [
             'parse_mode' => 'HTML',
             'chat_id' => $telegramParser->getChatId(),
-            'text' => $response
-        ]);
+            'text' => $response,
+        ];
+
+        if (!empty($postData['message']['contact'])) {
+            $data['reply_markup'] = ['remove_keyboard' => true];
+        } else {
+            $data['reply_markup'] = [
+                'keyboard' => [
+                    [
+                        (new KeyboardButton('Отправить контакт'))->setRequestContact(true)
+                    ]
+                ],
+                'resize_keyboard' => true
+            ];
+        }
+
+        TelegramRequest::sendMessage($data);
     }
 
     /**

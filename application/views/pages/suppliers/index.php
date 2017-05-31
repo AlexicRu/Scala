@@ -1,4 +1,10 @@
-<h1>Поставщики</h1>
+<h1>Поставщики <?if(Access::allow('suppliers_supplier_add')){?><a href="#supplier_add" class="btn fancy">+ Добавить поставщика</a><?}?></h1>
+
+
+<?if(Access::allow('suppliers_supplier_add')){?>
+    <?=$popupSupplierAdd?>
+<?}?>
+
 
 <div class="ajax_block_suppliers_out block_loading">
 
