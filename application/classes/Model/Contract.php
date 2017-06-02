@@ -233,6 +233,7 @@ class Model_Contract extends Model
             'p_invoice_currency' 		=> self::CURRENCY_RUR,
             'p_invoice_period_type' 	=> $params['settings']['INVOICE_PERIOD_TYPE'],
             'p_invoice_period_value' 	=> $params['settings']['INVOICE_PERIOD_VALUE'],
+            'p_goods_reciever' 	        => !empty($params['settings']['GOODS_RECIEVER']) ? $params['settings']['GOODS_RECIEVER'] : null,
             'p_manager_id' 		        => $user['MANAGER_ID'],
             'p_error_code' 		        => 'out',
         ];

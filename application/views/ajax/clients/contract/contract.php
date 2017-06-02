@@ -93,6 +93,22 @@
             </tr>
         </table>
 
+        <?if(Access::allow('view_goods_reciever')){?>
+        <br>
+        <b class="f18">Грузополучатель:</b><br>
+        <table>
+            <tr>
+                <td class="gray right" width="160">Грузополучатель:</td>
+                <td>
+                    <span toggle_block="block2"><?=($contractSettings['GOODS_RECIEVER'] ?: '<i class="gray">отсутствует</i>')?></span>
+                    <span toggle_block="block2" class="dn">
+                        <input type="text" name="GOODS_RECIEVER" value="<?=$contractSettings['GOODS_RECIEVER']?>">
+                    </span>
+                </td>
+            </tr>
+        </table>
+        <?}?>
+
         <?if(Access::allow('view_penalties')){?>
         <br>
         <b class="f18">Штрафы:</b><br>
@@ -223,6 +239,7 @@
                         OVERDRAFT:              $("[name=OVERDRAFT]").val(),
                         INVOICE_PERIOD_TYPE:    $("[name=INVOICE_PERIOD_TYPE]").val(),
                         INVOICE_PERIOD_VALUE:   $("[name=INVOICE_PERIOD_VALUE]").val(),
+                        GOODS_RECIEVER:         $("[name=GOODS_RECIEVER]").val(),
                         scheme:                 $("[name=scheme]").val()
                     }
                 };
