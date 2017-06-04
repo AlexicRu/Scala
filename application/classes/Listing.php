@@ -184,4 +184,30 @@ class Listing
 
         return $db->query($db->limit($sql, 0, self::$limit));
     }
+
+    /**
+     * список труб
+     *
+     * @param $search
+     * @param ids
+     * @return array|bool|int
+     */
+    public static function getTubes($search = '', $ids = [])
+    {
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $sql = "select * from ".Oracle::$prefix."V_WEB_TUBES_LIST t where t.is_owner = 1 and t.agent_id=".$user['AGENT_ID'];
+
+        if(!empty($search)){
+            $sql .= " and upper(t.PROJECT_NAME) like ".mb_strtoupper(Oracle::quote('%'.$search.'%'));
+        }
+
+        if(!empty($ids)){
+            $sql .= " and t.ID in (".implode(',', $ids).")";
+        }
+
+        return $db->query($db->limit($sql, 0, self::$limit));
+    }
 }

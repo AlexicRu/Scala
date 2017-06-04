@@ -335,4 +335,27 @@ class Controller_Help extends Controller_Common
 
         $this->jsonResult(true, $return);
     }
+
+    /**
+     * получаем список клиентов для combobox
+     */
+    public function action_list_tube()
+    {
+        $res = Listing::getTubes($this->_search, $this->_ids);
+
+        if(empty($res)){
+            $this->jsonResult(false);
+        }
+
+        $return = [];
+
+        foreach($res as $item){
+            $return[] = [
+                'name' => $item['PROJECT_NAME'],
+                'value' => $item['PROJECT_ID'],
+            ];
+        }
+
+        $this->jsonResult(true, $return);
+    }
 }
