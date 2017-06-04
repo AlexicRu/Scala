@@ -198,7 +198,7 @@ class Listing
 
         $user = Auth::instance()->get_user();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_TUBES_LIST t where t.is_owner = 1 and t.agent_id=".$user['AGENT_ID'];
+        $sql = "select * from ".Oracle::$prefix."V_WEB_TUBES_LIST t where t.agent_id=".$user['AGENT_ID'];
 
         if(!empty($search)){
             $sql .= " and upper(t.PROJECT_NAME) like ".mb_strtoupper(Oracle::quote('%'.$search.'%'));
