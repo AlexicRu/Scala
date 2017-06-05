@@ -126,6 +126,12 @@ return [
             Access::ROLE_MANAGER,
             Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
+        'view_goods_reciever' => [
+            'a_14',
+            'a_16',
+            'a_17',
+            'a_10',
+        ],
         'root' => [
             Access::ROLE_ROOT
         ]

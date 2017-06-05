@@ -11,7 +11,7 @@
         <td class="gray right" width="100">Параметр:</td>
         <td>
             <?foreach(Model_Tariff::$paramsTypesParams as $paramsTypeId => $paramsParams){?>
-                <select name="DISC_PARAM" class="disc_param_select" dist_type="<?=$paramsTypeId?>">
+                <select name="DISC_PARAM" class="disc_param_select" disc_type="<?=$paramsTypeId?>">
                     <?foreach($paramsParams as $paramsParamsId => $paramsParam){?>
                         <option value="<?=($paramsParamsId+1)?>">
                             <?=Model_Tariff::$paramsParams[$paramsParam]?>

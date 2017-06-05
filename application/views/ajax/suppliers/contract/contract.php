@@ -97,7 +97,7 @@
         <div class="col line_inner">
             <b class="f18">Баланс по договору:</b>
             <br>
-            <?if(!empty($contract['BALANCE']) && is_string($contract['BALANCE'])){?>
+            <?if(!empty($contract['BALANCE']) && !is_numeric($contract['BALANCE'])){?>
                 <div class="f30"><b><?=$contract['BALANCE']?></b></div>
             <?}else{?>
                 <div class="f50"><b><?=number_format($contract['BALANCE'], 2, ',', ' ')?></b> <?=Text::RUR?></div>

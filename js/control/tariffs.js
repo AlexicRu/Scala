@@ -133,9 +133,9 @@ function onChangeParam(t) {
     var distType = t.val();
     var block = t.closest('.params_block');
 
-    block.find('.disc_param_select[dist_type]').hide();
+    block.find('.disc_param_select[disc_type]').hide();
 
-    block.find('.disc_param_select[dist_type='+ distType +']').show();
+    block.find('.disc_param_select[disc_type='+ distType +']').show();
 }
 
 function addSection(t)
