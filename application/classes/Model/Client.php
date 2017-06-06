@@ -5,9 +5,9 @@ class Model_Client extends Model
 	/**
 	 * получаем список клиентов
 	 */
-	public static function getClientsList($search = null, $params = [])
-	{
-		$db = Oracle::init();
+    public static function getClientsList($search = null, $params = [])
+    {
+        $db = Oracle::init();
 
         if(empty($params['manager_id'])){
             $user = Auth::instance()->get_user();
@@ -16,41 +16,56 @@ class Model_Client extends Model
             $managerId = $params['manager_id'];
         }
 
-		$sql = "
-			select *
-			from ".Oracle::$prefix."v_web_clients_title v
-			where v.manager_id = ".Oracle::quote($managerId)
-		;
+        $sql = (new Builder())->select()
+            ->from('v_web_clients_title v')
+            ->where("v.manager_id = ".Oracle::quote($managerId))
+            ->orderBy([
+                'client_id desc',
+                'contract_name'
+            ])
+        ;
 
-		if(!is_null($search)){
-			$search = mb_strtoupper($search);
-			$sql .= " and (upper(v.client_name) like ".Oracle::quote('%'.$search.'%')." or upper(v.long_name) like ".Oracle::quote('%'.$search.'%')." or upper(v.contract_name) like ".Oracle::quote('%'.$search.'%')." or exists (select 1 from ".Oracle::$prefix."V_WEB_CRD_LIST c where c.contract_id = v.contract_id and c.card_id like ".Oracle::quote('%'.$search.'%')."))";
-		}
+        if(!is_null($search)){
+            $search = mb_strtoupper($search);
 
-		$sql .= " order by client_id desc, contract_name ";
+            $subSql = (new Builder())->select('1')
+                ->from('V_WEB_CRD_LIST c')
+                ->where('c.contract_id = v.contract_id')
+                ->where('c.card_id like '.Oracle::quote('%'.$search.'%'))
+            ;
 
-		if(!empty($params['limit'])){
-            $sql = $db->limit($sql, 0, $params['limit']);
+            $sql
+                ->whereStart('and')
+                ->where("upper(v.client_name) like ".Oracle::quote('%'.$search.'%'))
+                ->whereOr("upper(v.long_name) like ".Oracle::quote('%'.$search.'%'))
+                ->whereOr("upper(v.contract_name) like ".Oracle::quote('%'.$search.'%'))
+                ->whereOr("exists (".$subSql->build().")")
+                ->whereEnd()
+            ;
         }
 
-		$result = $db->tree($sql, 'CLIENT_ID');
+        if(!empty($params['limit'])){
+            $sql->limit($params['limit']);
+        }
 
-		$clients = [];
+        $result = $db->tree($sql, 'CLIENT_ID');
 
-		foreach($result as $clientId => $rows){
-			$client = reset($rows);
+        $clients = [];
 
-			foreach($rows as $row){
-				if(!empty($row['CONTRACT_ID'])){
-					$client['contracts'][] = $row;
-				}
-			}
+        foreach($result as $clientId => $rows){
+            $client = reset($rows);
 
-			$clients[$clientId] = $client;
-		}
+            foreach($rows as $row){
+                if(!empty($row['CONTRACT_ID'])){
+                    $client['contracts'][] = $row;
+                }
+            }
 
-		return $clients;
-	}
+            $clients[$clientId] = $client;
+        }
+
+        return $clients;
+    }
 
 	/**
 	 * получаем данные по клиенту

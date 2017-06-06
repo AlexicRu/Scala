@@ -16,7 +16,8 @@ class Oracle{
     }
 	protected function __clone() {}
 
-	static public function init() {
+	static public function init()
+    {
 		if(is_null(self::$_instance))
 		{
 			$config = Kohana::$config->load('database');
@@ -35,6 +36,11 @@ class Oracle{
 
 	public function query($sql, $type='select')
     {
+        //builder
+        if (is_a($sql, 'Builder')) {
+            $sql = $sql->build();
+        }
+
         try {
             if ($type == 'select') {
                 $ret = array();
@@ -200,6 +206,7 @@ class Oracle{
 	 * @param $offset
 	 * @param $limit
 	 * @return string
+     * @deprecated
 	 */
 	public function limit($sql, $offset = 0, $limit = 9999999)
 	{
