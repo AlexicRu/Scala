@@ -132,6 +132,11 @@ return [
             'a_17',
             'a_10',
         ],
+        'edit_client_full' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_MANAGER_SALE_SUPPORT
+        ],
         'root' => [
             Access::ROLE_ROOT
         ]
@@ -188,10 +193,6 @@ return [
         ],
         // custom
         'view_tariffs' => [
-            Access::ROLE_USER,
-            Access::ROLE_USER_SECOND,
-        ],
-        'edit_client_full' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
         ],

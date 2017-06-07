@@ -1,15 +1,20 @@
 <script src="/js/clients/client.js"></script>
 
 <div class="back_link">&larr; <a href="/clients">Вернуться назад</a></div>
-
 <h2>
     <span toggle_block="edit_client" uid="client_name"><?=$client['NAME']?></span>
-    <span toggle_block="edit_client" uid="client_name" class="dn"><nobr><input type="text" class="input_big" name="NAME" value="<?=$client['NAME']?>">*</nobr></span>
+    <span toggle_block="edit_client" uid="client_name" class="dn">
+        <nobr>
+            <input type="text" class="input_big input_grand" name="NAME" value="<?=$client['NAME']?>"
+                <?=(!empty($client['NAME']) && Access::deny('edit_client_full') ? 'disabled' : '')?>
+            >*
+        </nobr>
+    </span>
 </h2>
 
 <p>
     <span toggle_block="edit_client" uid="client_long_name"><?if($client['LONG_NAME']){?><?=$client['LONG_NAME']?><?}?></span>
-    <span toggle_block="edit_client" uid="client_long_name" class="dn"><input type="text" placeholder="Полное название" name="LONG_NAME" value="<?=$client['LONG_NAME']?>"></span>
+    <span toggle_block="edit_client" uid="client_long_name" class="dn"><input type="text" class="input_grand" placeholder="Полное название" name="LONG_NAME" value="<?=$client['LONG_NAME']?>"></span>
 </p>
 
 <div toggle_block="block1" class="dn edit_client_block">
@@ -19,7 +24,13 @@
                 <td class="gray right" width="170">Юридический адрес:</td>
                 <td width="370">
                     <span toggle_block="edit_client" uid="client_y_address"><?=($client['Y_ADDRESS'] ?: '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_y_address" class="dn"><nobr><input type="text" name="Y_ADDRESS" value="<?=$client['Y_ADDRESS']?>" <?if(Access::deny('edit_client_full')){?>disabled<?}?>>*</nobr></span>
+                    <span toggle_block="edit_client" uid="client_y_address" class="dn">
+                        <nobr>
+                            <input type="text" name="Y_ADDRESS" value="<?=$client['Y_ADDRESS']?>"
+                                <?=(!empty($client['Y_ADDRESS']) && Access::deny('edit_client_full') ? 'disabled' : '')?>
+                            >*
+                        </nobr>
+                    </span>
                 </td>
             </tr>
             <tr>
@@ -64,21 +75,37 @@
                 <td class="gray right">ИНН:</td>
                 <td>
                     <span toggle_block="edit_client" uid="client_inn"><?=($client['INN'] ?: '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_inn" class="dn"><nobr><input type="text" name="INN" value="<?=$client['INN']?>">*</nobr></span>
+                    <span toggle_block="edit_client" uid="client_inn" class="dn">
+                        <nobr>
+                            <input type="text" name="INN" value="<?=$client['INN']?>"
+                                <?=(!empty($client['INN']) && Access::deny('edit_client_full') ? 'disabled' : '')?>
+                            >*
+                        </nobr>
+                    </span>
                 </td>
             </tr>
             <tr>
                 <td class="gray right">КПП:</td>
                 <td>
                     <span toggle_block="edit_client" uid="client_kpp"><?=($client['KPP'] ?: '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_kpp" class="dn"><nobr><input type="text" name="KPP" value="<?=$client['KPP']?>">*</nobr></span>
+                    <span toggle_block="edit_client" uid="client_kpp" class="dn">
+                        <nobr>
+                            <input type="text" name="KPP" value="<?=$client['KPP']?>"
+                                <?=(!empty($client['KPP']) && Access::deny('edit_client_full') ? 'disabled' : '')?>
+                            >*
+                        </nobr>
+                    </span>
                 </td>
             </tr>
             <tr>
                 <td class="gray right">ОГРН:</td>
                 <td>
                     <span toggle_block="edit_client" uid="client_ogrn"><?=($client['OGRN'] ?: '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_ogrn" class="dn"><input type="text" name="OGRN" value="<?=$client['OGRN']?>"></span>
+                    <span toggle_block="edit_client" uid="client_ogrn" class="dn">
+                        <input type="text" name="OGRN" value="<?=$client['OGRN']?>"
+                            <?=(!empty($client['OGRN']) && Access::deny('edit_client_full') ? 'disabled' : '')?>
+                        >
+                    </span>
                 </td>
             </tr>
             <tr>
