@@ -333,6 +333,8 @@ class Model_Card extends Model
 		$db = Oracle::init();
 
 		if(empty($limits)){
+            $db->procedure('card_service_refresh', ['p_card_id' => $cardId]);
+
 			return true;
 		}
 

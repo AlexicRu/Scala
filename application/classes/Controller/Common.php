@@ -157,8 +157,8 @@ abstract class Controller_Common extends Controller_Template {
                 '/js/plugins/fancy/jquery.fancybox.css',
             ];
             $this->template->scripts = [
-                'https://yastatic.net/jquery/2.1.3/jquery.min.js',
-                'https://yastatic.net/jquery-ui/1.11.2/jquery-ui.min.js',
+                '/js/plugins/jquery.2.1.3.min.js',
+                '/js/plugins/jquery-ui.1.11.2.min.js',
                 '/js/plugins/jGrowl/jGrowl.js',
                 '/js/plugins/fancy/jquery.fancybox.js',
                 '/js/ui.js',
@@ -168,7 +168,7 @@ abstract class Controller_Common extends Controller_Template {
         }else{
             $this->template->styles = [];
             $this->template->scripts = [
-                'https://yastatic.net/jquery/2.1.3/jquery.min.js',
+                '/js/plugins/jquery.2.1.3.min.js',
                 '/js/common.js',
             ];
         }
