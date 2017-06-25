@@ -688,4 +688,37 @@ class Model_Card extends Model
 
         return $db->procedure('ctrl_card_group_collection', $data);
     }
+
+    /**
+     * удаляем карты из группы
+     *
+     * @param $groupId
+     * @param $cardsNumbers
+     */
+    public static function delCardsFromGroup($groupId, $cardsNumbers)
+    {
+        if (empty($groupId) || empty($cardsNumbers)) {
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_group_id'        => $groupId,
+            'p_action'          => 2,
+            'p_card_collection' => [$cardsNumbers, SQLT_CHR],
+            'p_manager_id'      => $user['MANAGER_ID'],
+            'p_error_code' 	    => 'out',
+        ];
+
+        $result = $db->procedure('ctrl_card_group_collection', $data);
+
+        if ($result == Oracle::CODE_ERROR) {
+            return false;
+        }
+
+        return true;
+    }
 }

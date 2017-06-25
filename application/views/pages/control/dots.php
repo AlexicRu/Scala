@@ -123,17 +123,6 @@
             if(!confirm('Удалить ' + dots.length + ' точки?')){
                 return false;
             }
-
-            $.post('/control/del_dots_from_group', {group_id: group_id, pos_ids: dots}, function (data) {
-                if (data.success) {
-
-                    for(var i in dots){
-                        $('.dot_row[id="'+ dots[i] +'"]', group).remove();
-                    }
-                } else {
-                    message(0, 'Ошибка удаления');
-                }
-            });
         });
 
         $('.btn_del_dots_groups').on('click', function () {

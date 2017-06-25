@@ -32,7 +32,7 @@
         }
 
         for(var i in data){
-            var tpl = $('<tr>' +
+            var tpl = $('<tr class="card_row">' +
                 (canEdit ? '<td class="td_check" />' : '') +
                 '<td class="group_card_td_CARD_ID" />' +
                 '<td class="group_card_td_HOLDER" />' +
@@ -40,6 +40,7 @@
                 (canEdit ? '<td class="td_edit"/>' : '') +
             '</tr>');
 
+            tpl.attr('id', data[i].CARD_ID);
             tpl.find('.td_check').html('<input type="checkbox" name="card_id" value="'+ data[i].CARD_ID +'">');
             tpl.find('.group_card_td_CARD_ID').text(data[i].CARD_ID);
             tpl.find('.group_card_td_HOLDER').text(data[i].HOLDER);

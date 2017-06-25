@@ -49,7 +49,7 @@
         <div class="tabs_v_content tabs_content_no_padding">
             <?if(!empty($cardsGroups)){?>
                 <?foreach($cardsGroups as $key => $group){?>
-                    <div class="tab_v_content" tab_content="cards_group_<?=$group['GROUP_ID']?>"></div>
+                    <div class="tab_v_content" tab_content="cards_group_<?=$group['GROUP_ID']?>" group_id="<?=$group['GROUP_ID']?>"></div>
                 <?}?>
             <?}?>
         </div>
@@ -75,20 +75,35 @@
         });
 
         $('.btn_del_cards').on('click', function () {
-            var dots = [];
+            var cards = [];
+            var group = $('.tab_v_content.active');
+            var group_id = group.attr('group_id');
 
-            $('.td_check [type=checkbox][name=pos_id]:checked').each(function () {
-                dots.push($(this).val());
+            $('.td_check [type=checkbox][name=card_id]:checked').each(function () {
+                cards.push($(this).val());
             });
 
-            if(dots.length == 0){
+            if(cards.length == 0){
                 message(0, 'Не выделенно ни одной карты');
             }
 
-            if(!confirm('Удалить ' + dots.length + ' точки?')){
+            if(!confirm('Удалить ' + cards.length + ' карты?')){
                 return false;
             }
+
+            $.post('/control/del_cards_from_group', {group_id: group_id, cards_numbers: cards}, function (data) {
+                if (data.success) {
+                    message(0, 'Карты удалены');
+
+                    for(var i in cards){
+                        $('.card_row[id="'+ cards[i] +'"]', group).remove();
+                    }
+                } else {
+                    message(0, 'Ошибка удаления');
+                }
+            });
         });
+
         $('.btn_del_cards_groups').on('click', function () {
             var groups = [];
             var selectedGroups = {};

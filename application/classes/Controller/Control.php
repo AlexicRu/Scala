@@ -577,14 +577,14 @@ class Controller_Control extends Controller_Common {
     }
 
     /**
-     * удаление точек из группы
+     * удаление карт из группы
      */
-    public function action_del_dots_from_group()
+    public function action_del_cards_from_group()
     {
-        $posIds = $this->request->post('pos_ids');
+        $cardsNumbers = $this->request->post('cards_numbers');
         $groupId = $this->request->post('group_id');
 
-        $result = Model_Dot::delDotsFromGroup($groupId, $posIds);
+        $result = Model_Card::delCardsFromGroup($groupId, $cardsNumbers);
 
         $this->jsonResult($result);
     }
