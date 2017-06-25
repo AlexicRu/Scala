@@ -20,7 +20,10 @@ class Model_Transaction extends Model
 
         $sql .= " order by datetime_trn ";
 
-        return $db->pagination($sql, $params);
+        if (!empty($params['pagination'])) {
+            return $db->pagination($sql, $params);
+        }
+        return $db->query($sql);
     }
 
     /**
@@ -35,12 +38,19 @@ class Model_Transaction extends Model
 
         $user = User::current();
 
-        $sql = "
-            select * from ".Oracle::$prefix."V_WEB_LOG_FILES_IMPORT where agent_id = ".$user['AGENT_ID']." 
-        ";
+        $sql = (new Builder())->select()
+            ->from('V_WEB_LOG_FILES_IMPORT t')
+            ->where("t.agent_id = ".$user['AGENT_ID'])
+            ->orderBy('t.datetime_process desc')
+        ;
 
-        $sql .= " order by datetime_process desc ";
+        if (!empty($params['rnum'])) {
+            $sql->where('t.RNUM in ('. implode(',', $params['rnum']) .')');
+        }
 
-        return $db->pagination($sql, $params);
+        if (!empty($params['pagination'])) {
+            return $db->pagination($sql, $params);
+        }
+        return $db->query($sql);
     }
 }

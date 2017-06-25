@@ -6,6 +6,7 @@
             <span toggle_block="cards_groups_block">
                 <a href="#control_add_cards_group" class="btn fancy">+ Добавить группу</a>
                 <a href="#control_add_cards" class="btn fancy">+ Добавить карты</a>
+                <span class="btn btn_green btn_icon" onclick="groupCardsToXls()"><i class="icon-exel1"></i> Выгрузить</span>
                 <span class="btn btn_green btn_icon" toggle="cards_groups_block"><i class="icon-pen"></i></span>
             </span>
 
@@ -182,5 +183,18 @@
 
             block.html(data);
         });
+    }
+
+    function groupCardsToXls()
+    {
+        var group = $(".tabs_cards_groups .tab_v[tab].active");
+
+        if (group.length == 0) {
+            message(0, 'Нет данный для выгрузки');
+            return;
+        }
+
+        var group_id = group.attr('tab').replace('cards_group_', '');
+        window.open('/control/load_group_cards/?group_id=' + group_id + '&to_xls=1');
     }
 </script>

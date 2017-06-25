@@ -258,6 +258,11 @@ class Oracle{
 			$to++;
 		}
 
+        //builder
+        if (is_a($sql, 'Builder')) {
+            $sql = $sql->build();
+        }
+
 		$sql = $this->limit($sql, $from, $to);
 
 		$items = $this->query($sql);

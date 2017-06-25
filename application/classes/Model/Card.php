@@ -591,7 +591,10 @@ class Model_Card extends Model
             select * from ".Oracle::$prefix."V_WEB_CARDS_GROUP_ITEMS t where t.group_id = ".$params['group_id'];
         ;
 
-        return $db->pagination($sql, $params);
+        if (!empty($params['pagination'])) {
+            return $db->pagination($sql, $params);
+        }
+        return $db->query($sql);
     }
 
     /**

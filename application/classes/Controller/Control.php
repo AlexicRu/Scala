@@ -132,12 +132,25 @@ class Controller_Control extends Controller_Common {
     public function action_load_group_dots()
     {
         $params = [
-            'group_id'	    => $this->request->post('group_id'),
+            'group_id'	    => $this->request->post('group_id') ?: $this->request->query('group_id'),
             'offset' 		=> $this->request->post('offset'),
-            'pagination'    => true
+            'pagination'    => $this->toXls ? false : true
         ];
 
-        list($dots, $more) = Model_Dot::getGroupDots($params);
+        $result = Model_Dot::getGroupDots($params);
+
+        if ($this->toXls){
+            $this->showXls($result, [
+                'PROJECT_NAME'  => 'PROJECT NAME',
+                'ID_EMITENT'    => 'ID EMI',
+                'ID_TO'         => 'ID TO',
+                'POS_NAME'      => 'POS name',
+                'OWNER'         => 'Владелец',
+                'POS_ADDRESS'   => 'Адрес'
+            ], true);
+        } else {
+            list($dots, $more) = $result;
+        }
 
         if(empty($dots)){
             $this->jsonResult(false);
@@ -251,7 +264,26 @@ class Controller_Control extends Controller_Common {
             'pagination'    => true
         ];
 
-        list($dots, $more) = Model_Dot::getDots($params);
+        if ($this->toXls) {
+            unset($params['pagination']);
+
+            $params['POS_ID'] = explode(',', $this->request->query('pos_id'));
+        }
+
+        $result = Model_Dot::getDots($params);
+
+        if ($this->toXls){
+            $this->showXls($result, [
+                'PROJECT_NAME'  => 'PROJECT NAME',
+                'ID_EMITENT'    => 'ID EMI',
+                'ID_TO'         => 'ID TO',
+                'POS_NAME'      => 'POS name',
+                'OWNER'         => 'Владелец',
+                'POS_ADDRESS'   => 'Адрес'
+            ], true);
+        } else {
+            list($dots, $more) = $result;
+        }
 
         if(empty($dots)){
             $this->jsonResult(false);
@@ -469,7 +501,7 @@ class Controller_Control extends Controller_Common {
         //если это есть значит уже грузим данные а не страницу
         $offset = $this->request->post('offset');
 
-        if(is_null($offset)){
+        if(is_null($offset) && !$this->toXls){
 
             $groupId = $this->request->param('id');
 
@@ -487,12 +519,20 @@ class Controller_Control extends Controller_Common {
             $this->html($html);
         }else{
             $params = [
-                'group_id' => $this->request->post('group_id'),
-                'offset' => $offset,
-                'pagination' => true
+                'group_id'      => $this->request->post('group_id'),
+                'offset'        => $offset,
+                'pagination'    => $this->toXls ? false : true
             ];
 
-            list($items, $more) = Model_Card::getGroupCards($params);
+            $result = Model_Card::getGroupCards($params);
+
+            if ($this->toXls){
+                $this->showXls($result, [
+                    'CARD ID', 'Владелец', 'Описание'
+                ]);
+            } else {
+                list($items, $more) = $result;
+            }
 
             if (empty($items)) {
                 $this->jsonResult(false);

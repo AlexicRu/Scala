@@ -8,6 +8,7 @@ abstract class Controller_Common extends Controller_Template {
     public $scripts = [];
     public $styles = [];
     public $tpl = '';
+    public $toXls = false;
 
     public function before()
     {
@@ -36,8 +37,12 @@ abstract class Controller_Common extends Controller_Template {
 
         $allow = Access::allow(strtolower($controller.'_'.$action));
 
+        if ($this->request->query('to_xls')) {
+            $this->toXls = true;
+        }
+
         //если не аяксовый запрос
-        if(!$this->request->is_ajax()) {
+        if(!$this->request->is_ajax() && !$this->toXls) {
             if($allow == false){
                 throw new HTTP_Exception_403();
             }
@@ -261,6 +266,60 @@ abstract class Controller_Common extends Controller_Template {
                 $this->request->query($key, array_merge($data, $value));
             }
         }
+    }
+
+    /**
+     * показываем как XLS
+     *
+     * @param $rows
+     * @param $headers
+     * @param $filterRows
+     */
+    public function showXls($rows, $headers = [], $filterRows = false)
+    {
+        $preRows = [];
+        if ($filterRows) {
+            foreach ($rows as $row) {
+
+                $preRow = [];
+
+                foreach ($headers as $key => $value) {
+                    $preRow[$key] = isset($row[$key]) ? $row[$key] : '';
+                }
+
+                $preRows[] = $preRow;
+            }
+
+            $rows = $preRows;
+        }
+
+        echo '<table>';
+
+        if (!empty($headers)) {
+            echo '<tr>';
+            foreach ($headers as $elem){
+                echo '<th>';
+                echo $elem;
+                echo '</th>';
+            }
+            echo '</tr>';
+        }
+
+        foreach ($rows as $elems){
+            echo '<tr>';
+
+            foreach ($elems as $elem){
+                echo '<td>';
+                echo $elem;
+                echo '</td>';
+            }
+
+            echo '</tr>';
+        }
+
+        echo '</table>';
+
+        die;
     }
 
 } // End Common

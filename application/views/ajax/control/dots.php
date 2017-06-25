@@ -93,6 +93,7 @@
                 '<td class="td_edit"/>' +
             '</tr>');
 
+            tpl.attr('POS_ID', data[i].POS_ID);
             tpl.find('.td_check').html('<input type="checkbox" name="pos_id" value="'+ data[i].POS_ID +'">');
             tpl.find('.dot_td_project_name').text(data[i].PROJECT_NAME);
             tpl.find('.dot_td_id_emi').text(data[i].ID_EMITENT);

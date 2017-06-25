@@ -86,7 +86,10 @@ class Model_Dot extends Model
         $sql = "
             select * from ".Oracle::$prefix."V_WEB_POS_GROUP_ITEMS t where t.group_id = ".$params['group_id']." and t.agent_id = ".$user['AGENT_ID']." order by id_to";
 
-        return $db->pagination($sql, $params);
+        if (!empty($params['pagination'])) {
+            return $db->pagination($sql, $params);
+        }
+        return $db->query($sql);
     }
 
     /**
@@ -100,37 +103,43 @@ class Model_Dot extends Model
 
         $user = Auth::instance()->get_user();
 
-        $sql = "
-            select * from ".Oracle::$prefix."V_WEB_POS_LIST t where t.agent_id = ".$user['AGENT_ID']." 
-        ";
-        
-        if(!empty($params['group_id'])){
-            $sql .= ' and not exists (select 1 from '.Oracle::$prefix.'V_WEB_POS_GROUP_ITEMS pg where pg.group_id = '.intval($params['group_id']).' and pg.POS_ID = t.POS_ID)';
-        }
+        $sql = (new Builder())->select()
+            ->from('V_WEB_POS_LIST t')
+            ->where("t.agent_id = ".$user['AGENT_ID'])
+        ;
 
+        if(!empty($params['group_id'])){
+            $sql->where('not exists (select 1 from '.Oracle::$prefix.'V_WEB_POS_GROUP_ITEMS pg where pg.group_id = '.intval($params['group_id']).' and pg.POS_ID = t.POS_ID)');
+        }
         if(!empty($params['POS_ID'])){
-            $sql .= ' and t.POS_ID = '.intval($params['POS_ID']);
+            if (!is_array($params['POS_ID'])) {
+                $params['POS_ID'] = [$params['POS_ID']];
+            }
+            $sql->where('t.POS_ID in ('.implode(',', ($params['POS_ID'])).')');
         }
         if(!empty($params['PROJECT_NAME'])){
-            $sql .= " and upper(t.PROJECT_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['PROJECT_NAME'].'%'));
+            $sql->where("upper(t.PROJECT_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['PROJECT_NAME'].'%')));
         }
         if(!empty($params['ID_EMITENT'])){
-            $sql .= ' and t.ID_EMITENT = '.intval($params['ID_EMITENT']);
+            $sql->where('t.ID_EMITENT = '.intval($params['ID_EMITENT']));
         }
         if(!empty($params['ID_TO'])){
-            $sql .= " and t.ID_TO like ".Oracle::quote('%'.$params['ID_TO'].'%');
+            $sql->where("t.ID_TO like ".Oracle::quote('%'.$params['ID_TO'].'%'));
         }
         if(!empty($params['POS_NAME'])){
-            $sql .= " and upper(t.POS_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['POS_NAME'].'%'));
+            $sql->where("upper(t.POS_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['POS_NAME'].'%')));
         }
         if(!empty($params['OWNER'])){
-            $sql .= " and upper(t.OWNER) like ".mb_strtoupper(Oracle::quote('%'.$params['OWNER'].'%'));
+            $sql->where("upper(t.OWNER) like ".mb_strtoupper(Oracle::quote('%'.$params['OWNER'].'%')));
         }
         if(!empty($params['POS_ADDRESS'])){
-            $sql .= " and upper(t.POS_ADDRESS) like ".mb_strtoupper(Oracle::quote('%'.$params['POS_ADDRESS'].'%'));
+            $sql->where("upper(t.POS_ADDRESS) like ".mb_strtoupper(Oracle::quote('%'.$params['POS_ADDRESS'].'%')));
         }
 
-        return $db->pagination($sql, $params);
+        if (!empty($params['pagination'])) {
+            return $db->pagination($sql, $params);
+        }
+        return $db->query($sql);
     }
 
     /**
