@@ -1,19 +1,6 @@
-<?
-$cntWork = 0;
-$cntDisable = 0;
-
-foreach($cards as $card){
-    if($card['CARD_STATE'] != Model_Card::CARD_STATE_BLOCKED){
-        $cntWork++;
-    }else{
-        $cntDisable++;
-    }
-}
-?>
-
 <div class="tc_top_line">
     <span class="gray">Всего карт:
-        <a href="#" onclick="filterCards('all')"><?=count($cards)?></a>
+        <a href="#" onclick="filterCards('all')"><?=$cntCards?></a>
     </span> &nbsp;&nbsp;&nbsp;
     <span class="gray <?=(!empty($params['status']) && $params['status'] == 'work' ? 'act' : '')?>">
         В работе: <a href="#" onclick="filterCards(true)" class="cards_cnt_in_work"><?=$cntWork?></a>
@@ -33,44 +20,10 @@ foreach($cards as $card){
             </div>
         <?}?>
         <div class="scroll">
-            <?
-            if(is_array($foundCards) && empty($foundCards)){?>
-                <div class="tab_v"><div>
-                        <span class="gray">Карты не найдены</span>
-                    </div></div>
-            <?}else{?>
-                <?foreach($cards as $key => $card){
-                    $found = true;
-                    if($foundCards !== false){
-                        $found = false;
-                        foreach($foundCards as $foundCard){
-                            if($foundCard['CARD_ID'] == $card['CARD_ID']){
-                                $found = true;
-                                break;
-                            }
-                        }
-                    }
-                    ?>
-                    <div class="tab_v" tab="<?=$card['CARD_ID']?>" <?if(empty($found)){?>style="display: none;"<?}?>><div>
-                            <span class="icon-card gray"></span>
-                            <?=$card['CARD_ID']?>
-                            <div class="gray"><?=$card['HOLDER']?></div>
-                            <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
-                                <span class="label label_error label_small">Заблокирована</span>
-                            <?}?>
-                        </div></div>
-                <?}?>
-            <?}?>
+            <?include('cards/list.php')?>
         </div>
-        <!--div class="tab_v gray preload"><div>
-                <span class="icon-loader"></span> Загрузка карточек
-            </div></div-->
     </div>
-    <div class="tabs_v_content">
-        <?foreach($cards as $key => $card){?>
-            <div class="tab_v_content" tab_content="<?=$card['CARD_ID']?>"></div>
-        <?}?>
-    </div>
+    <div class="tabs_v_content"></div>
 </div>
 
 <?if(Access::allow('clients_card_add')){?>
@@ -79,30 +32,6 @@ foreach($cards as $card){
 
 <script>
     $(function(){
-        $(".tabs_cards [tab]").on('click', function(){
-            var t = $(this);
-
-            cardLoad(t);
-        });
-
-        var clicked = false;
-        $(".tabs_cards [tab]").each(function(){
-            if(clicked){
-                return;
-            }
-            var t = $(this);
-
-            if(!t.attr('style')){
-                clicked = true;
-                t.click();
-            }
-        });
-
-        $(".cards_search").on('keypress', function(e){
-            if(e.keyCode == 13){
-                loadContract('cards', $(".cards_search").val());
-            }
-        });
 /*
  0 - не отображать кнопку "Блокировать"/"Разблокировать"
  1 - отображать кнопку "Блокировать"/"Разблокировать",

@@ -74,6 +74,10 @@ class Model_Card extends Model
             }
         }
 
+        if(!empty($params['pagination'])) {
+            return $db->pagination($sql, $params);
+        }
+
 		$cards = $db->query($sql);
 
 		return $cards;
