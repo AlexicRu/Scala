@@ -45,8 +45,8 @@
                                 Цепочка договоров внутри системы
                             <?}else{
                                 foreach ($tubes as $tube) {
-                                    if ($tube['PROJECT_ID'] == $contract['TUBE_ID']) {
-                                        ?>Внешний - <b><?=$tube['PROJECT_NAME']?></b><?
+                                    if ($tube['TUBE_ID'] == $contract['TUBE_ID']) {
+                                        ?>Внешний - <b><?=$tube['TUBE_NAME']?></b><?
                                     }
                                 }
                             }?>
@@ -65,7 +65,7 @@
                                 </label>
                                 <select name="TUBE_ID" <?=($contract['DATA_SOURCE'] != Model_Supplier_Contract::DATA_SOURCE_OUTSIDE ? 'disabled' : '')?>>
                                     <?foreach ($tubes as $tube) {?>
-                                        <option value="<?=$tube['PROJECT_ID']?>" <?=($tube['PROJECT_ID'] == $contract['TUBE_ID'] ? 'selected' : '')?>><?=$tube['PROJECT_NAME']?></option>
+                                        <option value="<?=$tube['TUBE_ID']?>" <?=($tube['TUBE_ID'] == $contract['TUBE_ID'] ? 'selected' : '')?>><?=$tube['TUBE_NAME']?></option>
                                     <?}?>
                                 </select>
                             </div>

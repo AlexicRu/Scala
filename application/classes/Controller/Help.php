@@ -351,8 +351,8 @@ class Controller_Help extends Controller_Common
 
         foreach($res as $item){
             $return[] = [
-                'name' => $item['PROJECT_NAME'],
-                'value' => $item['PROJECT_ID'],
+                'name' => $item['TUBE_NAME'],
+                'value' => $item['TUBE_ID'],
             ];
         }
 

@@ -146,6 +146,11 @@ function editSupplierContract()
             message(1, 'Контракт успешно обновлен');
 
             loadSupplierContract();
+
+            $('[name=suppliers_contracts_list] option:selected').text(
+                'Договор: [' + contractId + '] ' + params.CONTRACT_NAME + ' от ' + params.DATE_BEGIN +
+                (params.DATE_END != '31.12.2099' ? ' от ' + params.DATE_END : '')
+            );
         } else {
             message(0, data.data ? data.data : 'Ошибка добавления контракта');
         }
