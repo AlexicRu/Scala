@@ -31,36 +31,9 @@ class Controller_Help extends Controller_Common
             'search'        => $this->_search,
             'ids'           => $this->_ids,
             'limit'         => 10,
-            //'group_type'    => Model_Dot::GROUP_TYPE_USER
+            'group_type'    => !empty($this->_params['group_type']) ? $this->_params['group_type'] : Model_Dot::GROUP_TYPE_USER
         ];
         $res = Model_Dot::getGroups($params);
-
-        if(empty($res)){
-            $this->jsonResult(false);
-        }
-
-        $return = [];
-
-        foreach($res as $item){
-            $return[] = [
-                'name' => $item['GROUP_NAME'],
-                'value' => $item['GROUP_ID'],
-            ];
-        }
-
-        $this->jsonResult(true, $return);
-    }
-
-    /**
-     * получаем список точек для combobox
-     */
-    public function action_list_pos_group_supplier()
-    {
-        $res = Listing::getSupplierDotsGroups([
-            'search' => $this->_search,
-            'ids' => $this->_ids,
-            'params' => $this->_params,
-        ]);
 
         if(empty($res)){
             $this->jsonResult(false);
@@ -107,33 +80,6 @@ class Controller_Help extends Controller_Common
     public function action_list_service()
     {
         $res = Listing::getServices(['search' => $this->_search, 'ids' => $this->_ids]);
-
-        if(empty($res)){
-            $this->jsonResult(false);
-        }
-
-        $return = [];
-
-        foreach($res as $item){
-            $return[] = [
-                'name' => $item['LONG_DESC'],
-                'value' => $item['SERVICE_ID'],
-            ];
-        }
-
-        $this->jsonResult(true, $return);
-    }
-
-    /**
-     * получаем список услуг для combobox
-     */
-    public function action_list_service_supplier()
-    {
-        $res = Listing::getServicesSupplier([
-            'search' => $this->_search,
-            'ids' => $this->_ids,
-            'params' => $this->_params,
-        ]);
 
         if(empty($res)){
             $this->jsonResult(false);

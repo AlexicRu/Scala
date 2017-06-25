@@ -112,27 +112,12 @@ class Controller_Clients extends Controller_Common {
 			case 'cards':
 				$popupCardAdd = Common::popupForm('Добавление новой карты', 'card/add');
 
-                $cards = Model_Card::getCards($contractId);
-
-                $cntWork = 0;
-                $cntDisable = 0;
-
-                foreach($cards as $card){
-                    if($card['CARD_STATE'] != Model_Card::CARD_STATE_BLOCKED){
-                        $cntWork++;
-                    }else{
-                        $cntDisable++;
-                    }
-                }
-
-                $cntCards = count($cards);
+				$cardsCounter = Model_Contract::getCardsCounter($contractId);
 
 				$content = View::factory('ajax/clients/contract/cards')
                     ->bind('params', $params)
 					->bind('popupCardAdd', $popupCardAdd)
-					->bind('cntWork', $cntWork)
-					->bind('cntDisable', $cntDisable)
-					->bind('cntCards', $cntCards)
+					->bind('cardsCounter', $cardsCounter)
                 ;
 				break;
 			case 'account':

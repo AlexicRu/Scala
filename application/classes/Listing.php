@@ -71,69 +71,6 @@ class Listing
     }
 
     /**
-     * список услуг
-     *
-     * @param $params
-     * @return array|bool|int
-     */
-    public static function getServicesSupplier($params)
-    {
-        $db = Oracle::init();
-
-        $sql = (new Builder())->select()
-            ->from('V_WEB_SUPL_CONTRACT_SERVICES t')
-            ->orderBy("t.LONG_DESC")
-            ->limit(self::$limit)
-            ->columns([
-                't.SERVICE_ID',
-                't.LONG_DESC'
-            ])
-        ;
-
-        if(!empty($params['search'])){
-            $sql->where("upper(t.long_desc) like ".mb_strtoupper(Oracle::quote('%'.$params['search'].'%')));
-        }
-
-        if(!empty($params['ids'])){
-            $sql->where("t.SERVICE_ID in (".implode(',', $params['ids']).")");
-        }
-
-        if(!empty($params['params']['contract_id'])){
-            $sql->where("and t.contract_id  = ".intval($params['params']['contract_id']));
-        }
-
-        return $db->query($sql);
-    }
-
-    /**
-     * список групп точек для поставщика
-     *
-     * @param $params
-     */
-    public static function getSupplierDotsGroups($params)
-    {
-        $db = Oracle::init();
-
-        $sql = (new Builder())->select()
-            ->from('V_WEB_SUPL_POS_GROUPS t')
-        ;
-
-        if(!empty($params['search'])){
-            $sql->where("upper(t.long_desc) like ".mb_strtoupper(Oracle::quote('%'.$params['search'].'%')));
-        }
-
-        if(!empty($params['ids'])){
-            $sql->where("t.SERVICE_ID in (".implode(',', $params['ids']).")");
-        }
-
-        if(!empty($params['params']['contract_id'])){
-            $sql->where("and t.contract_id  = ".intval($params['params']['contract_id']));
-        }
-
-        return $db->query($sql);
-    }
-
-    /**
      * список карт
      *
      * @param $search

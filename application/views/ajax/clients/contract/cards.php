@@ -1,12 +1,12 @@
 <div class="tc_top_line">
     <span class="gray">Всего карт:
-        <a href="#" onclick="filterCards('all')"><?=$cntCards?></a>
+        <a href="#" onclick="filterCards('all')"><?=$cardsCounter['ALL_CARDS']?></a>
     </span> &nbsp;&nbsp;&nbsp;
     <span class="gray <?=(!empty($params['status']) && $params['status'] == 'work' ? 'act' : '')?>">
-        В работе: <a href="#" onclick="filterCards(true)" class="cards_cnt_in_work"><?=$cntWork?></a>
+        В работе: <a href="#" onclick="filterCards(true)" class="cards_cnt_in_work"><?=$cardsCounter['CARDS_IN_WORK']?></a>
     </span> &nbsp;&nbsp;&nbsp;
     <span class="red <?=(!empty($params['status']) && $params['status'] == 'disabled' ? 'act' : '')?>">
-        Заблокировано: <a href="#" onclick="filterCards(false)" class="cards_cnt_blocked"><?=$cntDisable?></a>
+        Заблокировано: <a href="#" onclick="filterCards(false)" class="cards_cnt_blocked"><?=$cardsCounter['CARDS_NOT_WORK']?></a>
     </span>
     <div class="fr input_with_icon"><i class="icon-find"></i><input type="text" class="input_big cards_search" placeholder="Поиск..." value="<?=(!empty($params['query']) ? $params['query'] : '')?>"></div>
 </div>

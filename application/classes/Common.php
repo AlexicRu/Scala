@@ -44,7 +44,7 @@ class Common
             $content = View::factory('forms/_fields/' . $type)
                 ->bind('type', $type)
                 ->bind('name', $name)
-                ->bind('value', $value)
+                ->bind('value', is_array($value) ? implode(',', $value) : $value)
                 ->bind('params', $params)
             ;
         } catch (Exception $e){

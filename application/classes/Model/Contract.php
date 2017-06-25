@@ -625,4 +625,23 @@ class Model_Contract extends Model
 
         return $db->procedure('ctrl_pos_group_edit', $data);
     }
+
+    /**
+     * получаем данные по колву карт
+     *
+     * @param $contractId
+     */
+    public static function getCardsCounter($contractId)
+    {
+        if (empty($contractId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('v_web_crd_counter')
+            ->where('contract_id = '.(int)$contractId)
+        ;
+
+        return Oracle::init()->row($sql);
+    }
 }
