@@ -10,6 +10,8 @@ class Oracle{
 	private static $_conn = null;
 	private static $_instance = null;
 
+	private $_fullResponse = [];
+
 	private function __construct() {}
     public function __destruct() {
         oci_close(self::$_conn);
@@ -187,18 +189,28 @@ class Oracle{
 
 		$proc = 'begin '.self::$prefix.'web_pack.'.$procedure.'('.implode(', ', $keys).'); end;';
 
-		$res = $this->ora_proced($proc, $data);
+		$this->_fullResponse = $this->ora_proced($proc, $data);
 
         if($fullResponse){
-            return $res;
+            return $this->_fullResponse;
         }
 
-		if(isset($res['p_error_code'])){
-			return $res['p_error_code'];
+		if(isset($this->_fullResponse['p_error_code'])){
+			return $this->_fullResponse['p_error_code'];
 		}
 
 		return self::CODE_ERROR;
 	}
+
+    /**
+     * получение полного ответа на процедуру
+     *
+     * @return array
+     */
+	public function getFullResponse()
+    {
+        return $this->_fullResponse;
+    }
 
 	/**
 	 * вот такой вот кривой лимит с офсетом

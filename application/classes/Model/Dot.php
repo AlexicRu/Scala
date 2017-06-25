@@ -173,4 +173,38 @@ class Model_Dot extends Model
 
         return self::$groupsTypesNames;
     }
+
+    /**
+     * удаляем точки из группы
+     *
+     * @param $groupId
+     * @param $posIds
+     */
+    public static function delDotsFromGroup($groupId, $posIds)
+    {
+        if (empty($groupId) || empty($posIds)) {
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_group_id'        => $groupId,
+            'p_action'          => 2,
+            'p_card_collection' => [$posIds, SQLT_CHR],
+            'p_manager_id'      => $user['MANAGER_ID'],
+            'p_error_code' 	    => 'out',
+        ];
+
+        $result = $db->procedure('ctrl_card_group_collection', $data);
+
+        if ($result == Oracle::CODE_ERROR) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

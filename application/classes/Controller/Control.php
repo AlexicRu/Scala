@@ -575,4 +575,17 @@ class Controller_Control extends Controller_Common {
 
         $this->jsonResult(true);
     }
+
+    /**
+     * удаление точек из группы
+     */
+    public function action_del_dots_from_group()
+    {
+        $posIds = $this->request->post('pos_ids');
+        $groupId = $this->request->post('group_id');
+
+        $result = Model_Dot::delDotsFromGroup($groupId, $posIds);
+
+        $this->jsonResult($result);
+    }
 }
