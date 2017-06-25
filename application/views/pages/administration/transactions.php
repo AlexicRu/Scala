@@ -6,10 +6,10 @@
     </div>
     <div class="tabs_content">
         <div tab_content="errors" class="tab_content active">
-            <div class="ajax_block_administration_transactions_errors_out"></div>
+            <div class="ajax_block_administration_transactions_errors_out block_loading"></div>
         </div>
         <div tab_content="history" class="tab_content">
-            <div class="ajax_block_administration_transactions_history_out"></div>
+            <div class="ajax_block_administration_transactions_history_out block_loading"></div>
         </div>
     </div>
 </div>
@@ -18,7 +18,11 @@
     var skipColumns = ['RNUM', 'TRN_CURRENCY', 'AGENT_ID', 'DATETIME_PROCESS'];
 
     $(function(){
-        paginationAjax('/administration/transactions_errors', 'ajax_block_administration_transactions_errors', renderAjaxPaginationAdminTransactions);
+        var params = {
+            show_all_btn:true
+        };
+
+        paginationAjax('/administration/transactions_errors', 'ajax_block_administration_transactions_errors', renderAjaxPaginationAdminTransactions, params);
         paginationAjax('/administration/transactions_history', 'ajax_block_administration_transactions_history', renderAjaxPaginationAdminTransactions);
     });
 
