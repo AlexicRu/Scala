@@ -4,12 +4,14 @@ class Controller_Help extends Controller_Common
 {
     protected $_search;
     protected $_ids;
+    protected $_params;
     protected $_user;
 
     public function before()
     {
         parent::before();
 
+        $this->_params = $this->request->post('params');
         $this->_search = $this->request->post('search');
         $this->_ids = $this->request->post('ids');
 
@@ -32,6 +34,33 @@ class Controller_Help extends Controller_Common
             //'group_type'    => Model_Dot::GROUP_TYPE_USER
         ];
         $res = Model_Dot::getGroups($params);
+
+        if(empty($res)){
+            $this->jsonResult(false);
+        }
+
+        $return = [];
+
+        foreach($res as $item){
+            $return[] = [
+                'name' => $item['GROUP_NAME'],
+                'value' => $item['GROUP_ID'],
+            ];
+        }
+
+        $this->jsonResult(true, $return);
+    }
+
+    /**
+     * получаем список точек для combobox
+     */
+    public function action_list_pos_group_supplier()
+    {
+        $res = Listing::getSupplierDotsGroups([
+            'search' => $this->_search,
+            'ids' => $this->_ids,
+            'params' => $this->_params,
+        ]);
 
         if(empty($res)){
             $this->jsonResult(false);
@@ -73,11 +102,38 @@ class Controller_Help extends Controller_Common
     }
 
     /**
-     * получаем список стран для combobox
+     * получаем список услуг для combobox
      */
     public function action_list_service()
     {
         $res = Listing::getServices(['search' => $this->_search, 'ids' => $this->_ids]);
+
+        if(empty($res)){
+            $this->jsonResult(false);
+        }
+
+        $return = [];
+
+        foreach($res as $item){
+            $return[] = [
+                'name' => $item['LONG_DESC'],
+                'value' => $item['SERVICE_ID'],
+            ];
+        }
+
+        $this->jsonResult(true, $return);
+    }
+
+    /**
+     * получаем список услуг для combobox
+     */
+    public function action_list_service_supplier()
+    {
+        $res = Listing::getServicesSupplier([
+            'search' => $this->_search,
+            'ids' => $this->_ids,
+            'params' => $this->_params,
+        ]);
 
         if(empty($res)){
             $this->jsonResult(false);

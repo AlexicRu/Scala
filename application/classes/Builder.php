@@ -16,6 +16,7 @@ class Builder
     private $_orderBy   = [];
     private $_limit     = 0;
     private $_offset    = 0;
+    private $_distinct  = false;
 
     /**
      * @return $this
@@ -25,6 +26,16 @@ class Builder
         $this->columns($array);
 
         $this->_action = 'select';
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function distinct()
+    {
+        $this->_distinct = true;
 
         return $this;
     }
@@ -192,6 +203,10 @@ class Builder
     public function build()
     {
         $sql = " {$this->_action} ";
+
+        if ($this->_distinct) {
+            $sql .= " distinct ";
+        }
 
         //columns
         if (empty($this->_columns)) {

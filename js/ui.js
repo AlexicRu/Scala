@@ -242,7 +242,10 @@ function renderComboBoxMulti(combo, params)
             ajaxComboBoxMulti.abort();
         }
 
-        var postParams = { search:val };
+        var postParams = {
+            params: params,
+            search: val
+        };
 
         if(params && params['depend_on']){
             var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]'));
