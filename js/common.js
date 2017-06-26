@@ -136,6 +136,9 @@ function paginationAjax(url, name, callback, params)
     var more = $('<button class="btn btn_small">Загрузить еще...</button>');
     var all = $('<button class="btn btn_small">Загрузить все</button>');
 
+    outer.addClass('ajax_pagination_out');
+    block.addClass('ajax_pagination');
+
     more.appendTo(btnBlock);
 
     if (params && params.show_all_btn) {

@@ -8,18 +8,46 @@
 
         $(".cards_search").on('keypress', function(e){
             if(e.keyCode == 13){
-                $('.ajax_block_cards_list_out').empty().addClass('block_loading')
-                    .closest('.tabs_cards').find('.tabs_v_content').empty()
-                ;
-
                 var params = {
                     query: $(this).val()
                 };
 
-                paginationAjax('/clients/cards_list/?contract_id=' + $('[name=contracts_list]').val(), 'ajax_block_cards_list', renderAjaxPaginationCardsList, params);
+                reLoad(params);
             }
         });
     });
+
+    function reLoad(params)
+    {
+        $('.ajax_block_cards_list_out').empty().addClass('block_loading')
+            .closest('.tabs_cards').find('.tabs_v_content').empty()
+        ;
+
+        paginationAjax('/clients/cards_list/?contract_id=' + $('[name=contracts_list]').val(), 'ajax_block_cards_list', renderAjaxPaginationCardsList, params);
+    }
+
+    /**
+     * фильтр
+     */
+    function filterCards(type)
+    {
+        var params = {
+            query: $(".cards_search").val()
+        };
+
+        switch (type) {
+            case 'work':
+                params.status = 'work';
+                break;
+            case 'disabled':
+                params.status = 'disabled';
+                break;
+        }
+
+        reLoad(params);
+
+        return false;
+    }
 
     function renderAjaxPaginationCardsList(data, block)
     {

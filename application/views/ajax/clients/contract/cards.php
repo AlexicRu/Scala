@@ -3,10 +3,10 @@
         <a href="#" onclick="filterCards('all')"><?=$cardsCounter['ALL_CARDS']?></a>
     </span> &nbsp;&nbsp;&nbsp;
     <span class="gray <?=(!empty($params['status']) && $params['status'] == 'work' ? 'act' : '')?>">
-        В работе: <a href="#" onclick="filterCards(true)" class="cards_cnt_in_work"><?=$cardsCounter['CARDS_IN_WORK']?></a>
+        В работе: <a href="#" onclick="filterCards('work')" class="cards_cnt_in_work"><?=$cardsCounter['CARDS_IN_WORK']?></a>
     </span> &nbsp;&nbsp;&nbsp;
     <span class="red <?=(!empty($params['status']) && $params['status'] == 'disabled' ? 'act' : '')?>">
-        Заблокировано: <a href="#" onclick="filterCards(false)" class="cards_cnt_blocked"><?=$cardsCounter['CARDS_NOT_WORK']?></a>
+        Заблокировано: <a href="#" onclick="filterCards('disabled')" class="cards_cnt_blocked"><?=$cardsCounter['CARDS_NOT_WORK']?></a>
     </span>
     <div class="fr input_with_icon"><i class="icon-find"></i><input type="text" class="input_big cards_search" placeholder="Поиск..." value="<?=(!empty($params['query']) ? $params['query'] : '')?>"></div>
 </div>
@@ -126,22 +126,6 @@
                 message(0, 'Ошибка изъятия');
             }
         });
-        return false;
-    }
-
-    /**
-     * фильтр
-     */
-    function filterCards(type)
-    {
-        if(type == 'all') {
-            loadContract('cards', $(".cards_search").val());
-
-            return false;
-        }
-
-        loadContract('cards', $(".cards_search").val(), {status: type == 1 ? 'work' : 'disabled'});
-
         return false;
     }
 </script>
