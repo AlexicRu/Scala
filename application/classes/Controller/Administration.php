@@ -37,7 +37,7 @@ class Controller_Administration extends Controller_Common
         $result = Model_Transaction::getTransactionsErrors($params);
 
         if ($this->toXls){
-            $this->showXls($result, [
+            $this->showXls('transactions_errors', $result, [
                 'SOURCE_NAME'       => 'SOURCE_NAME',
                 'DATETIME_TRN'      => 'DATETIME_TRN',
                 'CARD_ID'           => 'CARD_ID',
@@ -82,7 +82,7 @@ class Controller_Administration extends Controller_Common
         $result = Model_Transaction::getTransactionsHistory($params);
 
         if ($this->toXls){
-            $this->showXls($result, [
+            $this->showXls('transactions_history', $result, [
                 'SOURCE_NAME'       => 'SOURCE_NAME',
                 'FILE_NAME'         => 'FILE_NAME',
                 'DATETIME_RECIEVE'  => 'DATETIME_RECIEVE',

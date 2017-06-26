@@ -140,7 +140,7 @@ class Controller_Control extends Controller_Common {
         $result = Model_Dot::getGroupDots($params);
 
         if ($this->toXls){
-            $this->showXls($result, [
+            $this->showXls('group_dots', $result, [
                 'PROJECT_NAME'  => 'PROJECT NAME',
                 'ID_EMITENT'    => 'ID EMI',
                 'ID_TO'         => 'ID TO',
@@ -273,7 +273,7 @@ class Controller_Control extends Controller_Common {
         $result = Model_Dot::getDots($params);
 
         if ($this->toXls){
-            $this->showXls($result, [
+            $this->showXls('dots', $result, [
                 'PROJECT_NAME'  => 'PROJECT NAME',
                 'ID_EMITENT'    => 'ID EMI',
                 'ID_TO'         => 'ID TO',
@@ -527,8 +527,10 @@ class Controller_Control extends Controller_Common {
             $result = Model_Card::getGroupCards($params);
 
             if ($this->toXls){
-                $this->showXls($result, [
-                    'CARD ID', 'Владелец', 'Описание'
+                $this->showXls('group_cards', $result, [
+                    'CARD_ID'           => 'CARD ID',
+                    'HOLDER'            => 'Владелец',
+                    'DESCRIPTION_RU'    => 'Описание'
                 ]);
             } else {
                 list($items, $more) = $result;

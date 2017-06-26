@@ -275,7 +275,7 @@ abstract class Controller_Common extends Controller_Template {
      * @param $headers
      * @param $filterRows
      */
-    public function showXls($rows, $headers = [], $filterRows = false)
+    public function showXls($filename, $rows, $headers = [], $filterRows = false)
     {
         $preRows = [];
         if ($filterRows) {
@@ -293,33 +293,8 @@ abstract class Controller_Common extends Controller_Template {
             $rows = $preRows;
         }
 
-        echo '<table>';
-
-        if (!empty($headers)) {
-            echo '<tr>';
-            foreach ($headers as $elem){
-                echo '<th>';
-                echo $elem;
-                echo '</th>';
-            }
-            echo '</tr>';
-        }
-
-        foreach ($rows as $elems){
-            echo '<tr>';
-
-            foreach ($elems as $elem){
-                echo '<td>';
-                echo $elem;
-                echo '</td>';
-            }
-
-            echo '</tr>';
-        }
-
-        echo '</table>';
-
-        die;
+        $PHPToExcel = new PHPToExcel();
+        $PHPToExcel->dispay($filename . '_'.date('Ymd'), $rows, $headers);
     }
 
 } // End Common
