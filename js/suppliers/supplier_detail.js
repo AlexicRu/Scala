@@ -132,7 +132,7 @@ function editSupplierContract()
         CONTRACT_STATE:         $('[name=CONTRACT_STATE]', block).val(),
         DATA_SOURCE:            $('[name=DATA_SOURCE]:checked', block).val(),
         TUBE_ID:                $('[name=TUBE_ID]', block).val(),
-        CONTRACT_SERVICES:      getComboboxMultiValue($('[name=CONTRACT_SERVICES]', block)),
+        CONTRACT_SERVICES:      getComboboxValue($('[name=CONTRACT_SERVICES]', block)),
         CONTRACT_POS_GROUPS:    getComboboxMultiValue($('[name=CONTRACT_POS_GROUPS]', block)),
     };
 

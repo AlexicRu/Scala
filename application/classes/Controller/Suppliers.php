@@ -99,7 +99,7 @@ class Controller_Suppliers extends Controller_Common {
         switch($tab) {
             case 'contract':
 
-                $contractServices = array_column(Model_Supplier_Contract::getContractServices($contractId), 'SERVICE_ID');
+                $contractServices = reset(array_column(Model_Supplier_Contract::getContractServices($contractId), 'SERVICE_ID'));
                 $contractDotsGroups = array_column(Model_Supplier_Contract::getContractDotsGroups($contractId), 'POS_GROUP_ID');
 
                 $content = View::factory('ajax/suppliers/contract/contract')

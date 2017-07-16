@@ -78,7 +78,7 @@
                     <td>
                         <div toggle_block="toggle_contract" class="contract_service_render_value"></div>
                         <div class="dn" toggle_block="toggle_contract">
-                            <?=Common::buildFormField('service_choose_multi', 'CONTRACT_SERVICES', $contractServices, [
+                            <?=Common::buildFormField('service_choose_single', 'CONTRACT_SERVICES', $contractServices, [
                                 'show_all' => true,
                                 'render_value_to' => '.contract_service_render_value'
                             ])?>

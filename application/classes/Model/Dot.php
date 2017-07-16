@@ -38,34 +38,35 @@ class Model_Dot extends Model
      */
     public static function getGroups($filter = [])
     {
-        $db = Oracle::init();
-
         $user = Auth::instance()->get_user();
 
-        $sql = "
-            select * from ".Oracle::$prefix."V_WEB_POS_GROUPS t where t.agent_id = ".$user['AGENT_ID']
+        $sql = (new Builder())->select()
+            ->from('V_WEB_POS_GROUPS t')
+            ->where("t.agent_id = ".$user['AGENT_ID'])
+            ->orderBy('group_name')
         ;
 
         if(!empty($filter['search'])){
-            $sql .= " and upper(t.group_name) like ".mb_strtoupper(Oracle::quote('%'.$filter['search'].'%'));
+            $sql->where("upper(t.group_name) like ".mb_strtoupper(Oracle::quote('%'.$filter['search'].'%')));
         }
 
         if(!empty($filter['ids'])){
-            $sql .= " and t.group_id in (".implode(',', $filter['ids']).")";
+            $sql->where("t.group_id in (".implode(',', $filter['ids']).")");
         }
 
         if(!empty($filter['group_type'])){
             if(!is_array($filter['group_type'])){
                 $filter['group_type'] = [Oracle::quote($filter['group_type'])];
             }
-            $sql .= " and t.group_type in (".implode(',', $filter['group_type']).")";
+            $sql->where("t.group_type in (".implode(',', $filter['group_type']).")");
         }
 
-        $sql .= ' order by group_name ';
+        $db = Oracle::init();
 
         if(!empty($filter['limit'])){
-            return $db->query($db->limit($sql, 0, $filter['limit']));
+            $sql->limit($filter['limit']);
         }
+
         return $db->query($sql);
     }
 
