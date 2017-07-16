@@ -308,6 +308,11 @@ class Model_Card extends Model
 
         $user = Auth::instance()->get_user();
 
+        if (count($limits) > 9) {
+            Messages::put('Изменение лимитов не произошло. Превышен лимит ограничений');
+            return false;
+        }
+
 		if(in_array($user['role'], array_keys(Access::$clientRoles))) {
             $currentLimits = self::getOilRestrictions($cardId);
 
