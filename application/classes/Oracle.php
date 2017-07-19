@@ -137,8 +137,9 @@ class Oracle{
 	 * @param $sql
 	 * @param $field
 	 * @param $noArray
+	 * @param $subField
 	 */
-	public function tree($sql, $field, $noArray = false)
+	public function tree($sql, $field, $noArray = false, $subField = false)
 	{
 		$result = $this->query($sql);
 
@@ -153,9 +154,9 @@ class Oracle{
 
 			foreach($result as $row){
 				if($noArray) {
-					$return[$row[$field]] = $row;
+					$return[$row[$field]] = !empty($subField) ? $row[$subField] : $row;
 				}else{
-					$return[$row[$field]][] = $row;
+					$return[$row[$field]][] =  !empty($subField) ? $row[$subField] : $row;
 				}
 			}
 		}

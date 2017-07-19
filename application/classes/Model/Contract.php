@@ -66,35 +66,44 @@ class Model_Contract extends Model
 
 		$db = Oracle::init();
 
-		$sql = "
-			select *
-			from ".Oracle::$prefix."V_WEB_CL_CONTRACTS
-			where 1=1
-		";
+        $sql = (new Builder())->select()
+            ->from('V_WEB_CL_CONTRACTS')
+            ->orderBy(['ct_date desc', 'state_id', 'contract_name'])
+        ;
 
-		if(!empty($clientId)){
-			$sql .= " and client_id = ".Oracle::quote($clientId);
-		}
+        if(!empty($clientId)){
+            $sql->where("client_id = ".Oracle::quote($clientId));
+        }
 
-		if(!empty($params['contract_id'])){
-		    if(!is_array($params['contract_id'])){
+        if(!empty($params['contract_id'])){
+            if(!is_array($params['contract_id'])){
                 $params['contract_id'] = [(int)$params['contract_id']];
             }
-			$sql .= " and contract_id in (".implode(',', $params['contract_id']).") ";
-		}
+        } else {
+            $params['contract_id'] = [];
+        }
+
+        //ограничение по договорам пользователя
+        $user = User::current();
+
+        if (!empty($user['contracts'][$clientId])) {
+            $params['contract_id'] = array_merge($params['contract_id'], $user['contracts'][$clientId]);
+        }
+
+        if(!empty($params['contract_id'])){
+            $sql->where("contract_id in (".implode(',', $params['contract_id']).")");
+        }
 
         if(!empty($params['search'])){
-            $sql .= " and upper(contract_name) like upper(".Oracle::quote('%'.$params['search'].'%').") ";
+            $sql->where("upper(contract_name) like upper(".Oracle::quote('%'.$params['search'].'%').")");
         }
 
         if(!empty($params['agent_id'])){
-            $sql .= " and agent_id = ".(int)$params['agent_id'];
+            $sql->where("agent_id = ".(int)$params['agent_id']);
         }
 
-		$sql .= ' order by ct_date desc, state_id, contract_name ';
-
 		if(!empty($params['limit'])){
-            return $db->query($db->limit($sql, 0, $params['limit']));
+            $sql->limit($params['limit']);
         }
 
         return $db->query($sql);

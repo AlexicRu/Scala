@@ -843,6 +843,7 @@ textarea.input_grand {
   color: #999;
   text-align: right;
   clear: both;
+  white-space: normal;
 }
 .line_inner + .line_inner {
   margin-top: 2px;

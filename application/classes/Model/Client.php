@@ -52,12 +52,21 @@ class Model_Client extends Model
 
         $clients = [];
 
+        $user = User::current();
+
         foreach($result as $clientId => $rows){
             $client = reset($rows);
 
             foreach($rows as $row){
                 if(!empty($row['CONTRACT_ID'])){
-                    $client['contracts'][] = $row;
+
+                    if (!empty($user['contracts'][$clientId])) {
+                        if (in_array($row['CONTRACT_ID'], $user['contracts'][$clientId])) {
+                            $client['contracts'][] = $row;
+                        }
+                    } else {
+                        $client['contracts'][] = $row;
+                    }
                 }
             }
 
