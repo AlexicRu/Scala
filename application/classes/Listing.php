@@ -201,11 +201,11 @@ class Listing
         $sql = "select * from ".Oracle::$prefix."V_WEB_TUBES_LIST t where t.agent_id=".$user['AGENT_ID'];
 
         if(!empty($search)){
-            $sql .= " and upper(t.PROJECT_NAME) like ".mb_strtoupper(Oracle::quote('%'.$search.'%'));
+            $sql .= " and upper(t.TUBE_NAME) like ".mb_strtoupper(Oracle::quote('%'.$search.'%'));
         }
 
         if(!empty($ids)){
-            $sql .= " and t.ID in (".implode(',', $ids).")";
+            $sql .= " and t.TUBE_ID in (".implode(',', $ids).")";
         }
 
         return $db->query($db->limit($sql, 0, self::$limit));

@@ -4,12 +4,14 @@ class Controller_Help extends Controller_Common
 {
     protected $_search;
     protected $_ids;
+    protected $_params;
     protected $_user;
 
     public function before()
     {
         parent::before();
 
+        $this->_params = $this->request->post('params');
         $this->_search = $this->request->post('search');
         $this->_ids = $this->request->post('ids');
 
@@ -29,7 +31,7 @@ class Controller_Help extends Controller_Common
             'search'        => $this->_search,
             'ids'           => $this->_ids,
             'limit'         => 10,
-            //'group_type'    => Model_Dot::GROUP_TYPE_USER
+            'group_type'    => !empty($this->_params['group_type']) ? $this->_params['group_type'] : Model_Dot::GROUP_TYPE_USER
         ];
         $res = Model_Dot::getGroups($params);
 
@@ -73,7 +75,7 @@ class Controller_Help extends Controller_Common
     }
 
     /**
-     * получаем список стран для combobox
+     * получаем список услуг для combobox
      */
     public function action_list_service()
     {
@@ -351,8 +353,8 @@ class Controller_Help extends Controller_Common
 
         foreach($res as $item){
             $return[] = [
-                'name' => $item['PROJECT_NAME'],
-                'value' => $item['PROJECT_ID'],
+                'name' => $item['TUBE_NAME'],
+                'value' => $item['TUBE_ID'],
             ];
         }
 

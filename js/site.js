@@ -4,9 +4,15 @@ $(function(){
     });
 
     $(document).on('click', "[tab]", function(){
+        console.log(1);
         var t = $(this);
         var block = t.closest('.tabs_switcher');
-        $(' > div > [tab_content], > div > [tab], > div > .scroll > [tab]', block).removeClass('active');
+        $(
+            ' > div > [tab_content],' +
+            ' > div > [tab],' +
+            ' > div > .scroll > [tab],' +
+            ' > div > .scroll > .ajax_pagination_out > .ajax_pagination > [tab]'
+            , block).removeClass('active');
         t.addClass('active');
         $('[tab_content='+ t.attr('tab') +']', block).addClass('active');
 

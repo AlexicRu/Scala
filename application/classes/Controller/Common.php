@@ -8,6 +8,7 @@ abstract class Controller_Common extends Controller_Template {
     public $scripts = [];
     public $styles = [];
     public $tpl = '';
+    public $toXls = false;
 
     public function before()
     {
@@ -36,8 +37,12 @@ abstract class Controller_Common extends Controller_Template {
 
         $allow = Access::allow(strtolower($controller.'_'.$action));
 
+        if ($this->request->query('to_xls')) {
+            $this->toXls = true;
+        }
+
         //если не аяксовый запрос
-        if(!$this->request->is_ajax()) {
+        if(!$this->request->is_ajax() && !$this->toXls) {
             if($allow == false){
                 throw new HTTP_Exception_403();
             }
@@ -157,8 +162,8 @@ abstract class Controller_Common extends Controller_Template {
                 '/js/plugins/fancy/jquery.fancybox.css',
             ];
             $this->template->scripts = [
-                'https://yastatic.net/jquery/2.1.3/jquery.min.js',
-                'https://yastatic.net/jquery-ui/1.11.2/jquery-ui.min.js',
+                '/js/plugins/jquery.2.1.3.min.js',
+                '/js/plugins/jquery-ui.1.11.2.min.js',
                 '/js/plugins/jGrowl/jGrowl.js',
                 '/js/plugins/fancy/jquery.fancybox.js',
                 '/js/ui.js',
@@ -168,7 +173,7 @@ abstract class Controller_Common extends Controller_Template {
         }else{
             $this->template->styles = [];
             $this->template->scripts = [
-                'https://yastatic.net/jquery/2.1.3/jquery.min.js',
+                '/js/plugins/jquery.2.1.3.min.js',
                 '/js/common.js',
             ];
         }
@@ -261,6 +266,35 @@ abstract class Controller_Common extends Controller_Template {
                 $this->request->query($key, array_merge($data, $value));
             }
         }
+    }
+
+    /**
+     * показываем как XLS
+     *
+     * @param $rows
+     * @param $headers
+     * @param $filterRows
+     */
+    public function showXls($filename, $rows, $headers = [], $filterRows = false)
+    {
+        $preRows = [];
+        if ($filterRows) {
+            foreach ($rows as $row) {
+
+                $preRow = [];
+
+                foreach ($headers as $key => $value) {
+                    $preRow[$key] = isset($row[$key]) ? $row[$key] : '';
+                }
+
+                $preRows[] = $preRow;
+            }
+
+            $rows = $preRows;
+        }
+
+        $PHPToExcel = new PHPToExcel();
+        $PHPToExcel->dispay($filename . '_'.date('Ymd'), $rows, $headers);
     }
 
 } // End Common

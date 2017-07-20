@@ -4,12 +4,18 @@
     <div class="tabs">
         <span tab="errors" class="tab active">Отказные</span><span tab="history" class="tab">История загрузок</span>
     </div>
-    <div class="tabs_content">
+    <div class="tabs_content tabs_content_no_padding">
         <div tab_content="errors" class="tab_content active">
-            <div class="ajax_block_administration_transactions_errors_out"></div>
+            <div class="tab_content_header">
+                <div class="fr">
+                    <span class="btn btn_green btn_icon" onclick="transactionCancelToXls()"><i class="icon-exel1"></i> Выгрузить</span>
+                </div>
+                <br class="clr">
+            </div>
+            <div class="ajax_block_administration_transactions_errors_out block_loading"></div>
         </div>
         <div tab_content="history" class="tab_content">
-            <div class="ajax_block_administration_transactions_history_out"></div>
+            <div class="ajax_block_administration_transactions_history_out block_loading"></div>
         </div>
     </div>
 </div>
@@ -18,7 +24,11 @@
     var skipColumns = ['RNUM', 'TRN_CURRENCY', 'AGENT_ID', 'DATETIME_PROCESS'];
 
     $(function(){
-        paginationAjax('/administration/transactions_errors', 'ajax_block_administration_transactions_errors', renderAjaxPaginationAdminTransactions);
+        var params = {
+            show_all_btn:true
+        };
+
+        paginationAjax('/administration/transactions_errors', 'ajax_block_administration_transactions_errors', renderAjaxPaginationAdminTransactions, params);
         paginationAjax('/administration/transactions_history', 'ajax_block_administration_transactions_history', renderAjaxPaginationAdminTransactions);
     });
 
@@ -54,6 +64,8 @@
         for(i in data){
             tr = $('<tr />');
 
+            tr.attr('rnum', data[i].RNUM);
+
             for(j in data[i]){
                 if(skipColumns.indexOf(j) != -1){
                     continue;
@@ -63,5 +75,20 @@
 
             table.append(tr);
         }
+    }
+
+    function transactionCancelToXls()
+    {
+        window.open('/administration/transactions_errors?to_xls=1');
+    }
+    function transactionHistoryToXls()
+    {
+        var rnum = [];
+
+        $('.ajax_block_administration_transactions_history [rnum]').each(function () {
+            rnum.push($(this).attr('rnum'));
+        });
+
+        window.open('/administration/transactions_history?to_xls=1&rnum=' + rnum.join(','));
     }
 </script>

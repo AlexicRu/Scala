@@ -132,7 +132,7 @@ function editSupplierContract()
         CONTRACT_STATE:         $('[name=CONTRACT_STATE]', block).val(),
         DATA_SOURCE:            $('[name=DATA_SOURCE]:checked', block).val(),
         TUBE_ID:                $('[name=TUBE_ID]', block).val(),
-        CONTRACT_SERVICES:      getComboboxMultiValue($('[name=CONTRACT_SERVICES]', block)),
+        CONTRACT_SERVICES:      getComboboxValue($('[name=CONTRACT_SERVICES]', block)),
         CONTRACT_POS_GROUPS:    getComboboxMultiValue($('[name=CONTRACT_POS_GROUPS]', block)),
     };
 
@@ -146,6 +146,11 @@ function editSupplierContract()
             message(1, 'Контракт успешно обновлен');
 
             loadSupplierContract();
+
+            $('[name=suppliers_contracts_list] option:selected').text(
+                'Договор: [' + contractId + '] ' + params.CONTRACT_NAME + ' от ' + params.DATE_BEGIN +
+                (params.DATE_END != '31.12.2099' ? ' от ' + params.DATE_END : '')
+            );
         } else {
             message(0, data.data ? data.data : 'Ошибка добавления контракта');
         }

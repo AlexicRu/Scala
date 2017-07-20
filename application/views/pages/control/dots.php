@@ -11,6 +11,7 @@
                     <span toggle_block="group_dots_block">
                         <a href="#control_add_dots_group" class="btn fancy">+ Добавить группу</a>
                         <a href="#control_add_dot" class="btn fancy">+ Добавить точки</a>
+                        <span class="btn btn_green btn_icon" onclick="dotsToXls()"><i class="icon-exel1"></i> Выгрузить</span>
                         <span class="btn btn_green btn_icon" toggle="group_dots_block"><i class="icon-pen"></i></span>
                     </span>
 
@@ -78,14 +79,23 @@
                 <div class="tabs_v_content tabs_content_no_padding">
                     <?if(!empty($dotsGroups)){?>
                         <?foreach($dotsGroups as $key => $group){?>
-                            <div class="tab_v_content" tab_content="group_dot<?=$group['GROUP_ID']?>"></div>
+                            <div class="tab_v_content" tab_content="group_dot<?=$group['GROUP_ID']?>" group_id="<?=$group['GROUP_ID']?>"></div>
                         <?}?>
                     <?}?>
                 </div>
             </div>
 
         </div>
-        <div tab_content="info" class="tab_content"></div>
+        <div tab_content="info" class="tab_content">
+            <div class="tab_content_header">
+                <div class="fr">
+                    <span class="btn btn_green btn_icon" onclick="dotsInfoToXls()"><i class="icon-exel1"></i> Выгрузить</span>
+                </div>
+                <br class="clr">
+            </div>
+
+            <div class="list"></div>
+        </div>
     </div>
 </div>
 
@@ -107,10 +117,12 @@
             $('.check_span_hidden, .td_check, .td_edit').toggle();
         });
 
-        $('.btn_del_dots_dots').on('click', function () {
+        $('.btn_del_dots').on('click', function () {
             var dots = [];
+            var group = $('.tab_v_content.active');
+            var group_id = group.attr('group_id');
 
-            $('.td_check [type=checkbox][name=pos_id]:checked').each(function () {
+            $('.td_check [type=checkbox][name=pos_id]:checked', group).each(function () {
                 dots.push($(this).val());
             });
 
@@ -122,6 +134,7 @@
                 return false;
             }
         });
+
         $('.btn_del_dots_groups').on('click', function () {
             var groups = [];
             var selectedGroups = {};
@@ -188,7 +201,7 @@
 
     function showDotsList()
     {
-        var block = $('[tab_content=info]');
+        var block = $('[tab_content=info] .list');
 
         if(block.html() != ''){
             return true;
@@ -196,10 +209,33 @@
 
         block.addClass('block_loading');
 
-        $.post('/control/show_dots', {  }, function (data) {
+        $.post('/control/show_dots', { postfix: 'dots_info' }, function (data) {
             block.removeClass('block_loading');
 
             block.html(data);
         });
+    }
+
+    function dotsToXls()
+    {
+        var group = $(".tabs_group_dots .tab_v[tab].active");
+
+        if (group.length == 0) {
+            message(0, 'Нет данный для выгрузки');
+            return;
+        }
+
+        var group_id = group.attr('tab').replace('group_dot', '');
+        window.open('/control/load_group_dots/?group_id=' + group_id + '&to_xls=1');
+    }
+    function dotsInfoToXls()
+    {
+        var pos_id = [];
+
+        $('.ajax_block_dots_list_dots_info [pos_id]').each(function () {
+            pos_id.push($(this).attr('pos_id'));
+        });
+
+        window.open('/control/load_dots?to_xls=1&pos_id=' + pos_id.join(','));
     }
 </script>

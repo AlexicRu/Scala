@@ -45,8 +45,8 @@
                                 Цепочка договоров внутри системы
                             <?}else{
                                 foreach ($tubes as $tube) {
-                                    if ($tube['PROJECT_ID'] == $contract['TUBE_ID']) {
-                                        ?>Внешний - <b><?=$tube['PROJECT_NAME']?></b><?
+                                    if ($tube['TUBE_ID'] == $contract['TUBE_ID']) {
+                                        ?>Внешний - <b><?=$tube['TUBE_NAME']?></b><?
                                     }
                                 }
                             }?>
@@ -65,7 +65,7 @@
                                 </label>
                                 <select name="TUBE_ID" <?=($contract['DATA_SOURCE'] != Model_Supplier_Contract::DATA_SOURCE_OUTSIDE ? 'disabled' : '')?>>
                                     <?foreach ($tubes as $tube) {?>
-                                        <option value="<?=$tube['PROJECT_ID']?>" <?=($tube['PROJECT_ID'] == $contract['TUBE_ID'] ? 'selected' : '')?>><?=$tube['PROJECT_NAME']?></option>
+                                        <option value="<?=$tube['TUBE_ID']?>" <?=($tube['TUBE_ID'] == $contract['TUBE_ID'] ? 'selected' : '')?>><?=$tube['TUBE_NAME']?></option>
                                     <?}?>
                                 </select>
                             </div>
@@ -78,7 +78,10 @@
                     <td>
                         <div toggle_block="toggle_contract" class="contract_service_render_value"></div>
                         <div class="dn" toggle_block="toggle_contract">
-                            <?=Common::buildFormField('service_choose_multi', 'CONTRACT_SERVICES', $contract['CONTRACT_SERVICES'], ['show_all' => true, 'render_value_to' => '.contract_service_render_value'])?>
+                            <?=Common::buildFormField('service_choose_single', 'CONTRACT_SERVICES', $contractServices, [
+                                'show_all' => true,
+                                'render_value_to' => '.contract_service_render_value'
+                            ])?>
                         </div>
                     </td>
                 </tr>
@@ -87,7 +90,11 @@
                     <td>
                         <div toggle_block="toggle_contract" class="contract_pos_groups_render_value"></div>
                         <div class="dn" toggle_block="toggle_contract">
-                            <?=Common::buildFormField('pos_group_choose_multi', 'CONTRACT_POS_GROUPS', $contract['CONTRACT_POS_GROUPS'], ['show_all' => true, 'render_value_to' => '.contract_pos_groups_render_value'])?>
+                            <?=Common::buildFormField('pos_group_choose_multi', 'CONTRACT_POS_GROUPS', $contractDotsGroups, [
+                                'show_all' => true,
+                                'render_value_to' => '.contract_pos_groups_render_value',
+                                'group_type' => Model_Dot::GROUP_TYPE_SUPPLIER
+                            ])?>
                         </div>
                     </td>
                 </tr>

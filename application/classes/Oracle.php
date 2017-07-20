@@ -10,13 +10,16 @@ class Oracle{
 	private static $_conn = null;
 	private static $_instance = null;
 
+	private $_fullResponse = [];
+
 	private function __construct() {}
     public function __destruct() {
         oci_close(self::$_conn);
     }
 	protected function __clone() {}
 
-	static public function init() {
+	static public function init()
+    {
 		if(is_null(self::$_instance))
 		{
 			$config = Kohana::$config->load('database');
@@ -35,6 +38,11 @@ class Oracle{
 
 	public function query($sql, $type='select')
     {
+        //builder
+        if (is_a($sql, 'Builder')) {
+            $sql = $sql->build();
+        }
+
         try {
             if ($type == 'select') {
                 $ret = array();
@@ -129,8 +137,9 @@ class Oracle{
 	 * @param $sql
 	 * @param $field
 	 * @param $noArray
+	 * @param $subField
 	 */
-	public function tree($sql, $field, $noArray = false)
+	public function tree($sql, $field, $noArray = false, $subField = false)
 	{
 		$result = $this->query($sql);
 
@@ -145,9 +154,9 @@ class Oracle{
 
 			foreach($result as $row){
 				if($noArray) {
-					$return[$row[$field]] = $row;
+					$return[$row[$field]] = !empty($subField) ? $row[$subField] : $row;
 				}else{
-					$return[$row[$field]][] = $row;
+					$return[$row[$field]][] =  !empty($subField) ? $row[$subField] : $row;
 				}
 			}
 		}
@@ -181,18 +190,28 @@ class Oracle{
 
 		$proc = 'begin '.self::$prefix.'web_pack.'.$procedure.'('.implode(', ', $keys).'); end;';
 
-		$res = $this->ora_proced($proc, $data);
+		$this->_fullResponse = $this->ora_proced($proc, $data);
 
         if($fullResponse){
-            return $res;
+            return $this->_fullResponse;
         }
 
-		if(isset($res['p_error_code'])){
-			return $res['p_error_code'];
+		if(isset($this->_fullResponse['p_error_code'])){
+			return $this->_fullResponse['p_error_code'];
 		}
 
 		return self::CODE_ERROR;
 	}
+
+    /**
+     * получение полного ответа на процедуру
+     *
+     * @return array
+     */
+	public function getFullResponse()
+    {
+        return $this->_fullResponse;
+    }
 
 	/**
 	 * вот такой вот кривой лимит с офсетом
@@ -200,6 +219,7 @@ class Oracle{
 	 * @param $offset
 	 * @param $limit
 	 * @return string
+     * @deprecated
 	 */
 	public function limit($sql, $offset = 0, $limit = 9999999)
 	{
@@ -238,6 +258,11 @@ class Oracle{
 		if(!empty($params['pagination'])){
 			$to++;
 		}
+
+        //builder
+        if (is_a($sql, 'Builder')) {
+            $sql = $sql->build();
+        }
 
 		$sql = $this->limit($sql, $from, $to);
 

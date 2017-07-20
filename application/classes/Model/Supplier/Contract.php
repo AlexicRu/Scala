@@ -177,4 +177,42 @@ class Model_Supplier_Contract extends Model_Contract
 
         return [true, ''];
     }
+
+    /**
+     * получаем список услуг по контракту
+     *
+     * @param $contractId
+     */
+    public static function getContractServices($contractId)
+    {
+        if (empty($contractId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_SUPL_CONTRACT_SERVICES')
+            ->where('contract_id = '.(int)$contractId)
+        ;
+
+        return Oracle::init()->query($sql);
+    }
+
+    /**
+     * получаем список групп точек по контракту
+     *
+     * @param $contractId
+     */
+    public static function getContractDotsGroups($contractId)
+    {
+        if (empty($contractId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_SUPL_POS_GROUPS')
+            ->where('contract_id = '.(int)$contractId)
+        ;
+
+        return Oracle::init()->query($sql);
+    }
 }

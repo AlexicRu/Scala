@@ -83,7 +83,6 @@ class Controller_Clients extends Controller_Common {
 		}
 
 		$tab = $this->request->post('tab');
-		$query = $this->request->post('query');
 		$params = $this->request->post('params') ?: [];
 
 		$contract = Model_Contract::getContract($contractId);
@@ -111,23 +110,14 @@ class Controller_Clients extends Controller_Common {
 				;
 				break;
 			case 'cards':
-                $cards = Model_Card::getCards($contractId);
-				$foundCards = false;
-
-				if(!empty($query) ){
-				    $params['query'] = $query;
-                }
-				if(!empty($params) ){
-					$foundCards = Model_Card::getCards($contractId, false, $params);
-				}
-
 				$popupCardAdd = Common::popupForm('Добавление новой карты', 'card/add');
 
+				$cardsCounter = Model_Contract::getCardsCounter($contractId);
+
 				$content = View::factory('ajax/clients/contract/cards')
-                    ->bind('cards', $cards)
-                    ->bind('foundCards', $foundCards)
                     ->bind('params', $params)
 					->bind('popupCardAdd', $popupCardAdd)
+					->bind('cardsCounter', $cardsCounter)
                 ;
 				break;
 			case 'account':
@@ -533,5 +523,37 @@ class Controller_Clients extends Controller_Common {
         }
 
         $this->jsonResult(true, ['items' => $history, 'more' => $more]);
+    }
+
+    /**
+     * грузим список карт
+     */
+    public function action_cards_list()
+    {
+        $contractId = $this->request->query('contract_id');
+        $query = $this->request->post('query');
+        $status = $this->request->post('status');
+
+        $params = [
+            'CONTRACT_ID'   => $contractId,
+            'offset' 		=> $this->request->post('offset'),
+            'pagination'	=> true,
+            'limit'	        => 20,
+        ];
+
+        if(!empty($query) ){
+            $params['query'] = $query;
+        }
+        if(!empty($status) ){
+            $params['status'] = $status;
+        }
+
+        list($cards, $more) = Model_Card::getCards($contractId, false, $params);
+
+        if(empty($cards)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, ['items' => $cards, 'more' => $more]);
     }
 }

@@ -242,7 +242,10 @@ function renderComboBoxMulti(combo, params)
             ajaxComboBoxMulti.abort();
         }
 
-        var postParams = { search:val };
+        var postParams = {
+            params: params,
+            search: val
+        };
 
         if(params && params['depend_on']){
             var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]'));
@@ -303,6 +306,22 @@ function selectComboBoxMultiResult(item)
         return;
     }
 
+    if (value == show_all_value) {
+        //если выбрали все, то все остальное выключаем
+        selected.find('.combobox_multi_selected_item[value!="'+ show_all_value +'"]').each(function () {
+            var t = $(this);
+            wrapper.find('.combobox_multi_result_item_selected[value='+ t.attr('value') +']').removeClass('combobox_multi_result_item_selected');
+            uncheckComboBoxMultiItem(t);
+        });
+    } else {
+        //если выбрали что-то отличное от все, то выключаемв все
+        var itemAll = selected.find('.combobox_multi_selected_item[value='+ show_all_value +']');
+        if (itemAll.length) {
+            wrapper.find('.combobox_multi_result_item_selected[value='+ show_all_value +']').removeClass('combobox_multi_result_item_selected');
+            uncheckComboBoxMultiItem(itemAll);
+        }
+    }
+
     renderComboBoxMultiSelectedItem(value, item.text(), wrapper);
 }
 
@@ -351,6 +370,14 @@ function renderComboBox(combo, params)
 {
     if(combo.data('rendered')){
         return false;
+    }
+
+    if (params && params != '') {
+        params = JSON.parse(params);
+
+        for (var i in params) {
+            combo.data(i, params[i]);
+        }
     }
 
     combo.data('rendered', true);
@@ -406,9 +433,17 @@ function renderComboBox(combo, params)
         }
 
         hiddenValue.val('');
+        checkRenderTo(combo, {}, true);
 
         ajaxComboBox = $.post(url, postParams, function(data){
             if(data.success){
+                if(params && params.show_all){
+                    data.data.unshift({
+                        name: show_all_name,
+                        value: show_all_value
+                    });
+                }
+
                 for(var i in data.data){
                     var tpl = $('<div class="combobox_result_item" onclick="selectComboBoxResult($(this))"></div>');
                     tpl.attr('value', data.data[i].value);
@@ -463,12 +498,22 @@ function setComboboxValue(combo, value)
         combo.val('');
         hiddenValue.val('');
     }else{
-        $.post(combo.attr('url'), {ids: value}, function (data) {
-            if (data.success) {
-                combo.val(data.data[0].name);
-                hiddenValue.val(data.data[0].value);
-            }
-        });
+        if (value == show_all_value && combo.data('show_all')){
+            combo.val(show_all_name);
+            hiddenValue.val(show_all_value);
+
+            checkRenderTo(combo, {value:show_all_value, text:show_all_name});
+        } else {
+
+            $.post(combo.attr('url'), {ids: value}, function (data) {
+                if (data.success) {
+                    combo.val(data.data[0].name);
+                    hiddenValue.val(data.data[0].value);
+
+                    checkRenderTo(combo, {value:data.data[0].value, text:data.data[0].name});
+                }
+            });
+        }
     }
 }
 
@@ -544,8 +589,16 @@ function checkRenderTo(combo, item, isRemove) {
 
             tpl.appendTo(block);
         }
-    } else {
+    } else if (combo.hasClass('combobox')) {
         //combobox
-        //todo
+        if (isRemove) {
+            block.find('.combobox_multi_selected_item').remove();
+        } else {
+            var tpl = $('<div class="combobox_multi_selected_item" />');
+
+            tpl.attr('value', item.value).text(item.text);
+
+            tpl.appendTo(block);
+        }
     }
 }

@@ -74,6 +74,10 @@ class Model_Card extends Model
             }
         }
 
+        if(!empty($params['pagination'])) {
+            return $db->pagination($sql, $params);
+        }
+
 		$cards = $db->query($sql);
 
 		return $cards;
@@ -304,6 +308,11 @@ class Model_Card extends Model
 
         $user = Auth::instance()->get_user();
 
+        if (count($limits) > 9) {
+            Messages::put('Изменение лимитов не произошло. Превышен лимит ограничений');
+            return false;
+        }
+
 		if(in_array($user['role'], array_keys(Access::$clientRoles))) {
             $currentLimits = self::getOilRestrictions($cardId);
 
@@ -333,6 +342,8 @@ class Model_Card extends Model
 		$db = Oracle::init();
 
 		if(empty($limits)){
+            $db->procedure('card_service_refresh', ['p_card_id' => $cardId]);
+
 			return true;
 		}
 
@@ -585,7 +596,10 @@ class Model_Card extends Model
             select * from ".Oracle::$prefix."V_WEB_CARDS_GROUP_ITEMS t where t.group_id = ".$params['group_id'];
         ;
 
-        return $db->pagination($sql, $params);
+        if (!empty($params['pagination'])) {
+            return $db->pagination($sql, $params);
+        }
+        return $db->query($sql);
     }
 
     /**
@@ -681,5 +695,38 @@ class Model_Card extends Model
         ];
 
         return $db->procedure('ctrl_card_group_collection', $data);
+    }
+
+    /**
+     * удаляем карты из группы
+     *
+     * @param $groupId
+     * @param $cardsNumbers
+     */
+    public static function delCardsFromGroup($groupId, $cardsNumbers)
+    {
+        if (empty($groupId) || empty($cardsNumbers)) {
+            return false;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        $data = [
+            'p_group_id'        => $groupId,
+            'p_action'          => 2,
+            'p_card_collection' => [$cardsNumbers, SQLT_CHR],
+            'p_manager_id'      => $user['MANAGER_ID'],
+            'p_error_code' 	    => 'out',
+        ];
+
+        $result = $db->procedure('ctrl_card_group_collection', $data);
+
+        if ($result == Oracle::CODE_ERROR) {
+            return false;
+        }
+
+        return true;
     }
 }
