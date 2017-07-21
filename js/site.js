@@ -4,7 +4,6 @@ $(function(){
     });
 
     $(document).on('click', "[tab]", function(){
-        console.log(1);
         var t = $(this);
         var block = t.closest('.tabs_switcher');
         $(
