@@ -442,13 +442,13 @@ class Controller_Control extends Controller_Common {
             $this->jsonResult(false);
         }
 
-        $rows = json_decode(Upload::readFile($_SERVER["DOCUMENT_ROOT"].$file), true);
+        list($data, $mimeType) = Upload::readFile($_SERVER["DOCUMENT_ROOT"].$file);
 
-        if(empty($rows['ROWS'])){
+        if(empty($data)){
             $this->jsonResult(false);
         }
 
-        $rows = (new Model_Transaction_Parser())->parse($rows);
+        $rows = (new Model_Transaction_Parser())->parse($data, $mimeType);
 
         $this->jsonResult(true, $rows);
     }

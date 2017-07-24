@@ -2,6 +2,10 @@
 
 class Upload extends Kohana_Upload
 {
+    const MIME_TYPE_XLS = 'application/vnd.ms-excel';
+    const MIME_TYPE_XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    const MIME_TYPE_TXT = 'text/plain';
+
     /**
      * создаем структуру папок под файл
      *
@@ -50,15 +54,31 @@ class Upload extends Kohana_Upload
      */
     public static function readFile($file)
     {
-        $text = file_get_contents($file);
+        $mimeType = mime_content_type($file);
 
-        if (empty($text)) {
-            return '';
+        switch ($mimeType) {
+            case self::MIME_TYPE_XLS:
+            case self::MIME_TYPE_XLSX:
+                $objPHPExcel = PHPExcel_IOFactory::load($file);
+
+                foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
+                    $data = $worksheet->toArray();
+                    break;
+                }
+                break;
+            default:
+                $text = file_get_contents($file);
+
+                if (!empty($text)) {
+                    $bom = pack('H*','EFBBBF');
+                    $data = json_decode(preg_replace("/^$bom/", '', $text), true);
+                }
         }
 
-        $bom = pack('H*','EFBBBF');
-        $text = preg_replace("/^$bom/", '', $text);
+        if (empty($data)) {
+            return [[], false];
+        }
 
-        return $text;
+        return [$data, $mimeType];
     }
 }
