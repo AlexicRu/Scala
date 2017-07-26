@@ -84,7 +84,7 @@ if(empty($changeRole)){
                                 <span class="btn btn_small" toggle="edit_login"><i class="icon icon-pen"></i></span>
                             </div>
                             <div toggle_block="edit_login" style="display: none">
-                                <input type="text" value="<?=$manager['LOGIN']?>" name="edit_login" class="input_big">
+                                <input type="text" value="<?=$manager['LOGIN']?>" name="edit_login" class="input_big input_mini">
                                 <span class="btn btn_small btn_green" onclick="editLogin($(this));"><i class="icon icon-ok"></i></span>
                                 <span class="btn btn_small btn_red" toggle="edit_login"><i class="icon icon-cancel"></i></span>
                             </div>

@@ -866,10 +866,6 @@ table th {
   padding: 8px;
   vertical-align: top;
 }
-table.table_form input[type=text],
-table.table_form textarea {
-  width: 100%;
-}
 table.table_form tr.dark td {
   background: #f6f6f6;
 }

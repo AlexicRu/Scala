@@ -377,7 +377,7 @@ class Model_Manager extends Model
             'p_error_code' 		=> 'out',
         ];
 
-        $code = $db->procedure('ctrl_manager_change_login', $data, true);
+        $code = $db->procedure('ctrl_manager_change_login', $data);
 
         $result = ['login' => $login];
 
