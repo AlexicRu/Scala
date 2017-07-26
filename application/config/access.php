@@ -104,6 +104,9 @@ return [
         'suppliers_agreement_edit' => [
             Access::ROLE_ADMIN,
         ],
+        'clients_edit_login' => [
+            Access::ROLE_ADMIN,
+        ],
         // custom
         'view_contract_balances' => [
             Access::ROLE_ROOT

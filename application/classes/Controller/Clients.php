@@ -556,4 +556,20 @@ class Controller_Clients extends Controller_Common {
 
         $this->jsonResult(true, ['items' => $cards, 'more' => $more]);
     }
+
+    /**
+     * редактируем логин пользователя
+     */
+    public function action_edit_login()
+    {
+        $login = $this->request->post('login');
+        $managerId = $this->request->post('manager_id');
+
+        $result = Model_Manager::editLogin($managerId, $login);
+
+        if (!empty($result['error'])) {
+            $this->jsonResult(false, $result);
+        }
+        $this->jsonResult(true, $result);
+    }
 }

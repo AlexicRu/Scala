@@ -116,6 +116,8 @@ class Model_Transaction_Parser extends Model
              */
 
             $row['OPERATION']       = !empty($row['OPERATION']) ? $row['OPERATION'] : 50;
+            $row['PAYMENT_DATE']    = !empty($row['PAYMENT_DATE']) ? $row['PAYMENT_DATE'] : $row['ORDER_DATE'];
+
             $row['OPERATION_NAME']  = $row['OPERATION'] == 50 ? 'Пополнение счета' : 'Списание со счета';
             $row['CAN_ADD']         = 0;
             $row['CONTRACT_NAME']   = 'Не определен';
