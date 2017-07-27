@@ -46,19 +46,20 @@ class Model_Dot extends Model
             ->orderBy('group_name')
         ;
 
-        if(!empty($filter['search'])){
-            $sql->where("upper(t.group_name) like ".mb_strtoupper(Oracle::quote('%'.$filter['search'].'%')));
-        }
-
         if(!empty($filter['ids'])){
             $sql->where("t.group_id in (".implode(',', $filter['ids']).")");
-        }
+        } else {
 
-        if(!empty($filter['group_type'])){
-            if(!is_array($filter['group_type'])){
-                $filter['group_type'] = [Oracle::quote($filter['group_type'])];
+            if (!empty($filter['search'])) {
+                $sql->where("upper(t.group_name) like " . mb_strtoupper(Oracle::quote('%' . $filter['search'] . '%')));
             }
-            $sql->where("t.group_type in (".implode(',', $filter['group_type']).")");
+
+            if (!empty($filter['group_type'])) {
+                if (!is_array($filter['group_type'])) {
+                    $filter['group_type'] = [Oracle::quote($filter['group_type'])];
+                }
+                $sql->where("t.group_type in (" . implode(',', $filter['group_type']) . ")");
+            }
         }
 
         $db = Oracle::init();

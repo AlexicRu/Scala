@@ -186,8 +186,6 @@ var ajaxComboBoxMulti;
 function renderComboBoxMulti(combo, params)
 {
     if (params && params != '') {
-        params = JSON.parse(params);
-
         for (var i in params) {
             combo.data(i, params[i]);
         }

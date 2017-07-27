@@ -53,16 +53,17 @@ class Listing
 
         $sql = "select distinct t.SERVICE_ID, t.{$description} from ".Oracle::$prefix."V_WEB_SERVICE_LIST t where t.agent_id = ".$user['AGENT_ID'];
 
-        if(!empty($params['search'])){
-            $sql .= " and upper(t.long_desc) like ".mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
-        }
-
         if(!empty($params['ids'])){
             $sql .= " and t.SERVICE_ID in (".implode(',', $params['ids']).")";
-        }
+        } else {
 
-        if(!empty($params['TUBE_ID'])){
-            $sql .= " and t.TUBE_ID = ".intval($params['TUBE_ID']);
+            if (!empty($params['search'])) {
+                $sql .= " and upper(t.long_desc) like " . mb_strtoupper(Oracle::quote('%' . $params['search'] . '%'));
+            }
+
+            if (!empty($params['TUBE_ID'])) {
+                $sql .= " and t.TUBE_ID = " . intval($params['TUBE_ID']);
+            }
         }
 
         $sql .= " order by t.{$description}";
