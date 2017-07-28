@@ -1,8 +1,3 @@
-<style>
-    [limit_group] td{
-        border-bottom: 1px solid #ddd;
-    }
-</style>
 <?
 $postfix = $card['CARD_ID'];
 ?>
@@ -110,7 +105,7 @@ $postfix = $card['CARD_ID'];
             return false;
         }
 
-        var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" /> <button class="btn btn_small btn_red btn_card_edit_del_serviсe">&times;</button></nobr></div>');
+        var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" /> <button class="btn btn_small btn_red btn_card_edit_del_serviсe" onclick="cardEditDelService_<?=$postfix?>($(this))">&times;</button></nobr></div>');
 
         for (var i in services_<?=$postfix?>) {
             tpl.find('select').append('<option value="' + i + '">' + services_<?=$postfix?>[i] + '</option>');

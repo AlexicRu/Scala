@@ -40,15 +40,19 @@ class Listing
      * @param $params
      * @return array|bool|int
      */
-    public static function getServices($params)
+    public static function getServices($params = [])
     {
         $db = Oracle::init();
 
         $user = Auth::instance()->get_user();
 
-        $description = 'LONG_DESC';
-        if(array_key_exists('TUBE_ID', $params)){
-            $description = 'FOREIGN_DESC';
+        if (!empty($params['description'])) {
+            $description = $params['description'];
+        }else{
+            $description = 'LONG_DESC';
+            if (array_key_exists('TUBE_ID', $params)) {
+                $description = 'FOREIGN_DESC';
+            }
         }
 
         $sql = "select distinct t.SERVICE_ID, t.{$description} from ".Oracle::$prefix."V_WEB_SERVICE_LIST t where t.agent_id = ".$user['AGENT_ID'];

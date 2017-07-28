@@ -653,4 +653,108 @@ class Model_Contract extends Model
 
         return Oracle::init()->row($sql);
     }
+
+    /**
+     * редактирование лимитов
+     *
+     * @param $contractId
+     * @param $limits
+     */
+    public static function editLimits($contractId, $limits)
+    {
+        if(empty($contractId)){
+            return false;
+        }
+
+        $user = User::current();
+
+        $db = Oracle::init();
+
+        /*
+        S1,S2,S3:P1:T1:V1:PCS1;
+        где
+        S1,...,Sn - ID услуг в группе
+        P1 - параметр лимита (1 - в литрах, 2 в валюте)
+        T1 - тип лимита 4 - установлен лимит, 5 - в случае, если стоит галочка "Неограниченно"
+        V1 - размер лимита (если стоит галочка "Неограниченно" передавать 0)
+        PCS - лимит на количество транзакций, пока всегда 0
+         */
+        $limitsArray = [];
+
+        foreach($limits as $group => $limit){
+
+            $limitsArray[] =
+                implode(',', $limit['services']) . ':' .
+                $limit['param'] . ':' .
+                ($limit['unlim'] ? 5 : 4) . ':' .
+                str_replace(",", ".", (int)$limit['value']) . ':' .
+                0 . ';'
+            ;
+        }
+
+        $data = [
+            'p_contract_id'		=> $contractId,
+            'p_limit_array'		=> [$limitsArray, SQLT_CHR],
+            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = $db->procedure('client_contract_service_limit', $data);
+
+        if(!empty($res)){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * получаем список лимитов по договору
+     *
+     * @param $contractId
+     */
+    public static function getLimits($contractId)
+    {
+        if (empty($contractId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_CL_CTR_SERV_RESTRIC t')
+            ->where('t.contract_id = ' . (int)$contractId)
+        ;
+
+        return Oracle::init()->tree($sql, 'LIMIT_GROUP');
+    }
+
+    /**
+     * редактируем конкретный лимит
+     *
+     * @param $contractId
+     * @param $groupId
+     * @param $amount
+     */
+    public static function editLimit($contractId, $groupId, $amount)
+    {
+        if (empty($contractId) || empty($groupId)) {
+            return false;
+        }
+
+        $user = User::current();
+
+        $data = [
+            'p_contract_id'		=> $contractId,
+            'p_group_id'		=> $groupId,
+            'p_value'		    => $amount,
+            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = Oracle::init()->procedure('client_contract_service_add', $data);
+
+        if($res == Oracle::CODE_SUCCESS){
+            return true;
+        }
+        return false;
+    }
 }

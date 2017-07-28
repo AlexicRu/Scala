@@ -122,17 +122,30 @@ class Controller_Clients extends Controller_Common {
 				break;
 			case 'account':
 				$turnover = Model_Contract::getTurnover($contractId);
+				$contractLimits = Model_Contract::getLimits($contractId);
+                Listing::$limit = 999;
+                $servicesList = Listing::getServices(['description' => 'FOREIGN_DESC']);
 
 				$popupContractPaymentAdd = Common::popupForm('Добавление нового платежа', 'contract/payment_add');
                 $popupContractBillAdd = Common::popupForm('Выставить счет', 'contract/bill_add');
                 $popupContractBillPrint = Common::popupForm('Печать счетов', 'contract/bill_print');
+                $popupContractLimitIncrease = Common::popupForm('Изменение лимита', 'contract/increase_limit');
+
+                $popupContractLimitsEdit = Common::popupForm('Редактирование лимитов договора', 'contract/limits_edit', [
+                    'contractLimits' 	=> $contractLimits,
+                    'servicesList'		=> $servicesList
+                ]);
 
 				$content = View::factory('ajax/clients/contract/account')
                     ->bind('balance', $balance)
 					->bind('turnover', $turnover)
+					->bind('contractLimits', $contractLimits)
+					->bind('servicesList', $servicesList)
 					->bind('popupContractPaymentAdd', $popupContractPaymentAdd)
                     ->bind('popupContractBillAdd', $popupContractBillAdd)
                     ->bind('popupContractBillPrint', $popupContractBillPrint)
+                    ->bind('popupContractLimitsEdit', $popupContractLimitsEdit)
+                    ->bind('popupContractLimitIncrease', $popupContractLimitIncrease)
                 ;
 				break;
 			case 'reports':
@@ -570,6 +583,44 @@ class Controller_Clients extends Controller_Common {
         if (!empty($result['error'])) {
             $this->jsonResult(false, $result);
         }
+        $this->jsonResult(true, $result);
+    }
+
+    /**
+     * редактирование лимитов договора
+     */
+    public function action_contract_limits_edit()
+    {
+        $limits = $this->request->post('limits');
+        $contractId = $this->request->post('contract_id');
+
+        $result = Model_Contract::editLimits($contractId, $limits);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $messages = Messages::get();
+
+        if(!empty($messages)){
+            $this->jsonResult(false, $messages);
+        }
+
+        $this->jsonResult(true, $result);
+    }
+
+    public function action_contract_increase_limit()
+    {
+        $amount = $this->request->post('amount');
+        $groupId = $this->request->post('group_id');
+        $contractId = $this->request->post('contract_id');
+
+        $result = Model_Contract::editLimit($contractId, $groupId, $amount);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
         $this->jsonResult(true, $result);
     }
 }
