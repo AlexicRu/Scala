@@ -107,6 +107,10 @@ return [
         'clients_edit_login' => [
             Access::ROLE_ADMIN,
         ],
+        'managers_edit_manager_clients_contract_binds' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
         // custom
         'view_contract_balances' => [
             Access::ROLE_ROOT

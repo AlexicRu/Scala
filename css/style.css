@@ -845,6 +845,11 @@ textarea.input_grand {
   clear: both;
   white-space: normal;
 }
+.line_inner__second_line {
+  white-space: normal;
+  clear: both;
+  padding: 10px 30px 0;
+}
 .line_inner + .line_inner {
   margin-top: 2px;
 }

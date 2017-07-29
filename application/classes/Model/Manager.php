@@ -392,4 +392,51 @@ class Model_Manager extends Model
 
         return $result;
     }
+
+    /**
+     * редактируем доступы менеджера к контрактам конкретного клиента
+     *
+     * @param $managerId
+     * @param $clientId
+     * @param $binds
+     */
+    public static function editContractBinds($managerId, $clientId, $binds = [])
+    {
+        if (empty($clientId) || empty($managerId)) {
+            return false;
+        }
+
+        $user = User::current();
+
+        $data = [
+            'p_manager_for_id' 	    => $managerId,
+            'p_client_id' 	        => $clientId,
+            'p_contract_collection'	=> [($binds ?: [-1]), SQLT_INT],
+            'p_manager_who_id' 	    => $user['MANAGER_ID'],
+            'p_error_code' 		    => 'out',
+        ];
+
+        $res = Oracle::init()->procedure('ctrl_manager_client_contracts', $data);
+
+        return $res == Oracle::CODE_SUCCESS;
+    }
+
+    /**
+     * дерево доступных контрактов
+     *
+     * @param $managerId
+     */
+    public static function getContractsTree($managerId)
+    {
+        if (empty($managerId)) {
+            return [];
+        }
+
+        $sql = (new Builder())->select()
+            ->from('v_web_manager_contracts')
+            ->where('MANAGER_ID = '.(int)$managerId)
+        ;
+
+        return Oracle::init()->tree($sql, 'CLIENT_ID', false, 'CONTRACT_ID');
+    }
 }

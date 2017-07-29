@@ -71,27 +71,7 @@
 
         $.post('/managers/load_clients', { manager_id: managerId }, function (data) {
             block.removeClass('block_loading');
-
-            if(data.success){
-                var clients = data.data;
-
-                if(clients.length == 0){
-                    $('<div class="line_inner">Клиенты не найдены</div>').appendTo(block);
-                }else{
-                    for(var i in clients) {
-                        var tpl = $('<div class="line_inner"><span class="gray"></span> &nbsp;&nbsp;&nbsp; <b></b><div class="fr"><a href="#" class="red del" onclick="delManagersClient($(this))">Удалить <i class="icon-cancel"></i></a></div></div>');
-
-                        tpl.find('.gray:first').text(clients[i].CLIENT_ID);
-                        tpl.find('b:first').text(clients[i].CLIENT_NAME);
-                        tpl.attr('client_id', clients[i].CLIENT_ID);
-                        tpl.attr('manager_id', managerId);
-                        tpl.appendTo(block);
-                    }
-                }
-
-            }else{
-                message(0, 'Ошибка загрузки клиентов');
-            }
+            block.html(data);
 
             renderScroll($('.tabs_managers .scroll'));
         });
@@ -120,4 +100,29 @@
             }
         });
     }
+
+    <?if(Access::allow('managers_edit_manager_clients_contract_binds')) {?>
+    function saveManagerClientContractBinds(btn)
+    {
+        var line = btn.closest('[client_id]');
+        var clientId = line.attr('client_id');
+        var managerId = line.attr('manager_id');
+
+        var binds = getComboboxMultiValue($('[name=manager_clients_contract_binds'+ clientId +']', line));
+
+        var params = {
+            client_id: clientId,
+            manager_id: managerId,
+            binds: binds
+        };
+
+        $.post('/managers/edit_manager_clients_contract_binds', params, function(data) {
+            if (data.success) {
+                message(1, 'Доступы менеджера к договорам обновлены');
+            } else {
+                message(0, 'Ошибка обновления доступов');
+            }
+        });
+    }
+    <?}?>
 </script>
