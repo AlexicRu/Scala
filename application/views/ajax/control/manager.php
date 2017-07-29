@@ -22,15 +22,27 @@
 
         </div>
         <div tab_content="clients" class="tab_content" manager_id="<?=$managerId?>">
-            <div class="clients_btn">
+            <div class="fr clients_btn">
                 <a href="#manager_add_clients" class="fancy btn">Добавить клиентов</a>
             </div>
+            <div class="clients__search">
+                <div class="input_with_icon">
+                    <i class="icon-find"></i>
+                    <input type="text" onkeypress="if(event.keyCode == 13){searchManagerClients($(this), <?=$managerId?>)}" class="input_big input_messages" placeholder="Поиск...">
+                </div>
+            </div>
+            <div class="clr"></div>
             <div class="client_list"></div>
         </div>
     </div>
 </div>
 
 <script>
+    function searchManagerClients(input, managerId)
+    {
+        showManagersClients(managerId, {search: input.val()}, true)
+    }
+
     <?if(Access::allow('manager_toggle')) {?>
     function managerStateToggle(managerId, t)
     {
@@ -59,18 +71,18 @@
     }
     <?}?>
 
-    function showManagersClients(managerId)
+    function showManagersClients(managerId, params, force)
     {
         var block = $('[tab_content=clients][manager_id='+ managerId +'] .client_list');
 
-        if(block.html() != ''){
+        if(block.html() != '' && !force){
             return true;
         }
 
-        block.addClass('block_loading');
+        block.empty().addClass(CLASS_LOADING);
 
-        $.post('/managers/load_clients', { manager_id: managerId }, function (data) {
-            block.removeClass('block_loading');
+        $.post('/managers/load_clients', { manager_id: managerId, params: params }, function (data) {
+            block.removeClass(CLASS_LOADING);
             block.html(data);
 
             renderScroll($('.tabs_managers .scroll'));

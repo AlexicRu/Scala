@@ -69,8 +69,11 @@ class Controller_Managers extends Controller_Common {
     public function action_load_clients()
     {
         $managerId = $this->request->post('manager_id');
+        $params = $this->request->post('params');
 
-        $clients = Model_Client::getClientsList(null, ['manager_id' => $managerId]);
+        $search = !empty($params['search']) ? $params['search'] : null;
+
+        $clients = Model_Client::getClientsList($search, ['manager_id' => $managerId]);
 
         $contractsTree = Model_Manager::getContractsTree($managerId);
 
