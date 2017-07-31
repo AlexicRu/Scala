@@ -387,7 +387,12 @@ function renderComboBox(combo, params)
     combo.on('keyup', function () {
         if(params && params['depend']){
             var dependCombo = $('[name=' + params['depend'] + ']');
-            setComboboxValue(dependCombo, false);
+
+            if (dependCombo.hasClass('combobox_multi')) {
+                resetComboboxMultiValue(dependCombo);
+            } else {
+                setComboboxValue(dependCombo, false);
+            }
         }
 
         var t = $(this);
@@ -520,6 +525,17 @@ function getComboboxMultiValue(combo)
     return hiddenArray;
 }
 
+function resetComboboxMultiValue(combo)
+{
+    var wrapper = combo.closest('.combobox_multi_wrapper');
+    var selected = wrapper.find('.combobox_multi_selected');
+    var hiddenValue = wrapper.find('[name=combobox_multi_value]');
+
+    selected.empty();
+
+    hiddenValue.val('');
+}
+
 function setComboboxMultiValue(combo, value)
 {
     var wrapper = combo.closest('.combobox_multi_wrapper');
@@ -534,7 +550,6 @@ function setComboboxMultiValue(combo, value)
 
         $.post(combo.attr('url'), { ids:list[i] }, function(data){
             if(data.success){
-                console.log(data);
                 for(var j in data.data){
                     renderComboBoxMultiSelectedItem(data.data[j].value, data.data[j].name, wrapper);
                 }
