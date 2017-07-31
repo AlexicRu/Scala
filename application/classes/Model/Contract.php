@@ -80,17 +80,14 @@ class Model_Contract extends Model
                 $params['contract_id'] = [(int)$params['contract_id']];
             }
         } else {
-            $params['contract_id'] = [];
-        }
-
-        if (!empty($params['merge_user_contracts'])) {
             //ограничение по договорам пользователя
             $user = User::current();
 
             if (!empty($user['contracts'][$clientId])) {
-                $params['contract_id'] = array_merge($params['contract_id'], $user['contracts'][$clientId]);
+                $params['contract_id'] = $user['contracts'][$clientId];
             }
         }
+
 
         if(!empty($params['contract_id'])){
             $sql->where("contract_id in (".implode(',', $params['contract_id']).")");

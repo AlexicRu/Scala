@@ -159,6 +159,7 @@ if(empty($changeRole)){
             if(data.success){
                 message(1, 'Логин обновлен');
                 txt.text(data.data.login)
+                td.find('[toggle=edit_login]:first').click();
             }else{
                 message(0, 'Ошибка. ' + data.data.error);
             }

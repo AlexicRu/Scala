@@ -19,17 +19,20 @@ class Model_Message extends Model
 
         $db = Oracle::init();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_NOTIFICATION where manager_id = ".$user['MANAGER_ID'];
+        $sql = (new Builder())->select()
+            ->from('V_WEB_NOTIFICATION')
+            ->where("manager_id = ".$user['MANAGER_ID'])
+            ->orderBy('date_time desc')
+            ->where("note_type = 1")
+        ;
 
         if(!empty($params['not_read'])){
-            $sql .= " and status = ".self::MESSAGE_STATUS_NOTREAD;
+            $sql->where("status = ".self::MESSAGE_STATUS_NOTREAD);
         }
         if(!empty($params['search'])){
             $search = mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
-            $sql .= " and (upper(NOTIFICATION_BODY) like ".$search." or subject like ".$search.") ";
+            $sql->where("(upper(NOTIFICATION_BODY) like ".$search." or subject like ".$search.")");
         }
-
-        $sql .= ' order by date_time desc';
 
         if(!empty($params['pagination'])) {
             return $db->pagination($sql, $params);

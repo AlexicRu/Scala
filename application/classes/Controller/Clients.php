@@ -124,7 +124,7 @@ class Controller_Clients extends Controller_Common {
 				$turnover = Model_Contract::getTurnover($contractId);
 				$contractLimits = Model_Contract::getLimits($contractId);
                 Listing::$limit = 999;
-                $servicesList = Listing::getServices(['description' => 'FOREIGN_DESC']);
+                $servicesList = Listing::getServices(['description' => 'LONG_DESC']);
 
 				$popupContractPaymentAdd = Common::popupForm('Добавление нового платежа', 'contract/payment_add');
                 $popupContractBillAdd = Common::popupForm('Выставить счет', 'contract/bill_add');

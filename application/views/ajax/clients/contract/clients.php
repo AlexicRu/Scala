@@ -11,30 +11,28 @@
             </div>
 
             <?if(Access::allow('managers_edit_manager_clients_contract_binds')) {?>
-                <?if (!empty($contractsTree)) {?>
-                    <div class="line_inner__second_line">
-                        <table class="table_form">
-                            <tr>
-                                <td class="gray right">
-                                    Договоры:
-                                </td>
-                                <td>
-                                    <?
-                                        $contractsIds = [];
+                <div class="line_inner__second_line">
+                    <table class="table_form">
+                        <tr>
+                            <td class="gray right">
+                                Договоры:
+                            </td>
+                            <td>
+                                <?
+                                    $contractsIds = [];
 
-                                        if (!empty($contractsTree[$client['CLIENT_ID']])) {
-                                            $contractsIds = $contractsTree[$client['CLIENT_ID']];
-                                        }
-                                    ?>
-                                    <?=Common::buildFormField('client_contract_choose_multi', 'manager_clients_contract_binds'.$client['CLIENT_ID'], implode(',', $contractsIds), ['client_id' => $client['CLIENT_ID']])?>
-                                </td>
-                                <td>
-                                    <span class="btn btn_green" onclick="saveManagerClientContractBinds($(this))">Сохранить</span>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                <?}?>
+                                    if (!empty($contractsTree[$client['CLIENT_ID']])) {
+                                        $contractsIds = $contractsTree[$client['CLIENT_ID']];
+                                    }
+                                ?>
+                                <?=Common::buildFormField('client_contract_choose_multi', 'manager_clients_contract_binds'.$client['CLIENT_ID'], implode(',', $contractsIds), ['client_id' => $client['CLIENT_ID']])?>
+                            </td>
+                            <td>
+                                <span class="btn btn_green" onclick="saveManagerClientContractBinds($(this))">Сохранить</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             <?}?>
         </div>
     <?}?>

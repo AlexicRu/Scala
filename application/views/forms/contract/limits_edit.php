@@ -12,7 +12,7 @@
                                 <div class="form_elem" limit_service><nobr>
                                         <select name="limit_service">
                                             <?foreach($servicesList as $service){?>
-                                                <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $limit['SERVICE_ID']){?>selected<?}?>><?=$service['FOREIGN_DESC']?></option>
+                                                <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $limit['SERVICE_ID']){?>selected<?}?>><?=$service['LONG_DESC']?></option>
                                             <?}?>
                                         </select>
                                         <button class="btn btn_small btn_red btn_contract_limits_edit_del_serviсe" onclick="contractLimitsEditDelService($(this))">&times;</button>
@@ -70,7 +70,7 @@
 
     var services = {
         <?foreach($servicesList as $service){?>
-        "<?=$service['SERVICE_ID']?>": "<?=$service['FOREIGN_DESC']?>",
+        "<?=$service['SERVICE_ID']?>": "<?=$service['LONG_DESC']?>",
         <?}?>
     };
     var limitParams = {
