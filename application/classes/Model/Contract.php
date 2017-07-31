@@ -691,6 +691,10 @@ class Model_Contract extends Model
             ;
         }
 
+        if (empty($limitsArray)) {
+            $limitsArray = [-1];
+        }
+
         $data = [
             'p_contract_id'		=> $contractId,
             'p_limit_array'		=> [$limitsArray, SQLT_CHR],
