@@ -7,7 +7,7 @@
             <span class="gray"><?=$client['CLIENT_ID']?></span>
             &nbsp;&nbsp;&nbsp; <b><?=$client['CLIENT_NAME']?></b>
             <div class="fr">
-                <a client_id="<?=$client['CLIENT_ID']?>" href="#" class="red del" onclick="delManagersClient($(this))">Удалить <i class="icon-cancel"></i></a>
+                <a href="#" class="red del" onclick="delManagersClient($(this))">Удалить <i class="icon-cancel"></i></a>
             </div>
 
             <?if(Access::allow('managers_edit_manager_clients_contract_binds')) {?>
