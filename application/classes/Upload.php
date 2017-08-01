@@ -72,7 +72,11 @@ class Upload extends Kohana_Upload
                 if (!empty($text)) {
                     $bom = pack('H*','EFBBBF');
                     $data = json_decode(preg_replace("/^$bom/", '', $text), true);
+
+                    $data = !empty($data['ROWS']) ? $data['ROWS'] : [];
                 }
+
+
         }
 
         if (empty($data)) {
