@@ -91,10 +91,10 @@
     {
         var td = t.closest('td');
 
-        if(td.find('[limit_service]').size()){
+        /*if(td.find('[limit_service]').size()){
             message(0, 'Максимум один вид услуги');
             return false;
-        }
+        }*/
 
         var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" /> <button class="btn btn_small btn_red btn_contract_limits_edit_del_serviсe" onclick="contractLimitsEditDelService($(this))">&times;</button></nobr></div>');
 
