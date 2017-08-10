@@ -20,5 +20,7 @@ return [
         '.*\.modulcard\.ru',
         'alberit\.ru',
         '.*\.alberit\.ru',
+        'cleveroil\.ru',
+        '.*\.cleveroil\.ru',
     ],
 ];
