@@ -47,30 +47,33 @@ class Model_Card extends Model
 		}
 
 		$db = Oracle::init();
+		$user = User::current();
 
-		$sql = "
-			select *
-			from ".Oracle::$prefix."V_WEB_CRD_LIST
-			where 1=1
-		";
+		$sql = (new Builder())->select()
+            ->from('V_WEB_CARD_GROUPS')
+            ->where('manager_id = '.$user['MANAGER_ID'])
+        ;
 
 		if(!empty($contractId)){
-			$sql .= " and contract_id = ".Oracle::quote($contractId);
+			$sql->where("contract_id = ".Oracle::quote($contractId));
 		}
 
 		if(!empty($cardId)){
-			$sql .= " and card_id = ".Oracle::quote($cardId);
+			$sql->where("card_id = ".Oracle::quote($cardId));
 		}
 
 		if(!empty($params['query'])){
-			$sql .= " and (card_id like ".Oracle::quote('%'.$params['query'].'%')." or upper(holder) like ".mb_strtoupper(Oracle::quote('%'.$params['query'].'%')).")";
+		    $sql->whereStart();
+			$sql->where("card_id like ".Oracle::quote('%'.$params['query'].'%'));
+			$sql->whereOr("upper(holder) like ".mb_strtoupper(Oracle::quote('%'.$params['query'].'%')));
+            $sql->whereEnd();
 		}
 
         if(!empty($params['status'])){
             if($params['status'] == 'work'){
-                $sql .= ' and CARD_STATE != '.Model_Card::CARD_STATE_BLOCKED;
+                $sql->where('CARD_STATE != '.Model_Card::CARD_STATE_BLOCKED);
             } else {
-                $sql .= ' and CARD_STATE = '.Model_Card::CARD_STATE_BLOCKED;
+                $sql->where('and CARD_STATE = '.Model_Card::CARD_STATE_BLOCKED);
             }
         }
 
