@@ -114,6 +114,18 @@ return [
         'references_index' => [
             Access::ROLE_ROOT
         ],
+        'references_sources' => [
+            Access::ROLE_ROOT
+        ],
+        'references_addresses' => [
+            Access::ROLE_ROOT
+        ],
+        'references_currency' => [
+            Access::ROLE_ROOT
+        ],
+        'references_converter' => [
+            Access::ROLE_ROOT
+        ],
         // custom
         'view_contract_balances' => [
             Access::ROLE_ROOT
