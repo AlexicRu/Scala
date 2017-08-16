@@ -111,6 +111,9 @@ return [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
         ],
+        'references_index' => [
+            Access::ROLE_ROOT
+        ],
         // custom
         'view_contract_balances' => [
             Access::ROLE_ROOT
