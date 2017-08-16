@@ -67,23 +67,6 @@ class Model_Supplier_Contract extends Model_Contract
     }
 
     /**
-     * получаем список труб
-     *
-     * @return array|bool
-     */
-    public static function getTubes()
-    {
-        $db = Oracle::init();
-
-        $user = User::current();
-
-        $sql = "select * from ".Oracle::$prefix."V_WEB_TUBES_LIST t where t.is_owner = 1 and t.agent_id=".$user['AGENT_ID'];
-
-        return $db->query($sql);
-    }
-
-
-    /**
      * @param $contractId
      * @param $params
      */

@@ -20,6 +20,14 @@ class Controller_References extends Controller_Common {
 	public function action_sources()
     {
         $this->title[] = 'Источники данных';
+
+        $this->_initJsGrid();
+
+        $tubesList = Model_Tube::getTubes();
+
+        $this->tpl
+            ->bind('tubesList', $tubesList)
+        ;
     }
 
     /**

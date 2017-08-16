@@ -94,7 +94,7 @@ class Controller_Suppliers extends Controller_Common {
 
         $tab = $this->request->post('tab');
         $contract = Model_Supplier_Contract::get($contractId);
-        $tubes = Model_Supplier_Contract::getTubes();
+        $tubes = Model_Tube::getTubes();
 
         switch($tab) {
             case 'contract':
