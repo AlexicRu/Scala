@@ -53,4 +53,35 @@ class Controller_References extends Controller_Common {
     {
         $this->title[] = 'Курсы валют';
     }
+
+    /**
+     * старт загрузки получения списка карт
+     */
+    public function action_card_list_load()
+    {
+        $tubeId = $this->request->post('tube_id');
+
+        list($result, $error) = Model_Tube::startCardListLoad($tubeId);
+
+        if (empty($result)) {
+            $this->jsonResult(0, $error);
+        }
+        $this->jsonResult(1);
+    }
+
+    /**
+     * редактирование трубы
+     */
+    public function action_tube_name_edit()
+    {
+        $tubeId = $this->request->post('tube_id');
+        $name = $this->request->post('name');
+
+        list($result, $error) = Model_Tube::editTubeName($tubeId, $name);
+
+        if (empty($result)) {
+            $this->jsonResult(0, $error);
+        }
+        $this->jsonResult(1);
+    }
 }
