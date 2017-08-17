@@ -126,6 +126,11 @@ return [
         'references_converter' => [
             Access::ROLE_ROOT
         ],
+        'clients_contract_limits_edit' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_MANAGER,
+        ],
         // custom
         'view_contract_balances' => [
             Access::ROLE_ROOT
