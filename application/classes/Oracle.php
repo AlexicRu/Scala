@@ -305,11 +305,11 @@ class Oracle{
      * @param $string
      * @return false|string
      */
-	public static function toDate($string)
+	public static function toDate($string, $format = 'd.m.Y H:i:s')
     {
-        $dateTime = DateTime::createFromFormat('d.m.Y H:i:s', $string);
+        $dateTime = DateTime::createFromFormat($format, $string);
 
-        return "'".$dateTime->format('d.m.Y')."'";
+        return $dateTime->format('d.m.Y');
     }
 
     /**

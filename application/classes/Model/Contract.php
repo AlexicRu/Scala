@@ -337,14 +337,13 @@ class Model_Contract extends Model
 
 		$db = Oracle::init();
 
-		$sql = "
-			select *
-			from ".Oracle::$prefix."V_WEB_CL_CONTRACTS_PAYS
-			where 1=1
-		";
+		$sql = (new Builder())->select()
+            ->from('V_WEB_CL_CONTRACTS_PAYS')
+            ->orderBy('O_DATE desc')
+        ;
 
 		if(!empty($contractId)){
-			$sql .= " and contract_id = ".Oracle::quote($contractId);
+			$sql->where("contract_id = ".Oracle::quote($contractId));
 		}
 
         if (!empty($params['order_date'])) {
@@ -352,22 +351,20 @@ class Model_Contract extends Model
                 $params['order_date'] = [$params['order_date']];
             }
 
-		    foreach ($params['order_date'] as &$date) {
-		        $date = ' order_date = '.Oracle::toDate($date);
+            $sql->whereStart();
+		    foreach ($params['order_date'] as $date) {
+		        $sql->whereOr("order_date = '".Oracle::toDate($date, 'd-m-y')."'");
             }
-
-            $sql .= ' and ( '.implode(' or ', $params['order_date'] ).' ) ';
+            $sql->whereEnd();
         }
 
         if(!empty($params['order_num'])) {
-            $sql .= " and order_num = ".Oracle::quote($params['order_num']);
+            $sql->where("order_num = ".Oracle::quote($params['order_num']));
         }
 
         if(!empty($params['sumpay'])) {
-            $sql .= " and sumpay = ".Oracle::toFloat($params['sumpay']);
+            $sql->where("sumpay = ".Oracle::toFloat($params['sumpay']));
         }
-
-		$sql .= " order by O_DATE desc";
 
         if(!empty($params['pagination'])) {
 			return $db->pagination($sql, $params);
