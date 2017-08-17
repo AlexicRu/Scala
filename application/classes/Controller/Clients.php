@@ -276,25 +276,45 @@ class Controller_Clients extends Controller_Common {
 
 		$this->jsonResult(false, $error);
 	}
+    /**
+     * редактирование лимитов карты
+     */
+    public function action_card_edit_limits()
+    {
+        $cardId     = $this->request->post('card_id');
+        $contractId = $this->request->post('contract_id');
+        $limits     = $this->request->post('limits');
 
-	/**
-	 * редактирование карты
-	 */
-	public function action_card_edit()
-	{
-		$params = $this->request->post('params');
+        $result = Model_Card::editCardLimits($cardId, $contractId, $limits);
 
-		$result = Model_Card::editCard($params, Model_Card::CARD_ACTION_EDIT);
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
 
-		if(empty($result)){
-			$this->jsonResult(false);
-		}
-
-		$messages = Messages::get();
+        $messages = Messages::get();
 
         if(!empty($messages)){
             $this->jsonResult(false, $messages);
         }
+
+        $this->jsonResult(true, $result);
+    }
+
+	/**
+	 * редактирование карты
+	 */
+	public function action_card_edit_holder()
+	{
+        $cardId     = $this->request->post('card_id');
+        $contractId = $this->request->post('contract_id');
+        $holder     = $this->request->post('holder');
+        $date       = $this->request->post('date');
+
+		$result = Model_Card::editCardHolder($cardId, $contractId, $holder, $date);
+
+		if(empty($result)){
+			$this->jsonResult(false);
+		}
 
 		$this->jsonResult(true, $result);
 	}

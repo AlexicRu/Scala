@@ -50,8 +50,9 @@ class Model_Card extends Model
 		$user = User::current();
 
 		$sql = (new Builder())->select()
-            ->from('V_WEB_CARD_GROUPS')
-            ->where('manager_id = '.$user['MANAGER_ID'])
+            ->from('V_WEB_CRD_LIST')
+            /*->from('V_WEB_CARD_GROUPS')
+            ->where('manager_id = '.$user['MANAGER_ID'])*/
         ;
 
 		if(!empty($contractId)){
@@ -198,11 +199,6 @@ class Model_Card extends Model
 		if(!empty($res)){
 			return $res;
 		}
-
-		if($action != self::CARD_ACTION_ADD && Access::allow('clients_card_edit_limits')) {
-            //редактируем лимитов если таковые пришли в запросе
-            self::editCardLimits($params['card_id'], $params['contract_id'], empty($params['limits']) ? [] : $params['limits']);
-        }
 
 		return true;
 	}
@@ -727,6 +723,43 @@ class Model_Card extends Model
         $result = $db->procedure('ctrl_card_group_collection', $data);
 
         if ($result == Oracle::CODE_ERROR) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * редактируем держателя
+     *
+     * @param $cardId
+     * @param $contractId
+     * @param $holder
+     * @param $date
+     * @return bool
+     */
+    public static function editCardHolder($cardId, $contractId, $holder, $date)
+    {
+        if (empty($cardId) || empty($contractId) || empty($holder)) {
+            return false;
+        }
+
+        $user = User::current();
+
+        $db = Oracle::init();
+
+        $data = [
+            'p_card_id'     => $cardId,
+            'p_contract_id' => $contractId,
+            'p_new_holder'  => $holder,
+            'p_date_from'   => $date ?: date('d.m.Y'),
+            'p_manager_id'  => $user['MANAGER_ID'],
+            'p_error_code' 	=> 'out',
+        ];
+
+        $result = $db->procedure('card_change_holder', $data);
+
+        if ($result != Oracle::CODE_SUCCESS) {
             return false;
         }
 

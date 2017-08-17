@@ -1318,6 +1318,12 @@ sup.required {
   display: none;
   margin-right: 10px;
 }
+.popup_divider {
+  margin: 30px -30px;
+  background: rgba(0, 0, 0, 0.1);
+  line-height: 0;
+  height: 1px;
+}
 .popup_list {
   margin: -30px -30px 0;
   height: 500px;
