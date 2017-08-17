@@ -285,7 +285,7 @@ class Oracle{
 	 */
 	public static function toFloat($number)
 	{
-		return str_replace(',', '.', $number);
+		return str_replace([',', ' ', " "], ['.', '', ""], $number);
 	}
 
     /**
