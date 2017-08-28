@@ -136,7 +136,10 @@ function editSupplierContract()
         CONTRACT_POS_GROUPS:    getComboboxMultiValue($('[name=CONTRACT_POS_GROUPS]', block)),
     };
 
-    if (params.CONTRACT_NAME == '' || params.CONTRACT_SERVICES.length == 0 || params.CONTRACT_POS_GROUPS.length == 0) {
+    if (params.CONTRACT_NAME == '' ||
+        (params.CONTRACT_SERVICES != undefined && params.CONTRACT_SERVICES == '') /*||
+        (params.CONTRACT_POS_GROUPS != undefined && params.CONTRACT_POS_GROUPS.length == 0)*/
+    ) {
         message(0, 'Заполните все поля');
         return;
     }

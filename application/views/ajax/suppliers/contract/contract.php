@@ -72,8 +72,7 @@
                         </div>
                     </td>
                 </tr>
-                <?if(Access::allow('root')){?>
-                <tr>
+                <?/*?><tr>
                     <td class="gray right">Услуги:</td>
                     <td>
                         <div toggle_block="toggle_contract" class="contract_service_render_value"></div>
@@ -84,7 +83,8 @@
                             ])?>
                         </div>
                     </td>
-                </tr>
+                </tr><?*/?>
+                <?if(Access::allow('show_supplier_contract_group_dots')){?>
                 <tr>
                     <td class="gray right">Группы точек:</td>
                     <td>

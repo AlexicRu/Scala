@@ -11,7 +11,7 @@ $postfix = $card['CARD_ID'];
     <tr>
         <td class="gray right">Дата:</td>
         <td>
-            <input type="text" class="input_big datepicker" readonly name="card_edit_date">
+            <input type="text" class="input_big datepicker" readonly name="card_edit_date" value="<?=$card['DATE_HOLDER']?>">
         </td>
     </tr>
     <tr>

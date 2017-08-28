@@ -108,6 +108,7 @@ class Model_Dot extends Model
         $sql = (new Builder())->select()
             ->from('V_WEB_POS_LIST t')
             ->where("t.agent_id = ".$user['AGENT_ID'])
+            ->orderBy(['t.PROJECT_NAME', 't.ID_EMITENT', 't.ID_TO'])
         ;
 
         if(!empty($params['group_id'])){

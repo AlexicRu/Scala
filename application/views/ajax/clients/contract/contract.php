@@ -244,6 +244,12 @@
                     }
                 };
 
+
+                if(params.settings.TARIF_ONLINE == '' || params.settings.TARIF_OFFLINE == ''){
+                    message(0, 'Заполните тарификацию');
+                    return false;
+                }
+
                 if(params.contract.CONTRACT_NAME == ''){
                     message(0, 'Введите название');
                     return false;

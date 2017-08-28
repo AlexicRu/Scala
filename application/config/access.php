@@ -112,10 +112,10 @@ return [
             Access::ROLE_SUPERVISOR,
         ],
         'references_index' => [
-            Access::ROLE_ROOT
+            Access::ROLE_ADMIN
         ],
         'references_sources' => [
-            Access::ROLE_ROOT
+            Access::ROLE_ADMIN
         ],
         'references_addresses' => [
             Access::ROLE_ROOT
@@ -133,7 +133,9 @@ return [
         ],
         // custom
         'view_contract_balances' => [
-            Access::ROLE_ROOT
+			Access::ROLE_SUPERVISOR,
+            Access::ROLE_ADMIN,
+			Access::ROLE_MANAGER,
         ],
         'view_penalties' => [
             Access::ROLE_ROOT,
@@ -163,6 +165,10 @@ return [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
             Access::ROLE_MANAGER_SALE_SUPPORT
+        ],
+        'show_supplier_contract_group_dots' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
         ],
         'root' => [
             Access::ROLE_ROOT

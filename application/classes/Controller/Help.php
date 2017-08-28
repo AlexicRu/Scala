@@ -31,7 +31,7 @@ class Controller_Help extends Controller_Common
             'search'        => $this->_search,
             'ids'           => $this->_ids,
             'limit'         => 10,
-            'group_type'    => !empty($this->_params['group_type']) ? $this->_params['group_type'] : Model_Dot::GROUP_TYPE_USER
+            'group_type'    => !empty($this->_params['group_type']) ? $this->_params['group_type'] : false
         ];
         $res = Model_Dot::getGroups($params);
 
