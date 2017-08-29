@@ -309,6 +309,10 @@ class Oracle{
     {
         $dateTime = DateTime::createFromFormat($format, $string);
 
+        if (empty($dateTime)) {
+            return false;
+        }
+
         return $dateTime->format('d.m.Y');
     }
 
