@@ -69,6 +69,7 @@ class Controller_Administration extends Controller_Common
     public function action_transactions_history()
     {
         $params = [
+            'filter'        => $this->request->post('filter'),
             'offset' 		=> $this->request->post('offset'),
             'pagination'    => true
         ];

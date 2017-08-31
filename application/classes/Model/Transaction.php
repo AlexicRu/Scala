@@ -48,6 +48,14 @@ class Model_Transaction extends Model
             $sql->where('t.RNUM in ('. implode(',', $params['rnum']) .')');
         }
 
+        if (!empty($params['filter'])) {
+            foreach ($params['filter'] as $key => $value) {
+                if (!empty($value)) {
+                    $sql->where("t." . $key . " = '" . $value . "'");
+                }
+            }
+        }
+
         if (!empty($params['pagination'])) {
             return $db->pagination($sql, $params);
         }
