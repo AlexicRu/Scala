@@ -133,7 +133,7 @@ function editSupplierContract()
         DATA_SOURCE:            $('[name=DATA_SOURCE]:checked', block).val(),
         TUBE_ID:                $('[name=TUBE_ID]', block).val(),
         CONTRACT_SERVICES:      getComboboxValue($('[name=CONTRACT_SERVICES]', block)),
-        CONTRACT_POS_GROUPS:    getComboboxMultiValue($('[name=CONTRACT_POS_GROUPS]', block)),
+        CONTRACT_POS_GROUPS:    getComboboxValue($('[name=CONTRACT_POS_GROUPS]', block)),
     };
 
     if (params.CONTRACT_NAME == '' ||

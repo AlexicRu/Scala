@@ -90,7 +90,7 @@
                     <td>
                         <div toggle_block="toggle_contract" class="contract_pos_groups_render_value"></div>
                         <div class="dn" toggle_block="toggle_contract">
-                            <?=Common::buildFormField('pos_group_choose_multi', 'CONTRACT_POS_GROUPS', $contractDotsGroups, [
+                            <?=Common::buildFormField('pos_group_choose_single', 'CONTRACT_POS_GROUPS', $contractDotsGroups, [
                                 'show_all' => true,
                                 'render_value_to' => '.contract_pos_groups_render_value',
                                 'group_type' => Model_Dot::GROUP_TYPE_SUPPLIER
