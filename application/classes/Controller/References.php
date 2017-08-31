@@ -84,4 +84,20 @@ class Controller_References extends Controller_Common {
         }
         $this->jsonResult(1);
     }
+
+    /**
+     * Список карт
+     */
+    public function action_cards()
+    {
+        $this->title[] = 'Список карт';
+
+        $this->_initJsGrid();
+
+        $cardsList = Model_Card::getDictionary();
+
+        $this->tpl
+            ->bind('cardsList', $cardsList)
+        ;
+    }
 }

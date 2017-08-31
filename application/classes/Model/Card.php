@@ -765,4 +765,19 @@ class Model_Card extends Model
 
         return true;
     }
+
+    /**
+     * получение справочника
+     */
+    public static function getDictionary()
+    {
+        $user = User::current();
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_CRD_DICTIONARY t')
+            ->where('t.agent_id = '.$user['agent_id'])
+        ;
+
+        return Oracle::init()->query($sql);
+    }
 }

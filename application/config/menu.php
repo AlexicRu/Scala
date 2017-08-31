@@ -15,7 +15,8 @@ return array(
         'sources'       => 'Источники данных',
         'addresses'     => 'Адресный справочник',
         'currency'      => 'Валюты',
-        'converter'     => 'Конвертер услуг'
+        'converter'     => 'Конвертер услуг',
+        'cards'         => 'Список карт'
     ]],
     'administration'    => ['title' => 'Сервис', 'icon' => 'icon-service', 'children' => [
         'transactions'  => 'Транзакции'
