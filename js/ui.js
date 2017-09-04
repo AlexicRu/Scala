@@ -35,7 +35,10 @@ function renderElements()
 
 function renderCheckbox(check)
 {
-    if(check.data('rendered')){
+    if(
+        check.data('rendered') ||
+        check.closest('.jsgrid-filter-row').length
+    ){
         return false;
     }
 

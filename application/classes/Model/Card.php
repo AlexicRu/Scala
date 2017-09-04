@@ -740,7 +740,7 @@ class Model_Card extends Model
      */
     public static function editCardHolder($cardId, $contractId, $holder, $date)
     {
-        if (empty($cardId) || empty($contractId) || empty($holder)) {
+        if (empty($cardId) || empty($contractId)) {
             return false;
         }
 
@@ -751,7 +751,7 @@ class Model_Card extends Model
         $data = [
             'p_card_id'     => $cardId,
             'p_contract_id' => $contractId,
-            'p_new_holder'  => $holder,
+            'p_new_holder'  => $holder ?: '',
             'p_date_from'   => $date ?: date('d.m.Y'),
             'p_manager_id'  => $user['MANAGER_ID'],
             'p_error_code' 	=> 'out',

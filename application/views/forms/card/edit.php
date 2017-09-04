@@ -189,10 +189,6 @@ $postfix = $card['CARD_ID'];
             date        : $('[name=card_edit_date]', form).val(),
         };
 
-        if(params.holder == false){
-            message(0, 'Заполните держателя');
-            return;
-        }
         if(params.date == false){
             message(0, 'Заполните дату');
             return;

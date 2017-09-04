@@ -1,82 +1,66 @@
 <h1>Список карт</h1>
 
-<pre>
-    <?print_r($cardsList)?>
-</pre>
-
 <div class="jsGrid references_cards_jsGrid"></div>
 
 <script>
-    $(function(){
-        var rows = [];
-        var row;
-        var tpl;
+    var db = {
+        loadData: function(filter) {
+            console.log(filter);
+            return $.grep(this.rows, function(row) {
+                return (!filter.CARD_ID || row.CARD_ID.toLowerCase().indexOf(filter.CARD_ID.toLowerCase()) > -1)
+                    && (!filter.SOURCE_NAME || row.SOURCE_NAME.toLowerCase().indexOf(filter.SOURCE_NAME.toLowerCase()) > -1)
+                    && (!filter.SOURCE_STATE || row.SOURCE_STATE == filter.SOURCE_STATE)
+                    && (!filter.ISSUE_STATE || row.ISSUE_STATE == filter.ISSUE_STATE)
+                    && (!filter.status || row.status == filter.status)
+                ;
+            });
+        },
+        rows: [],
+        statuses: [
+            {'name': ''},
+            {'name': 'В работе'},
+            {'name': 'Не в работе'}
+        ]
+    };
 
-        <?if (!empty($tubesList)) {
-        foreach($tubesList as $tube) {?>
-        tpl = '<div class="reference_sources_tube_name_block">' +
-            '<span toggle_block="referenceSourcesTube<?=$tube['TUBE_ID']?>">' +
-            '<span toggle="referenceSourcesTube<?=$tube['TUBE_ID']?>" class="btn btn_small btn_icon"><i class="icon-pen"></i></span> ' +
-            '<span class="reference_sources_tube_name"><?=$tube['TUBE_NAME']?></span>'+
-            '</span>' +
-            '<span toggle_block="referenceSourcesTube<?=$tube['TUBE_ID']?>" style="display:none;">' +
-            '<span onclick="referenceSourcesTubeNameChange($(this), <?=$tube['TUBE_ID']?>)" class="btn btn_small btn_icon btn_green"><i class="icon-ok"></i></span>'+
-            '<input type="text" value="<?=$tube['TUBE_NAME']?>" class="input_mini">'+
-            '</span>' +
-            '</div>';
-
-        row = {
-            'TUBE_ID'           : '<?=$tube['TUBE_ID']?>',
-            'CURRENT_STATE'     : '<?=$tube['CURRENT_STATE']?>',
-            'SYS_TEMPLATE'      : '<?=$tube['SYS_TEMPLATE']?>',
-            'TUBE_NAME'         : tpl,
-            'CARDS_BLOCK'       : '<?=$tube['CARDS_BLOCK']?>',
-            'CARDS_CHANGE_LIMIT': '<?=$tube['CARDS_CHANGE_LIMIT']?>',
-        };
-
-        <?if ($tube['CARDS_LIST_RECIEVE'] === "0") {?>
-        row.CARDS_LIST_RECIEVE = '<button class="btn btn_small" <?=(($tube['STATE_ID'] != 1 || $tube['IS_OWNER'] != 1)? 'disabled' : '')?> onclick="referenceSourcesCardListLoadStart($(this),<?=$tube['TUBE_ID']?>)">Загрузить</button>';
-        <?} else if ($tube['CARDS_LIST_RECIEVE'] === "1") {?>
-        row.CARDS_LIST_RECIEVE = 'Идет загрузка...';
-        <?} else {?>
-        row.CARDS_LIST_RECIEVE = 'Не подключено';
-        <?}?>
-
-        <?if ($tube['TUBE_ORDER_REPORT'] === "0") {?>
-        row.TUBE_ORDER_REPORT = '<button class="btn btn_small" <?=($tube['STATE_ID'] != 1 ? 'disabled' : '')?>>Загрузить</button>';
-        <?} else if ($tube['TUBE_ORDER_REPORT'] === "1") {?>
-        row.TUBE_ORDER_REPORT = 'Идет загрузка...';
-        <?} else {?>
-        row.TUBE_ORDER_REPORT = 'Не подключено';
-        <?}?>
-
-        rows.push(row);
+    <?if (!empty($cardsList)) {
+        foreach($cardsList as $card) {?>
+            db.rows.push({
+                'CARD_ID'       : '<?=$card['CARD_ID']?>',
+                'SOURCE_NAME'   : '<?=$card['SOURCE_NAME']?>',
+                'SOURCE_STATE'  : '<?=$card['SOURCE_STATE']?>',
+                'ISSUE_STATE'   : '<?=$card['ISSUE_STATE']?>',
+                'status'        : <?=($card['ISSUE_ID'] == 0 ? 'true' : 'false')?>,
+            });
         <?}
-        }?>
+    }?>
 
-        connect1cPayments_drawTable(rows);
+    window.db = db;
+
+    var grid = $(".references_cards_jsGrid");
+
+    grid.jsGrid({
+        width: '100%',
+        sorting: true,
+        filtering: true,
+        paging: true,
+        pageSize: 15,
+
+        controller:db,
+
+        fields: [
+            { name: "CARD_ID", type: "text", title: 'Номер карты', width:200},
+            { name: "SOURCE_NAME", type: "text", title: 'Имя источника', width:'auto'},
+            { name: "SOURCE_STATE", type: "select", title: 'Статус в источнике', width:200, items: db.statuses, valueField: "name", textField: "name" },
+            { name: "ISSUE_STATE", type: "text", title: 'Статус выдачи', width:250 },
+            { name: "status", type: "checkbox", title: 'Не выдано', width:80}
+        ],
+        onRefreshed: function(args) {
+            $('.jsgrid-grid-body [type=checkbox]').each(function () {
+                renderCheckbox($(this));
+            });
+        }
     });
 
-    function connect1cPayments_drawTable(rows)
-    {
-        var grid = $(".references_cards_jsGrid");
-
-        grid.jsGrid({
-            width: '100%',
-            sorting: true,
-
-            data: rows,
-
-            fields: [
-                { name: "TUBE_ID", type: "text", title: 'ID', width:100},
-                { name: "CURRENT_STATE", type: "text", title: 'Статус', width:100},
-                { name: "SYS_TEMPLATE", type: "text", title: 'Шаблон', width:150},
-                { name: "TUBE_NAME", type: "text", title: 'Наименование', width:150},
-                { name: "CARDS_BLOCK", type: "text", title: 'Блокировка карт', width:200},
-                { name: "CARDS_CHANGE_LIMIT", type: "text", title: 'Изменение лимитов', width:200},
-                { name: "CARDS_LIST_RECIEVE", type: "text", title: 'Получение списка карт', width:200},
-//                { name: "TUBE_ORDER_REPORT", type: "text", title: 'Загрузка транзакций за период', width:'auto'}
-            ]
-        });
-    }
+    grid.jsGrid("search");
 </script>
