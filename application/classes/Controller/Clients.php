@@ -285,19 +285,9 @@ class Controller_Clients extends Controller_Common {
         $contractId = $this->request->post('contract_id');
         $limits     = $this->request->post('limits');
 
-        $result = Model_Card::editCardLimits($cardId, $contractId, $limits);
+        list($result, $error) = Model_Card::editCardLimits($cardId, $contractId, $limits);
 
-        if(empty($result)){
-            $this->jsonResult(false);
-        }
-
-        $messages = Messages::get();
-
-        if(!empty($messages)){
-            $this->jsonResult(false, $messages);
-        }
-
-        $this->jsonResult(true, $result);
+        $this->jsonResult($result, $error);
     }
 
 	/**

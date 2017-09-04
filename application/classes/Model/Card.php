@@ -297,19 +297,18 @@ class Model_Card extends Model
 	 * редактирование карты и лимитов
 	 *
 	 * @param $params
-	 * @return bool
+	 * @return array
 	 */
 	public static function editCardLimits($cardId, $contractId, $limits = [])
 	{
 		if(empty($cardId)){
-			return false;
+			return [false, 'Ошибка'];
 		}
 
         $user = Auth::instance()->get_user();
 
         if (count($limits) > 9) {
-            Messages::put('Изменение лимитов не произошло. Превышен лимит ограничений');
-            return false;
+            return [false, 'Изменение лимитов не произошло. Превышен лимит ограничений'];
         }
 
 		if(in_array($user['role'], array_keys(Access::$clientRoles))) {
@@ -321,15 +320,13 @@ class Model_Card extends Model
                     ($limit['param'] == 2 && $limit['value'] > 30000)
                 ){
                     if(empty($currentLimits)){
-                        Messages::put('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
-                        return false;
+                        return [false, 'Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру'];
                     }
                     foreach($limit['services'] as $service){
                         foreach ($currentLimits as $currentLimit){
                             foreach ($currentLimit as $currentL) {
                                 if ($currentL['SERVICE_ID'] == $service && $limit['value'] != $currentL['LIMIT_VALUE']) {
-                                    Messages::put('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
-                                    return false;
+                                    return [false, 'Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру'];
                                 }
                             }
                         }
@@ -343,7 +340,7 @@ class Model_Card extends Model
 		if(empty($limits)){
             $db->procedure('card_service_refresh', ['p_card_id' => $cardId]);
 
-			return true;
+			return [true, ''];
 		}
 
         /*
@@ -379,11 +376,16 @@ class Model_Card extends Model
 
         $res = $db->procedure('card_service_edit_ar', $data);
 
-        if(!empty($res)){
-            return false;
+        switch ($res) {
+            case Oracle::CODE_ERROR:
+                return [false, 'Ошибка'];
+            case 2:
+                return [false, 'Превышен лимит ограничений'];
+            case 3:
+                return [false, 'Задвоенные лимиты'];
         }
 
-		return true;
+		return [true, ''];
 	}
 
     /**
