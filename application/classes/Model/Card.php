@@ -775,7 +775,7 @@ class Model_Card extends Model
 
         $sql = (new Builder())->select()
             ->from('V_WEB_CRD_DICTIONARY t')
-            ->where('t.agent_id = '.$user['agent_id'])
+            ->where('t.agent_id = '.$user['AGENT_ID'])
         ;
 
         return Oracle::init()->query($sql);

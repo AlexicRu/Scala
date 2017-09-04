@@ -10,6 +10,7 @@ return array(
         'tariffs'       => 'Тарифы',
         'connect_1c'    => 'Связь с 1С',
         'cards_groups'  => 'Группы карт',
+        'firms_groups'  => 'Группы фирм',
     ]],
     'references'        => ['title' => 'Справочники', 'icon' => 'icon-contract', 'children' => [
         'sources'       => 'Источники данных',

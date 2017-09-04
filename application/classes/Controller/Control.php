@@ -454,6 +454,30 @@ class Controller_Control extends Controller_Common {
     }
 
     /**
+     * страница работыс группами фирм
+     */
+    public function action_firms_groups()
+    {
+        $this->title[] = 'Группы фирм';
+
+        $filter = $this->request->query('filter');
+
+        $groups = Model_Card::getGroups($filter);
+
+        $popupAddCards = Common::popupForm('Добавление карт', 'control/add_cards');
+        $popupAddGroup = Common::popupForm('Добавление группы', 'control/add_group');
+        $popupEditGroup = Common::popupForm('Редактирование группы', 'control/edit_group');
+
+        $this->tpl
+            ->bind('groups', $groups)
+            ->bind('filter', $filter)
+            ->bind('popupAddCards', $popupAddCards)
+            ->bind('popupAddGroup', $popupAddGroup)
+            ->bind('popupEditGroup', $popupEditGroup)
+        ;
+    }
+
+    /**
      * страница работыс группами карт
      */
     public function action_cards_groups()
