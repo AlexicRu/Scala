@@ -187,7 +187,8 @@ class Oracle{
         $user = User::current();
 
 		if ($user['role'] == Access::ROLE_CLIENT && !in_array($procedure, [
-            'auth_user'
+            'auth_user',
+            'notification_change_status',
         ])) {
 		    Messages::put('Данной роли разрешен только просмотр', 'info');
             return self::CODE_ERROR;

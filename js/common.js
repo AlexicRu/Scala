@@ -20,7 +20,7 @@ $(function() {
     });
 });
 
-function message(type, text)
+function message(type, text, sticky, onClose)
 {
     var header = '';
 
@@ -34,7 +34,17 @@ function message(type, text)
         header = 'Внимание!';
     }
 
-    $.jGrowl(text, { header: header , theme: 'jgrowl-glopro', group: 'jgrowl-group-' + type});
+    if (!sticky) {
+        sticky = false;
+    }
+
+    var params = { header: header , theme: 'jgrowl-glopro', group: 'jgrowl-group-' + type, sticky: sticky };
+
+    if (typeof onClose == 'function') {
+        params.close = onClose;
+    }
+
+    $.jGrowl(text, params);
 }
 
 function alarm(block) {

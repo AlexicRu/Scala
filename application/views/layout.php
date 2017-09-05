@@ -95,6 +95,20 @@
 			</div>
 		</div>
 	</div>
+
+    <?if (!empty($popupGlobalMessages)){?>
+        <?=$popupGlobalMessages?>
+        <script>
+            $(function () {
+                $.fancybox({
+                    href: '#common_global_messages',
+                    modal: true,
+                    padding: [0,0,0,0]
+                });
+            });
+        </script>
+    <?}?>
+
 	<!--[if (lt IE 9)]>
 	<div class="bad_browser">
 		<h1>Ваш браузер устарел</h1>

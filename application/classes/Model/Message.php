@@ -5,6 +5,9 @@ class Model_Message extends Model
     const MESSAGE_STATUS_NOTREAD = 0;
     const MESSAGE_STATUS_READ = 1;
 
+    const MESSAGE_TYPE_COMMON = 1;
+    const MESSAGE_TYPE_GLOBAL = 2;
+
     /**
      * собираем доступные пользовалю сообщения
      *
@@ -13,21 +16,23 @@ class Model_Message extends Model
      */
     public static function getList($params = [])
     {
-        if(empty($user)){
-            $user = Auth::instance()->get_user();
-        }
+        $user = User::current();
 
         $db = Oracle::init();
+
+        if (empty($params['note_type'])) {
+            $params['note_type'] = self::MESSAGE_TYPE_COMMON;
+        }
 
         $sql = (new Builder())->select()
             ->from('V_WEB_NOTIFICATION')
             ->where("manager_id = ".$user['MANAGER_ID'])
             ->orderBy('date_time desc')
-            ->where("note_type = 1")
+            ->where("note_type = ".$params['note_type'])
         ;
 
-        if(!empty($params['not_read'])){
-            $sql->where("status = ".self::MESSAGE_STATUS_NOTREAD);
+        if(isset($params['status'])){
+            $sql->where("status = ".$params['status']);
         }
         if(!empty($params['search'])){
             $search = mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
@@ -56,7 +61,7 @@ class Model_Message extends Model
         }
 
         $data = [
-            'p_note_guid' 		=> $params['note_guid'],
+            'p_note_type' 		=> $params['note_type'],
             'p_new_status' 	    => self::MESSAGE_STATUS_READ,
             'p_manager_id' 		=> $user['MANAGER_ID'],
             'p_error_code' 		=> 'out',
@@ -64,7 +69,7 @@ class Model_Message extends Model
 
         $res = $db->procedure('notification_change_status', $data);
 
-        if(!empty($res)){
+        if($res != Oracle::CODE_SUCCESS){
             return false;
         }
 

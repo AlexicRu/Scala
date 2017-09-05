@@ -80,6 +80,7 @@ abstract class Controller_Common extends Controller_Template {
 
         if(!$this->request->is_ajax()) {
             $this->_appendFilesAfter();
+            $this->_checkGlobalMessages();
         }
 
         View::set_global('user', Auth_Oracle::instance()->get_user());
@@ -93,7 +94,7 @@ abstract class Controller_Common extends Controller_Template {
         View::set_global('errors', $this->errors);
 
         if(Auth::instance()->logged_in()) {
-            View::set_global('notices', Model_Message::getList(['not_read' => true]));
+            View::set_global('notices', Model_Message::getList(['status' => Model_Message::MESSAGE_STATUS_NOTREAD]));
         }
 
         $this->template->content = $this->tpl;
@@ -298,4 +299,22 @@ abstract class Controller_Common extends Controller_Template {
         $PHPToExcel->dispay($filename . '_'.date('Ymd'), $rows, $headers);
     }
 
+    /**
+     * проверяем глобальные сообщения
+     */
+    private function _checkGlobalMessages()
+    {
+        $globalMessages = Model_Message::getList([
+            'note_type' => Model_Message::MESSAGE_TYPE_GLOBAL,
+            'status' => Model_Message::MESSAGE_STATUS_NOTREAD
+        ]);
+
+        if (!empty($globalMessages)) {
+            $popupGlobalMessages = Common::popupForm('ВАЖНО!', 'common/global_messages', [
+                'globalMessages' => $globalMessages
+            ]);
+
+            View::set_global('popupGlobalMessages', $popupGlobalMessages);
+        }
+    }
 } // End Common
