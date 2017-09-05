@@ -1406,9 +1406,6 @@ fieldset {
 .reference_compare {
   display: none;
 }
-.reference_block {
-  display: inline-block;
-}
 .reference_block td {
   vertical-align: top;
   padding: 0 10px 0 0;

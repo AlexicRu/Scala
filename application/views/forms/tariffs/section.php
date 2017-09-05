@@ -3,14 +3,13 @@
         <legend>Секция <?=$section['SECTION_NUM']?> &nbsp; <span class="up_arrow" onclick="sectionMove('up', $(this))"></span> <span class="down_arrow" onclick="sectionMove('down', $(this))"></span> &nbsp;</legend>
         <span class="btn btn_small btn_icon btn_red ts_remove"><i class="icon-cancel"></i></span>
 
+        <b class="f18">Условия:</b>
         <div class="ts_conditions">
             <?foreach($conditions as $key => $condition){
                 $uid = $tariffId.'_'.$section['SECTION_NUM'].'_'.$condition['CONDITION_NUM'];
                 ?>
                 <div class="tsc_item line_inner">
                     <span class="btn btn_small btn_icon btn_red ts_remove"><i class="icon-cancel"></i></span>
-
-                    <div class="line_inner_100">Условие:</div>
                     <?=Model_Tariff::buildReference($uid, $reference)?>
                     <script>
                         $(function () {
