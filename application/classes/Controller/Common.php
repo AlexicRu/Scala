@@ -112,8 +112,9 @@ abstract class Controller_Common extends Controller_Template {
         exit;
     }
 
-    protected function jsonResult($result, $data = []){
-        self::json(['success' => $result, 'data' => $data]);
+    protected function jsonResult($result, $data = [])
+    {
+        self::json(['success' => $result, 'data' => $data, 'messages' => Messages::get()]);
     }
 
     protected function _isPost()

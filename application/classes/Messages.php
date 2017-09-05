@@ -11,10 +11,16 @@ class Messages
     public static function get()
     {
         $cache = Cache::instance();
-        
-        $messages = $cache->get('messages');
-        
-        $cache->delete('messages');
+
+        $user = User::current();
+
+        $key = 'messages_user'.(!empty($user['MANAGER_ID']) ? $user['MANAGER_ID'] : 0);
+
+        $messages = $cache->get($key);
+
+        if (!empty($messages)) {
+            $cache->delete($key);
+        }
         
         return $messages ?: [];
     }
@@ -33,6 +39,10 @@ class Messages
 
         $cache = $cache = Cache::instance();
 
-        return $cache->set('messages', $messages);
+        $user = User::current();
+
+        $key = 'messages_user'.(!empty($user['MANAGER_ID']) ? $user['MANAGER_ID'] : 0);
+
+        return $cache->set($key, $messages);
     }
 }

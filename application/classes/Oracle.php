@@ -183,6 +183,16 @@ class Oracle{
 			return self::CODE_ERROR;
 		}
 
+		//если роль КЛИЕНТ, то процедуры (add|edit) выполнять нельзя
+        $user = User::current();
+
+		if ($user['role'] == Access::ROLE_CLIENT && !in_array($procedure, [
+            'auth_user'
+        ])) {
+		    Messages::put('Данной роли разрешен только просмотр', 'info');
+            return self::CODE_ERROR;
+        }
+
 		$keys = [];
 		foreach(array_keys($data) as $key){
 			$keys[] = ':'.$key;

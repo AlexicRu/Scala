@@ -1105,12 +1105,22 @@ div.jGrowl div.jGrowl-notification {
     width: 300px; font-size: 16px; color: white; opacity: 1; padding: 15px 20px;
 
     //error
-    &.jgrowl-group-0 {
+    &.jgrowl-group-0,
+    &.jgrowl-group-error
+    {
       background-color: #a94442;
     }
     //success
-    &.jgrowl-group-1 {
+    &.jgrowl-group-1,
+    &.jgrowl-group-success
+    {
       background-color: #3c763d;
+    }
+    //info
+    &.jgrowl-group-2,
+    &.jgrowl-group-info
+    {
+      background-color: #0275d8;
     }
   }
 }

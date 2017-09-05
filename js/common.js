@@ -10,17 +10,28 @@ $(function() {
             message.remove();
         }, 500);
     });
+
+    $(document).ajaxSuccess(function( event, xhr, settings) {
+        if (xhr.responseJSON && xhr.responseJSON.messages && xhr.responseJSON.messages.length) {
+            for (var i in xhr.responseJSON.messages) {
+                message(xhr.responseJSON.messages[i].type, xhr.responseJSON.messages[i].text);
+            }
+        }
+    });
 });
 
 function message(type, text)
 {
     var header = '';
 
-    if(type == 0){
+    if(type == 0 || type == 'error'){
         header = 'Ошибка!';
     }
-    if(type == 1){
+    if(type == 1 || type == 'success'){
         header = 'Успех!';
+    }
+    if(type == 2 || type == 'info'){
+        header = 'Внимание!';
     }
 
     $.jGrowl(text, { header: header , theme: 'jgrowl-glopro', group: 'jgrowl-group-' + type});

@@ -65,7 +65,7 @@ class Model_Message extends Model
         $res = $db->procedure('notification_change_status', $data);
 
         if(!empty($res)){
-            return $res;
+            return false;
         }
 
         return true;

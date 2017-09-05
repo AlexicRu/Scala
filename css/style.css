@@ -1555,11 +1555,17 @@ div.jGrowl div.jGrowl-notification.jgrowl-glopro {
   opacity: 1;
   padding: 15px 20px;
 }
-div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-0 {
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-0,
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-error {
   background-color: #a94442;
 }
-div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-1 {
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-1,
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-success {
   background-color: #3c763d;
+}
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-2,
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-info {
+  background-color: #0275d8;
 }
 .supplier-contract {
   margin-top: 30px;
