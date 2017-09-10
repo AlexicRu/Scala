@@ -61,8 +61,9 @@ class Model_Message extends Model
         }
 
         $data = [
-            'p_note_type' 		=> $params['note_type'],
+            'p_note_guid' 		=> null,
             'p_new_status' 	    => self::MESSAGE_STATUS_READ,
+            'p_note_type' 		=> $params['note_type'],
             'p_manager_id' 		=> $user['MANAGER_ID'],
             'p_error_code' 		=> 'out',
         ];

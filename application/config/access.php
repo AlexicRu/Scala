@@ -131,6 +131,9 @@ return [
             Access::ROLE_SUPERVISOR,
             Access::ROLE_MANAGER,
         ],
+        'control_firms_groups' => [
+            Access::ROLE_ROOT
+        ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,
