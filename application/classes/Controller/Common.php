@@ -315,6 +315,8 @@ abstract class Controller_Common extends Controller_Template {
             ]);
 
             View::set_global('popupGlobalMessages', $popupGlobalMessages);
+
+            Model_Message::makeRead(['note_type' => Model_Message::MESSAGE_TYPE_GLOBAL]);
         }
     }
 } // End Common
