@@ -94,7 +94,9 @@ $postfix = $card['CARD_ID'];
 
 <script>
     $(function () {
-        renderDatePicker($('[name=card_edit_date]'));
+        $('[name=card_edit_date]').each(function () {
+            renderDatePicker($(this));
+        });
     });
 
     var services_<?=$postfix?> = {
