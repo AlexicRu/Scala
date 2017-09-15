@@ -13,6 +13,7 @@ class Access
     const ROLE_USER_SECOND		        = 98;
     const ROLE_MANAGER_SALE		        = 5;
     const ROLE_MANAGER_SALE_SUPPORT		= 6;
+    const ROLE_CLIENT		            = 97;
 
     public static $roles = [
         self::ROLE_MANAGER              => 'Менеджер сопровождения',

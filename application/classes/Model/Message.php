@@ -5,6 +5,9 @@ class Model_Message extends Model
     const MESSAGE_STATUS_NOTREAD = 0;
     const MESSAGE_STATUS_READ = 1;
 
+    const MESSAGE_TYPE_COMMON = 1;
+    const MESSAGE_TYPE_GLOBAL = 2;
+
     /**
      * собираем доступные пользовалю сообщения
      *
@@ -13,23 +16,28 @@ class Model_Message extends Model
      */
     public static function getList($params = [])
     {
-        if(empty($user)){
-            $user = Auth::instance()->get_user();
-        }
+        $user = User::current();
 
         $db = Oracle::init();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_NOTIFICATION where manager_id = ".$user['MANAGER_ID'];
+        if (empty($params['note_type'])) {
+            $params['note_type'] = self::MESSAGE_TYPE_COMMON;
+        }
 
-        if(!empty($params['not_read'])){
-            $sql .= " and status = ".self::MESSAGE_STATUS_NOTREAD;
+        $sql = (new Builder())->select()
+            ->from('V_WEB_NOTIFICATION')
+            ->where("manager_id = ".$user['MANAGER_ID'])
+            ->orderBy('date_time desc')
+            ->where("note_type = ".$params['note_type'])
+        ;
+
+        if(isset($params['status'])){
+            $sql->where("status = ".$params['status']);
         }
         if(!empty($params['search'])){
             $search = mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
-            $sql .= " and (upper(NOTIFICATION_BODY) like ".$search." or subject like ".$search.") ";
+            $sql->where("(upper(NOTIFICATION_BODY) like ".$search." or subject like ".$search.")");
         }
-
-        $sql .= ' order by date_time desc';
 
         if(!empty($params['pagination'])) {
             return $db->pagination($sql, $params);
@@ -53,16 +61,17 @@ class Model_Message extends Model
         }
 
         $data = [
-            'p_note_guid' 		=> $params['note_guid'],
+            'p_note_guid' 		=> null,
             'p_new_status' 	    => self::MESSAGE_STATUS_READ,
+            'p_note_type' 		=> $params['note_type'],
             'p_manager_id' 		=> $user['MANAGER_ID'],
             'p_error_code' 		=> 'out',
         ];
 
         $res = $db->procedure('notification_change_status', $data);
 
-        if(!empty($res)){
-            return $res;
+        if($res != Oracle::CODE_SUCCESS){
+            return false;
         }
 
         return true;

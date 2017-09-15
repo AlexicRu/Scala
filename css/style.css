@@ -845,6 +845,11 @@ textarea.input_grand {
   clear: both;
   white-space: normal;
 }
+.line_inner__second_line {
+  white-space: normal;
+  clear: both;
+  padding: 10px 30px 0;
+}
 .line_inner + .line_inner {
   margin-top: 2px;
 }
@@ -865,10 +870,6 @@ table td,
 table th {
   padding: 8px;
   vertical-align: top;
-}
-table.table_form input[type=text],
-table.table_form textarea {
-  width: 100%;
 }
 table.table_form tr.dark td {
   background: #f6f6f6;
@@ -1317,6 +1318,12 @@ sup.required {
   display: none;
   margin-right: 10px;
 }
+.popup_divider {
+  margin: 30px -30px;
+  background: rgba(0, 0, 0, 0.1);
+  line-height: 0;
+  height: 1px;
+}
 .popup_list {
   margin: -30px -30px 0;
   height: 500px;
@@ -1398,9 +1405,6 @@ fieldset {
 }
 .reference_compare {
   display: none;
-}
-.reference_block {
-  display: inline-block;
 }
 .reference_block td {
   vertical-align: top;
@@ -1548,11 +1552,17 @@ div.jGrowl div.jGrowl-notification.jgrowl-glopro {
   opacity: 1;
   padding: 15px 20px;
 }
-div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-0 {
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-0,
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-error {
   background-color: #a94442;
 }
-div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-1 {
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-1,
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-success {
   background-color: #3c763d;
+}
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-2,
+div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-info {
+  background-color: #0275d8;
 }
 .supplier-contract {
   margin-top: 30px;
@@ -1576,4 +1586,16 @@ div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-1 {
 .agreement__discount-type label {
   display: block;
   margin-bottom: 5px;
+}
+[limit_group] td {
+  border-bottom: 1px solid #ddd;
+}
+.reference_sources_tube_name_block {
+  white-space: nowrap;
+}
+.global_messages {
+  margin: -30px -30px 30px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  max-height: 500px;
+  overflow-y: auto;
 }

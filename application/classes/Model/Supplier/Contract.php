@@ -67,23 +67,6 @@ class Model_Supplier_Contract extends Model_Contract
     }
 
     /**
-     * получаем список труб
-     *
-     * @return array|bool
-     */
-    public static function getTubes()
-    {
-        $db = Oracle::init();
-
-        $user = User::current();
-
-        $sql = "select * from ".Oracle::$prefix."V_WEB_TUBES_LIST t where t.is_owner = 1 and t.agent_id=".$user['AGENT_ID'];
-
-        return $db->query($sql);
-    }
-
-
-    /**
      * @param $contractId
      * @param $params
      */
@@ -109,8 +92,8 @@ class Model_Supplier_Contract extends Model_Contract
             'p_contract_cur'        => self::CURRENCY_RUR,
             'p_contract_source'     => $params['DATA_SOURCE'],
             'p_contract_tube'       => $params['TUBE_ID'],
-            'p_contract_service'    => [$params['CONTRACT_SERVICES'], SQLT_INT],
-            'p_contract_pos_groups' => [$params['CONTRACT_POS_GROUPS'], SQLT_INT],
+            //'p_contract_service'    => [(!empty($params['CONTRACT_SERVICES']) ? $params['CONTRACT_SERVICES'] : [-1]), SQLT_INT],
+            'p_contract_pos_groups' => [(!empty($params['CONTRACT_POS_GROUPS']) ? $params['CONTRACT_POS_GROUPS'] : [-1]), SQLT_INT],
             'p_manager_id'          => $user['MANAGER_ID'],
             'p_error_code'          => 'out',
         ];

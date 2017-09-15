@@ -39,7 +39,9 @@ class Controller_Messages extends Controller_Common {
 	 */
 	public function action_make_read()
 	{
-		$res = Model_Message::makeRead(['note_guid' => null]);
+        $noteType = $this->request->post('type') ?: Model_Message::MESSAGE_TYPE_COMMON;
+
+		$res = Model_Message::makeRead(['note_type' => $noteType]);
 		
 		if(empty($res)){
 			$this->jsonResult(false);

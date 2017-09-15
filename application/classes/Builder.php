@@ -77,7 +77,7 @@ class Builder
      * @param $connector
      * @return $this
      */
-    public function whereStart($connector = 'start')
+    public function whereStart($connector = 'and')
     {
         $this->_where[] = [
             'connector'             => $connector,

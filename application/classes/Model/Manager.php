@@ -348,4 +348,95 @@ class Model_Manager extends Model
 
         return $db->query($sql);
     }
+
+    /**
+     * редактируем логин пальзователя
+     *
+     * @param $managerId
+     * @param $login
+     */
+    public static function editLogin($managerId, $login)
+    {
+        if (empty($managerId) || empty($login)) {
+            return ['error' => 'Некорректные данные'];
+        }
+
+        $login = str_replace(' ', '', $login);
+
+        if (empty($login)) {
+            return ['error' => 'Пустой логин'];
+        }
+
+        $db = Oracle::init();
+        $user = User::current();
+
+        $data = [
+            'p_manager_id' 	    => $managerId,
+            'p_new_login' 	    => $login,
+            'p_manager_who_id' 	=> $user['MANAGER_ID'],
+            'p_error_code' 		=> 'out',
+        ];
+
+        $code = $db->procedure('ctrl_manager_change_login', $data);
+
+        $result = ['login' => $login];
+
+        switch ($code) {
+            case Oracle::CODE_ERROR:
+                $result = ['error' => 'Логин не обновлен'];
+                break;
+            case Oracle::CODE_ERROR_EXISTS:
+                $result = ['error' => 'Логин уже занят'];
+                break;
+        }
+
+        return $result;
+    }
+
+    /**
+     * редактируем доступы менеджера к контрактам конкретного клиента
+     *
+     * @param $managerId
+     * @param $clientId
+     * @param $binds
+     */
+    public static function editContractBinds($managerId, $clientId, $binds = [])
+    {
+        if (empty($clientId) || empty($managerId)) {
+            return false;
+        }
+
+        $user = User::current();
+
+        $data = [
+            'p_manager_for_id' 	    => $managerId,
+            'p_client_id' 	        => $clientId,
+            'p_contract_collection'	=> [($binds ?: [-1]), SQLT_INT],
+            'p_manager_who_id' 	    => $user['MANAGER_ID'],
+            'p_error_code' 		    => 'out',
+        ];
+
+        $res = Oracle::init()->procedure('ctrl_manager_client_contracts', $data);
+
+        return $res == Oracle::CODE_SUCCESS;
+    }
+
+    /**
+     * дерево доступных контрактов
+     *
+     * @param $managerId
+     */
+    public static function getContractsTree($managerId)
+    {
+        if (empty($managerId)) {
+            return [];
+        }
+
+        $sql = (new Builder())->select()
+            ->from('v_web_manager_contracts')
+            ->where('MANAGER_ID = '.(int)$managerId)
+        ;
+
+        return Oracle::init()->tree($sql, 'CLIENT_ID', false, 'CONTRACT_ID');
+    }
 }

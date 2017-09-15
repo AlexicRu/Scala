@@ -40,4 +40,8 @@ return array(
         'title' => 'Алберит',
         'class' => 'alberit'
     ],
+    'lkcleveroilru' => [
+        'title' => 'Clever Oil',
+        'class' => 'cleveroil'
+    ],
 );

@@ -1,8 +1,3 @@
-<style>
-    [limit_group] td{
-        border-bottom: 1px solid #ddd;
-    }
-</style>
 <?
 $postfix = $card['CARD_ID'];
 ?>
@@ -10,10 +5,31 @@ $postfix = $card['CARD_ID'];
     <tr>
         <td class="gray right" width="170">Держатель:</td>
         <td>
-            <input type="text" name="card_edit_holder" class="input_big" value="<?=$card['HOLDER']?>" maxlength="200">
+            <input type="text" name="card_edit_holder" class="input_big input_grand" value="<?=$card['HOLDER']?>" maxlength="200">
         </td>
     </tr>
+    <tr>
+        <td class="gray right">Дата:</td>
+        <td>
+            <input type="text" class="input_big datepicker" readonly name="card_edit_date" value="<?=$card['DATE_HOLDER']?>">
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <span class="btn btn_reverse" onclick="cardEditHolderGo_<?=$postfix?>($(this))"><i class="icon-ok"></i> Сохранить держателя</span>
+
+            <?if(empty($card['CHANGE_LIMIT_AVAILABLE']) || !Access::allow('clients_card_edit_limits')){?>
+                <span class="btn btn_red fancy_close">Отмена</span>
+            <?}?>
+        </td>
+    </tr>
+</table>
+
     <?if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card_edit_limits')){?>
+        <div class="popup_divider"></div>
+
+<table class="table_form form_card_edit">
     <tr>
         <td class="gray right v_top" width="170">Ограничения по топливу:</td>
         <td>
@@ -66,17 +82,23 @@ $postfix = $card['CARD_ID'];
             </table>
         </td>
     </tr>
-    <?}?>
     <tr>
         <td></td>
         <td>
-            <span class="btn btn_reverse btn_card_edit_go" onclick="cardEditGo_<?=$postfix?>($(this))"><i class="icon-ok"></i> Сохранить</span>
+            <span class="btn btn_reverse" onclick="cardEditGo_<?=$postfix?>($(this))"><i class="icon-ok"></i> Сохранить лимиты</span>
             <span class="btn btn_red fancy_close">Отмена</span>
         </td>
     </tr>
 </table>
+    <?}?>
 
 <script>
+    $(function () {
+        $('[name=card_edit_date]').each(function () {
+            renderDatePicker($(this));
+        });
+    });
+
     var services_<?=$postfix?> = {
         <?foreach($servicesList as $service){?>
         "<?=$service['SERVICE_ID']?>": "<?=$service['FOREIGN_DESC']?>",
@@ -110,7 +132,7 @@ $postfix = $card['CARD_ID'];
             return false;
         }
 
-        var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" /> <button class="btn btn_small btn_red btn_card_edit_del_serviсe">&times;</button></nobr></div>');
+        var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" /> <button class="btn btn_small btn_red btn_card_edit_del_serviсe" onclick="cardEditDelService_<?=$postfix?>($(this))">&times;</button></nobr></div>');
 
         for (var i in services_<?=$postfix?>) {
             tpl.find('select').append('<option value="' + i + '">' + services_<?=$postfix?>[i] + '</option>');
@@ -159,13 +181,45 @@ $postfix = $card['CARD_ID'];
         }
     }
 
-    function cardEditGo_<?=$postfix?>(t)
+    function cardEditHolderGo_<?=$postfix?>(t)
     {
         var form = t.closest('.form_card_edit');
         var params = {
             contract_id : $('[name=contracts_list]').val(),
             card_id     : $('.tab_v.active').attr('tab'),
             holder      : $('[name=card_edit_holder]', form).val(),
+            date        : $('[name=card_edit_date]', form).val(),
+        };
+
+        if(params.date == false){
+            message(0, 'Заполните дату');
+            return;
+        }
+
+        $.post('/clients/card_edit_holder', params, function (data) {
+            if (data.success) {
+                message(1, 'Держатель карты успешно обновлен');
+                $.fancybox.close();
+                cardLoad($('.tab_v.active'), true);
+                $('.tab_v.active div.gray').text(params.holder);
+            } else {
+                message(0, 'Ошибка обновления держателя карты');
+
+                if(data.data){
+                    for(var i in data.data){
+                        message(0, data.data[i].text);
+                    }
+                }
+            }
+        });
+    }
+
+    function cardEditGo_<?=$postfix?>(t)
+    {
+        var form = t.closest('.form_card_edit');
+        var params = {
+            contract_id : $('[name=contracts_list]').val(),
+            card_id     : $('.tab_v.active').attr('tab'),
             limits      : []
         };
 
@@ -200,14 +254,13 @@ $postfix = $card['CARD_ID'];
             return;
         }
 
-        $.post('/clients/card_edit', {params: params}, function (data) {
+        $.post('/clients/card_edit_limits', params, function (data) {
             if (data.success) {
-                message(1, 'Карта успешно обновлена');
+                message(1, 'Лимиты карты успешно обновлена');
                 $.fancybox.close();
                 cardLoad($('.tab_v.active'), true);
-                $('.tab_v.active div.gray').text(params.holder);
             } else {
-                message(0, 'Ошибка обновления карты');
+                message(0, 'Ошибка обновления лимитов карты');
 
                 if(data.data){
                     for(var i in data.data){

@@ -35,7 +35,7 @@
     $(function(){
         dropzone = new Dropzone('.connect_1c_payments', {
             url: "/control/upload_pays",
-            acceptedFiles: '.txt, .json',
+            acceptedFiles: '.txt, .json, .xls, .xlsx',
             addedfile: function () {
                 $('.load_connect1c_payments_btn').prop('disabled', true);
 
@@ -48,11 +48,18 @@
             },
             success: function(file, response)
             {
-                if(response.data && response.data.ROWS){
-                    connect1cPayments_drawTable(response.data.ROWS);
+                if(response.data){
+                    connect1cPayments_drawTable(response.data);
 
                     $('.load_connect1c_payments_btn').prop('disabled', false);
                 }
+            },
+            error : function(file, response) {
+                var grid = $(".connect_1c_payments_jsGrid");
+
+                grid.removeClass(CLASS_LOADING);
+
+                message(0, response);
             }
         });
     });

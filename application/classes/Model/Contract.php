@@ -80,15 +80,14 @@ class Model_Contract extends Model
                 $params['contract_id'] = [(int)$params['contract_id']];
             }
         } else {
-            $params['contract_id'] = [];
+            //ограничение по договорам пользователя
+            $user = User::current();
+
+            if (!empty($user['contracts'][$clientId])) {
+                $params['contract_id'] = $user['contracts'][$clientId];
+            }
         }
 
-        //ограничение по договорам пользователя
-        $user = User::current();
-
-        if (!empty($user['contracts'][$clientId])) {
-            $params['contract_id'] = array_merge($params['contract_id'], $user['contracts'][$clientId]);
-        }
 
         if(!empty($params['contract_id'])){
             $sql->where("contract_id in (".implode(',', $params['contract_id']).")");
@@ -338,14 +337,13 @@ class Model_Contract extends Model
 
 		$db = Oracle::init();
 
-		$sql = "
-			select *
-			from ".Oracle::$prefix."V_WEB_CL_CONTRACTS_PAYS
-			where 1=1
-		";
+		$sql = (new Builder())->select()
+            ->from('V_WEB_CL_CONTRACTS_PAYS')
+            ->orderBy('O_DATE desc')
+        ;
 
 		if(!empty($contractId)){
-			$sql .= " and contract_id = ".Oracle::quote($contractId);
+			$sql->where("contract_id = ".Oracle::quote($contractId));
 		}
 
         if (!empty($params['order_date'])) {
@@ -353,22 +351,22 @@ class Model_Contract extends Model
                 $params['order_date'] = [$params['order_date']];
             }
 
-		    foreach ($params['order_date'] as &$date) {
-		        $date = ' order_date = '.Oracle::toDate($date);
-            }
+            $params['order_date'] = array_unique($params['order_date']);
 
-            $sql .= ' and ( '.implode(' or ', $params['order_date'] ).' ) ';
+            $sql->whereStart();
+		    foreach ($params['order_date'] as $date) {
+		        $sql->whereOr("order_date = '".Oracle::toDate($date, 'd.m.Y G:i:s')."'");
+            }
+            $sql->whereEnd();
         }
 
         if(!empty($params['order_num'])) {
-            $sql .= " and order_num = ".Oracle::quote($params['order_num']);
+            $sql->where("order_num = ".Oracle::quote($params['order_num']));
         }
 
         if(!empty($params['sumpay'])) {
-            $sql .= " and sumpay = ".Oracle::toFloat($params['sumpay']);
+            $sql->where("sumpay = ".Oracle::toFloat($params['sumpay']));
         }
-
-		$sql .= " order by O_DATE desc";
 
         if(!empty($params['pagination'])) {
 			return $db->pagination($sql, $params);
@@ -652,5 +650,113 @@ class Model_Contract extends Model
         ;
 
         return Oracle::init()->row($sql);
+    }
+
+    /**
+     * редактирование лимитов
+     *
+     * @param $contractId
+     * @param $limits
+     */
+    public static function editLimits($contractId, $limits)
+    {
+        if(empty($contractId)){
+            return false;
+        }
+
+        $user = User::current();
+
+        $db = Oracle::init();
+
+        /*
+        S1,S2,S3:P1:T1:V1:PCS1;
+        где
+        S1,...,Sn - ID услуг в группе
+        P1 - параметр лимита (1 - в литрах, 2 в валюте)
+        T1 - тип лимита 4 - установлен лимит, 5 - в случае, если стоит галочка "Неограниченно"
+        V1 - размер лимита (если стоит галочка "Неограниченно" передавать 0)
+        PCS - лимит на количество транзакций, пока всегда 0
+         */
+        $limitsArray = [];
+
+        foreach($limits as $group => $limit){
+
+            $limitsArray[] =
+                implode(',', $limit['services']) . ':' .
+                $limit['param'] . ':' .
+                ($limit['unlim'] ? 5 : 4) . ':' .
+                str_replace(",", ".", (int)$limit['value']) . ':' .
+                0 . ';'
+            ;
+        }
+
+        if (empty($limitsArray)) {
+            $limitsArray = [-1];
+        }
+
+        $data = [
+            'p_contract_id'		=> $contractId,
+            'p_limit_array'		=> [$limitsArray, SQLT_CHR],
+            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = $db->procedure('client_contract_service_limit', $data);
+
+        if(!empty($res)){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * получаем список лимитов по договору
+     *
+     * @param $contractId
+     */
+    public static function getLimits($contractId)
+    {
+        if (empty($contractId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_CL_CTR_SERV_RESTRIC t')
+            ->where('t.contract_id = ' . (int)$contractId)
+        ;
+
+        return Oracle::init()->tree($sql, 'LIMIT_GROUP');
+    }
+
+    /**
+     * редактируем конкретный лимит
+     *
+     * @param $contractId
+     * @param $groupId
+     * @param $amount
+     */
+    public static function editLimit($contractId, $groupId, $amount)
+    {
+        if (empty($contractId) || empty($groupId)) {
+            return false;
+        }
+
+        $user = User::current();
+
+        $data = [
+            'p_contract_id'		=> $contractId,
+            'p_group_id'		=> $groupId,
+            'p_value'		    => $amount,
+            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = Oracle::init()->procedure('client_contract_service_add', $data);
+
+        if($res == Oracle::CODE_SUCCESS){
+            return true;
+        }
+        return false;
     }
 }

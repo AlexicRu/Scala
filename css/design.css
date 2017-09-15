@@ -1,42 +1,56 @@
 .custom_view_glopro .logo a,
+.custom_view_cleveroil .logo a,
 .custom_view_scala .logo a {
   background-image: url(/img/GloPro-logo-pack/GloPro-main-logo.svg);
   width: 140px;
 }
 .custom_view_glopro aside,
+.custom_view_cleveroil aside,
 .custom_view_scala aside {
   background: #0e1d29;
 }
 .custom_view_glopro aside > a,
+.custom_view_cleveroil aside > a,
 .custom_view_scala aside > a,
 .custom_view_glopro aside .sub_menu_title,
+.custom_view_cleveroil aside .sub_menu_title,
 .custom_view_scala aside .sub_menu_title {
   color: white;
 }
 .custom_view_glopro aside > a:hover,
+.custom_view_cleveroil aside > a:hover,
 .custom_view_scala aside > a:hover,
 .custom_view_glopro aside .sub_menu_title:hover,
+.custom_view_cleveroil aside .sub_menu_title:hover,
 .custom_view_scala aside .sub_menu_title:hover,
 .custom_view_glopro aside > a.act,
+.custom_view_cleveroil aside > a.act,
 .custom_view_scala aside > a.act,
 .custom_view_glopro aside .sub_menu_title.act,
+.custom_view_cleveroil aside .sub_menu_title.act,
 .custom_view_scala aside .sub_menu_title.act {
   background: #0e86ad;
   color: white;
 }
 .custom_view_glopro aside > a:hover span,
+.custom_view_cleveroil aside > a:hover span,
 .custom_view_scala aside > a:hover span,
 .custom_view_glopro aside .sub_menu_title:hover span,
+.custom_view_cleveroil aside .sub_menu_title:hover span,
 .custom_view_scala aside .sub_menu_title:hover span,
 .custom_view_glopro aside > a.act span,
+.custom_view_cleveroil aside > a.act span,
 .custom_view_scala aside > a.act span,
 .custom_view_glopro aside .sub_menu_title.act span,
+.custom_view_cleveroil aside .sub_menu_title.act span,
 .custom_view_scala aside .sub_menu_title.act span {
   color: white;
 }
 .custom_view_glopro aside > a [class^="icon-"],
+.custom_view_cleveroil aside > a [class^="icon-"],
 .custom_view_scala aside > a [class^="icon-"],
 .custom_view_glopro aside .sub_menu_title [class^="icon-"],
+.custom_view_cleveroil aside .sub_menu_title [class^="icon-"],
 .custom_view_scala aside .sub_menu_title [class^="icon-"] {
   color: rgba(255, 255, 255, 0.5);
 }
@@ -283,4 +297,7 @@
 .custom_view_alberit .sub_menu_items a:hover,
 .custom_view_alberit .sub_menu_items a.act {
   color: rgba(255, 255, 255, 0.5);
+}
+.custom_view_cleveroil .logo a {
+  background-image: url(/img/projects/LogoClever.jpg);
 }

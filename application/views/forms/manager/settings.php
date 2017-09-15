@@ -78,7 +78,19 @@ if(empty($changeRole)){
                 <tr class="form_attention">
                     <td class="gray right" width="<?=$width?>">Логин:</td>
                     <td>
-                        <?=$manager['LOGIN']?>
+                        <?if (Access::allow('clients_edit_login')) {?>
+                            <div toggle_block="edit_login">
+                                <span class="login_value"><?=$manager['LOGIN']?></span>
+                                <span class="btn btn_small" toggle="edit_login"><i class="icon icon-pen"></i></span>
+                            </div>
+                            <div toggle_block="edit_login" style="display: none">
+                                <input type="text" value="<?=$manager['LOGIN']?>" name="edit_login" class="input_big input_mini">
+                                <span class="btn btn_small btn_green" onclick="editLogin($(this));"><i class="icon icon-ok"></i></span>
+                                <span class="btn btn_small btn_red" toggle="edit_login"><i class="icon icon-cancel"></i></span>
+                            </div>
+                        <?} else {?>
+                            <?=$manager['LOGIN']?>
+                        <?}?>
                     </td>
                 </tr>
                 <tr class="form_attention">
@@ -110,7 +122,7 @@ if(empty($changeRole)){
             return false;
         }
 
-        $.post('/managers/settings', form.serialize(), function (data) {
+        $.post('/managers/settings', form.find(':input[name!="edit_login"]').serialize(), function (data) {
            if(data.success){
                <?if($reload){?>
                window.location.reload();
@@ -123,5 +135,34 @@ if(empty($changeRole)){
         });
 
         return false;
+    }
+
+    function editLogin(btn)
+    {
+        var td = btn.closest('td');
+        var txt = td.find('.login_value');
+        var input = td.find('[name=edit_login]');
+        var form = btn.closest('form');
+        var managerId = form.find('[name=manager_settings_id]').val();
+
+        if(input.val() == ''){
+            message(0, 'Логин не должен быть пустым');
+            return false;
+        }
+
+        var params = {
+            login: input.val(),
+            manager_id: managerId
+        };
+
+        $.post('/clients/edit_login', params, function (data) {
+            if(data.success){
+                message(1, 'Логин обновлен');
+                txt.text(data.data.login)
+                td.find('[toggle=edit_login]:first').click();
+            }else{
+                message(0, 'Ошибка. ' + data.data.error);
+            }
+        });
     }
 </script>

@@ -40,29 +40,34 @@ class Listing
      * @param $params
      * @return array|bool|int
      */
-    public static function getServices($params)
+    public static function getServices($params = [])
     {
         $db = Oracle::init();
 
         $user = Auth::instance()->get_user();
 
-        $description = 'LONG_DESC';
-        if(array_key_exists('TUBE_ID', $params)){
-            $description = 'FOREIGN_DESC';
+        if (!empty($params['description'])) {
+            $description = $params['description'];
+        }else{
+            $description = 'LONG_DESC';
+            if (array_key_exists('TUBE_ID', $params)) {
+                $description = 'FOREIGN_DESC';
+            }
         }
 
         $sql = "select distinct t.SERVICE_ID, t.{$description} from ".Oracle::$prefix."V_WEB_SERVICE_LIST t where t.agent_id = ".$user['AGENT_ID'];
 
-        if(!empty($params['search'])){
-            $sql .= " and upper(t.long_desc) like ".mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
-        }
-
         if(!empty($params['ids'])){
             $sql .= " and t.SERVICE_ID in (".implode(',', $params['ids']).")";
-        }
+        } else {
 
-        if(!empty($params['TUBE_ID'])){
-            $sql .= " and t.TUBE_ID = ".intval($params['TUBE_ID']);
+            if (!empty($params['search'])) {
+                $sql .= " and upper(t.long_desc) like " . mb_strtoupper(Oracle::quote('%' . $params['search'] . '%'));
+            }
+
+            if (!empty($params['TUBE_ID'])) {
+                $sql .= " and t.TUBE_ID = " . intval($params['TUBE_ID']);
+            }
         }
 
         $sql .= " order by t.{$description}";

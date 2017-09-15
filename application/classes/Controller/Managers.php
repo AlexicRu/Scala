@@ -69,13 +69,21 @@ class Controller_Managers extends Controller_Common {
     public function action_load_clients()
     {
         $managerId = $this->request->post('manager_id');
+        $params = $this->request->post('params');
 
-        $clients = Model_Client::getClientsList(null, ['manager_id' => $managerId]);
+        $search = !empty($params['search']) ? $params['search'] : null;
 
-        if($clients === false){
-            $this->jsonResult(0);
-        }
-        $this->jsonResult(1, $clients);
+        $clients = Model_Client::getClientsList($search, ['manager_id' => $managerId]);
+
+        $contractsTree = Model_Manager::getContractsTree($managerId);
+
+        $html = View::factory('ajax/clients/contract/clients')
+            ->bind('clients', $clients)
+            ->bind('managerId', $managerId)
+            ->bind('contractsTree', $contractsTree)
+        ;
+
+        $this->html($html);
     }
 
     /**
@@ -134,5 +142,22 @@ class Controller_Managers extends Controller_Common {
         $clients = Model_Manager::getClientsList($params);
 
         $this->jsonResult(true, $clients);
+    }
+
+    /**
+     * редактируем доступы менеджера к контрактам конкретного клиента
+     */
+    public function action_edit_manager_clients_contract_binds()
+    {
+        $clientId = $this->request->post('client_id');
+        $managerId = $this->request->post('manager_id');
+        $binds = $this->request->post('binds');
+
+        $result = Model_Manager::editContractBinds($managerId, $clientId, $binds);
+
+        if($result == Oracle::CODE_SUCCESS){
+            $this->jsonResult(true);
+        }
+        $this->jsonResult(false, $result);
     }
 }

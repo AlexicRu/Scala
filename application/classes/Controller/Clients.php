@@ -122,17 +122,30 @@ class Controller_Clients extends Controller_Common {
 				break;
 			case 'account':
 				$turnover = Model_Contract::getTurnover($contractId);
+				$contractLimits = Model_Contract::getLimits($contractId);
+                Listing::$limit = 999;
+                $servicesList = Listing::getServices(['description' => 'LONG_DESC']);
 
 				$popupContractPaymentAdd = Common::popupForm('Добавление нового платежа', 'contract/payment_add');
                 $popupContractBillAdd = Common::popupForm('Выставить счет', 'contract/bill_add');
                 $popupContractBillPrint = Common::popupForm('Печать счетов', 'contract/bill_print');
+                $popupContractLimitIncrease = Common::popupForm('Изменение лимита', 'contract/increase_limit');
+
+                $popupContractLimitsEdit = Common::popupForm('Редактирование лимитов договора', 'contract/limits_edit', [
+                    'contractLimits' 	=> $contractLimits,
+                    'servicesList'		=> $servicesList
+                ]);
 
 				$content = View::factory('ajax/clients/contract/account')
                     ->bind('balance', $balance)
 					->bind('turnover', $turnover)
+					->bind('contractLimits', $contractLimits)
+					->bind('servicesList', $servicesList)
 					->bind('popupContractPaymentAdd', $popupContractPaymentAdd)
                     ->bind('popupContractBillAdd', $popupContractBillAdd)
                     ->bind('popupContractBillPrint', $popupContractBillPrint)
+                    ->bind('popupContractLimitsEdit', $popupContractLimitsEdit)
+                    ->bind('popupContractLimitIncrease', $popupContractLimitIncrease)
                 ;
 				break;
 			case 'reports':
@@ -263,25 +276,35 @@ class Controller_Clients extends Controller_Common {
 
 		$this->jsonResult(false, $error);
 	}
+    /**
+     * редактирование лимитов карты
+     */
+    public function action_card_edit_limits()
+    {
+        $cardId     = $this->request->post('card_id');
+        $contractId = $this->request->post('contract_id');
+        $limits     = $this->request->post('limits');
+
+        list($result, $error) = Model_Card::editCardLimits($cardId, $contractId, $limits);
+
+        $this->jsonResult($result, $error);
+    }
 
 	/**
 	 * редактирование карты
 	 */
-	public function action_card_edit()
+	public function action_card_edit_holder()
 	{
-		$params = $this->request->post('params');
+        $cardId     = $this->request->post('card_id');
+        $contractId = $this->request->post('contract_id');
+        $holder     = $this->request->post('holder');
+        $date       = $this->request->post('date');
 
-		$result = Model_Card::editCard($params, Model_Card::CARD_ACTION_EDIT);
+		$result = Model_Card::editCardHolder($cardId, $contractId, $holder, $date);
 
 		if(empty($result)){
 			$this->jsonResult(false);
 		}
-
-		$messages = Messages::get();
-
-        if(!empty($messages)){
-            $this->jsonResult(false, $messages);
-        }
 
 		$this->jsonResult(true, $result);
 	}
@@ -555,5 +578,59 @@ class Controller_Clients extends Controller_Common {
         }
 
         $this->jsonResult(true, ['items' => $cards, 'more' => $more]);
+    }
+
+    /**
+     * редактируем логин пользователя
+     */
+    public function action_edit_login()
+    {
+        $login = $this->request->post('login');
+        $managerId = $this->request->post('manager_id');
+
+        $result = Model_Manager::editLogin($managerId, $login);
+
+        if (!empty($result['error'])) {
+            $this->jsonResult(false, $result);
+        }
+        $this->jsonResult(true, $result);
+    }
+
+    /**
+     * редактирование лимитов договора
+     */
+    public function action_contract_limits_edit()
+    {
+        $limits = $this->request->post('limits');
+        $contractId = $this->request->post('contract_id');
+
+        $result = Model_Contract::editLimits($contractId, $limits);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $messages = Messages::get();
+
+        if(!empty($messages)){
+            $this->jsonResult(false, $messages);
+        }
+
+        $this->jsonResult(true, $result);
+    }
+
+    public function action_contract_increase_limit()
+    {
+        $amount = $this->request->post('amount');
+        $groupId = $this->request->post('group_id');
+        $contractId = $this->request->post('contract_id');
+
+        $result = Model_Contract::editLimit($contractId, $groupId, $amount);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, $result);
     }
 }

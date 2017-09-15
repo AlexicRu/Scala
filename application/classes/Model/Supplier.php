@@ -17,10 +17,14 @@ class Model_Supplier extends Model
 
         $user = User::current();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_SUPPLIERS_LIST t where t.agent_id = ".$user['AGENT_ID'];
+        $sql = (new Builder())->select()
+            ->from('V_WEB_SUPPLIERS_LIST t')
+            ->where('t.agent_id = '.$user['AGENT_ID'])
+            ->orderBy('t.SUPPLIER_NAME')
+        ;
 
         if (!empty($params['supplier_id'])) {
-            $sql .= ' and t.id = '.Oracle::toInt($params['supplier_id']);
+            $sql->where('t.id = '.Oracle::toInt($params['supplier_id']));
         }
 
         if (!empty($params['pagination'])) {

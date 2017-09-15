@@ -106,9 +106,41 @@ return [
         'suppliers_agreement_edit' => [
             Access::ROLE_ADMIN,
         ],
+        'clients_edit_login' => [
+            Access::ROLE_ADMIN,
+        ],
+        'managers_edit_manager_clients_contract_binds' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
+        'references_index' => [
+            Access::ROLE_ADMIN
+        ],
+        'references_sources' => [
+            Access::ROLE_ADMIN
+        ],
+        'references_addresses' => [
+            Access::ROLE_ROOT
+        ],
+        'references_currency' => [
+            Access::ROLE_ROOT
+        ],
+        'references_converter' => [
+            Access::ROLE_ROOT
+        ],
+        'clients_contract_limits_edit' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_MANAGER,
+        ],
+        'control_firms_groups' => [
+            Access::ROLE_ROOT
+        ],
         // custom
         'view_contract_balances' => [
-            Access::ROLE_ROOT
+			Access::ROLE_SUPERVISOR,
+            Access::ROLE_ADMIN,
+			Access::ROLE_MANAGER,
         ],
         'view_penalties' => [
             Access::ROLE_ROOT,
@@ -138,6 +170,10 @@ return [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
             Access::ROLE_MANAGER_SALE_SUPPORT
+        ],
+        'show_supplier_contract_group_dots' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
         ],
         'root' => [
             Access::ROLE_ROOT

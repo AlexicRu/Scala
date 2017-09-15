@@ -35,7 +35,10 @@ function renderElements()
 
 function renderCheckbox(check)
 {
-    if(check.data('rendered')){
+    if(
+        check.data('rendered') ||
+        check.closest('.jsgrid-filter-row').length
+    ){
         return false;
     }
 
@@ -186,7 +189,6 @@ var ajaxComboBoxMulti;
 function renderComboBoxMulti(combo, params)
 {
     if (params && params != '') {
-        params = JSON.parse(params);
 
         for (var i in params) {
             combo.data(i, params[i]);
@@ -198,6 +200,7 @@ function renderComboBoxMulti(combo, params)
     }
 
     combo.data('rendered', true);
+    combo.attr('placeholder', 'Поиск...');
 
     var url = combo.attr('url');
 
@@ -210,7 +213,7 @@ function renderComboBoxMulti(combo, params)
     var wrapper = combo.closest('.combobox_multi_wrapper');
 
     outer.append('<div class="combobox_multi_result" />');
-    wrapper.append('<div class="combobox_multi_selected" />');
+    wrapper.prepend('<div class="combobox_multi_selected" />');
 
     var result = outer.find('.combobox_multi_result');
     var selected = wrapper.find('.combobox_multi_selected');
@@ -218,8 +221,6 @@ function renderComboBoxMulti(combo, params)
     wrapper.append('<input type="hidden" name="combobox_multi_value">');
 
     var hiddenValue = wrapper.find('[name=combobox_multi_value]');
-
-    var preLoad = true;
 
     combo.on('keyup', function () {
         if(params && params['depend']){
@@ -231,12 +232,6 @@ function renderComboBoxMulti(combo, params)
         var val = t.val();
 
         result.hide().html('');
-
-        if(val.length < 1 && preLoad == false){
-            return;
-        }
-
-        preLoad= false;
 
         if(ajaxComboBoxMulti){
             ajaxComboBoxMulti.abort();
@@ -283,10 +278,7 @@ function renderComboBoxMulti(combo, params)
             ajaxComboBoxMulti = false;
         });
     }).on('focus', function () {
-        if (preLoad || hiddenValue.val() == '') {
-            preLoad = true;
-            combo.trigger('keyup');
-        }
+        combo.trigger('keyup');
     });
 }
 
@@ -373,14 +365,13 @@ function renderComboBox(combo, params)
     }
 
     if (params && params != '') {
-        params = JSON.parse(params);
-
         for (var i in params) {
             combo.data(i, params[i]);
         }
     }
 
     combo.data('rendered', true);
+    combo.attr('placeholder', 'Поиск...');
 
     var url = combo.attr('url');
 
@@ -396,25 +387,21 @@ function renderComboBox(combo, params)
 
     var hiddenValue = outer.find('[name=combobox_value]');
 
-    var preLoad = true;
-
     combo.on('keyup', function () {
         if(params && params['depend']){
             var dependCombo = $('[name=' + params['depend'] + ']');
-            setComboboxValue(dependCombo, false);
+
+            if (dependCombo.hasClass('combobox_multi')) {
+                resetComboboxMultiValue(dependCombo);
+            } else {
+                setComboboxValue(dependCombo, false);
+            }
         }
 
         var t = $(this);
         var val = t.val();
 
         result.hide().html('');
-
-        if(val.length < 1 && preLoad == false){
-            hiddenValue.val('');
-            return;
-        }
-
-        preLoad= false;
 
         if(ajaxComboBox){
             ajaxComboBox.abort();
@@ -461,10 +448,7 @@ function renderComboBox(combo, params)
             ajaxComboBox = false;
         });
     }).on('focus', function () {
-        if (preLoad || hiddenValue.val() == '') {
-            preLoad = true;
-            combo.trigger('keyup');
-        }
+        combo.trigger('keyup');
     }).on('blur', function () {
         var t = $(this);
 
@@ -544,6 +528,17 @@ function getComboboxMultiValue(combo)
     return hiddenArray;
 }
 
+function resetComboboxMultiValue(combo)
+{
+    var wrapper = combo.closest('.combobox_multi_wrapper');
+    var selected = wrapper.find('.combobox_multi_selected');
+    var hiddenValue = wrapper.find('[name=combobox_multi_value]');
+
+    selected.empty();
+
+    hiddenValue.val('');
+}
+
 function setComboboxMultiValue(combo, value)
 {
     var wrapper = combo.closest('.combobox_multi_wrapper');
@@ -558,8 +553,8 @@ function setComboboxMultiValue(combo, value)
 
         $.post(combo.attr('url'), { ids:list[i] }, function(data){
             if(data.success){
-                for(var i in data.data){
-                    renderComboBoxMultiSelectedItem(data.data[0].value, data.data[0].name, wrapper);
+                for(var j in data.data){
+                    renderComboBoxMultiSelectedItem(data.data[j].value, data.data[j].name, wrapper);
                 }
             }
         });

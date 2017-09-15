@@ -255,6 +255,10 @@ class Model_Report extends Model
                     foreach($params['additional'] as $additional){
                         if($additional['name'] == $param['PARAM_NAME']){
 
+                            if (!isset($additional['value'])) {
+                                continue;
+                            }
+
                             if (is_array($additional['value'])) {
                                 $additional['value'] = array_filter($additional['value']);
                                 if(!empty($additional['value'])){

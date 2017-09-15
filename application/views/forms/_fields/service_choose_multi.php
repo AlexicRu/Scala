@@ -7,7 +7,7 @@
         $('[name=<?=$name?>]').each(function () {
             var t = $(this);
 
-            renderComboBoxMulti(t, '<?=json_encode($params)?>');
+            renderComboBoxMulti(t, <?=json_encode($params)?>);
             setFormFieldValue(t.parent(), '<?=$value?>');
         });
     });

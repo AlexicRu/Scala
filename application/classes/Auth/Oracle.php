@@ -147,7 +147,7 @@ class Auth_Oracle extends Auth {
         $db = Oracle::init();
 
         $user['clients'] = $db->column("select CLIENT_ID from ".Oracle::$prefix."V_WEB_MANAGER_CLIENTS where MANAGER_ID = ".$user['MANAGER_ID'], 'CLIENT_ID');
-        $user['contracts'] = $db->tree("select CLIENT_ID, CONTRACT_ID from ".Oracle::$prefix."v_web_manager_contracts where MANAGER_ID = ".$user['MANAGER_ID'], 'CLIENT_ID', false, 'CONTRACT_ID');
+        $user['contracts'] = Model_Manager::getContractsTree($user['MANAGER_ID']);
 
         parent::complete_login($user);
     }

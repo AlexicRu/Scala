@@ -25,36 +25,71 @@
 
     $(function(){
         var params = {
-            show_all_btn:true
+            show_all_btn:true,
+            no_filter: true
         };
 
         paginationAjax('/administration/transactions_errors', 'ajax_block_administration_transactions_errors', renderAjaxPaginationAdminTransactions, params);
         paginationAjax('/administration/transactions_history', 'ajax_block_administration_transactions_history', renderAjaxPaginationAdminTransactions);
     });
 
-    function renderAjaxPaginationAdminTransactions(data, block)
+    function renderAjaxPaginationAdminTransactionsFilter(data, block, params)
     {
-        var i, j, tr, table;
-
-        if(block.find('table').length == 0) {
-            var scrollBlock = $('<div class="scroll_horizontal"><table class="table table_small" /></div>');
-            block.append(scrollBlock);
-
-            table = block.find('table');
-
+        if(block.find('> table').size() == 0){
             //draw headers
-            for(i in data){
-                tr = $('<tr />');
+            for(var i in data){
 
-                for(j in data[i]){
+                block.append('<table class="table table_small table_fullscreen check_all_block"></table>');
+                block = block.find('table');
+                block.append('<tr />');
+
+                for(var j in data[i]){
                     if(skipColumns.indexOf(j) != -1){
                         continue;
                     }
-                    tr.append('<th>'+ j +'</th>');
+
+                    var value = '';
+                    if (params.filter && params.filter[j]) {
+                        value = params.filter[j];
+                    }
+
+                    block.find('tr').append('<th><input type="text" name="transactions_filter_'+ j +'" placeholder="'+ j +'" class="input_small transaction_filter" onkeypress="filterTransactions(event, $(this))" value="'+value+'"></th>');
+
                 }
 
-                table.append(tr);
                 break;
+            }
+        }
+    }
+
+    function renderAjaxPaginationAdminTransactions(data, block, params)
+    {
+        var i, j, tr, table;
+
+        if (!params.no_filter) {
+            renderAjaxPaginationAdminTransactionsFilter(data, block, params);
+        } else {
+
+            if(block.find('table').length == 0) {
+                var scrollBlock = $('<div class="scroll_horizontal"><table class="table table_small" /></div>');
+                block.append(scrollBlock);
+
+                table = block.find('table');
+
+                //draw headers
+                for(i in data){
+                    tr = $('<tr />');
+
+                    for(j in data[i]){
+                        if(skipColumns.indexOf(j) != -1){
+                            continue;
+                        }
+                        tr.append('<th>'+ j +'</th>');
+                    }
+
+                    table.append(tr);
+                    break;
+                }
             }
         }
 
@@ -77,6 +112,19 @@
         }
     }
 
+    function renderAjaxPaginationAdminTransactionsError(block, params)
+    {
+        renderAjaxPaginationAdminTransactionsFilter([params['filter']], block, params);
+
+        var subBlock = block.find('tbody');
+
+        var tpl = $('<tr>' +
+            '<td colspan="'+Object.keys(params['filter']).length+'" class="center"><i>Данные отсутствуют</i></td>' +
+            '</tr>');
+
+        subBlock.append(tpl);
+    }
+
     function transactionCancelToXls()
     {
         window.open('/administration/transactions_errors?to_xls=1');
@@ -90,5 +138,30 @@
         });
 
         window.open('/administration/transactions_history?to_xls=1&rnum=' + rnum.join(','));
+    }
+
+    function filterTransactions(e, btn)
+    {
+        if (e.keyCode != 13) {
+            return false;
+        }
+
+        var block = btn.closest('.ajax_block_administration_transactions_history_out');
+
+        var params = {
+            filter: {},
+            onError: renderAjaxPaginationAdminTransactionsError
+        };
+
+        block.find('.transaction_filter').each(function(){
+            var t = $(this);
+            var name = t.attr('name').replace('transactions_filter_', '');
+
+            params.filter[name] = t.val();
+        });
+
+        block.empty().addClass('block_loading');
+
+        paginationAjax('/administration/transactions_history', 'ajax_block_administration_transactions_history', renderAjaxPaginationAdminTransactions, params);
     }
 </script>

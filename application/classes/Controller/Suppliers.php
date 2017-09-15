@@ -94,12 +94,13 @@ class Controller_Suppliers extends Controller_Common {
 
         $tab = $this->request->post('tab');
         $contract = Model_Supplier_Contract::get($contractId);
-        $tubes = Model_Supplier_Contract::getTubes();
+        $tubes = Model_Tube::getTubes();
 
         switch($tab) {
             case 'contract':
 
-                $contractServices = reset(array_column(Model_Supplier_Contract::getContractServices($contractId), 'SERVICE_ID'));
+                $contractServices = array_column(Model_Supplier_Contract::getContractServices($contractId), 'SERVICE_ID');
+                $contractServices = reset($contractServices);
                 $contractDotsGroups = array_column(Model_Supplier_Contract::getContractDotsGroups($contractId), 'POS_GROUP_ID');
 
                 $content = View::factory('ajax/suppliers/contract/contract')

@@ -31,7 +31,7 @@ class Controller_Help extends Controller_Common
             'search'        => $this->_search,
             'ids'           => $this->_ids,
             'limit'         => 10,
-            'group_type'    => !empty($this->_params['group_type']) ? $this->_params['group_type'] : Model_Dot::GROUP_TYPE_USER
+            'group_type'    => !empty($this->_params['group_type']) ? $this->_params['group_type'] : false
         ];
         $res = Model_Dot::getGroups($params);
 
@@ -257,7 +257,11 @@ class Controller_Help extends Controller_Common
     {
         $clientId = $this->request->post('client_id');
 
-        if(empty($clientId)){
+        if (!empty($this->_params['client_id'])) {
+            $clientId = $this->_params['client_id'];
+        }
+
+        if(empty($clientId) && empty($this->_ids)){
             $this->jsonResult(false);
         }
 
@@ -265,6 +269,7 @@ class Controller_Help extends Controller_Common
             $clientId,
             [
                 'search' => $this->_search,
+                'contract_id' => $this->_ids,
                 'limit' => 10,
             ]
         );

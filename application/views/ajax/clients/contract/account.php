@@ -12,23 +12,48 @@
 <div class="as_table">
     <div class="col line_inner">
         <?if(Access::allow('view_contract_balances')){?>
-        <b class="f18">Остатки по договору:</b>
-        <br>Без ограничений<br>
-        <?/*<table>
-            <tbody><tr>
-                <td class="gray right" width="160">ДТ:<br>ДТ зимнее:<br>ДТ Евро:</td>
-                <td class="f24 white_block">
-                    985 л.
-                </td>
-            </tr>
-            <tr>
-                <td class="gray right">Бензин АИ-95:</td>
-                <td class="f24 white_block">
-                    150 л.
-                </td>
-            </tr>
-            </tbody></table>*/?>
-        <br>
+            <?if(Access::allow('clients_contract_limits_edit')){?>
+                <div class="fr"><a href="#contract_limits_edit" class="fancy btn btn_green btn_icon"><i class="icon-pen"></i></a></div>
+            <?}?>
+
+            <b class="f18">Остатки по договору:</b>
+
+            <?if (empty($contractLimits)) {?>
+                <br>Без ограничений<br>
+            <?} else {?>
+                <table class="tbl_spacing">
+                    <?foreach($contractLimits as $restrictions){
+                        $restrict = reset($restrictions);
+                        ?>
+                        <tr>
+                            <td class="gray right">
+                                <?foreach($restrictions as $restriction){?>
+                                    <?=$restriction['LONG_DESC']?>:<br>
+                                <?}?>
+                            </td>
+                            <td class="line_inner">
+                                <?if($restrict['INFINITELY']){?>
+                                    <i>Неограничено</i>
+                                <?}else{
+                                    $param = Model_Card::$cardLimitsParams[Model_Card::CARD_LIMIT_PARAM_VOLUME];
+                                    if ($restrict['CURRENCY'] == Model_Contract::CURRENCY_RUR) {
+                                        $param = Model_Card::$cardLimitsParams[Model_Card::CARD_LIMIT_PARAM_RUR];
+                                    }?>
+                                    <b><?=$restrict['REST_LIMIT']?> <?=$param?></b> из <?=$restrict['LIMIT_VALUE']?> <?=$param?>
+                                <?}?>
+                            </td>
+                            <?if(Access::allow('clients_contract_increase_limit')){?>
+                            <td>
+                                <?if(!$restrict['INFINITELY']){?>
+                                    <span class="btn btn_small" onclick="openIncreaseLimitPopup(<?=$restrict['CONTRACT_ID']?>, <?=$restrict['LIMIT_GROUP']?>)">+</span>
+                                <?}?>
+                            </td>
+                            <?}?>
+                        </tr>
+                    <?}?>
+                </table>
+            <?}?>
+            <br>
         <?}?>
 
         <b class="f18">Обороты по договору:</b>
@@ -95,6 +120,12 @@
 <?if(Access::allow('clients_bill_print')){?>
     <?=$popupContractBillPrint?>
 <?}?>
+<?if(Access::allow('view_contract_balances') && Access::allow('clients_contract_limits_edit')){?>
+    <?=$popupContractLimitsEdit?>
+<?}?>
+<?if(Access::allow('clients_contract_increase_limit')){?>
+    <?=$popupContractLimitIncrease?>
+<?}?>
 
 <script>
     $(function(){
@@ -125,4 +156,18 @@
             });
         <?}?>
     });
+
+    <?if(Access::allow('clients_contract_increase_limit')){?>
+    var increaseLimitContractId = 0;
+    var increaseLimitGroupId = 0;
+    function openIncreaseLimitPopup(contractId, groupId)
+    {
+        increaseLimitContractId = contractId;
+        increaseLimitGroupId = groupId;
+
+        $.fancybox('#contract_increase_limit', {
+            padding: [0,0,0,0]
+        });
+    }
+    <?}?>
 </script>

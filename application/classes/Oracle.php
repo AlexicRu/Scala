@@ -183,6 +183,17 @@ class Oracle{
 			return self::CODE_ERROR;
 		}
 
+		//если роль КЛИЕНТ, то процедуры (add|edit) выполнять нельзя
+        $user = User::current();
+
+		if ($user['role'] == Access::ROLE_CLIENT && !in_array($procedure, [
+            'auth_user',
+            'notification_change_status',
+        ])) {
+		    Messages::put('Данной роли разрешен только просмотр', 'info');
+            return self::CODE_ERROR;
+        }
+
 		$keys = [];
 		foreach(array_keys($data) as $key){
 			$keys[] = ':'.$key;
@@ -285,7 +296,7 @@ class Oracle{
 	 */
 	public static function toFloat($number)
 	{
-		return str_replace(',', '.', $number);
+		return str_replace([',', ' ', " "], ['.', '', ""], $number);
 	}
 
     /**
@@ -305,11 +316,15 @@ class Oracle{
      * @param $string
      * @return false|string
      */
-	public static function toDate($string)
+	public static function toDate($string, $format = 'd.m.Y H:i:s')
     {
-        $dateTime = DateTime::createFromFormat('d.m.Y H:i:s', $string);
+        $dateTime = DateTime::createFromFormat($format, $string);
 
-        return "'".$dateTime->format('d.m.Y')."'";
+        if (empty($dateTime)) {
+            return false;
+        }
+
+        return $dateTime->format('d.m.Y');
     }
 
     /**
