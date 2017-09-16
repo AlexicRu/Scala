@@ -74,7 +74,7 @@ class Model_Card extends Model
             if($params['status'] == 'work'){
                 $sql->where('CARD_STATE != '.Model_Card::CARD_STATE_BLOCKED);
             } else {
-                $sql->where('and CARD_STATE = '.Model_Card::CARD_STATE_BLOCKED);
+                $sql->where('CARD_STATE = '.Model_Card::CARD_STATE_BLOCKED);
             }
         }
 
