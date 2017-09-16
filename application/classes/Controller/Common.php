@@ -80,7 +80,6 @@ abstract class Controller_Common extends Controller_Template {
 
         if(!$this->request->is_ajax()) {
             $this->_appendFilesAfter();
-            $this->_checkGlobalMessages();
         }
 
         View::set_global('user', Auth_Oracle::instance()->get_user());
@@ -95,6 +94,10 @@ abstract class Controller_Common extends Controller_Template {
 
         if(Auth::instance()->logged_in()) {
             View::set_global('notices', Model_Message::getList(['status' => Model_Message::MESSAGE_STATUS_NOTREAD]));
+
+            if(!$this->request->is_ajax()) {
+                $this->_checkGlobalMessages();
+            }
         }
 
         $this->template->content = $this->tpl;
