@@ -307,6 +307,8 @@ class Model_Card extends Model
 
         $user = Auth::instance()->get_user();
 
+		$limits = (array)$limits;
+
         if (count($limits) > 9) {
             return [false, 'Изменение лимитов не произошло. Превышен лимит ограничений'];
         }
