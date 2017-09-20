@@ -74,7 +74,7 @@ class Model_Card extends Model
             if($params['status'] == 'work'){
                 $sql->where('CARD_STATE != '.Model_Card::CARD_STATE_BLOCKED);
             } else {
-                $sql->where('and CARD_STATE = '.Model_Card::CARD_STATE_BLOCKED);
+                $sql->where('CARD_STATE = '.Model_Card::CARD_STATE_BLOCKED);
             }
         }
 
@@ -510,7 +510,7 @@ class Model_Card extends Model
         $user = User::current();
 
         $sql = "
-            select * from ".Oracle::$prefix."V_WEB_CARD_GROUPS t where t.agent_id = ".$user['AGENT_ID']
+            select * from ".Oracle::$prefix."V_WEB_CARD_GROUPS t where t.manager_id = ".$user['MANAGER_ID']
         ;
 
         if(!empty($filter['search'])){

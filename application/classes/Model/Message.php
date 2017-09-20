@@ -27,8 +27,8 @@ class Model_Message extends Model
         $sql = (new Builder())->select()
             ->from('V_WEB_NOTIFICATION')
             ->where("manager_id = ".$user['MANAGER_ID'])
-            ->orderBy('date_time desc')
             ->where("note_type = ".$params['note_type'])
+            ->orderBy('date_time desc')
         ;
 
         if(isset($params['status'])){
