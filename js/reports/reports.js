@@ -45,6 +45,9 @@ function generateReport(btn)
             value = field.is(':checked') ? 1 : 0;
         }else if(field.hasClass('combobox_multi')){
             value = getComboboxMultiValue(field);
+            if (value.length == 0) {
+                value = [-1];
+            }
         }else if(field.hasClass('combobox')){
             var dependField = field.attr('depend');
             var skip = false;
@@ -60,6 +63,10 @@ function generateReport(btn)
 
             if(!skip) {
                 value = getComboboxValue(field);
+            }
+
+            if (!value) {
+                value = -1;
             }
         }else{
             value = field.val();

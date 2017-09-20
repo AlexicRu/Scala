@@ -213,7 +213,7 @@ class Model_Report extends Model
 
         if(!empty($params['additional'])){
             foreach ($params['additional'] as $additional){
-                $weight += $additional['value'] ? $additional['weight'] : 0;
+                $weight += !empty($additional['weight']) ? $additional['weight'] : 0;
             }
         }
 

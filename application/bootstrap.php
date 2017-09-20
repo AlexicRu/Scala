@@ -155,7 +155,9 @@ Kohana::modules(array(
 Cookie::$salt = $config['cookie_salt'];
 
 //логирование ошибок
-$sentryClient = new Raven_Client($config['sentry_dsn']);
+$sentryClient = new Raven_Client($config['sentry_dsn'], [
+    'release' => $config['sentry_release']
+]);
 $sentryClient->install();
 
 Cache::$default = 'memcache';
