@@ -213,7 +213,13 @@ class Model_Report extends Model
 
         if(!empty($params['additional'])){
             foreach ($params['additional'] as $additional){
-                $weight += !empty($additional['weight']) ? $additional['weight'] : 0;
+                if (
+                    !empty($additional['value'])
+                    && $additional['value'] != -1
+                    && !(is_array($additional['value']) && count($additional['value']) == 1 && $additional['value'][0] == -1)
+                ) {
+                    $weight += $additional['weight'];
+                }
             }
         }
 
@@ -261,7 +267,7 @@ class Model_Report extends Model
 
                             if (is_array($additional['value'])) {
                                 $additional['value'] = array_filter($additional['value']);
-                                if(!empty($additional['value'])){
+                                if(!in_array(-1, $additional['value'])){
                                     array_unshift($additional['value'], -1); //привет джасперу
                                 }
                             }
