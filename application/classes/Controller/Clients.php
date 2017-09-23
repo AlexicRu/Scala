@@ -197,17 +197,21 @@ class Controller_Clients extends Controller_Common {
         Listing::$limit = 999;
 		$servicesList = Listing::getServices(['TUBE_ID' => $card['TUBE_ID']]);
 
-		$popupCardEdit = Common::popupForm('Редактирование карты', 'card/edit', [
-				'card' 				=> $card,
-				'oilRestrictions' 	=> $oilRestrictions,
-				'servicesList'		=> $servicesList
-		], 'card_edit_'.$cardId);
+		$popupCardHolderEdit = Common::popupForm('Редактирование держателя карты', 'card/edit_holder', [
+            'card' 				=> $card,
+		], 'card_edit_holder_'.$cardId);
+        $popupCardLimitsEdit = Common::popupForm('Редактирование лимитов карты', 'card/edit_limits', [
+            'card' 				=> $card,
+            'oilRestrictions' 	=> $oilRestrictions,
+            'servicesList'		=> $servicesList
+        ], 'card_edit_limits_'.$cardId);
 
         $html = View::factory('ajax/clients/card')
             ->bind('card', $card)
             ->bind('oilRestrictions', $oilRestrictions)
             ->bind('lastFilling', $lastFilling)
-            ->bind('popupCardEdit', $popupCardEdit)
+            ->bind('popupCardHolderEdit', $popupCardHolderEdit)
+            ->bind('popupCardLimitsEdit', $popupCardLimitsEdit)
         ;
 
         $this->html($html);
