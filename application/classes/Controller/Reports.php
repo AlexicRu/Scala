@@ -13,15 +13,7 @@ class Controller_Reports extends Controller_Common {
 	{
         $reportsList = Model_Report::getAvailableReports();
 
-        $reports = [];
-
-        foreach(Model_Report::$reportGroups as $reportGroupId => $reportGroup){
-            foreach($reportsList as $report){
-                if($report['REPORT_GROUP_ID'] == $reportGroupId){
-                    $reports[$reportGroupId][] = $report;
-                }
-            }
-        }
+        $reports = Model_Report::separateBuyGroups($reportsList);
 
         $this->tpl
             ->bind('reports', $reports)

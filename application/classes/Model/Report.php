@@ -18,6 +18,9 @@ class Model_Report extends Model
     const REPORT_CONSTRUCTOR_TYPE_ADDITIONAL = 'additional';
     const REPORT_CONSTRUCTOR_TYPE_FORMAT     = 'format';
 
+    const REPORT_TYPE_DB_ALL = 1;
+    const REPORT_TYPE_DB_CLIENT = 2;
+
     public static $reportTypes = [
         self::REPORT_TYPE_DAILY         => 'kf/kf_client_total_detail',
         self::REPORT_TYPE_BALANCE_SHEET => 'kf/kf_manager_osv',
@@ -143,18 +146,23 @@ class Model_Report extends Model
     /**
      * получаем список доступных отчетов дл менеджера
      */
-    public static function getAvailableReports()
+    public static function getAvailableReports($params = [])
     {
         $db = Oracle::init();
 
-        $user = Auth::instance()->get_user();
+        $user = User::current();
 
-        $sql = "select *
-            from ".Oracle::$prefix."V_WEB_REPORTS_AVAILABLE t 
-            where t.agent_id in (0, {$user['AGENT_ID']}) 
-            and t.role_id in (0, {$user['role']})
-            and t.manager_id in (0, {$user['MANAGER_ID']})
-        ";
+        if (empty($params['report_type_id'])) {
+            $params['report_type_id'] = self::REPORT_TYPE_DB_ALL;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_REPORTS_AVAILABLE t')
+            ->where("t.agent_id in (0, {$user['AGENT_ID']})")
+            ->where("t.role_id in (0, {$user['role']})")
+            ->where("t.manager_id in (0, {$user['MANAGER_ID']})")
+            ->where("t.report_type_id in (0, {$params['report_type_id']})")
+        ;
 
 		$reports = $db->query($sql);
 
@@ -282,5 +290,30 @@ class Model_Report extends Model
         }
 
         return $settings;
+    }
+
+    /**
+     * разбиваем отчеты по группам
+     *
+     * @param $reportsList
+     * @return array
+     */
+    public static function separateBuyGroups($reportsList)
+    {
+        $reports = [];
+
+        if (empty($reportsList)) {
+            return $reports;
+        }
+
+        foreach(Model_Report::$reportGroups as $reportGroupId => $reportGroup){
+            foreach($reportsList as $report){
+                if($report['REPORT_GROUP_ID'] == $reportGroupId){
+                    $reports[$reportGroupId][] = $report;
+                }
+            }
+        }
+
+        return $reports;
     }
 }

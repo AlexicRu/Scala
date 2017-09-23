@@ -149,7 +149,15 @@ class Controller_Clients extends Controller_Common {
                 ;
 				break;
 			case 'reports':
-				$content = View::factory('ajax/clients/contract/reports');
+                $reportsList = Model_Report::getAvailableReports([
+                    'report_type_id' => Model_Report::REPORT_TYPE_DB_CLIENT
+                ]);
+
+                $reports = Model_Report::separateBuyGroups($reportsList);
+
+				$content = View::factory('ajax/clients/contract/reports')
+                    ->bind('reports', $reports)
+                ;
 				break;
 		}
 
