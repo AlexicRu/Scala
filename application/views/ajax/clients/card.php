@@ -31,7 +31,9 @@ $user = Auth::instance()->get_user();
 
 <div class="fr">
     <?if(Access::allow('clients_card_edit')){?>
-        <a href="#card_edit_limits_<?=$card['CARD_ID']?>" class="fancy btn btn_icon"><i class="icon-pen"></i></a>
+        <?if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card_edit_limits')){?>
+            <a href="#card_edit_limits_<?=$card['CARD_ID']?>" class="fancy btn btn_icon"><i class="icon-pen"></i></a>
+        <?}?>
     <?}?>
 </div>
 <b class="f18">Ограничения по топливу:</b>
