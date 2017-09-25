@@ -311,8 +311,9 @@ class Controller_Clients extends Controller_Common {
         $contractId = $this->request->post('contract_id');
         $holder     = $this->request->post('holder');
         $date       = $this->request->post('date');
+        $comment    = $this->request->post('comment');
 
-		$result = Model_Card::editCardHolder($cardId, $contractId, $holder, $date);
+		$result = Model_Card::editCardHolder($cardId, $contractId, $holder, $date, $comment);
 
 		if(empty($result)){
 			$this->jsonResult(false);

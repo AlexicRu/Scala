@@ -740,9 +740,10 @@ class Model_Card extends Model
      * @param $contractId
      * @param $holder
      * @param $date
+     * @param $comment
      * @return bool
      */
-    public static function editCardHolder($cardId, $contractId, $holder, $date)
+    public static function editCardHolder($cardId, $contractId, $holder, $date = false, $comment = '')
     {
         if (empty($cardId) || empty($contractId)) {
             return false;
@@ -753,12 +754,13 @@ class Model_Card extends Model
         $db = Oracle::init();
 
         $data = [
-            'p_card_id'     => $cardId,
-            'p_contract_id' => $contractId,
-            'p_new_holder'  => $holder ?: '',
-            'p_date_from'   => $date ?: date('d.m.Y'),
-            'p_manager_id'  => $user['MANAGER_ID'],
-            'p_error_code' 	=> 'out',
+            'p_card_id'         => $cardId,
+            'p_contract_id'     => $contractId,
+            'p_new_holder'      => $holder ?: '',
+            'p_card_comment'    => $comment,
+            'p_date_from'       => $date ?: date('d.m.Y'),
+            'p_manager_id'      => $user['MANAGER_ID'],
+            'p_error_code' 	    => 'out',
         ];
 
         $result = $db->procedure('card_change_holder', $data);

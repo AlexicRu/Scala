@@ -9,15 +9,21 @@ $postfix = $card['CARD_ID'];
         </td>
     </tr>
     <tr>
-        <td class="gray right">Дата:</td>
+        <td class="gray right">Держатель с:</td>
         <td>
             <input type="text" class="input_big datepicker" readonly name="card_edit_date" value="<?=$card['DATE_HOLDER']?>">
         </td>
     </tr>
     <tr>
+        <td class="gray right">Комментарий:</td>
+        <td>
+            <textarea name="card_edit_holder_comment" style="width: 100%"><?=$card['CARD_COMMENT']?></textarea>
+        </td>
+    </tr>
+    <tr>
         <td></td>
         <td>
-            <span class="btn btn_reverse" onclick="cardEditHolderGo_<?=$postfix?>($(this))"><i class="icon-ok"></i> Сохранить держателя</span>
+            <span class="btn btn_reverse" onclick="cardEditHolderGo_<?=$postfix?>($(this))"><i class="icon-ok"></i> Сохранить</span>
 
             <?if(empty($card['CHANGE_LIMIT_AVAILABLE']) || !Access::allow('clients_card_edit_limits')){?>
                 <span class="btn btn_red fancy_close">Отмена</span>
@@ -41,6 +47,7 @@ $postfix = $card['CARD_ID'];
             card_id     : $('.tab_v.active').attr('tab'),
             holder      : $('[name=card_edit_holder]', form).val(),
             date        : $('[name=card_edit_date]', form).val(),
+            comment     : $('[name=card_edit_holder_comment]', form).val(),
         };
 
         if(params.date == false){
