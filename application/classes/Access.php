@@ -22,6 +22,7 @@ class Access
         self::ROLE_SUPERVISOR           => 'Главный менеджер',
         self::ROLE_USER                 => 'Клиент',
         self::ROLE_USER_SECOND          => 'Клиент (без редактирования лимитов)',
+        self::ROLE_CLIENT               => 'Клиент (только просмотр)',
     ];
 
     public static $clientRoles = [
