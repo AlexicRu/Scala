@@ -44,6 +44,10 @@ class Model_Client extends Model
             ;
         }
 
+        if(!empty($params['ids'])){
+            $sql->where('v.client_id in ('.implode(',', $params['ids']).')');
+        }
+
         if(!empty($params['limit'])){
             $sql->limit($params['limit']);
         }

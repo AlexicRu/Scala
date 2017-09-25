@@ -20,17 +20,13 @@
                 <tr>
                     <td class="gray right">В справочнике</td>
                     <td>
-                        <select name="add_service_in_service">
-                            <?foreach($servicesList as $service) {?>
-                                <option value="<?=$service['SERVICE_ID']?>"><?=$service['LONG_DESC']?></option>
-                            <?}?>
-                        </select>
+                        <?=Common::buildFormField('service_choose_single', 'add_service_in_service')?>
                     </td>
                 </tr>
                 <tr>
                     <td class="gray right">В источнике</td>
                     <td>
-                        <input type="text" name="add_service_in_source">
+                        <input type="text" name="add_service_in_source" class="input_wide">
                     </td>
                 </tr>
                 <tr>
@@ -63,11 +59,11 @@
 
         var params = {
             'tube_id':    $('.sources_list').val(),
-            'service_id': $('[name=add_service_in_service]').val(),
+            'service_id': getComboboxValue($('[name=add_service_in_service].combobox')),
             'name':       $('[name=add_service_in_source]').val(),
         };
 
-        if (params.service_id == '' || params.name == '') {
+        if (params.service_id == '' || params.name == '' || params.tube_id == '') {
             message('error', 'Заполните все поля');
             return false;
         }
@@ -88,6 +84,12 @@
         var block = $('services_list');
 
         block.addClass(CLASS_LOADING);
+
+        if (!source) {
+            block.removeClass(CLASS_LOADING);
+            message('error', 'Список услуг пуст');
+            return false;
+        }
 
         $.post('/references/service_list_load', {tube_id: source}, function (data) {
             if (data.success) {

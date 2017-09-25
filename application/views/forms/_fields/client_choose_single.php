@@ -7,7 +7,9 @@
 <script>
     $(function () {
         $('[name=<?=$name?>]').each(function () {
-            renderComboBox($(this));
+            var t = $(this);
+            renderComboBox(t, <?=json_encode($params)?>);
+            setFormFieldValue(t.parent(), '<?=$value?>');
         });
     });
 </script>

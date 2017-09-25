@@ -242,12 +242,13 @@ class Model_Contract extends Model
             'p_invoice_period_type' 	=> $params['settings']['INVOICE_PERIOD_TYPE'],
             'p_invoice_period_value' 	=> $params['settings']['INVOICE_PERIOD_VALUE'],
             'p_goods_reciever' 	        => !empty($params['settings']['GOODS_RECIEVER']) ? $params['settings']['GOODS_RECIEVER'] : null,
+            'p_contract_comment' 	    => !empty($params['settings']['CONTRACT_COMMENT']) ? $params['settings']['CONTRACT_COMMENT'] : null,
             'p_manager_id' 		        => $user['MANAGER_ID'],
             'p_error_code' 		        => 'out',
         ];
 
 		$res = $db->procedure('client_contract_edit', $data);
-		$res1 = $db->procedure('client_contract_settings_edit', $data1);
+		$res1 = $db->procedure('client_contract_settings_edit', $data1, true);
 
 		if(empty($res) || empty($res1)){
 			return true;
