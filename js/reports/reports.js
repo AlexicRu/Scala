@@ -75,6 +75,10 @@ function generateReport(btn)
         params.additional.push({name: name, value: value, weight: field.attr('weight')});
     });
 
+    if ($('[name=fix_contract]').length) {
+        params.additional.push({name: 'contract_single_choose', value: $('.contracts_list').val(), weight: 0});
+    }
+
     window.open('/reports/generate/?' + $.param(params));
 
     isGenerating = false;
