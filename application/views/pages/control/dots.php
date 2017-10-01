@@ -120,10 +120,13 @@
         $('.btn_del_dots').on('click', function () {
             var dots = [];
             var group = $('.tab_v_content.active');
+            var selectedDots = [];
             var group_id = group.attr('group_id');
 
             $('.td_check [type=checkbox][name=pos_id]:checked', group).each(function () {
-                dots.push($(this).val());
+                var t = $(this);
+                dots.push(t.val());
+                selectedDots['dot' + t.val()] = t.closest('.dot_row');
             });
 
             if(dots.length == 0){
@@ -133,6 +136,16 @@
             if(!confirm('Удалить ' + dots.length + ' точки?')){
                 return false;
             }
+
+            $.post('/control/del_dots', {dots: dots, group_id:group_id}, function (data) {
+                if (data.success) {
+                    for (var i in data.data.deleted) {
+                        selectedDots['dot' + i].remove();
+                    }
+                } else {
+                    message('error', 'Ошибка удаления');
+                }
+            });
         });
 
         $('.btn_del_dots_groups').on('click', function () {
