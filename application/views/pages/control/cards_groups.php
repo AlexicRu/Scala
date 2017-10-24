@@ -31,7 +31,7 @@
                 <?}else{?>
                     <?foreach($cardsGroups as $key => $group){?>
                         <div class="tab_v tab_v_small" tab="cards_group_<?=$group['GROUP_ID']?>"><div>
-                            <?if(in_array($user['role'], Access::$adminRoles)){?>
+                            <?if(in_array($user['role'], Access::$rolesForCardGroups)){?>
                                 <span class="check_span_hidden">
                                     <input type="checkbox" name="group_id" value="<?=$group['GROUP_ID']?>">
                                     <input type="hidden" name="group_name" value="<?=$group['GROUP_NAME']?>">
@@ -94,7 +94,7 @@
 
             $.post('/control/del_cards_from_group', {group_id: group_id, cards_numbers: cards}, function (data) {
                 if (data.success) {
-                    message(0, 'Карты удалены');
+                    message(1, 'Карты удалены');
 
                     for(var i in cards){
                         $('.card_row[id="'+ cards[i] +'"]', group).remove();

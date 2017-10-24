@@ -29,6 +29,7 @@ return [
         'control_index' => [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
+            Access::ROLE_CLIENT,
             'u_7',
         ],
 
@@ -76,6 +77,8 @@ return [
         'control_cards_groups' => [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
+            Access::ROLE_CLIENT,
+            Access::ROLE_USER_SECOND,
         ],
         'administration_index' => [
             Access::ROLE_ADMIN,
@@ -186,6 +189,7 @@ return [
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
             Access::ROLE_MANAGER_SALE_SUPPORT,
+            Access::ROLE_CLIENT,
         ],
         'clients_client_add' => [
             Access::ROLE_USER,
@@ -225,11 +229,18 @@ return [
         'reports_index' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
+            Access::ROLE_CLIENT,
         ],
         'manager_setting' => [
             Access::ROLE_MANAGER_SALE,
         ],
+        'clients_client_edit' => [
+            Access::ROLE_CLIENT,
+        ],
         // custom
+        'clients_card_toggle_full' => [
+            Access::ROLE_CLIENT,
+        ],
         'view_tariffs' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,

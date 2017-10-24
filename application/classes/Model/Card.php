@@ -648,14 +648,21 @@ class Model_Card extends Model
                 vc.holder, 
                 vc.description_ru 
             from ".Oracle::$prefix."v_web_cards_all vc
-            where vc.agent_id = {$user['AGENT_ID']}
-                and not exists 
+            where 
+                not exists 
                     (
                         select 1 
                         from ".Oracle::$prefix."v_web_cards_group_items vgi 
                         where vgi.card_id = vc.card_id
                          and vgi.group_id = ".(int)$params['group_id']."
                     )
+               and exists
+                   (
+                        select 1 
+                        from ".Oracle::$prefix."v_web_manager_cards vmc
+                        where vmc.MANAGER_ID = {$user['MANAGER_ID']}
+                         and vmc.card_id = vc.card_id
+                   )                    
             ";
 
         if(!empty($params['CARD_ID'])){

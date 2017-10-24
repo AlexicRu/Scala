@@ -5,11 +5,13 @@ $user = Auth::instance()->get_user();
 ?>
 
 <div class="fr">
-    <?if(in_array($card['BLOCK_AVAILABLE'], [1,2]) || Access::allow('clients_card_toggle')){?>
-        <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
-            <button class="btn btn_green btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span style="display: none"><i class="icon-block"></i> Заблокировать</span><span><i class="icon-backblock"></i> Разблокировать</span></button>
-        <?}else{?>
-            <button class="btn btn_red btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span><i class="icon-block"></i> Заблокировать</span><span style="display: none"><i class="icon-backblock"></i> Разблокировать</span></button>
+    <?if(Access::allow('clients_card_toggle_full')){?>
+        <?if(in_array($card['BLOCK_AVAILABLE'], [1,2]) || Access::allow('clients_card_toggle')){?>
+            <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
+                <button class="btn btn_green btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span style="display: none"><i class="icon-block"></i> Заблокировать</span><span><i class="icon-backblock"></i> Разблокировать</span></button>
+            <?}else{?>
+                <button class="btn btn_red btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span><i class="icon-block"></i> Заблокировать</span><span style="display: none"><i class="icon-backblock"></i> Разблокировать</span></button>
+            <?}?>
         <?}?>
     <?}?>
     <?if(Access::allow('clients_card_withdraw')){?>

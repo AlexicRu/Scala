@@ -266,27 +266,33 @@ class Model_Report extends Model
                     $value = $user['AGENT_ID'];
                     break;
                 default:
-                    foreach($params['additional'] as $additional){
-                        if($additional['name'] == $param['PARAM_NAME']){
+                    if (!empty($params['additional'])) {
+                        foreach ($params['additional'] as $additional) {
+                            if ($additional['name'] == $param['PARAM_NAME']) {
 
-                            if (!isset($additional['value'])) {
-                                continue;
-                            }
-
-                            if (is_array($additional['value'])) {
-                                $additional['value'] = array_filter($additional['value']);
-                                if(!in_array(-1, $additional['value'])){
-                                    array_unshift($additional['value'], -1); //привет джасперу
+                                if (!isset($additional['value'])) {
+                                    continue;
                                 }
-                            }
 
-                            $value = $additional['value'];
-                            break;
+                                if (is_array($additional['value'])) {
+                                    $additional['value'] = array_filter($additional['value']);
+                                    if (!in_array(-1, $additional['value'])) {
+                                        array_unshift($additional['value'], -1); //привет джасперу
+                                    }
+                                }
+
+                                $value = $additional['value'];
+                                break;
+                            }
                         }
                     }
             }
 
             $settings[$param['PARAM_VARIABLE_NAME']] = $value;
+        }
+
+        if (!empty($params['contract_id'])) {
+            $settings['REPORT_CONTRACT_ID'] = $params['contract_id'];
         }
 
         return $settings;

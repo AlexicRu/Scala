@@ -76,7 +76,7 @@ function generateReport(btn)
     });
 
     if ($('[name=fix_contract]').length) {
-        params.additional.push({name: 'contract_single_choose', value: $('.contracts_list').val(), weight: 0});
+        params.contract_id = $('[name=contracts_list]').val();
     }
 
     window.open('/reports/generate/?' + $.param(params));

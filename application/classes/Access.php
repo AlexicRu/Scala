@@ -36,10 +36,17 @@ class Access
         self::ROLE_GOD
     ];
 
+    public static $rolesForCardGroups = [
+        self::ROLE_ADMIN,
+        self::ROLE_ROOT,
+        self::ROLE_GOD,
+        self::ROLE_CLIENT,
+    ];
+
     /**
      * функция проверки доступа
      */
-    public static function allow($action)
+    public static function allow($action, $onlySee = false)
     {
         if(empty($action)){
             return true;
@@ -77,7 +84,7 @@ class Access
 
         //если нет явного запрета или наоборот, доступа только конкретной роли
 
-        if(in_array($user['role'], [self::ROLE_CLIENT])){
+        if(!$onlySee && in_array($user['role'], [self::ROLE_CLIENT])){
             return false;
         }
 

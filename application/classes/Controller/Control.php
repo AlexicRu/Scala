@@ -551,7 +551,7 @@ class Controller_Control extends Controller_Common {
             $user = User::current();
 
             $canEdit = true;
-            if (!in_array($user['role'], Access::$adminRoles)) {
+            if (!in_array($user['role'], Access::$rolesForCardGroups)) {
                 $canEdit = false;
             }
 
