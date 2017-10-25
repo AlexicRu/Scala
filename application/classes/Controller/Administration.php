@@ -103,4 +103,31 @@ class Controller_Administration extends Controller_Common
 
         $this->jsonResult(true, ['items' => $history, 'more' => $more]);
     }
+
+    /**
+     * расчет тарифов
+     */
+    public function action_calc_tariffs()
+    {
+        $this->_initJsGrid();
+    }
+
+    /**
+     * отрисовываем блок клиента
+     */
+    public function action_calc_tariffs_render_client()
+    {
+        $iteration = $this->request->post('iteration');
+
+        $html = View::factory('ajax/administration/calc_tariffs/client')
+            ->bind('iteration', $iteration)
+        ;
+
+        $this->html($html);
+    }
+
+    public function action_calc_tariff()
+    {
+        $this->jsonResult(1, []);
+    }
 }

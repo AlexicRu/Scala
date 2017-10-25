@@ -139,6 +139,9 @@ return [
         'control_firms_groups' => [
             Access::ROLE_ROOT
         ],
+        'administration_calc_tariffs' => [
+            Access::ROLE_ROOT
+        ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,
