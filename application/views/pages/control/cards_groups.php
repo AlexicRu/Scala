@@ -11,7 +11,7 @@
             </span>
 
             <span toggle_block="cards_groups_block" class="dn action_del">
-                <a href="#" class="btn btn_red btn_del_cards_groups"><i class="icon-cancel"></i> Удалить выделенные группы</a>
+<!--                <a href="#" class="btn btn_red btn_del_cards_groups"><i class="icon-cancel"></i> Удалить выделенные группы</a>-->
                 <a href="#" class="btn btn_red btn_del_cards"><i class="icon-cancel"></i> Удалить выделенные карты</a>
                 <span class="btn btn_orange btn_icon" toggle="cards_groups_block"><i class="icon-cancel"></i></span>
             </span>

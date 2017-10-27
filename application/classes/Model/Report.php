@@ -289,10 +289,19 @@ class Model_Report extends Model
             }
 
             $settings[$param['PARAM_VARIABLE_NAME']] = $value;
-        }
 
-        if (!empty($params['contract_id'])) {
-            $settings['REPORT_CONTRACT_ID'] = $params['contract_id'];
+            switch($param['PARAM_NAME']){
+                case 'contract_id':
+                    if (!empty($params['contract_id'])) {
+                        $settings['REPORT_CONTRACT_ID'] = $params['contract_id'];
+                    }
+                    break;
+                case 'contract_id_multi':
+                    if (!empty($params['contract_id'])) {
+                        $settings['REPORT_CONTRACT_ID'] = [-1, $params['contract_id']];
+                    }
+                    break;
+            }
         }
 
         return $settings;
