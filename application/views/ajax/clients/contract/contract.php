@@ -100,9 +100,20 @@
             <tr>
                 <td class="gray right" width="160">Грузополучатель:</td>
                 <td>
-                    <span toggle_block="block2"><?=($contractSettings['GOODS_RECIEVER'] ?: '<i class="gray">отсутствует</i>')?></span>
+                    <span toggle_block="block2" class="goods_reciever_span"></span>
                     <span toggle_block="block2" class="dn">
-                        <input type="text" name="GOODS_RECIEVER" value="<?=$contractSettings['GOODS_RECIEVER']?>">
+                        <?=Common::buildFormField('client_choose_single', 'GOODS_RECIEVER', $contractSettings['GOODS_RECIEVER'], [
+                            'render_value_to' => '.goods_reciever_span',
+                        ])?>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Комментарий к договору:</td>
+                <td>
+                    <span toggle_block="block2"><?=($contractSettings['CONTRACT_COMMENT'] ?: '<i class="gray">отсутствует</i>')?></span>
+                    <span toggle_block="block2" class="dn">
+                        <input type="text" name="CONTRACT_COMMENT" value="<?=$contractSettings['CONTRACT_COMMENT']?>">
                     </span>
                 </td>
             </tr>
@@ -239,7 +250,8 @@
                         OVERDRAFT:              $("[name=OVERDRAFT]").val(),
                         INVOICE_PERIOD_TYPE:    $("[name=INVOICE_PERIOD_TYPE]").val(),
                         INVOICE_PERIOD_VALUE:   $("[name=INVOICE_PERIOD_VALUE]").val(),
-                        GOODS_RECIEVER:         $("[name=GOODS_RECIEVER]").val(),
+                        GOODS_RECIEVER:         getComboboxValue($("[name=GOODS_RECIEVER].combobox")),
+                        CONTRACT_COMMENT:       $("[name=CONTRACT_COMMENT]").val(),
                         scheme:                 $("[name=scheme]").val()
                     }
                 };

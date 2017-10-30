@@ -22,11 +22,13 @@ class Access
         self::ROLE_SUPERVISOR           => 'Главный менеджер',
         self::ROLE_USER                 => 'Клиент',
         self::ROLE_USER_SECOND          => 'Клиент (без редактирования лимитов)',
+        self::ROLE_CLIENT               => 'Клиент (только просмотр)',
     ];
 
     public static $clientRoles = [
         self::ROLE_USER                 => 'Клиент',
         self::ROLE_USER_SECOND          => 'Клиент (без редактирования лимитов)',
+        self::ROLE_CLIENT               => 'Клиент (только просмотр)',
     ];
 
     public static $adminRoles = [
@@ -35,10 +37,17 @@ class Access
         self::ROLE_GOD
     ];
 
+    public static $rolesForCardGroups = [
+        self::ROLE_ADMIN,
+        self::ROLE_ROOT,
+        self::ROLE_GOD,
+        self::ROLE_CLIENT,
+    ];
+
     /**
      * функция проверки доступа
      */
-    public static function allow($action)
+    public static function allow($action, $onlySee = false)
     {
         if(empty($action)){
             return true;
@@ -75,6 +84,10 @@ class Access
         }
 
         //если нет явного запрета или наоборот, доступа только конкретной роли
+
+        if(!$onlySee && in_array($user['role'], [self::ROLE_CLIENT])){
+            return false;
+        }
 
         return true;
     }

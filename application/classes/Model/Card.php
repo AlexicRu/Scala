@@ -307,6 +307,8 @@ class Model_Card extends Model
 
         $user = Auth::instance()->get_user();
 
+		$limits = (array)$limits;
+
         if (count($limits) > 9) {
             return [false, 'Изменение лимитов не произошло. Превышен лимит ограничений'];
         }
@@ -505,27 +507,27 @@ class Model_Card extends Model
      */
     public static function getGroups($filter = [])
     {
-        $db = Oracle::init();
-
         $user = User::current();
 
-        $sql = "
-            select * from ".Oracle::$prefix."V_WEB_CARD_GROUPS t where t.manager_id = ".$user['MANAGER_ID']
+        $sql = (new Builder())->select()
+            ->from('V_WEB_CARD_GROUPS t')
+            ->where("t.manager_id = ".$user['MANAGER_ID'])
         ;
 
-        if(!empty($filter['search'])){
-            $sql .= " and upper(t.group_name) like ".mb_strtoupper(Oracle::quote('%'.$filter['search'].'%'));
-        }
-
         if(!empty($filter['ids'])){
-            $sql .= " and t.group_id in (".implode(',', $filter['ids']).")";
+            $sql->where("t.group_id in (".implode(',', $filter['ids']).")");
+        } else {
+            if (!empty($filter['search'])) {
+                $sql->where("upper(t.group_name) like " . mb_strtoupper(Oracle::quote('%' . $filter['search'] . '%')));
+            }
         }
 
-        $sql .= ' order by group_name ';
+        $db = Oracle::init();
 
         if(!empty($filter['limit'])){
-            return $db->query($db->limit($sql, 0, $filter['limit']));
+            $sql->limit($filter['limit']);
         }
+
         return $db->query($sql);
     }
 
@@ -646,14 +648,21 @@ class Model_Card extends Model
                 vc.holder, 
                 vc.description_ru 
             from ".Oracle::$prefix."v_web_cards_all vc
-            where vc.agent_id = {$user['AGENT_ID']}
-                and not exists 
+            where 
+                not exists 
                     (
                         select 1 
                         from ".Oracle::$prefix."v_web_cards_group_items vgi 
                         where vgi.card_id = vc.card_id
                          and vgi.group_id = ".(int)$params['group_id']."
                     )
+               and exists
+                   (
+                        select 1 
+                        from ".Oracle::$prefix."v_web_manager_cards vmc
+                        where vmc.MANAGER_ID = {$user['MANAGER_ID']}
+                         and vmc.card_id = vc.card_id
+                   )                    
             ";
 
         if(!empty($params['CARD_ID'])){
@@ -738,9 +747,10 @@ class Model_Card extends Model
      * @param $contractId
      * @param $holder
      * @param $date
+     * @param $comment
      * @return bool
      */
-    public static function editCardHolder($cardId, $contractId, $holder, $date)
+    public static function editCardHolder($cardId, $contractId, $holder, $date = false, $comment = '')
     {
         if (empty($cardId) || empty($contractId)) {
             return false;
@@ -751,12 +761,13 @@ class Model_Card extends Model
         $db = Oracle::init();
 
         $data = [
-            'p_card_id'     => $cardId,
-            'p_contract_id' => $contractId,
-            'p_new_holder'  => $holder ?: '',
-            'p_date_from'   => $date ?: date('d.m.Y'),
-            'p_manager_id'  => $user['MANAGER_ID'],
-            'p_error_code' 	=> 'out',
+            'p_card_id'         => $cardId,
+            'p_contract_id'     => $contractId,
+            'p_new_holder'      => $holder ?: '',
+            'p_card_comment'    => $comment,
+            'p_date_from'       => $date ?: date('d.m.Y'),
+            'p_manager_id'      => $user['MANAGER_ID'],
+            'p_error_code' 	    => 'out',
         ];
 
         $result = $db->procedure('card_change_holder', $data);

@@ -35,7 +35,7 @@ abstract class Controller_Common extends Controller_Template {
 
         parent::before();
 
-        $allow = Access::allow(strtolower($controller.'_'.$action));
+        $allow = Access::allow(strtolower($controller.'_'.$action), true);
 
         if ($this->request->query('to_xls')) {
             $this->toXls = true;

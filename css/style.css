@@ -712,6 +712,9 @@ textarea.input_grand {
 .tabs_reports {
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
+.tabs_reports.tabs_no_border {
+  border: 0;
+}
 .tabs_managers,
 .tabs_tariffs {
   border: 1px solid rgba(0, 0, 0, 0.1);

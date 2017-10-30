@@ -1,7 +1,7 @@
 <aside>
     <?
     foreach($menu as $link => $item){
-        if(Access::allow($link.'_index')) {
+        if(Access::allow($link.'_index', true)) {
 
             $isActiveController = strtolower(Request::current()->controller()) == $link ;
 
@@ -18,7 +18,7 @@
                 foreach($item['children'] as $child => $name){
                     $isActiveAction = strtolower(Request::current()->action()) == $child ;
 
-                    if(Access::allow($link.'_'.$child)) {
+                    if(Access::allow($link.'_'.$child, true)) {
                         $menuItem .= '<div><a href="/'.$link.'/'.$child.'" class="'.($isActiveAction ? 'act' : '').'">'.$name.'</a></div>';
                     }
                 }

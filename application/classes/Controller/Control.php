@@ -197,6 +197,25 @@ class Controller_Control extends Controller_Common {
     }
 
     /**
+     * удаление точек из группы
+     */
+    public function action_del_dots()
+    {
+        $groupId = $this->request->post('group_id');
+        $dots = $this->request->post('dots');
+
+        $deleted = [];
+
+        if(is_array($dots)) {
+            foreach($dots as $dotId) {
+                $deleted[$dotId] = true; //todo процедура удаления
+            }
+        }
+
+        $this->jsonResult(true, ['deleted' => $deleted]);
+    }
+
+    /**
      * добавляем группу точек
      */
     public function action_add_dots_group()
@@ -532,7 +551,7 @@ class Controller_Control extends Controller_Common {
             $user = User::current();
 
             $canEdit = true;
-            if (!in_array($user['role'], Access::$adminRoles)) {
+            if (!in_array($user['role'], Access::$rolesForCardGroups)) {
                 $canEdit = false;
             }
 

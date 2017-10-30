@@ -155,7 +155,7 @@ class Controller_Managers extends Controller_Common {
 
         $result = Model_Manager::editContractBinds($managerId, $clientId, $binds);
 
-        if($result == Oracle::CODE_SUCCESS){
+        if(!empty($result)){
             $this->jsonResult(true);
         }
         $this->jsonResult(false, $result);

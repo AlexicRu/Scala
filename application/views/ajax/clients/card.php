@@ -5,18 +5,20 @@ $user = Auth::instance()->get_user();
 ?>
 
 <div class="fr">
-    <?if(in_array($card['BLOCK_AVAILABLE'], [1,2]) || Access::allow('clients_card_toggle')){?>
-        <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
-            <button class="btn btn_green btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span style="display: none"><i class="icon-block"></i> Заблокировать</span><span><i class="icon-backblock"></i> Разблокировать</span></button>
-        <?}else{?>
-            <button class="btn btn_red btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span><i class="icon-block"></i> Заблокировать</span><span style="display: none"><i class="icon-backblock"></i> Разблокировать</span></button>
+    <?if(Access::allow('clients_card_toggle_full')){?>
+        <?if(in_array($card['BLOCK_AVAILABLE'], [1,2]) || Access::allow('clients_card_toggle')){?>
+            <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
+                <button class="btn btn_green btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span style="display: none"><i class="icon-block"></i> Заблокировать</span><span><i class="icon-backblock"></i> Разблокировать</span></button>
+            <?}else{?>
+                <button class="btn btn_red btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span><i class="icon-block"></i> Заблокировать</span><span style="display: none"><i class="icon-backblock"></i> Разблокировать</span></button>
+            <?}?>
         <?}?>
     <?}?>
     <?if(Access::allow('clients_card_withdraw')){?>
-        &nbsp; <a href="#" class="btn btn_orange" onclick="cardWithdraw('<?=$card['CARD_ID']?>', <?=$card['BLOCK_AVAILABLE']?>)"><i class="icon-cancel"></i> Изъять</a>
+        <a href="#" class="btn btn_orange" onclick="cardWithdraw('<?=$card['CARD_ID']?>', <?=$card['BLOCK_AVAILABLE']?>)"><i class="icon-cancel"></i> Изъять</a>
     <?}?>
     <?if(Access::allow('clients_card_edit')){?>
-        &nbsp; <a href="#card_edit_<?=$card['CARD_ID']?>" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
+        <a href="#card_edit_holder_<?=$card['CARD_ID']?>" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
     <?}?>
 </div>
 
@@ -29,6 +31,13 @@ $user = Auth::instance()->get_user();
 </div>
 <br>
 
+<div class="fr">
+    <?if(Access::allow('clients_card_edit')){?>
+        <?if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card_edit_limits')){?>
+            <a href="#card_edit_limits_<?=$card['CARD_ID']?>" class="fancy btn btn_icon"><i class="icon-pen"></i></a>
+        <?}?>
+    <?}?>
+</div>
 <b class="f18">Ограничения по топливу:</b>
 <?if(!empty($oilRestrictions)){?>
     <table class="tbl_spacing">
@@ -57,7 +66,8 @@ $user = Auth::instance()->get_user();
 </div>
 
 <?if(Access::allow('clients_card_edit')){?>
-    <?=$popupCardEdit?>
+    <?=$popupCardHolderEdit?>
+    <?=$popupCardLimitsEdit?>
 <?}?>
 
 <script>

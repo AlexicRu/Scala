@@ -16,11 +16,12 @@ return array(
         'sources'       => 'Источники данных',
         'addresses'     => 'Адресный справочник',
         'currency'      => 'Валюты',
-        'converter'     => 'Конвертер услуг',
+        'services'      => 'Услуги',
         'cards'         => 'Список карт'
     ]],
     'administration'    => ['title' => 'Сервис', 'icon' => 'icon-service', 'children' => [
-        'transactions'  => 'Транзакции'
+        'transactions'  => 'Транзакции',
+        'calc_tariffs'  => 'Расчет тарифов'
     ]],
     'news'              => ['title' => 'Новости', 'icon' => 'icon-news'],
     'support'           => ['title' => 'Поддержка', 'icon' => 'icon-question'],

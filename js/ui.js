@@ -16,9 +16,9 @@ function renderElements()
     $("input[type=radio]").each(function(){
         renderRadio($(this));
     });
-    $("input[type=text].combobox").each(function(){
+    /*$("input[type=text].combobox").each(function(){
         renderComboBox($(this));
-    });
+    });*/
 
 
     $(document).on('click', function(e){
@@ -371,7 +371,7 @@ function renderComboBox(combo, params)
     }
 
     combo.data('rendered', true);
-    combo.attr('placeholder', 'Поиск...');
+    combo.attr('placeholder', (params && params['placeholder']) ? params['placeholder'] : 'Поиск...');
 
     var url = combo.attr('url');
 

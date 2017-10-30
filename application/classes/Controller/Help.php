@@ -25,6 +25,34 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список точек для combobox
      */
+    public function action_list_card_group()
+    {
+        $params = [
+            'search'        => $this->_search,
+            'ids'           => $this->_ids,
+            'limit'         => 10,
+        ];
+        $res = Model_Card::getGroups($params);
+
+        if(empty($res)){
+            $this->jsonResult(false);
+        }
+
+        $return = [];
+
+        foreach($res as $item){
+            $return[] = [
+                'name' => $item['GROUP_NAME'],
+                'value' => $item['GROUP_ID'],
+            ];
+        }
+
+        $this->jsonResult(true, $return);
+    }
+
+    /**
+     * получаем список точек для combobox
+     */
     public function action_list_pos_group()
     {
         $params = [

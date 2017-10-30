@@ -94,7 +94,7 @@
 
             $.post('/control/del_cards_from_group', {group_id: group_id, cards_numbers: cards}, function (data) {
                 if (data.success) {
-                    message(0, 'Карты удалены');
+                    message(1, 'Карты удалены');
 
                     for(var i in cards){
                         $('.card_row[id="'+ cards[i] +'"]', group).remove();
