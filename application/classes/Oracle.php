@@ -193,6 +193,8 @@ class Oracle{
             'ctrl_card_group_collection',
             'ctrl_card_group_edit',
             'client_contract_notify_config',
+            'ctrl_manager_change_password',
+            'ctrl_manager_edit',
         ])) {
 		    Messages::put('Данной роли разрешен только просмотр', 'info');
             return self::CODE_ERROR;
