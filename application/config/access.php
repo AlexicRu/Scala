@@ -30,6 +30,8 @@ return [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
             Access::ROLE_CLIENT,
+            Access::ROLE_USER_SECOND,
+            Access::ROLE_USER,
             'u_7',
         ],
 
