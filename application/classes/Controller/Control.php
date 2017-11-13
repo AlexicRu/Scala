@@ -562,7 +562,7 @@ class Controller_Control extends Controller_Common {
             $this->html($html);
         }else{
             $params = [
-                'group_id'      => $this->request->post('group_id'),
+                'group_id'      => $this->request->post('group_id') ?: $this->request->query('group_id'),
                 'offset'        => $offset,
                 'pagination'    => $this->toXls ? false : true
             ];
@@ -571,7 +571,9 @@ class Controller_Control extends Controller_Common {
 
             if ($this->toXls){
                 $this->showXls('group_cards', $result, [
-                    'CARD_ID'           => 'CARD ID',
+                    'GROUP_ID'			=> 'ID Группы',
+                    'GROUP_NAME'		=> 'Наименование',
+                    'CARD_ID'           => 'Номер карты',
                     'HOLDER'            => 'Владелец',
                     'DESCRIPTION_RU'    => 'Описание'
                 ]);
