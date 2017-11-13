@@ -50,6 +50,7 @@ return [
             'a_6',
             'a_10',
             'a_15',
+            'a_4',
         ],
         'news_news_edit' => [
             Access::ROLE_ADMIN,
