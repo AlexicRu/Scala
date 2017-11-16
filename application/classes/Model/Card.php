@@ -32,6 +32,10 @@ class Model_Card extends Model
 		//self::CARD_LIMIT_TYPE_ONCE 	=> 'единовременно',
 	];
 
+	public static $editLimitsManagerNoLimit = [
+	    1233
+    ];
+
 	/**
 	 * получаем список доступный карт по контракту
 	 *
@@ -313,7 +317,10 @@ class Model_Card extends Model
             return [false, 'Изменение лимитов не произошло. Превышен лимит ограничений'];
         }
 
-		if(in_array($user['role'], array_keys(Access::$clientRoles))) {
+		if(
+		    in_array($user['role'], array_keys(Access::$clientRoles)) &&
+            !in_array($user['MANAGER_ID'], self::$editLimitsManagerNoLimit)
+        ) {
             $currentLimits = self::getOilRestrictions($cardId);
 
             foreach($limits as $limit){
