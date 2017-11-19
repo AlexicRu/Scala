@@ -127,7 +127,7 @@ class Controller_Clients extends Controller_Common {
                 $servicesList = Listing::getServices(['description' => 'LONG_DESC']);
 
 				$popupContractPaymentAdd = Common::popupForm('Добавление нового платежа', 'contract/payment_add');
-                $popupContractBillAdd = Common::popupForm('Выставить счет', 'contract/bill_add');
+                $popupContractBillAdd = Common::popupForm('Выставление счет', 'contract/bill_add');
                 $popupContractBillPrint = Common::popupForm('Печать счетов', 'contract/bill_print');
                 $popupContractLimitIncrease = Common::popupForm('Изменение лимита', 'contract/increase_limit');
 
@@ -501,8 +501,9 @@ class Controller_Clients extends Controller_Common {
     {
         $contractId = $this->request->query('contract_id');
         $sum = $this->request->query('sum');
+        $products = $this->request->query('products');
 
-        $invoiceNum = Model_Contract::addBill($contractId, $sum);
+        $invoiceNum = Model_Contract::addBill($contractId, $sum, $products);
 
         $params = [
             'type'              => Model_Report::REPORT_TYPE_BILL,
@@ -632,6 +633,9 @@ class Controller_Clients extends Controller_Common {
         $this->jsonResult(true, $result);
     }
 
+    /**
+     * изменяем лимит
+     */
     public function action_contract_increase_limit()
     {
         $amount = $this->request->post('amount');
@@ -645,5 +649,19 @@ class Controller_Clients extends Controller_Common {
         }
 
         $this->jsonResult(true, $result);
+    }
+
+    /**
+     * отрисовываем блок продукта для выставления счета
+     */
+    public function action_add_bill_product_template()
+    {
+        $iteration = $this->request->post('iteration');
+
+        $html = View::factory('ajax/clients/add_bill/product')
+            ->bind('iteration', $iteration)
+        ;
+
+        $this->html($html);
     }
 }

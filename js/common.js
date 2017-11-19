@@ -295,3 +295,15 @@ function collectForms(form, className)
 
     return true;
 }
+
+
+function deleteRow(btn)
+{
+    if(!confirm('Удаляем?')) {
+        return;
+    }
+
+    var fieldset = btn.parent();
+
+    fieldset.remove();
+}

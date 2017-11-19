@@ -94,15 +94,4 @@
             }
         });
     }
-
-    function calcTariffsDelRow(btn)
-    {
-        if(!confirm('Удаляем?')) {
-            return;
-        }
-
-        var fieldset = btn.parent();
-
-        fieldset.remove();
-    }
 </script>
