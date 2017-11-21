@@ -51,7 +51,7 @@ class Model_Transaction extends Model
         if (!empty($params['filter'])) {
             foreach ($params['filter'] as $key => $value) {
                 if (!empty($value)) {
-                    $sql->where("upper(t." . $key . ") like '%" . mb_strtoupper(Oracle::quote($value)) . "%'");
+                    $sql->where("upper(t." . $key . ") like " . mb_strtoupper(Oracle::quote('%'.$value.'%')));
                 }
             }
         }

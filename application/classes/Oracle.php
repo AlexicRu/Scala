@@ -185,7 +185,8 @@ class Oracle{
 	 */
     public static function quote($val)
     {
-        $str = str_replace(["%", "*", "_"], ["\%", "\*", "\_"], $val);
+        //todo
+        $str = $val; //str_replace(["%", "*", "_"], ["\%", "\*", "\_"], $val);
 
         $postfix = '';
         if ($str != $val) {
