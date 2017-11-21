@@ -6,7 +6,14 @@ class Oracle{
 	const CODE_ERROR        = 1;
 	const CODE_ERROR_EXISTS = 2;
 
+    /**
+     * @deprecated
+     */
 	public static $prefix = 's_dev.';
+
+	private $_prefix = 's_dev.';
+	private $_pack = 'web_pack.';
+
 	private static $_conn = null;
 	private static $_instance = null;
 
@@ -36,6 +43,13 @@ class Oracle{
 		return self::$_instance;
 	}
 
+    /**
+     * выполняем запрос
+     *
+     * @param $sql
+     * @param string $type
+     * @return array|bool
+     */
 	public function query($sql, $type='select')
     {
         //builder
@@ -212,7 +226,7 @@ class Oracle{
 			$keys[] = ':'.$key;
 		}
 
-		$proc = 'begin '.self::$prefix.'web_pack.'.$procedure.'('.implode(', ', $keys).'); end;';
+		$proc = 'begin '.$this->_prefix.$this->_pack.$procedure.'('.implode(', ', $keys).'); end;';
 
 		$this->_fullResponse = $this->ora_proced($proc, $data);
 
@@ -351,5 +365,15 @@ class Oracle{
         $dateTime = DateTime::createFromFormat('d.m.Y H:i:s', $string);
 
         return "to_date('".$dateTime->format('d.m.Y')."', 'dd.mm.yyyy')";
+    }
+
+    public function setPrefix($prefix)
+    {
+        $this->_prefix = $prefix;
+    }
+
+    public function setPack($pack)
+    {
+        $this->_pack = $pack;
     }
 }

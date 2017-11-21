@@ -53,10 +53,14 @@ class Model_Card extends Model
 		$db = Oracle::init();
 		$user = User::current();
 
+		$contracts = Model_Manager::getContracts($user['MANAGER_ID']);
+
+		if (!in_array($contractId, $contracts)) {
+		    return [];
+        }
+
 		$sql = (new Builder())->select()
             ->from('V_WEB_CRD_LIST')
-            /*->from('V_WEB_CARD_GROUPS')
-            ->where('manager_id = '.$user['MANAGER_ID'])*/
         ;
 
 		if(!empty($contractId)){

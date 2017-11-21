@@ -422,6 +422,25 @@ class Model_Manager extends Model
     }
 
     /**
+     * получаем список контрактов менеджера
+     *
+     * @param $managerId
+     * @return array|bool
+     */
+    public static function getContracts($managerId)
+    {
+        if (empty($managerId)) {
+            return [];
+        }
+
+        $sql = (new Builder())->select()
+            ->from('v_web_manager_contracts')
+            ->where('MANAGER_ID = ' . (int)$managerId);
+
+        return Oracle::init()->column($sql, 'CONTRACT_ID');
+    }
+
+    /**
      * дерево доступных контрактов
      *
      * @param $managerId
