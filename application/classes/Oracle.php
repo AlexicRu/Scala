@@ -169,10 +169,17 @@ class Oracle{
 	 *
 	 * @param $val
 	 */
-	public static function quote($val)
-	{
-		return "'".str_replace("'", "''", trim($val))."'";
-	}
+    public static function quote($val)
+    {
+        $str = str_replace(["%", "*", "_"], ["\%", "\*", "\_"], $val);
+
+        $postfix = '';
+        if ($str != $val) {
+            $postfix = " ESCAPE '\' ";
+        }
+
+        return "'".str_replace(["'"], ["''"], trim($str))."'" . $postfix;
+    }
 
 	/**
 	 * Выполнение процедуры
