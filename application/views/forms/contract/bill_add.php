@@ -20,9 +20,11 @@
                 <input type="text" name="client_add_bill_summ">
             </td>
             <td rowspan="2" class="right" style="vertical-align: bottom;">
+                <?if(Access::allow('client_add_bill_add_product')){?>
                 <div style="margin-bottom: 10px;">
                     <span class="btn btn_green" onclick="renderProduct()">+ Добавить товар</span>
                 </div>
+                <?}?>
                 <span class="btn btn_reverse btn_client_add_bill_go" onclick="addBill()">Выставить счет</span>
                 <span class="btn btn_red fancy_close">Отмена</span>
             </td>
@@ -134,7 +136,7 @@
         });
 
     }
-    
+
     function addBillDeleteRow(btn)
     {
         if(!confirm('Удаляем?')) {
