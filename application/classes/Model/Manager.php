@@ -427,7 +427,7 @@ class Model_Manager extends Model
      * @param $managerId
      * @return array|bool
      */
-    public static function getContracts($managerId)
+    public static function getContractsIds($managerId)
     {
         if (empty($managerId)) {
             return [];
