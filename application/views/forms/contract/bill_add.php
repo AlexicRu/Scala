@@ -36,7 +36,9 @@
             </td>
         </tr>
     </table>
+    <?if(Access::allow('client_add_bill_add_product')){?>
     <i class="gray">Для выставления счета на сумму добавление товаров не требуется</i>
+    <?}?>
 </div>
 
 <script>
