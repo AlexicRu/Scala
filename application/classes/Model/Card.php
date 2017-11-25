@@ -51,7 +51,6 @@ class Model_Card extends Model
 		}
 
 		$db = Oracle::init();
-		$user = User::current();
 
 		$sql = (new Builder())->select()
             ->from('V_WEB_CRD_LIST')
@@ -78,6 +77,11 @@ class Model_Card extends Model
             } else {
                 $sql->where('CARD_STATE = '.Model_Card::CARD_STATE_BLOCKED);
             }
+        }
+
+        if(!empty($params['contract_id'])){
+            $params['contract_id'] = (array)$params['contract_id'];
+            $sql->where("contract_id in (".implode(',', array_map('intval', $params['contract_id']))).")";
         }
 
         if(!empty($params['pagination'])) {

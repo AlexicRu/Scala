@@ -88,6 +88,9 @@ class Model_Contract extends Model
             }
         }
 
+        if(!empty($params['client_id'])){
+            $sql->where("client_id in (".implode(',', $params['client_id']).")");
+        }
 
         if(!empty($params['contract_id'])){
             $sql->where("contract_id in (".implode(',', $params['contract_id']).")");
