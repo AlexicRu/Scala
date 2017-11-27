@@ -44,4 +44,8 @@ return array(
         'title' => 'Clever Oil',
         'class' => 'cleveroil'
     ],
+    'pnggloproru' => [
+        'title' => 'Презентация ГПН-КП',
+        'class' => 'png'
+    ],
 );

@@ -50,6 +50,7 @@ return [
             'a_6',
             'a_10',
             'a_15',
+            'a_4',
         ],
         'news_news_edit' => [
             Access::ROLE_ADMIN,
@@ -251,6 +252,10 @@ return [
             Access::ROLE_USER_SECOND,
         ],
         'view_penalties_overdrafts' => [
+            Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
+        ],
+        'client_add_bill_add_product' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
         ]

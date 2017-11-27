@@ -204,15 +204,9 @@ class Controller_Control extends Controller_Common {
         $groupId = $this->request->post('group_id');
         $dots = $this->request->post('dots');
 
-        $deleted = [];
+        $result = Model_Dot::editDotsToGroup($groupId, $dots, Model_Dot::ACTION_DEL);
 
-        if(is_array($dots)) {
-            foreach($dots as $dotId) {
-                $deleted[$dotId] = true; //todo процедура удаления
-            }
-        }
-
-        $this->jsonResult(true, ['deleted' => $deleted]);
+        $this->jsonResult($result);
     }
 
     /**
@@ -319,13 +313,9 @@ class Controller_Control extends Controller_Common {
         $posIds = $this->request->post('pos_ids');
         $groupId = $this->request->post('group_id');
 
-        $result = Model_Dot::addDotsToGroup($groupId, $posIds);
+        $result = Model_Dot::editDotsToGroup($groupId, $posIds);
 
-        if(!empty($result)){
-            $this->jsonResult(false);
-        }
-
-        $this->jsonResult(true);
+        $this->jsonResult((bool) $result);
     }
 
     /**

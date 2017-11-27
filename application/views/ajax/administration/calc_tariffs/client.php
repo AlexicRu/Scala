@@ -1,6 +1,6 @@
 <fieldset>
     <legend>Клиент</legend>
-    <span class="btn btn_small btn_icon btn_red ts_remove" onclick="calcTariffsDelRow($(this))"><i class="icon-cancel"></i></span>
+    <span class="btn btn_small btn_icon btn_red ts_remove" onclick="deleteRow($(this))"><i class="icon-cancel"></i></span>
 
     <table>
         <tr>

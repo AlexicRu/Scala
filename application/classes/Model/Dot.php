@@ -5,6 +5,9 @@ class Model_Dot extends Model
     const GROUP_TYPE_USER       = 1;
     const GROUP_TYPE_SUPPLIER   = 2;
 
+    const ACTION_ADD = 1;
+    const ACTION_DEL = 2;
+
     public static $groupsTypesNames = [
         self::GROUP_TYPE_USER       => 'Пользовательская группа',
         self::GROUP_TYPE_SUPPLIER   => 'Группа точек поставщика',
@@ -150,11 +153,12 @@ class Model_Dot extends Model
      *
      * @param $groupId
      * @param $posIds
+     * @param $action
      */
-    public static function addDotsToGroup($groupId, $posIds)
+    public static function editDotsToGroup($groupId, $posIds, $action = self::ACTION_ADD)
     {
         if(empty($groupId) || empty($posIds)){
-            return Oracle::CODE_ERROR;
+            return false;
         }
 
         $db = Oracle::init();
@@ -163,13 +167,15 @@ class Model_Dot extends Model
 
         $data = [
             'p_pos_group_id' => $groupId,
-            'p_action'       => 1,
-            'p_pos_id'       => [$posIds, SQLT_INT],
+            'p_action'       => $action,
+                'p_pos_id'       => [$posIds, SQLT_INT],
             'p_manager_id'   => $user['MANAGER_ID'],
             'p_error_code' 	 => 'out',
         ];
 
-        return $db->procedure('ctrl_pos_group_collection', $data);
+        $result = $db->procedure('ctrl_pos_group_collection', $data);
+
+        return $result == Oracle::CODE_SUCCESS ? true : false;
     }
 
     /**

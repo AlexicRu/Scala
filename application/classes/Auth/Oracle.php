@@ -26,7 +26,12 @@ class Auth_Oracle extends Auth {
 
             $request = Request::current();
 
-            if ($request->controller() == 'Telegram') {
+            $controllersPasswordHashAvailable = [
+                'Telegram'  => true,
+                'Api'       => true
+            ];
+
+            if (isset($controllersPasswordHashAvailable[$request->controller()])) {
                 $password = $password['hash'];
             }
         }

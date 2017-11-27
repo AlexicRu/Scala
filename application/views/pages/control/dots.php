@@ -139,8 +139,8 @@
 
             $.post('/control/del_dots', {dots: dots, group_id:group_id}, function (data) {
                 if (data.success) {
-                    for (var i in data.data.deleted) {
-                        selectedDots['dot' + i].remove();
+                    for (var i in selectedDots) {
+                        selectedDots[i].remove();
                     }
                 } else {
                     message('error', 'Ошибка удаления');

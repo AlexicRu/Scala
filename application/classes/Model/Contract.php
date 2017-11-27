@@ -88,6 +88,9 @@ class Model_Contract extends Model
             }
         }
 
+        if(!empty($params['client_id'])){
+            $sql->where("client_id in (".implode(',', $params['client_id']).")");
+        }
 
         if(!empty($params['contract_id'])){
             $sql->where("contract_id in (".implode(',', $params['contract_id']).")");
@@ -478,8 +481,9 @@ class Model_Contract extends Model
      *
      * @param $contractId
      * @param $sum
+     * @param $products
      */
-    public static function addBill($contractId, $sum)
+    public static function addBill($contractId, $sum, $products = [])
     {
         if(empty($contractId) || empty($sum)){
             return false;
@@ -489,14 +493,34 @@ class Model_Contract extends Model
 
         $userWho = Auth::instance()->get_user();
 
+        $serviceArray = [1];
+        $serviceAmountArray = [1];
+        $servicePriceArray = [$sum];
+
+        if (!empty($products)) {
+            $serviceArray       = [];
+            $serviceAmountArray = [];
+            $servicePriceArray  = [];
+
+            foreach ($products as $product) {
+                $serviceArray[]         = $product['service'];
+                $serviceAmountArray[]   = $product['cnt'];
+                $servicePriceArray[]    = $product['price'];
+            }
+        }
+
         $data = [
-            'p_contract_id' 	=> $contractId,
-            'p_invoice_sum' 	=> str_replace([',', ' '], ['.', ''], $sum),
-            'p_manager_id' 	    => $userWho['MANAGER_ID'],
-            'p_invoice_num' 	=> 'out',
+            'p_contract_id' 	        => $contractId,
+            'p_invoice_sum' 	        => str_replace([',', ' '], ['.', ''], $sum),
+            'p_service_array'           => [$serviceArray, SQLT_INT],
+            'p_service_amount_array'    => [$serviceAmountArray, SQLT_FLT],
+            'p_service_price_array'     => [$servicePriceArray, SQLT_FLT],
+            'p_manager_id' 	            => $userWho['MANAGER_ID'],
+            'p_invoice_num' 	        => 'out',
+            'p_error_code'              => 'out'
         ];
 
-        $invoiceNum = $db->procedure('client_contract_invoice_pay', $data, true);
+        $invoiceNum = $db->procedure('client_contract_invoice_goods', $data, true);
 
         return $invoiceNum['p_invoice_num'];
     }

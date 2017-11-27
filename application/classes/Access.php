@@ -111,20 +111,51 @@ class Access
      */
     public static function check($type, $id)
     {
+        if (empty($type) || empty($id)) {
+            throw new HTTP_Exception_404();
+        }
+
         $allow = false;
 
-        if(!empty($type)){
-            switch($type){
-                case 'client':
-                    if(!empty($id)){
-                        $clients = Model_Client::getClientsList();
+        switch($type){
+            case 'client':
+                $clients = Model_Client::getClientsList(false, [
+                    'ids' => $id
+                ]);
 
-                        if(!empty($clients[$id])){
-                            $allow = true;
-                        }
-                    }
-                    break;
-            }
+                if(!empty($clients[$id])){
+                    $allow = true;
+                }
+                break;
+            case 'contract':
+                $clients = Model_Client::getClientsList();
+
+                $contracts = Model_Contract::getContracts(false, [
+                    'client_id' => array_keys($clients),
+                    'contract_id' => $id
+                ]);
+
+                if(!empty($contracts)){
+                    $allow = true;
+                }
+                break;
+            case 'card':
+                $clients = Model_Client::getClientsList();
+
+                $contracts = Model_Contract::getContracts(false, [
+                    'client_id' => array_keys($clients),
+                ]);
+
+                $params = [
+                    'contract_id' => array_column($contracts, 'CONTRACT_ID')
+                ];
+
+                $cards = Model_Card::getCards(false, $id, $params);
+
+                if(!empty($cards)){
+                    $allow = true;
+                }
+                break;
         }
 
         if(!$allow){

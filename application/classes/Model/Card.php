@@ -32,6 +32,10 @@ class Model_Card extends Model
 		//self::CARD_LIMIT_TYPE_ONCE 	=> 'единовременно',
 	];
 
+	public static $editLimitsManagerNoLimit = [
+	    1233
+    ];
+
 	/**
 	 * получаем список доступный карт по контракту
 	 *
@@ -47,12 +51,9 @@ class Model_Card extends Model
 		}
 
 		$db = Oracle::init();
-		$user = User::current();
 
 		$sql = (new Builder())->select()
             ->from('V_WEB_CRD_LIST')
-            /*->from('V_WEB_CARD_GROUPS')
-            ->where('manager_id = '.$user['MANAGER_ID'])*/
         ;
 
 		if(!empty($contractId)){
@@ -76,6 +77,11 @@ class Model_Card extends Model
             } else {
                 $sql->where('CARD_STATE = '.Model_Card::CARD_STATE_BLOCKED);
             }
+        }
+
+        if(!empty($params['contract_id'])){
+            $params['contract_id'] = (array)$params['contract_id'];
+            $sql->where("contract_id in (".implode(',', array_map('intval', $params['contract_id']))).")";
         }
 
         if(!empty($params['pagination'])) {
@@ -313,7 +319,10 @@ class Model_Card extends Model
             return [false, 'Изменение лимитов не произошло. Превышен лимит ограничений'];
         }
 
-		if(in_array($user['role'], array_keys(Access::$clientRoles))) {
+		if(
+		    in_array($user['role'], array_keys(Access::$clientRoles)) &&
+            !in_array($user['MANAGER_ID'], self::$editLimitsManagerNoLimit)
+        ) {
             $currentLimits = self::getOilRestrictions($cardId);
 
             foreach($limits as $limit){
