@@ -21,10 +21,10 @@
 
             block.append('<tr>' +
                 (canEdit ? '<th class="td_check"><input type="checkbox" onchange="checkAllRows($(this), \'pos_id\')"></th>' : '') +
-                '<th><nobr>PROJECT NAME</nobr></th>' +
-                '<th><nobr>ID EMI</nobr></th>' +
-                '<th><nobr>ID TO</nobr></th>' +
-                '<th><nobr>POS name</nobr></th>' +
+                '<th><nobr>Шаблон ТО</nobr></th>' +
+                '<th><nobr>Эмитент</nobr></th>' +
+                '<th><nobr>Номер ТО</nobr></th>' +
+                '<th><nobr>Название</nobr></th>' +
                 '<th>Владелец</th>' +
                 '<th>Адрес</th>' +
                 (canEdit ? '<th class="td_edit"></th>' : '') +

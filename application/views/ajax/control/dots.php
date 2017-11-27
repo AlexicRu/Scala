@@ -29,10 +29,10 @@
 
             block.append('<tr>' +
                 '<th class="td_check"><input type="checkbox" onchange="checkAllRows($(this), \'pos_id\')" style="display: none;"></th>' +
-                '<th><input type="text" name="dots_filter_project_name" placeholder="PROJECT NAME" class="input_small"></th>' +
-                '<th><input type="text" name="dots_filter_id_emi" placeholder="ID EMI" class="input_tiny"></th>' +
-                '<th><input type="text" name="dots_filter_id_to" placeholder="ID TO" class="input_tiny"></th>' +
-                '<th><input type="text" name="dots_filter_pos_name" placeholder="POS name" class="input_small"></th>' +
+                '<th><input type="text" name="dots_filter_project_name" placeholder="Шаблон ТО" class="input_small"></th>' +
+                '<th><input type="text" name="dots_filter_id_emi" placeholder="Эмитент" class="input_small"></th>' +
+                '<th><input type="text" name="dots_filter_id_to" placeholder="Номер ТО" class="input_small"></th>' +
+                '<th><input type="text" name="dots_filter_pos_name" placeholder="Название" class="input_small"></th>' +
                 '<th><input type="text" name="dots_filter_owner" placeholder="Владелец"></th>' +
                 '<th style="width:300px;"><input type="text" name="dots_filter_address" placeholder="Адрес">'+
                     '<button class="btn btn_small btn_icon fr" onclick="filterDots<?=$postfix?>($(this))"><i class="icon-find"></i></button>'+

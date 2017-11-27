@@ -18,7 +18,7 @@
                 <div class="tab_v_content" tab_content="<?=$reportGroupId?>">
                     <table>
                         <tr>
-                            <td class="gray right" width="150">Отчет:</td>
+                            <td class="gray right" width="150">Шаблон отчета:</td>
                             <td>
                                 <select class="report_select select_big select_long">
                                     <?foreach($reportsList as $report){?>
