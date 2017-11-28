@@ -100,9 +100,17 @@
                     tpl.find('span.gray:last').text('Сумма');
                     tpl.find('b:last').html(number_format(data[i].SUMPAY, 2, ',', ' ') + ' <?=Text::RUR?>');
 
-                    if (data[i].PAY_COMMENT) {
-                        tpl.append('<div class="full_comment"><i>Комментарий:</i> '+ data[i].PAY_COMMENT +'</div>');
+                    var tplAdditional = $('<div class="line_inner__additional" />');
+
+                    if (data[i].DATE_IN) {
+                        tplAdditional.append('<div class="date_in_comment"><i>Дата внесения::</i> '+ data[i].DATE_IN +'</div>');
                     }
+
+                    if (data[i].PAY_COMMENT) {
+                        tplAdditional.append('<div class="full_comment"><i>Комментарий:</i> '+ data[i].PAY_COMMENT +'</div>');
+                    }
+
+                    tpl.append(tplAdditional);
 
                     block.append(tpl);
                 }
