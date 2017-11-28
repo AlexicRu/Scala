@@ -29,6 +29,7 @@
 </div>
 <div class="as_table">
     <div class="col">
+        <?if(Access::allow('view_payment_block')){?>
         <b class="f18">Оплата:</b>
         <table>
             <tr>
@@ -92,8 +93,9 @@
                 </td>
             </tr>
         </table>
+        <?}?>
 
-        <?if(Access::allow('view_goods_reciever')){?>
+        <?if(Access::allow('view_goods_receiver')){?>
         <br>
         <b class="f18">Грузополучатель:</b><br>
         <table>

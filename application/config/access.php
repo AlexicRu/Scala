@@ -169,7 +169,7 @@ return [
             Access::ROLE_MANAGER,
             Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
-        'view_goods_reciever' => [
+        'view_goods_receiver' => [
             'a_14',
             'a_16',
             'a_17',
@@ -258,6 +258,9 @@ return [
         'client_add_bill_add_product' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
+        ],
+        'view_payment_block' => [
+            Access::ROLE_CLIENT
         ]
     ]
 ];
