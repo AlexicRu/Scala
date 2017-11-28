@@ -103,7 +103,7 @@
                     var tplAdditional = $('<div class="line_inner__additional" />');
 
                     if (data[i].DATE_IN) {
-                        tplAdditional.append('<div class="date_in_comment"><i>Дата внесения::</i> '+ data[i].DATE_IN +'</div>');
+                        tplAdditional.append('<div class="date_in_comment gray"><i>Внесена:</i> '+ data[i].DATE_IN +'</div>');
                     }
 
                     if (data[i].PAY_COMMENT) {
