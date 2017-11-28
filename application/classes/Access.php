@@ -122,8 +122,8 @@ class Access
 
         switch($type){
             case 'client':
-                $clients = Model_Client::getClientsList(false, [
-                    'ids' => $id
+                $clients = Model_Client::getClientsList(null, [
+                    'ids' => [$id]
                 ]);
 
                 if(!empty($clients[$id])){
