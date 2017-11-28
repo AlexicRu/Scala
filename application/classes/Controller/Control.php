@@ -141,10 +141,10 @@ class Controller_Control extends Controller_Common {
 
         if ($this->toXls){
             $this->showXls('group_dots', $result, [
-                'PROJECT_NAME'  => 'PROJECT NAME',
-                'ID_EMITENT'    => 'ID EMI',
-                'ID_TO'         => 'ID TO',
-                'POS_NAME'      => 'POS name',
+                'PROJECT_NAME'  => 'Шаблон ТО',
+                'ID_EMITENT'    => 'Эмитент',
+                'ID_TO'         => 'Номер ТО',
+                'POS_NAME'      => 'Название',
                 'OWNER'         => 'Владелец',
                 'POS_ADDRESS'   => 'Адрес'
             ], true);
@@ -287,10 +287,10 @@ class Controller_Control extends Controller_Common {
 
         if ($this->toXls){
             $this->showXls('dots', $result, [
-                'PROJECT_NAME'  => 'PROJECT NAME',
-                'ID_EMITENT'    => 'ID EMI',
-                'ID_TO'         => 'ID TO',
-                'POS_NAME'      => 'POS name',
+                'PROJECT_NAME'  => 'Шаблон ТО',
+                'ID_EMITENT'    => 'Эмитент',
+                'ID_TO'         => 'Номер ТО',
+                'POS_NAME'      => 'Название',
                 'OWNER'         => 'Владелец',
                 'POS_ADDRESS'   => 'Адрес'
             ], true);

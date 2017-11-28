@@ -9,7 +9,7 @@ $postfix = $card['CARD_ID'];
         </td>
     </tr>
     <tr>
-        <td class="gray right">Держатель с:</td>
+        <td class="gray right">Выдана держателю:</td>
         <td>
             <input type="text" class="input_big datepicker" readonly name="card_edit_date" value="<?=$card['DATE_HOLDER']?>">
         </td>

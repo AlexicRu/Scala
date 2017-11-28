@@ -14,19 +14,19 @@
             <div class="services_list jsGrid"></div>
         </div>
         <div class="col line_inner">
-            <b class="f18">Добавление услуги</b>
+            <b class="f18">Добавление конвертации услуг</b>
 
             <table>
                 <tr>
-                    <td class="gray right">В справочнике</td>
+                    <td class="gray right">Ввод из источника:</td>
                     <td>
-                        <?=Common::buildFormField('service_choose_single', 'add_service_in_service')?>
+                        <input type="text" name="add_service_in_source" class="input_wide">
                     </td>
                 </tr>
                 <tr>
-                    <td class="gray right">В источнике</td>
+                    <td class="gray right">Выбор из справочника</td>
                     <td>
-                        <input type="text" name="add_service_in_source" class="input_wide">
+                        <?=Common::buildFormField('service_choose_single', 'add_service_in_service')?>
                     </td>
                 </tr>
                 <tr>
@@ -131,9 +131,10 @@
             data: rows,
 
             fields: [
-                { name: "ID", type: "text", title: 'ID', width:100},
-                { name: "DESCRIPTION", type: "text", title: 'Краткое наименование', width:100},
-                { name: "SERVICE_IN_TUBE", type: "text", title: 'Полное наименование', width:150},
+                { name: "ID", type: "text", title: 'ID', width:50},
+                { name: "DESCRIPTION", type: "text", title: 'Наименование в справочнике', width:90},
+                { name: "FULL_DESC", type: "text", title: 'Полное наименование', width:150},
+                { name: "SERVICE_IN_TUBE", type: "text", title: 'Наименование в источнике', width:160},
             ]
         });
     }
