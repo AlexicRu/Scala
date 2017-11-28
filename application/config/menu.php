@@ -6,18 +6,19 @@ return array(
     'reports'           => ['title' => 'Отчетность', 'icon' => 'icon-reports'],
     'control'           => ['title' => 'Управление', 'icon' => 'icon-set', 'children' => [
         'managers'      => 'Менеджеры',
-        'dots'          => 'Точки обслуживания',
         'tariffs'       => 'Тарифы',
         'connect_1c'    => 'Связь с 1С',
         'cards_groups'  => 'Группы карт',
         'firms_groups'  => 'Группы фирм',
+        'dots_groups'   => 'Группы ТО',
     ]],
     'references'        => ['title' => 'Справочники', 'icon' => 'icon-contract', 'children' => [
         'sources'       => 'Источники данных',
         'addresses'     => 'Адресный справочник',
         'currency'      => 'Валюты',
         'services'      => 'Услуги',
-        'cards'         => 'Список карт'
+        'cards'         => 'Список карт',
+        'dots'          => 'Точки обслуживания',
     ]],
     'administration'    => ['title' => 'Сервис', 'icon' => 'icon-service', 'children' => [
         'transactions'  => 'Транзакции',

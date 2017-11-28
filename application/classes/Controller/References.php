@@ -142,4 +142,12 @@ class Controller_References extends Controller_Common {
             ->bind('cardsList', $cardsList)
         ;
     }
+
+    /**
+     * страницы точек
+     */
+    public function action_dots()
+    {
+        $this->title[] = 'Точки обслуживания';
+    }
 }

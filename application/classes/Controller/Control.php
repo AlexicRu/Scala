@@ -80,7 +80,7 @@ class Controller_Control extends Controller_Common {
     /**
      * страницы групп точек
      */
-    public function action_dots()
+    public function action_dots_groups()
     {
         $this->title[] = 'Группы точек';
 
