@@ -117,6 +117,8 @@ class Access
 
         $allow = false;
 
+        $user = User::current();
+
         switch($type){
             case 'client':
                 $clients = Model_Client::getClientsList(false, [
@@ -127,34 +129,13 @@ class Access
                     $allow = true;
                 }
                 break;
+
             case 'contract':
-                $clients = Model_Client::getClientsList();
-
-                $contracts = Model_Contract::getContracts(false, [
-                    'client_id' => array_keys($clients),
-                    'contract_id' => $id
-                ]);
-
-                if(!empty($contracts)){
-                    $allow = true;
-                }
+                $allow = Model_Contract::checkUserAccess($user['MANAGER_ID'], $id);
                 break;
+
             case 'card':
-                $clients = Model_Client::getClientsList();
-
-                $contracts = Model_Contract::getContracts(false, [
-                    'client_id' => array_keys($clients),
-                ]);
-
-                $params = [
-                    'contract_id' => array_column($contracts, 'CONTRACT_ID')
-                ];
-
-                $cards = Model_Card::getCards(false, $id, $params);
-
-                if(!empty($cards)){
-                    $allow = true;
-                }
+                $allow = Model_Card::checkUserAccess($user['MANAGER_ID'], $id);
                 break;
         }
 

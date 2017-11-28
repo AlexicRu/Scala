@@ -784,4 +784,30 @@ class Model_Contract extends Model
         }
         return false;
     }
+
+    /**
+     * проверяем доступ юзера к контракту
+     *
+     * @param $userId
+     * @param $contractId
+     */
+    public static function checkUserAccess($userId, $contractId)
+    {
+        if (empty($userId) || empty($contractId)) {
+            return false;
+        }
+
+        $data = [
+            'p_contract_id'		=> $contractId,
+            'p_manager_id' 		=> $userId,
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = Oracle::init()->procedure('check_manager_contract', $data);
+
+        if($res == Oracle::CODE_SUCCESS){
+            return true;
+        }
+        return false;
+    }
 }

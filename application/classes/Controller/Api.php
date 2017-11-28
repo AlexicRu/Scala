@@ -112,21 +112,10 @@ class Controller_Api extends Controller_Template
     /**
      * GET
      * грузим историю операций
-     * @todo оно? добавить фильтры
      */
     public function action_transactions_history()
     {
-        $params = [
-            'filter' => [],
-        ];
-
-        $history = Model_Transaction::getTransactionsHistory($params);
-
-        if(empty($history)){
-            $this->jsonResult(false);
-        }
-
-        $this->jsonResult(true, $history);
+        $this->jsonResult(false);
     }
 
     /**
