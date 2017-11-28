@@ -817,9 +817,9 @@ class Model_Card extends Model
         }
 
         $data = [
+            'p_manager_id' 		=> $userId,
             'p_contract_id'		=> $contractId,
             'p_card_id' 		=> $cardId,
-            'p_manager_id' 		=> $userId,
         ];
 
         $res = Oracle::init()->func('check_manager_card', $data);
