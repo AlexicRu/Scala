@@ -272,7 +272,7 @@ class Model_Contract extends Model
         $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_LIST where agent_id = ".Oracle::quote($user['AGENT_ID']);
 
         if (!empty($params['tarif_name'])) {
-            $sql .= " and upper(tarif_name) like upper(".mb_strtoupper(Oracle::quote('%'.$params['tarif_name'].'%')).") ";
+            $sql .= " and upper(tarif_name) like ".mb_strtoupper(Oracle::quote('%'.$params['tarif_name'].'%'));
         }
 
         if (!empty($params['ids'])) {
