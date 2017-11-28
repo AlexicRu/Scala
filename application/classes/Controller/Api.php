@@ -125,9 +125,10 @@ class Controller_Api extends Controller_Template
     public function action_card_limits()
     {
         $cardId = $this->request->query('card_id');
+        $contractId = $this->request->query('contract_id');
 
         try {
-            Access::check('card', $cardId);
+            Access::check('card', $cardId, $contractId);
         } catch (HTTP_Exception_404 $e) {
             $this->jsonResult(false);
         }
@@ -147,7 +148,6 @@ class Controller_Api extends Controller_Template
      */
     public function action_cards_list()
     {
-        $cardId = $this->request->query('card_id');
         $contractId = $this->request->query('contract_id');
 
         try {
@@ -156,9 +156,9 @@ class Controller_Api extends Controller_Template
             $this->jsonResult(false);
         }
 
-        $cards = Model_Card::getCards($cardId, $contractId);
+        $cards = Model_Card::getCards($contractId);
 
-        if(empty($limits)){
+        if(empty($cards)){
             $this->jsonResult(false);
         }
 
@@ -187,7 +187,7 @@ class Controller_Api extends Controller_Template
 
         $contracts = Model_Contract::getContracts($clientId, $params);
 
-        if(empty($limits)){
+        if(empty($contracts)){
             $this->jsonResult(false);
         }
 

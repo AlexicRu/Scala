@@ -108,8 +108,9 @@ class Access
      *
      * @param $type
      * @param $id
+     * @param $additionalId
      */
-    public static function check($type, $id)
+    public static function check($type, $id, $additionalId = false)
     {
         if (empty($type) || empty($id)) {
             throw new HTTP_Exception_404();
@@ -135,7 +136,7 @@ class Access
                 break;
 
             case 'card':
-                $allow = Model_Card::checkUserAccess($user['MANAGER_ID'], $id);
+                $allow = Model_Card::checkUserAccess($user['MANAGER_ID'], $id, $additionalId);
                 break;
         }
 

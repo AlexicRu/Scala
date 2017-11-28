@@ -800,10 +800,9 @@ class Model_Contract extends Model
         $data = [
             'p_contract_id'		=> $contractId,
             'p_manager_id' 		=> $userId,
-            'p_error_code' 		=> 'out',
         ];
 
-        $res = Oracle::init()->procedure('check_manager_contract', $data);
+        $res = Oracle::init()->func('check_manager_contract', $data);
 
         if($res == Oracle::CODE_SUCCESS){
             return true;

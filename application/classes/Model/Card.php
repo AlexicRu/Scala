@@ -808,20 +808,21 @@ class Model_Card extends Model
      *
      * @param $userId
      * @param $cardId
+     * @param $contractId
      */
-    public static function checkUserAccess($userId, $cardId)
+    public static function checkUserAccess($userId, $cardId, $contractId)
     {
-        if (empty($userId) || empty($cardId)) {
+        if (empty($userId) || empty($cardId) || empty($contractId)) {
             return false;
         }
 
         $data = [
-            'p_contract_id'		=> $cardId,
+            'p_contract_id'		=> $contractId,
+            'p_card_id' 		=> $cardId,
             'p_manager_id' 		=> $userId,
-            'p_error_code' 		=> 'out',
         ];
 
-        $res = Oracle::init()->procedure('check_manager_card', $data);
+        $res = Oracle::init()->func('check_manager_card', $data);
 
         if($res == Oracle::CODE_SUCCESS){
             return true;
