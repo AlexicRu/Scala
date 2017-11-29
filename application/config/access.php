@@ -77,12 +77,6 @@ return [
             Access::ROLE_SUPERVISOR,
 
         ],
-        'control_cards_groups' => [
-            Access::ROLE_ADMIN,
-            Access::ROLE_SUPERVISOR,
-            Access::ROLE_CLIENT,
-            Access::ROLE_USER_SECOND,
-        ],
         'administration_index' => [
             Access::ROLE_ADMIN,
         ],
@@ -144,6 +138,10 @@ return [
         ],
         'administration_calc_tariffs' => [
             Access::ROLE_ROOT
+        ],
+        'control_dots_groups' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
         ],
         // custom
         'view_contract_balances' => [

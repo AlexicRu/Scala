@@ -11,7 +11,7 @@
 
 <div class="tabs_block tabs_switcher tabs_connect_1c">
     <div class="tabs">
-        <span tab="payments" class="tab active">Загрузка платежей</span><span tab="documents" class="tab">Загрузка отчетных документов</span>
+        <span tab="payments" class="tab active">Загрузка платежей</span><!--span tab="documents" class="tab">Загрузка отчетных документов</span-->
     </div>
     <div class="tabs_content">
         <div tab_content="payments" class="tab_content active">
