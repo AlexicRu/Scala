@@ -802,4 +802,31 @@ class Model_Card extends Model
 
         return Oracle::init()->query($sql);
     }
+
+    /**
+     * проверяем доступ юзера к карте
+     *
+     * @param $userId
+     * @param $cardId
+     * @param $contractId
+     */
+    public static function checkUserAccess($userId, $cardId, $contractId)
+    {
+        if (empty($userId) || empty($cardId) || empty($contractId)) {
+            return false;
+        }
+
+        $data = [
+            'p_manager_id' 		=> $userId,
+            'p_contract_id'		=> $contractId,
+            'p_card_id' 		=> $cardId,
+        ];
+
+        $res = Oracle::init()->func('check_manager_card', $data);
+
+        if($res == Oracle::CODE_SUCCESS){
+            return true;
+        }
+        return false;
+    }
 }

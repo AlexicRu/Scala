@@ -186,7 +186,7 @@ class Oracle{
     public static function quote($val)
     {
         $str = str_replace(["%", "*", "_"], ["\%", "\*", "\_"], $val);
-        $str = preg_replace("/^\\%|\\%$/", "%", $str);
+        $str = preg_replace('/^\\\\%|\\\\%$/', "%", $str);
 
         $postfix = '';
         if ($str != $val) {
@@ -194,6 +194,33 @@ class Oracle{
         }
 
         return "'".str_replace(["'"], ["''"], trim($str))."'" . $postfix;
+    }
+
+    /**
+     * выполнение функции
+     *
+     * @param $function
+     * @param $data
+     * @return int|mixed
+     */
+    public function func($function, $data)
+    {
+        if(empty($function) || empty($data)){
+            return false;
+        }
+
+        $keys = [];
+        foreach(array_keys($data) as $key){
+            $keys[] = ':'.$key;
+        }
+
+        $query = 'begin :result := '.$this->_prefix.$this->_pack.$function.'('.implode(', ', $keys).'); end;';
+
+        $data['result'] = 'out';
+
+        $response = $this->ora_proced($query, $data);
+
+        return $response['result'];
     }
 
 	/**

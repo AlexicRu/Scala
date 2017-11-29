@@ -848,10 +848,26 @@ textarea.input_grand {
   clear: both;
   white-space: normal;
 }
+.line_inner .full_comment-right {
+  max-width: 700px;
+  clear: none;
+  float: right;
+  padding-left: 50px;
+}
 .line_inner__second_line {
   white-space: normal;
   clear: both;
   padding: 10px 30px 0;
+}
+.line_inner__additional {
+  display: table;
+  width: 100%;
+}
+.line_inner__additional > div {
+  display: table-cell;
+}
+.line_inner__additional > div.full_comment {
+  padding-left: 50px;
 }
 .line_inner + .line_inner {
   margin-top: 2px;

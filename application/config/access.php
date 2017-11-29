@@ -77,12 +77,6 @@ return [
             Access::ROLE_SUPERVISOR,
 
         ],
-        'control_cards_groups' => [
-            Access::ROLE_ADMIN,
-            Access::ROLE_SUPERVISOR,
-            Access::ROLE_CLIENT,
-            Access::ROLE_USER_SECOND,
-        ],
         'administration_index' => [
             Access::ROLE_ADMIN,
         ],
@@ -145,6 +139,10 @@ return [
         'administration_calc_tariffs' => [
             Access::ROLE_ROOT
         ],
+        'control_dots_groups' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,
@@ -169,7 +167,7 @@ return [
             Access::ROLE_MANAGER,
             Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
-        'view_goods_reciever' => [
+        'view_goods_receiver' => [
             'a_14',
             'a_16',
             'a_17',
@@ -258,6 +256,9 @@ return [
         'client_add_bill_add_product' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
+        ],
+        'view_payment_block' => [
+            Access::ROLE_CLIENT
         ]
     ]
 ];

@@ -272,7 +272,7 @@ class Model_Contract extends Model
         $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_LIST where agent_id = ".Oracle::quote($user['AGENT_ID']);
 
         if (!empty($params['tarif_name'])) {
-            $sql .= " and upper(tarif_name) like upper(".mb_strtoupper(Oracle::quote('%'.$params['tarif_name'].'%')).") ";
+            $sql .= " and upper(tarif_name) like ".mb_strtoupper(Oracle::quote('%'.$params['tarif_name'].'%'));
         }
 
         if (!empty($params['ids'])) {
@@ -778,6 +778,31 @@ class Model_Contract extends Model
         ];
 
         $res = Oracle::init()->procedure('client_contract_service_add', $data);
+
+        if($res == Oracle::CODE_SUCCESS){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * проверяем доступ юзера к контракту
+     *
+     * @param $userId
+     * @param $contractId
+     */
+    public static function checkUserAccess($userId, $contractId)
+    {
+        if (empty($userId) || empty($contractId)) {
+            return false;
+        }
+
+        $data = [
+            'p_manager_id' 		=> $userId,
+            'p_contract_id'		=> $contractId,
+        ];
+
+        $res = Oracle::init()->func('check_manager_contract', $data);
 
         if($res == Oracle::CODE_SUCCESS){
             return true;
