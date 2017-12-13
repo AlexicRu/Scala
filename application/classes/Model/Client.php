@@ -5,7 +5,7 @@ class Model_Client extends Model
 	/**
 	 * получаем список клиентов
 	 */
-    public static function getClientsList($search = null, $params = [])
+    public static function getClientsList($search = null, $params = [], $select = [])
     {
         $db = Oracle::init();
 
@@ -50,6 +50,10 @@ class Model_Client extends Model
 
         if(!empty($params['limit'])){
             $sql->limit($params['limit']);
+        }
+
+        if (!empty($select)) {
+            $sql->select($select);
         }
 
         $result = $db->tree($sql, 'CLIENT_ID');

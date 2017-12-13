@@ -44,7 +44,7 @@ class Model_Card extends Model
 	 * @param $params
 	 * @return array|int
 	 */
-	public static function getCards($contractId = false, $cardId = false, $params = false)
+	public static function getCards($contractId = false, $cardId = false, $params = false, $select = [])
 	{
 		if(empty($contractId) && empty($cardId)){
 			return [];
@@ -84,6 +84,10 @@ class Model_Card extends Model
             $sql->where("contract_id in (".implode(',', array_map('intval', $params['contract_id']))).")";
         }
 
+        if (!empty($select)) {
+		    $sql->select($select);
+        }
+
         if(!empty($params['pagination'])) {
             return $db->pagination($sql, $params);
         }
@@ -112,7 +116,7 @@ class Model_Card extends Model
 	 *
 	 * @param $cardId
 	 */
-	public static function getOilRestrictions($cardId)
+	public static function getOilRestrictions($cardId, $select = [])
 	{
 		if(empty($cardId)){
 			return [];
@@ -120,11 +124,14 @@ class Model_Card extends Model
 
 		$db = Oracle::init();
 
-		$sql = "
-			select *
-			from ".Oracle::$prefix."V_WEB_CRD_LIMITS
-			where card_id = ".Oracle::quote($cardId)
-		;
+		$sql = (new Builder())->select()
+            ->from('V_WEB_CRD_LIMITS')
+            ->where('card_id = ' . Oracle::quote($cardId))
+        ;
+
+		if (!empty($select)) {
+		    $sql->select($select);
+        }
 
 		$restrictions = $db->tree($sql, 'LIMIT_GROUP');
 

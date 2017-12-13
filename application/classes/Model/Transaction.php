@@ -61,4 +61,37 @@ class Model_Transaction extends Model
         }
         return $db->query($sql);
     }
+
+    /**
+     * получение списка транзакций
+     *
+     * @param $contractId
+     * @param array $select
+     * @return array|bool
+     */
+    public static function getTransactions($contractId, $params = [], $select = [])
+    {
+        if (empty($contractId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_API_TRANSACTION')
+            ->where('contract_id = ' . (int)$contractId)
+        ;
+
+        if (!empty($params['date_from'])) {
+            $sql->where('DATE_TRN >= '. Oracle::toDateOracle($params['date_from'], 'd.m.Y'));
+        }
+
+        if (!empty($params['date_to'])) {
+            $sql->where('DATE_TRN <= '. Oracle::toDateOracle($params['date_to'], 'd.m.Y'));
+        }
+
+        if (!empty($select)) {
+            $sql->select($select);
+        }
+
+        return Oracle::init()->query($sql);
+    }
 }

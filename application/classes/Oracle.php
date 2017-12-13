@@ -388,9 +388,9 @@ class Oracle{
      * @param $string
      * @return string
      */
-    public static function toDateOracle($string)
+    public static function toDateOracle($string, $format = 'd.m.Y H:i:s')
     {
-        $dateTime = DateTime::createFromFormat('d.m.Y H:i:s', $string);
+        $dateTime = DateTime::createFromFormat($format, $string);
 
         return "to_date('".$dateTime->format('d.m.Y')."', 'dd.mm.yyyy')";
     }

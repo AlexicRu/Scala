@@ -113,9 +113,46 @@ class Controller_Api extends Controller_Template
      * GET
      * грузим историю операций
      */
-    public function action_transactions_history()
+    public function action_transactions()
     {
-        $this->jsonResult(false);
+        $contractId = $this->request->query('contract_id');
+        $dateFrom = $this->request->query('date_from') ?: date('01.m.Y');
+        $dateTo = $this->request->query('date_to') ?: date('d.m.Y');
+
+        try {
+            Access::check('contract', $contractId);
+        } catch (HTTP_Exception_404 $e) {
+            $this->jsonResult(false);
+        }
+
+        $transactions = Model_Transaction::getTransactions($contractId, [
+            'date_from' => $dateFrom,
+            'date_to'   => $dateTo,
+        ], [
+            "DATETIME_TRN",
+            "CARD_ID",
+            "CLIENT_ID",
+            "CONTRACT_ID",
+            "OPERATION_ID",
+            "SUPPLIER_TERMINAL",
+            "SERVICE_ID",
+            "DESCRIPTION",
+            "SERVICE_AMOUNT",
+            "SERVICE_PRICE",
+            "SERVICE_SUMPRICE",
+            "TRN_CURRENCY",
+            "PRICE_DISCOUNT",
+            "SUMPRICE_DISCOUNT",
+            "POS_ADDRESS",
+            "TRN_KEY",
+            "TRZ_COMMENT"
+        ]);
+
+        if(empty($transactions)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, $transactions);
     }
 
     /**
@@ -133,7 +170,15 @@ class Controller_Api extends Controller_Template
             $this->jsonResult(false);
         }
 
-        $limits = Model_Card::getOilRestrictions($cardId);
+        $limits = Model_Card::getOilRestrictions($cardId, [
+            "SERVICE_ID",
+            "DESCRIPTION",
+            "LIMIT_GROUP",
+            "LIMIT_PARAM",
+            "LIMIT_TYPE",
+            "LIMIT_VALUE",
+            "LIMIT_CURRENCY",
+        ]);
 
         if(empty($limits)){
             $this->jsonResult(false);
@@ -156,7 +201,15 @@ class Controller_Api extends Controller_Template
             $this->jsonResult(false);
         }
 
-        $cards = Model_Card::getCards($contractId);
+        $cards = Model_Card::getCards($contractId, false, false, [
+            "CARD_ID",
+            "HOLDER",
+            "DATE_HOLDER",
+            "CARD_STATE",
+            "BLOCK_AVAILABLE",
+            "CHANGE_LIMIT_AVAILABLE",
+            "CARD_COMMENT"
+        ]);
 
         if(empty($cards)){
             $this->jsonResult(false);
@@ -185,12 +238,43 @@ class Controller_Api extends Controller_Template
             'agent_id' => $user['AGENT_ID']
         ];
 
-        $contracts = Model_Contract::getContracts($clientId, $params);
+        $contracts = Model_Contract::getContracts($clientId, $params, [
+            "CONTRACT_ID",
+            "CONTRACT_NAME",
+            "DATE_BEGIN",
+            "DATE_END",
+            "CURRENCY",
+            "STATE_ID",
+        ]);
 
         if(empty($contracts)){
             $this->jsonResult(false);
         }
 
         $this->jsonResult(true, $contracts);
+    }
+
+    /**
+     * GET
+     * получаем список контрактов
+     */
+    public function action_clients_list()
+    {
+        $user = User::current();
+
+        $clients = Model_Client::getClientsList(null, [
+            'manager_id' => $user['MANAGER_ID']
+        ], [
+            'CLIENT_ID',
+            'CLIENT_NAME',
+            'LONG_NAME',
+            'CLIENT_STATE',
+        ]);
+
+        if(empty($clients)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, $clients);
     }
 }
