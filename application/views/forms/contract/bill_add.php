@@ -112,8 +112,8 @@
             priceVal = 0;
         }
 
-        if ((parseInt(priceVal * 100) / 100) != priceVal) {
-            priceVal = parseInt(priceVal * 100) / 100;
+        if ((parseInt(priceVal * 10000) / 10000) != priceVal) {
+            priceVal = parseInt(priceVal * 10000) / 10000;
             price.val(priceVal);
         }
 
@@ -122,7 +122,7 @@
             cnt.val(cntVal);
         }
 
-        summ.val(parseInt(priceVal * cntVal * 100) / 100);
+        summ.val(parseInt(priceVal * cntVal * 10000) / 10000);
 
         recalcNDS();
     }
