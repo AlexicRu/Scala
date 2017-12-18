@@ -11,7 +11,7 @@
 
 <div class="tabs_block tabs_switcher tabs_connect_1c">
     <div class="tabs">
-        <span tab="payments" class="tab active">Загрузка платежей</span><!--span tab="documents" class="tab">Загрузка отчетных документов</span-->
+        <span tab="payments" class="tab active">Загрузка платежей</span><?if (Access::allow('view_export_1c_tab')) {?><span tab="export" class="tab">Выгрузка в 1С</span><?}?>
     </div>
     <div class="tabs_content">
         <div tab_content="payments" class="tab_content active">
@@ -26,8 +26,11 @@
 
             <div class="jsGrid connect_1c_payments_jsGrid"></div>
         </div>
-        <div tab_content="documents" class="tab_content">
+        <?if (Access::allow('view_export_1c_tab')) {?>
+        <div tab_content="export" class="tab_content">
+            <?include('connect_1c/export_1c.php')?>
         </div>
+        <?}?>
     </div>
 </div>
 

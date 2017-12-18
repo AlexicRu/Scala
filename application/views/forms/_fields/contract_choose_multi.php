@@ -1,20 +1,22 @@
 <?$dependFieldName = 'client_contract_choose_multi';?>
 
-<span class="form_field" field="<?=$type?>">
-    <input type="text" name="<?=$name?>" class="custom_field combobox input_wide" url="/help/list_client" autocomplete="off" depend="<?=$dependFieldName?>">
-</span>
+<div class="with_depend">
+    <span class="form_field" field="<?=$type?>">
+        <input type="text" name="<?=$name?>" class="custom_field combobox input_wide" url="/help/list_client" autocomplete="off" depend="<?=$dependFieldName?>">
+    </span>
 
-<div>
-    <?
-    $data = [
-        'placeholder' => 'Договор',
-        'depend_on' => $name,
-    ];
-    if(isset($params['weight'])){
-        $data['weight'] = $params['weight'];
-    }
-    ?>
-    <?=Common::buildFormField('_depend/' . $dependFieldName, $dependFieldName, false, $data)?>
+    <div>
+        <?
+        $data = [
+            'placeholder' => 'Договор',
+            'depend_on' => $name,
+        ];
+        if(isset($params['weight'])){
+            $data['weight'] = $params['weight'];
+        }
+        ?>
+        <?=Common::buildFormField('_depend/' . $dependFieldName, $dependFieldName, false, $data)?>
+    </div>
 </div>
 
 <script>

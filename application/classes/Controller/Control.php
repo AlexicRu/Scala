@@ -665,4 +665,63 @@ class Controller_Control extends Controller_Common {
 
         $this->jsonResult($result);
     }
+
+    /**
+     * рендерим блок формы
+     */
+    public function action_client_contract_form()
+    {
+        $iteration = $this->request->query('iteration') ?: 1;
+
+        $html = View::factory('ajax/control/connect_1c/client_contract_form')
+            ->bind('iteration', $iteration)
+        ;
+
+        $this->html($html);
+    }
+
+    /**
+     * экспорт данный для 1с
+     */
+    public function action_export_1c()
+    {
+        $get = $this->request->query();
+
+        if (!empty($get['contracts'])) {
+            $contracts = [];
+
+            foreach ($get['contracts'] as $item) {
+                $contracts = array_merge($contracts, $item);
+            }
+
+            $get['contracts'] = $contracts;
+        }
+
+        $data = Model_Report::exportTo1c($get);
+
+        //render xml
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"></root>');
+
+        $oldClient = false;
+        foreach ($data as $item) {
+            if ($oldClient != $item['ID']) {
+                $oldClient = $item['ID'];
+                $client = $xml->addChild('client');
+                $client->addAttribute('id', $item['ID']);
+                $client->addAttribute('name', $item['NAME']);
+            }
+
+            $delivery = $client->addChild('delivery');
+            $delivery->addChild('territory_id', $item['TERRITORY_ID']);
+            $delivery->addChild('supplier_id', $item['SUPPLIER_ID']);
+            $delivery->addChild('unit_type', $item['UNIT_TYPE']);
+            $delivery->addChild('vat_rate', $item['VAT_RATE']);
+            $delivery->addChild('recharge_vat', $item['RECHARGE_VAT']);
+            $delivery->addChild('volume', $item['VOLUME']);
+            $delivery->addChild('cost', $item['COST']);
+            $delivery->addChild('sale', $item['SALE']);
+        }
+
+        $this->_showXml($xml->asXML());
+    }
 }

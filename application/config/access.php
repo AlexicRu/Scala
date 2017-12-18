@@ -182,6 +182,9 @@ return [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
         ],
+        'view_export_1c_tab' => [
+            Access::ROLE_ADMIN
+        ],
         'root' => [
             Access::ROLE_ROOT
         ]

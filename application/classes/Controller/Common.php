@@ -110,6 +110,19 @@ abstract class Controller_Common extends Controller_Template {
         exit;
     }
 
+    /**
+     * show xml
+     * @param $xml
+     */
+    protected function _showXml($xml)
+    {
+        header('Content-type: text/xml');
+        header('Content-Disposition: attachment; filename="export.xml"');
+
+        echo $xml;
+        exit;
+    }
+
     protected function json($data){
         header('Content-Type: application/json');
         echo json_encode($data);
