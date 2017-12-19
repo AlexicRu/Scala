@@ -14,7 +14,7 @@ class Messages
 
         $user = User::current();
 
-        $key = 'messages_user'.(!empty($user['MANAGER_ID']) ? $user['MANAGER_ID'] : 0);
+        $key = 'messages_user'.(!empty($user['MANAGER_ID']) ? $user['MANAGER_ID'] : Session::instance()->id());
 
         $messages = $cache->get($key);
 
@@ -41,7 +41,7 @@ class Messages
 
         $user = User::current();
 
-        $key = 'messages_user'.(!empty($user['MANAGER_ID']) ? $user['MANAGER_ID'] : 0);
+        $key = 'messages_user'.(!empty($user['MANAGER_ID']) ? $user['MANAGER_ID'] : Session::instance()->id());
 
         return $cache->set($key, $messages);
     }
