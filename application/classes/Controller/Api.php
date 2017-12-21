@@ -8,6 +8,7 @@ class Controller_Api extends Controller_Template
      * @var Api
      */
     private $_api;
+    private $_errors = [];
 
     protected function json($data){
         header('Content-Type: application/json');
@@ -17,7 +18,17 @@ class Controller_Api extends Controller_Template
 
     protected function jsonResult($result, $data = [])
     {
-        self::json(['success' => $result, 'data' => $data]);
+        if (empty($result)) {
+            $apiErrors = $this->_api->getErrors();
+
+            $data = array_merge($this->_errors, (array)$data, $apiErrors);
+
+            if (empty($data)) {
+                $data[] = 'unknown error';
+            }
+        }
+
+        self::json(['success' => $result, 'data' => (array)$data]);
     }
 
     public function before()
@@ -33,20 +44,25 @@ class Controller_Api extends Controller_Template
 
         if (!isset($withoutToken[$action])) {
             if (empty($this->_token)) {
-                $this->jsonResult(0, ['error' => 'empty token']);
+                $this->jsonResult(false, 'empty token');
             } else {
                 $managerId = $this->_api->getUserIdByToken($this->_token);
 
                 if (empty($managerId)) {
-                    $this->jsonResult(0, ['error' => 'invalid token']);
+                    $this->jsonResult(false, 'invalid token');
                 } else {
                     $user = Model_Manager::getManager($managerId);
 
                     $resultAuth = Auth::instance()->login($user, ['hash' => $user['PASSWORD']], false);
 
                     if (empty($resultAuth)) {
-                        $messages = Messages::get();
-                        $this->jsonResult(0, ['errors' => $messages]);
+                        foreach (Messages::get() as $item) {
+                            if ($item['type'] == 'error') {
+                                $this->_errors[] = $item['text'];
+                            }
+                        }
+
+                        $this->jsonResult(false);
                     }
                 }
             }
@@ -65,8 +81,13 @@ class Controller_Api extends Controller_Template
         $resultAuth = Auth::instance()->login($login, $password, FALSE);
 
         if (empty($resultAuth)) {
-            $messages = Messages::get();
-            $this->jsonResult(0, ['errors' => $messages]);
+            foreach (Messages::get() as $item) {
+                if ($item['type'] == 'error') {
+                    $this->_errors[] = $item['text'];
+                }
+            }
+
+            $this->jsonResult(false);
         }
 
         $user = User::current();
@@ -74,10 +95,10 @@ class Controller_Api extends Controller_Template
         $this->_token = $this->_api->getToken($user['MANAGER_ID']);
 
         if ($this->_token) {
-            $this->jsonResult(1, ['token' => $this->_token]);
+            $this->jsonResult(true, ['token' => $this->_token]);
         }
 
-        $this->jsonResult(0, ['errors' => ['get token error']]);
+        $this->jsonResult(false);
     }
 
     /**
@@ -85,7 +106,7 @@ class Controller_Api extends Controller_Template
      */
     public function action_test()
     {
-        $this->jsonResult(1, ['test' => true]);
+        $this->jsonResult(true, ['test' => true]);
     }
 
     /**
@@ -103,7 +124,7 @@ class Controller_Api extends Controller_Template
         $result = Model_Card::toggleStatus($params);
 
         if(empty($result)){
-            $this->jsonResult(false);
+            $this->jsonResult(false, 'Статус не изменился');
         }
 
         $this->jsonResult(true);
@@ -122,7 +143,7 @@ class Controller_Api extends Controller_Template
         try {
             Access::check('contract', $contractId);
         } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false);
+            $this->jsonResult(false, 'no access to contract');
         }
 
         $transactions = Model_Transaction::getTransactions($contractId, [
@@ -148,10 +169,6 @@ class Controller_Api extends Controller_Template
             "TRZ_COMMENT"
         ]);
 
-        if(empty($transactions)){
-            $this->jsonResult(false);
-        }
-
         $this->jsonResult(true, $transactions);
     }
 
@@ -167,7 +184,7 @@ class Controller_Api extends Controller_Template
         try {
             Access::check('card', $cardId, $contractId);
         } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false);
+            $this->jsonResult(false, 'no access to card');
         }
 
         $limits = Model_Card::getOilRestrictions($cardId, [
@@ -179,10 +196,6 @@ class Controller_Api extends Controller_Template
             "LIMIT_VALUE",
             "LIMIT_CURRENCY",
         ]);
-
-        if(empty($limits)){
-            $this->jsonResult(false);
-        }
 
         $this->jsonResult(true, $limits);
     }
@@ -198,7 +211,7 @@ class Controller_Api extends Controller_Template
         try {
             Access::check('contract', $contractId);
         } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false);
+            $this->jsonResult(false, 'no access to contract');
         }
 
         $cards = Model_Card::getCards($contractId, false, false, [
@@ -210,10 +223,6 @@ class Controller_Api extends Controller_Template
             "CHANGE_LIMIT_AVAILABLE",
             "CARD_COMMENT"
         ]);
-
-        if(empty($cards)){
-            $this->jsonResult(false);
-        }
 
         $this->jsonResult(true, $cards);
     }
@@ -229,7 +238,7 @@ class Controller_Api extends Controller_Template
         try {
             Access::check('client', $clientId);
         } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false);
+            $this->jsonResult(false, 'no access to client');
         }
 
         $user = User::current();
@@ -246,10 +255,6 @@ class Controller_Api extends Controller_Template
             "CURRENCY",
             "STATE_ID",
         ]);
-
-        if(empty($contracts)){
-            $this->jsonResult(false);
-        }
 
         $this->jsonResult(true, $contracts);
     }
@@ -270,10 +275,6 @@ class Controller_Api extends Controller_Template
             'LONG_NAME',
             'CLIENT_STATE',
         ]);
-
-        if(empty($clients)){
-            $this->jsonResult(false);
-        }
 
         $this->jsonResult(true, $clients);
     }

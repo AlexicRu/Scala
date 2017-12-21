@@ -37,7 +37,7 @@ class Messages
 
         $messages[] = ['type' => $type, 'text' => $text];
 
-        $cache = $cache = Cache::instance();
+        $cache = Cache::instance();
 
         $user = User::current();
 
