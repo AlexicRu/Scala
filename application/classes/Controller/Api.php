@@ -118,7 +118,8 @@ class Controller_Api extends Controller_Template
         $params = [
             'card_id'       => $this->request->post('card_id'),
             'contract_id'   => $this->request->post('contract_id'),
-            'comment'       => $this->request->post('comment')
+            'comment'       => $this->request->post('comment'),
+            'status'        => $this->request->post('block') ? Model_Card::CARD_STATE_BLOCKED : Model_Card::CARD_STATE_IN_WORK,
         ];
 
         $result = Model_Card::toggleStatus($params);

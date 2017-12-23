@@ -273,20 +273,24 @@ class Model_Card extends Model
 
 		$user = Auth::instance()->get_user();
 
-		//получаем карты и смотрим текущий статус у нее
-		$card = self::getCard($params['card_id'], $params['contract_id']);
+		if (empty($params['status'])) {
+            //получаем карты и смотрим текущий статус у нее
+            $card = self::getCard($params['card_id'], $params['contract_id']);
 
-		if(empty($card['CARD_ID'])){
-			return false;
-		}
+            if (empty($card['CARD_ID'])) {
+                return false;
+            }
 
-		switch($card['CARD_STATE']){
-			case self::CARD_STATE_BLOCKED:
-				$status = self::CARD_STATE_IN_WORK;
-				break;
-			default:
-				$status = self::CARD_STATE_BLOCKED;
-		}
+            switch ($card['CARD_STATE']) {
+                case self::CARD_STATE_BLOCKED:
+                    $status = self::CARD_STATE_IN_WORK;
+                    break;
+                default:
+                    $status = self::CARD_STATE_BLOCKED;
+            }
+        } else {
+            $status = $params['status'];
+        }
 
 		$data = [
 			'p_card_id' 		=> $params['card_id'],
@@ -299,7 +303,7 @@ class Model_Card extends Model
 
 		$res = $db->procedure('card_change_state', $data);
 
-		if(empty($res)){
+		if($res == Oracle::CODE_SUCCESS){
 			return true;
 		}
 
