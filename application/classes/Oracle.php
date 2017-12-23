@@ -15,7 +15,7 @@ class Oracle{
     protected $_pack = 'web_pack.';
 
     protected $_conn = null;
-    protected static $_instances = null;
+    protected static $_instances = [];
 
     protected $_fullResponse = [];
 
@@ -34,6 +34,8 @@ class Oracle{
             $e = oci_error();
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
+
+        return $this;
     }
 
     public function __destruct()
@@ -50,7 +52,7 @@ class Oracle{
      */
 	static public function init($instanceName = 'default', $configName = 'database')
     {
-		if(isset(self::$_instances[$instanceName]))
+		if(!isset(self::$_instances[$instanceName]))
 		{
             self::$_instances[$instanceName] = new self($configName);
 		}
