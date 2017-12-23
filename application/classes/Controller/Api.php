@@ -78,6 +78,10 @@ class Controller_Api extends Controller_Template
         $login = $this->request->post('login');
         $password = $this->request->post('password');
 
+        if (empty($login) || empty($password)) {
+            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+        }
+
         $resultAuth = Auth::instance()->login($login, $password, FALSE);
 
         if (empty($resultAuth)) {
@@ -122,6 +126,16 @@ class Controller_Api extends Controller_Template
             'status'        => $this->request->post('block') ? Model_Card::CARD_STATE_BLOCKED : Model_Card::CARD_STATE_IN_WORK,
         ];
 
+        if (empty($params['card_id']) || empty($params['contract_id'])) {
+            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+        }
+
+        try {
+            Access::check('card', $params['card_id']);
+        } catch (HTTP_Exception_404 $e) {
+            $this->jsonResult(false, 'no access to card');
+        }
+
         $result = Model_Card::toggleStatus($params);
 
         if(empty($result)){
@@ -140,6 +154,10 @@ class Controller_Api extends Controller_Template
         $contractId = $this->request->query('contract_id');
         $dateFrom = $this->request->query('date_from') ?: date('01.m.Y');
         $dateTo = $this->request->query('date_to') ?: date('d.m.Y');
+
+        if (empty($contractId)) {
+            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+        }
 
         try {
             Access::check('contract', $contractId);
@@ -182,6 +200,10 @@ class Controller_Api extends Controller_Template
         $cardId = $this->request->query('card_id');
         $contractId = $this->request->query('contract_id');
 
+        if (empty($contractId) || empty($cardId)) {
+            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+        }
+
         try {
             Access::check('card', $cardId, $contractId);
         } catch (HTTP_Exception_404 $e) {
@@ -209,6 +231,10 @@ class Controller_Api extends Controller_Template
     {
         $contractId = $this->request->query('contract_id');
 
+        if (empty($contractId)) {
+            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+        }
+
         try {
             Access::check('contract', $contractId);
         } catch (HTTP_Exception_404 $e) {
@@ -230,11 +256,47 @@ class Controller_Api extends Controller_Template
 
     /**
      * GET
+     * получаем инфу по конкретной карте
+     */
+    public function action_card()
+    {
+        $contractId = $this->request->query('contract_id');
+        $cardId = $this->request->query('card_id');
+
+        if (empty($contractId) || empty($cardId)) {
+            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+        }
+
+        try {
+            Access::check('card', $cardId);
+        } catch (HTTP_Exception_404 $e) {
+            $this->jsonResult(false, 'no access to card');
+        }
+
+        $cards = Model_Card::getCards($contractId, $cardId, false, [
+            "CARD_ID",
+            "HOLDER",
+            "DATE_HOLDER",
+            "CARD_STATE",
+            "BLOCK_AVAILABLE",
+            "CHANGE_LIMIT_AVAILABLE",
+            "CARD_COMMENT"
+        ]);
+
+        $this->jsonResult(true, reset($cards));
+    }
+
+    /**
+     * GET
      * получаем список контрактов
      */
     public function action_contracts_list()
     {
         $clientId = $this->request->query('client_id');
+
+        if (empty($clientId)) {
+            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+        }
 
         try {
             Access::check('client', $clientId);
