@@ -51,7 +51,7 @@ class Builder
             return $this;
         }
 
-        $this->_from = Oracle::$prefix . $str;
+        $this->_from = $str;
 
         return $this;
     }
@@ -69,7 +69,7 @@ class Builder
 
         $this->_joins[] = [
             'join'  => 'join',
-            'table' => Oracle::$prefix . $table,
+            'table' => $table,
             'str'   => $str
         ];
 
@@ -89,7 +89,7 @@ class Builder
 
         $this->_joins[] = [
             'join'  => 'left join',
-            'table' => Oracle::$prefix . $table,
+            'table' => $table,
             'str'   => $str
         ];
 
@@ -276,11 +276,19 @@ class Builder
     {
         $this->_orderBy = [];
     }
+    public function resetGroupBy()
+    {
+        $this->_groupBy = [];
+    }
+    public function resetHaving()
+    {
+        $this->_having= [];
+    }
 
     /**
      * собираем из этого всего SQL
      */
-    public function build()
+    public function build($prefix = false)
     {
         $sql = " {$this->_action} ";
 
@@ -295,13 +303,15 @@ class Builder
             $sql .= " ".implode(" , ", $this->_columns)." ";
         }
 
+        $prefix = $prefix ?: Oracle::$prefix;
+
         //from
-        $sql .= " from {$this->_from} ";
+        $sql .= " from {$prefix}{$this->_from} ";
 
         //joins
         if (!empty($this->_joins)) {
             foreach ($this->_joins as $join) {
-                $sql .= " {$join['join']} {$join['table']} on {$join['str']} ";
+                $sql .= " {$join['join']} {$prefix}{$join['table']} on {$join['str']} ";
             }
         }
 

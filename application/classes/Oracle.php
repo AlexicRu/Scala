@@ -11,42 +11,57 @@ class Oracle{
      */
 	public static $prefix = 's_dev.';
 
-	private $_prefix = 's_dev.';
-	private $_pack = 'web_pack.';
+    protected $_prefix = 's_dev.';
+    protected $_pack = 'web_pack.';
 
-	private static $_conn = null;
-	private static $_instance = null;
+    protected $_conn = null;
+    protected static $_instances = null;
 
-	private $_fullResponse = [];
+    protected $_fullResponse = [];
 
-	private function __construct() {}
-    public function __destruct() {
-        oci_close(self::$_conn);
+    /**
+     * Oracle constructor.
+     * @param string $configName
+     * @throws Kohana_Exception
+     */
+    protected function __construct($configName = 'database')
+    {
+        $config = Kohana::$config->load($configName);
+
+        $this->_conn = oci_connect($config['name'], $config['password'], $config['db'], 'UTF8');
+
+        if (!$this->_conn) {
+            $e = oci_error();
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
     }
+
+    public function __destruct()
+    {
+        oci_close($this->_conn);
+    }
+
 	protected function __clone() {}
 
-	static public function init()
+    /**
+     * @param string $instanceName
+     * @param string $configName
+     * @return self
+     */
+	static public function init($instanceName = 'default', $configName = 'database')
     {
-		if(is_null(self::$_instance))
+		if(isset(self::$_instances[$instanceName]))
 		{
-			$config = Kohana::$config->load('database');
-
-            self::$_conn = oci_connect($config['name'], $config['password'], $config['db'], 'UTF8');
-
-			if (!self::$_conn) {
-				$e = oci_error();
-				trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-			}
-
-			self::$_instance = new self();
+            self::$_instances[$instanceName] = new self($configName);
 		}
-		return self::$_instance;
+
+		return self::$_instances[$instanceName];
 	}
 
     /**
      * выполняем запрос
      *
-     * @param $sql
+     * @param $sql Builder|string
      * @param string $type
      * @return array|bool
      */
@@ -54,13 +69,13 @@ class Oracle{
     {
         //builder
         if (is_a($sql, 'Builder')) {
-            $sql = $sql->build();
+            $sql = $sql->build($this->_prefix);
         }
 
         try {
             if ($type == 'select') {
                 $ret = array();
-                $res = oci_parse(self::$_conn, $sql);
+                $res = oci_parse($this->_conn, $sql);
 
                 oci_execute($res);
                 while ($row = oci_fetch_array($res, OCI_ASSOC + OCI_RETURN_NULLS)) {
@@ -68,7 +83,7 @@ class Oracle{
                 }
                 return $ret;
             } else {
-                $res = oci_parse(self::$_conn, $sql);
+                $res = oci_parse($this->_conn, $sql);
                 return oci_execute($res);
             }
         } catch (Exception $e) {
@@ -85,7 +100,7 @@ class Oracle{
 	 */
 	public function ora_proced($sql, $params)
 	{
-		$res = oci_parse(self::$_conn, $sql);
+		$res = oci_parse($this->_conn, $sql);
 		
 		foreach($params as $key=>&$param){
 			if($param == 'out'){

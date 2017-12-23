@@ -4,13 +4,16 @@ class Api
 {
     const DB_API_PACK = 'api_pack.';
 
+    /**
+     * @var Oracle
+     */
     private $_db;
     private $_errors = [];
 
     public function __construct()
     {
-        $this->_db = Oracle::init();
-        //$this->_db->setPack(self::DB_API_PACK);
+        $this->_db = Oracle::init('api');
+        $this->_db->setPack(self::DB_API_PACK);
     }
 
     public function getErrors()
