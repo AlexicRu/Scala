@@ -122,7 +122,9 @@
             cnt.val(cntVal);
         }
 
-        summ.val(parseInt(priceVal * cntVal * 10000) / 10000);
+        var sumRow = parseInt((priceVal * 100) * (cntVal * 100)) / 10000;
+
+        summ.val(sumRow);
 
         recalcNDS();
     }
