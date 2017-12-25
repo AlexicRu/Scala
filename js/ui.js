@@ -224,6 +224,7 @@ function renderComboBoxMulti(combo, params)
 
     combo.on('keyup', function () {
         if(params && params['depend']){
+            var dependWrapper = outer.closest('.with_depend');
             var dependCombo = $('[name=' + params['depend'] + ']');
             setComboboxValue(dependCombo, false);
         }
@@ -243,7 +244,7 @@ function renderComboBoxMulti(combo, params)
         };
 
         if(params && params['depend_on']){
-            var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]'));
+            var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]'), true);
 
             if(value == ''){
                 return;
@@ -389,7 +390,8 @@ function renderComboBox(combo, params)
 
     combo.on('keyup', function () {
         if(params && params['depend']){
-            var dependCombo = $('[name=' + params['depend'] + ']');
+            var dependWrapper = outer.closest('.with_depend');
+            var dependCombo = $('[name=' + params['depend'] + ']', dependWrapper);
 
             if (dependCombo.hasClass('combobox_multi')) {
                 resetComboboxMultiValue(dependCombo);
@@ -410,7 +412,7 @@ function renderComboBox(combo, params)
         var postParams = { search:val };
 
         if(params && params['depend_on']){
-            var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]'));
+            var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]'), true);
 
             if(value == ''){
                 return;
@@ -501,8 +503,18 @@ function setComboboxValue(combo, value)
     }
 }
 
-function getComboboxValue(combo)
+function getComboboxValue(combo, skipDepend)
 {
+    if(combo.attr('depend') && skipDepend != true){
+        var outerDepend = combo.closest('.with_depend');
+        var dependField = combo.attr('depend');
+        combo = $('[name='+ dependField +']', outerDepend);
+
+        if(combo.hasClass('combobox_multi')){
+            return getComboboxMultiValue(combo);
+        }
+    }
+
     var outer = combo.closest('.combobox_outer');
     var hiddenValue = outer.find('[name=combobox_value]');
 

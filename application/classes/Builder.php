@@ -4,15 +4,16 @@
  * Class Builder
  *
  * simple query builder
- *
- * todo having, group, join, leftjoin
  */
 class Builder
 {
     private $_action    = '';
     private $_from      = '';
+    private $_joins     = [];
     private $_columns   = [];
     private $_where     = [];
+    private $_having     = [];
+    private $_groupBy   = [];
     private $_orderBy   = [];
     private $_limit     = 0;
     private $_offset    = 0;
@@ -50,7 +51,47 @@ class Builder
             return $this;
         }
 
-        $this->_from = Oracle::$prefix . $str;
+        $this->_from = $str;
+
+        return $this;
+    }
+
+    /**
+     * @param $table
+     * @param $str
+     * @return $this
+     */
+    public function join($table, $str)
+    {
+        if (empty($str) || empty($table)) {
+            return $this;
+        }
+
+        $this->_joins[] = [
+            'join'  => 'join',
+            'table' => $table,
+            'str'   => $str
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param $table
+     * @param $str
+     * @return $this
+     */
+    public function joinLeft($table, $str)
+    {
+        if (empty($str) || empty($table)) {
+            return $this;
+        }
+
+        $this->_joins[] = [
+            'join'  => 'left join',
+            'table' => $table,
+            'str'   => $str
+        ];
 
         return $this;
     }
@@ -146,11 +187,50 @@ class Builder
         if (empty($array)) {
             return $this;
         }
+
         if (is_string($array)) {
             $array = [$array];
         }
 
         $this->_orderBy = array_merge($this->_orderBy, $array);
+
+        return $this;
+    }
+
+    /**
+     * @param $array
+     * @return $this
+     */
+    public function having($array)
+    {
+        if (empty($array)) {
+            return $this;
+        }
+
+        if (is_string($array)) {
+            $array = [$array];
+        }
+
+        $this->_having = array_merge($this->_having, $array);
+
+        return $this;
+    }
+
+    /**
+     * @param $array
+     * @return $this
+     */
+    public function groupBy($array)
+    {
+        if (empty($array)) {
+            return $this;
+        }
+
+        if (is_string($array)) {
+            $array = [$array];
+        }
+
+        $this->_groupBy = array_merge($this->_groupBy, $array);
 
         return $this;
     }
@@ -196,11 +276,19 @@ class Builder
     {
         $this->_orderBy = [];
     }
+    public function resetGroupBy()
+    {
+        $this->_groupBy = [];
+    }
+    public function resetHaving()
+    {
+        $this->_having= [];
+    }
 
     /**
      * собираем из этого всего SQL
      */
-    public function build()
+    public function build($prefix = false)
     {
         $sql = " {$this->_action} ";
 
@@ -215,8 +303,17 @@ class Builder
             $sql .= " ".implode(" , ", $this->_columns)." ";
         }
 
+        $prefix = $prefix ?: Oracle::$prefix;
+
         //from
-        $sql .= " from {$this->_from} ";
+        $sql .= " from {$prefix}{$this->_from} ";
+
+        //joins
+        if (!empty($this->_joins)) {
+            foreach ($this->_joins as $join) {
+                $sql .= " {$join['join']} {$prefix}{$join['table']} on {$join['str']} ";
+            }
+        }
 
         //where
         if (!empty($this->_where)) {
@@ -237,6 +334,16 @@ class Builder
                     $skipNextConnector = false;
                 }
             }
+        }
+
+        //group by
+        if (!empty($this->_groupBy)) {
+            $sql .= " group by ".implode(" , ", $this->_groupBy)." ";
+        }
+
+        //having
+        if (!empty($this->_having)) {
+            $sql .= " having ".implode(" , ", $this->_having)." ";
         }
 
         //order by

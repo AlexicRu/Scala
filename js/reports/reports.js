@@ -49,21 +49,8 @@ function generateReport(btn)
                 value = [-1];
             }
         }else if(field.hasClass('combobox')){
-            var dependField = field.attr('depend');
-            var skip = false;
 
-            if(dependField){
-                field = $('[name='+ dependField +']', block);
-
-                if(field.hasClass('combobox_multi')){
-                    value = getComboboxMultiValue(field);
-                    skip = true;
-                }
-            }
-
-            if(!skip) {
-                value = getComboboxValue(field);
-            }
+            value = getComboboxValue(field);
 
             if (!value) {
                 value = -1;

@@ -4,12 +4,21 @@ class Api
 {
     const DB_API_PACK = 'api_pack.';
 
+    /**
+     * @var Oracle
+     */
     private $_db;
+    private $_errors = [];
 
     public function __construct()
     {
-        $this->_db = Oracle::init();
-        //$this->_db->setPack(self::DB_API_PACK);
+        $this->_db = Oracle::init('api');
+        $this->_db->setPack(self::DB_API_PACK);
+    }
+
+    public function getErrors()
+    {
+        return $this->_errors;
     }
 
     /**
@@ -31,6 +40,17 @@ class Api
 
         if ($res['p_error_code'] == Oracle::CODE_SUCCESS) {
             return $res['p_token'];
+        }
+
+        switch ($res['p_error_code']) {
+            case 1:
+                $this->_errors[] = 'Интерфейс API для пользователя недоступен';
+                break;
+            case 2:
+                $this->_errors[] = 'Срок действия токена истек, получите токен заново';
+                break;
+            default:
+                $this->_errors[] = 'Неизвестная ошибка';
         }
 
         return false;

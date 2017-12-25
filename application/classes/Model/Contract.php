@@ -58,7 +58,7 @@ class Model_Contract extends Model
 	/**
 	 * получаем список контрактов
 	 */
-	public static function getContracts($clientId = false, $params = false)
+	public static function getContracts($clientId = false, $params = false, $select = [])
 	{
 		if(empty($clientId) && empty($params)){
 			return [];
@@ -106,6 +106,10 @@ class Model_Contract extends Model
 
 		if(!empty($params['limit'])){
             $sql->limit($params['limit']);
+        }
+
+        if (!empty($select)) {
+            $sql->select($select);
         }
 
         return $db->query($sql);

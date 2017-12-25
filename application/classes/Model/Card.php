@@ -44,7 +44,7 @@ class Model_Card extends Model
 	 * @param $params
 	 * @return array|int
 	 */
-	public static function getCards($contractId = false, $cardId = false, $params = false)
+	public static function getCards($contractId = false, $cardId = false, $params = false, $select = [])
 	{
 		if(empty($contractId) && empty($cardId)){
 			return [];
@@ -84,6 +84,10 @@ class Model_Card extends Model
             $sql->where("contract_id in (".implode(',', array_map('intval', $params['contract_id']))).")";
         }
 
+        if (!empty($select)) {
+		    $sql->select($select);
+        }
+
         if(!empty($params['pagination'])) {
             return $db->pagination($sql, $params);
         }
@@ -112,7 +116,7 @@ class Model_Card extends Model
 	 *
 	 * @param $cardId
 	 */
-	public static function getOilRestrictions($cardId)
+	public static function getOilRestrictions($cardId, $select = [])
 	{
 		if(empty($cardId)){
 			return [];
@@ -120,11 +124,14 @@ class Model_Card extends Model
 
 		$db = Oracle::init();
 
-		$sql = "
-			select *
-			from ".Oracle::$prefix."V_WEB_CRD_LIMITS
-			where card_id = ".Oracle::quote($cardId)
-		;
+		$sql = (new Builder())->select()
+            ->from('V_WEB_CRD_LIMITS')
+            ->where('card_id = ' . Oracle::quote($cardId))
+        ;
+
+		if (!empty($select)) {
+		    $sql->select($select);
+        }
 
 		$restrictions = $db->tree($sql, 'LIMIT_GROUP');
 
@@ -266,20 +273,24 @@ class Model_Card extends Model
 
 		$user = Auth::instance()->get_user();
 
-		//получаем карты и смотрим текущий статус у нее
-		$card = self::getCard($params['card_id'], $params['contract_id']);
+		if (empty($params['status'])) {
+            //получаем карты и смотрим текущий статус у нее
+            $card = self::getCard($params['card_id'], $params['contract_id']);
 
-		if(empty($card['CARD_ID'])){
-			return false;
-		}
+            if (empty($card['CARD_ID'])) {
+                return false;
+            }
 
-		switch($card['CARD_STATE']){
-			case self::CARD_STATE_BLOCKED:
-				$status = self::CARD_STATE_IN_WORK;
-				break;
-			default:
-				$status = self::CARD_STATE_BLOCKED;
-		}
+            switch ($card['CARD_STATE']) {
+                case self::CARD_STATE_BLOCKED:
+                    $status = self::CARD_STATE_IN_WORK;
+                    break;
+                default:
+                    $status = self::CARD_STATE_BLOCKED;
+            }
+        } else {
+            $status = $params['status'];
+        }
 
 		$data = [
 			'p_card_id' 		=> $params['card_id'],
@@ -292,7 +303,7 @@ class Model_Card extends Model
 
 		$res = $db->procedure('card_change_state', $data);
 
-		if(empty($res)){
+		if($res == Oracle::CODE_SUCCESS){
 			return true;
 		}
 
