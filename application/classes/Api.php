@@ -13,7 +13,7 @@ class Api
     public function __construct()
     {
         $this->_db = Oracle::init('api');
-        $this->_db->setPack(self::DB_API_PACK);
+        //$this->_db->setPack(self::DB_API_PACK);
     }
 
     public function getErrors()

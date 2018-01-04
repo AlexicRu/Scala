@@ -26,6 +26,8 @@ class Controller_Api extends Controller_Template
             if (empty($data)) {
                 $data[] = 'unknown error';
             }
+
+            http_response_code(400);
         }
 
         self::json(['success' => $result, 'data' => (array)$data]);
@@ -115,7 +117,7 @@ class Controller_Api extends Controller_Template
 
     /**
      * POST
-     * ищменение статуса карты
+     * изменение статуса карты
      */
     public function action_card_status()
     {
@@ -227,50 +229,27 @@ class Controller_Api extends Controller_Template
      * GET
      * получаем список карт по договору
      */
-    public function action_cards_list()
+    public function action_cards()
     {
         $contractId = $this->request->query('contract_id');
+        $cardId = $this->request->param('id') ?: false;
 
         if (empty($contractId)) {
             $this->jsonResult(false, 'Переданы не все необходимые параметры');
         }
 
-        try {
-            Access::check('contract', $contractId);
-        } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false, 'no access to contract');
-        }
-
-        $cards = Model_Card::getCards($contractId, false, false, [
-            "CARD_ID",
-            "HOLDER",
-            "DATE_HOLDER",
-            "CARD_STATE",
-            "BLOCK_AVAILABLE",
-            "CHANGE_LIMIT_AVAILABLE",
-            "CARD_COMMENT"
-        ]);
-
-        $this->jsonResult(true, $cards);
-    }
-
-    /**
-     * GET
-     * получаем инфу по конкретной карте
-     */
-    public function action_card()
-    {
-        $contractId = $this->request->query('contract_id');
-        $cardId = $this->request->query('card_id');
-
-        if (empty($contractId) || empty($cardId)) {
-            $this->jsonResult(false, 'Переданы не все необходимые параметры');
-        }
-
-        try {
-            Access::check('card', $cardId);
-        } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false, 'no access to card');
+        if (!empty($cardId)) {
+            try {
+                Access::check('card', $cardId);
+            } catch (HTTP_Exception_404 $e) {
+                $this->jsonResult(false, 'no access to card');
+            }
+        } else {
+            try {
+                Access::check('contract', $contractId);
+            } catch (HTTP_Exception_404 $e) {
+                $this->jsonResult(false, 'no access to contract');
+            }
         }
 
         $cards = Model_Card::getCards($contractId, $cardId, false, [
@@ -283,14 +262,14 @@ class Controller_Api extends Controller_Template
             "CARD_COMMENT"
         ]);
 
-        $this->jsonResult(true, reset($cards));
+        $this->jsonResult(true, !empty($cardId) ? reset($cards) : $cards);
     }
 
     /**
      * GET
      * получаем список контрактов
      */
-    public function action_contracts_list()
+    public function action_contracts()
     {
         $clientId = $this->request->query('client_id');
 
@@ -326,7 +305,7 @@ class Controller_Api extends Controller_Template
      * GET
      * получаем список контрактов
      */
-    public function action_clients_list()
+    public function action_clients()
     {
         $user = User::current();
 
@@ -339,6 +318,6 @@ class Controller_Api extends Controller_Template
             'CLIENT_STATE',
         ]);
 
-        $this->jsonResult(true, $clients);
+        $this->jsonResult(true, array_values($clients));
     }
 }

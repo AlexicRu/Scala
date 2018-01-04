@@ -1,0 +1,442 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.1.0",
+    "title": "GloPro API"
+  },
+  "host": "dev.lk.glopro.ru",
+  "basePath": "/api",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": ["main"],
+        "summary": "Авторизация",
+        "operationId": "login",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "login",
+            "in": "formData",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Результат",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success",
+                "data"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Ошибка",
+            "schema": {
+              "$ref": "#/definitions/ApiBadResponse"
+            }
+          }
+        }
+      }
+    },
+    "/clients": {
+      "get": {
+        "tags": ["clients"],
+        "summary": "Получение списка клиентов",
+        "operationId": "clients",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Результат",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success",
+                "data"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/ClientModel"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Ошибка",
+            "schema": {
+              "$ref": "#/definitions/ApiBadResponse"
+            }
+          }
+        }
+      }
+    },
+    "/contracts": {
+      "get": {
+        "tags": ["contracts"],
+        "summary": "Получение списка контрактов",
+        "operationId": "contracts",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "client_id",
+            "in": "query",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Результат",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success",
+                "data"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/ContractModel"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Ошибка",
+            "schema": {
+              "$ref": "#/definitions/ApiBadResponse"
+            }
+          }
+        }
+      }
+    },
+    "/transactions": {
+      "get": {
+        "deprecated": true,
+        "tags": ["contracts"],
+        "summary": "Получение списка транзакций",
+        "operationId": "transactions",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "contract_id",
+            "in": "query",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "name": "date_from",
+            "in": "query",
+            "type": "integer",
+            "description": "Если не передан параметр, то 01.m.Y"
+          },
+          {
+            "name": "date_to",
+            "in": "query",
+            "type": "integer",
+            "description": "Если не передан параметр, то d.m.Y"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Результат",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success",
+                "data"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/TransactionModel"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Ошибка",
+            "schema": {
+              "$ref": "#/definitions/ApiBadResponse"
+            }
+          }
+        }
+      }
+    },
+    "/cards": {
+      "get": {
+        "tags": ["cards"],
+        "summary": "Получение списка карт",
+        "operationId": "cards",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "contract_id",
+            "in": "query",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Результат",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Ошибка",
+            "schema": {
+              "$ref": "#/definitions/ApiBadResponse"
+            }
+          }
+        }
+      }
+    },
+    "/cards/{cardId}": {
+      "get": {
+        "deprecated": true,
+        "tags": [
+          "cards"
+        ],
+        "summary": "Получение карты",
+        "operationId": "transactions"
+      }
+    },
+    "/card_limits": {
+      "get": {
+        "deprecated": true,
+        "tags": [
+          "cards"
+        ],
+        "summary": "Получение лимитов карты",
+        "operationId": "transactions"
+      }
+    },
+    "/card_status": {
+      "post": {
+        "tags": ["cards"],
+        "summary": "Изменение статуса карты",
+        "operationId": "card_status",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "card_id",
+            "in": "formData",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "contract_id",
+            "in": "formData",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "name": "comment",
+            "in": "formData",
+            "type": "string",
+            "description": "Необходимо указывать при блокировке"
+          },
+          {
+            "name": "block",
+            "in": "formData",
+            "type": "boolean",
+            "description": "Если параметр не передан, то происходит toggle статуса блокировки"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Результат",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Ошибка",
+            "schema": {
+              "$ref": "#/definitions/ApiBadResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ApiResponse": {
+      "type": "object",
+      "required": [
+        "success",
+        "data"
+      ],
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "ApiBadResponse": {
+      "type": "object",
+      "required": [
+        "success",
+        "data"
+      ],
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "default": false
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "errors"
+          }
+        }
+      }
+    },
+    "ClientModel": {
+      "type": "object",
+      "properties": {
+        "CLIENT_ID": {
+          "type": "integer"
+        },
+        "CLIENT_NAME": {
+          "type": "string"
+        },
+        "LONG_NAME": {
+          "type": "string"
+        },
+        "CLIENT_STATE": {
+          "type": "integer",
+          "default": 1
+        }
+      }
+    },
+    "ContractModel": {
+      "type": "object",
+      "properties": {
+        "CONTRACT_ID": {
+          "type": "integer"
+        },
+        "CONTRACT_NAME": {
+          "type": "string"
+        },
+        "DATE_BEGIN": {
+          "type": "string",
+          "description": "d.m.Y"
+        },
+        "DATE_END": {
+          "type": "string",
+          "description": "d.m.Y"
+        },
+        "CURRENCY": {
+          "type": "integer",
+          "default": 643
+        },
+        "CLIENT_STATE": {
+          "type": "integer",
+          "default": 1
+        }
+      }
+    },
+    "TransactionModel": {
+      "type": "object",
+      "properties": {
+
+      }
+    },
+    "CardModel": {
+      "type": "object",
+      "properties": {
+
+      }
+    },
+    "CardLimitModel": {
+      "type": "object",
+      "properties": {
+
+      }
+    }
+  }
+}
