@@ -167,7 +167,6 @@
     },
     "/transactions": {
       "get": {
-        "deprecated": true,
         "tags": ["contracts"],
         "summary": "Получение списка транзакций",
         "operationId": "transactions",
@@ -187,13 +186,13 @@
           {
             "name": "date_from",
             "in": "query",
-            "type": "integer",
+            "type": "string",
             "description": "Если не передан параметр, то 01.m.Y"
           },
           {
             "name": "date_to",
             "in": "query",
-            "type": "integer",
+            "type": "string",
             "description": "Если не передан параметр, то d.m.Y"
           }
         ],
@@ -252,7 +251,23 @@
           "200": {
             "description": "Результат",
             "schema": {
-              "$ref": "#/definitions/ApiResponse"
+              "type": "object",
+              "required": [
+                "success",
+                "data"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/CardModel"
+                  }
+                }
+              }
             }
           },
           "400": {
@@ -264,14 +279,60 @@
         }
       }
     },
-    "/cards/{cardId}": {
+    "/cards/{card_id}": {
       "get": {
-        "deprecated": true,
         "tags": [
           "cards"
         ],
         "summary": "Получение карты",
-        "operationId": "transactions"
+        "operationId": "card",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "card_id",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "contract_id",
+            "in": "query",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Результат",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success",
+                "data"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "data": {
+                  "$ref": "#/definitions/CardModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Ошибка",
+            "schema": {
+              "$ref": "#/definitions/ApiBadResponse"
+            }
+          }
+        }
       }
     },
     "/card_limits": {
@@ -281,7 +342,7 @@
           "cards"
         ],
         "summary": "Получение лимитов карты",
-        "operationId": "transactions"
+        "operationId": "card_limits"
       }
     },
     "/card_status": {
@@ -423,13 +484,84 @@
     "TransactionModel": {
       "type": "object",
       "properties": {
-
+        "DATETIME_TRN": {
+          "type": "string"
+        },
+        "CARD_ID": {
+          "type": "string"
+        },
+        "CLIENT_ID": {
+          "type": "integer"
+        },
+        "CONTRACT_ID": {
+          "type": "integer"
+        },
+        "OPERATION_ID": {
+          "type": "integer"
+        },
+        "SUPPLIER_TERMINAL": {
+          "type": "integer"
+        },
+        "SERVICE_ID": {
+          "type": "integer"
+        },
+        "DESCRIPTION": {
+          "type": "string"
+        },
+        "SERVICE_AMOUNT": {
+          "type": "number"
+        },
+        "SERVICE_PRICE": {
+          "type": "number"
+        },
+        "SERVICE_SUMPRICE": {
+          "type": "number"
+        },
+        "TRN_CURRENCY": {
+          "type": "integer",
+          "default": 643
+        },
+        "PRICE_DISCOUNT": {
+          "type": "number"
+        },
+        "SUMPRICE_DISCOUNT": {
+          "type": "number"
+        },
+        "POS_ADDRESS": {
+          "type": "string"
+        },
+        "TRN_KEY": {
+          "type": "string"
+        },
+        "TRZ_COMMENT": {
+          "type": "string"
+        }
       }
     },
     "CardModel": {
       "type": "object",
       "properties": {
-
+        "CARD_ID": {
+          "type": "string"
+        },
+        "HOLDER": {
+          "type": "string"
+        },
+        "DATE_HOLDER": {
+          "type": "string"
+        },
+        "CARD_STATE": {
+          "type": "integer"
+        },
+        "BLOCK_AVAILABLE": {
+          "type": "integer"
+        },
+        "CHANGE_LIMIT_AVAILABLE": {
+          "type": "integer"
+        },
+        "CARD_COMMENT": {
+          "type": "string"
+        }
       }
     },
     "CardLimitModel": {

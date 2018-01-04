@@ -240,7 +240,7 @@ class Controller_Api extends Controller_Template
 
         if (!empty($cardId)) {
             try {
-                Access::check('card', $cardId);
+                Access::check('card', $cardId, $contractId);
             } catch (HTTP_Exception_404 $e) {
                 $this->jsonResult(false, 'no access to card');
             }
