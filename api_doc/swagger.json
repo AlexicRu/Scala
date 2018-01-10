@@ -4,7 +4,7 @@
     "version": "0.1.0",
     "title": "GloPro API"
   },
-  "host": "dev.lk.glopro.ru",
+  "host": "lk.glopro.ru",
   "basePath": "/api",
   "schemes": [
     "http"
