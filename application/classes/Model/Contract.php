@@ -708,15 +708,16 @@ class Model_Contract extends Model
          */
         $limitsArray = [];
 
-        foreach($limits as $group => $limit){
+        if (!empty($limits)) {
+            foreach ($limits as $group => $limit) {
 
-            $limitsArray[] =
-                implode(',', $limit['services']) . ':' .
-                $limit['param'] . ':' .
-                ($limit['unlim'] ? 5 : 4) . ':' .
-                str_replace(",", ".", (int)$limit['value']) . ':' .
-                0 . ';'
-            ;
+                $limitsArray[] =
+                    implode(',', $limit['services']) . ':' .
+                    $limit['param'] . ':' .
+                    ($limit['unlim'] ? 5 : 4) . ':' .
+                    str_replace(",", ".", (int)$limit['value']) . ':' .
+                    0 . ';';
+            }
         }
 
         if (empty($limitsArray)) {
