@@ -130,7 +130,7 @@ class Model_Dot extends Model
             $sql->where('t.ID_EMITENT = '.intval($params['ID_EMITENT']));
         }
         if(!empty($params['ID_TO'])){
-            $sql->where("t.ID_TO like ".Oracle::quote('%'.$params['ID_TO'].'%'));
+            $sql->where("t.ID_TO like ".mb_strtoupper(Oracle::quote('%'.$params['ID_TO'].'%')));
         }
         if(!empty($params['POS_NAME'])){
             $sql->where("upper(t.POS_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['POS_NAME'].'%')));
