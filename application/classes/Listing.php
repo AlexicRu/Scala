@@ -79,7 +79,7 @@ class Listing
      * список карт
      *
      * @param $search
-     * @param ids
+     * @param $search
      * @return array|bool|int
      */
     public static function getCards($search, $ids = [])

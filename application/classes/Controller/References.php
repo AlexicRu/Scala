@@ -73,10 +73,7 @@ class Controller_References extends Controller_Common {
 
         $servicesList = Model_Reference::getConverterServices(['tube_id' => $tubeId]);
 
-        if (empty($servicesList)) {
-            $this->jsonResult(0);
-        }
-        $this->jsonResult(1, $servicesList);
+        $this->jsonResult(1, $servicesList ?: []);
     }
 
     /**
