@@ -5,10 +5,9 @@ $dependFieldName = !empty($params['depend_field_name']) ? $params['depend_field_
 
 <div class="with_depend">
     <span class="form_field" field="<?=$type?>">
-        <input type="text" name="<?=$name?>" class="custom_field combobox input_wide" url="/help/list_client" autocomplete="off" depend="<?=$dependFieldName?>"
-               <?if (!empty($params['weight'])){?>
-               weight="<?=$params['weight']?>"
-               <?}?>
+        <input type="text" name="<?=$name?>" class="custom_field combobox input_wide" url="/help/list_client" autocomplete="off"
+               depend="<?=$dependFieldName?>"
+               <?if (!empty($params['weight'])){?>weight="<?=$params['weight']?>"<?}?>
         >
     </span>
 

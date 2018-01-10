@@ -2,7 +2,10 @@
 
 <div class="with_depend">
     <span class="form_field" field="<?=$type?>">
-        <input type="text" name="<?=$name?>" class="custom_field combobox input_wide" url="/help/list_client" autocomplete="off" depend="<?=$dependFieldName?>">
+        <input type="text" name="<?=$name?>" class="custom_field combobox input_wide" url="/help/list_client" autocomplete="off"
+               depend="<?=$dependFieldName?>"
+               <?if (!empty($params['weight'])){?>weight="<?=$params['weight']?>"<?}?>
+        >
     </span>
 
     <div>
