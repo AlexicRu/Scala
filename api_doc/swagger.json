@@ -7,7 +7,7 @@
   "host": "api.glopro.ru",
   "basePath": "",
   "schemes": [
-    "http"
+    "https"
   ],
   "consumes": [
     "application/json"
