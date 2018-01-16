@@ -5,7 +5,7 @@
     "title": "GloPro API"
   },
   "host": "api.glopro.ru",
-  "basePath": "",
+  "basePath": "/api",
   "schemes": [
     "https"
   ],
@@ -449,8 +449,7 @@
           "type": "string"
         },
         "CLIENT_STATE": {
-          "type": "integer",
-          "default": 1
+          "type": "integer"
         }
       }
     },
@@ -475,9 +474,8 @@
           "type": "integer",
           "default": 643
         },
-        "STATE_ID": {
-          "type": "integer",
-          "default": 1
+        "CONTRACT_STATUS": {
+          "type": "integer"
         }
       }
     },
