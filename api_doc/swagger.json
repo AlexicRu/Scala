@@ -381,8 +381,8 @@
           {
             "name": "block",
             "in": "formData",
-            "type": "boolean",
-            "description": "Если параметр не передан, то происходит toggle статуса блокировки"
+            "type": "integer",
+            "description": "1 / 0. Если параметр не передан, то происходит toggle статуса блокировки"
           }
         ],
         "responses": {
@@ -475,7 +475,7 @@
           "type": "integer",
           "default": 643
         },
-        "CLIENT_STATE": {
+        "STATE_ID": {
           "type": "integer",
           "default": 1
         }
@@ -533,7 +533,7 @@
         "TRN_KEY": {
           "type": "string"
         },
-        "TRZ_COMMENT": {
+        "TRN_COMMENT": {
           "type": "string"
         }
       }
@@ -550,7 +550,7 @@
         "DATE_HOLDER": {
           "type": "string"
         },
-        "CARD_STATE": {
+        "CARD_STATUS": {
           "type": "integer"
         },
         "BLOCK_AVAILABLE": {

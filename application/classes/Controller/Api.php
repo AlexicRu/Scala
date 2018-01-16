@@ -36,7 +36,7 @@ class Controller_Api extends Controller_Template
     public function before()
     {
         $this->_api = new Api();
-        $this->_token = $this->request->headers('token') ?: ($this->request->post('token') ?: $this->request->query('token'));
+        $this->_token = $this->request->headers('token') ?: $this->request->post('token');
 
         $action = $this->request->action();
 
@@ -125,7 +125,9 @@ class Controller_Api extends Controller_Template
             'card_id'       => $this->request->post('card_id'),
             'contract_id'   => $this->request->post('contract_id'),
             'comment'       => $this->request->post('comment'),
-            'status'        => $this->request->post('block') ? Model_Card::CARD_STATE_BLOCKED : Model_Card::CARD_STATE_IN_WORK,
+            'status'        => is_null($this->request->post('block')) ? false : (
+                $this->request->post('block') ? Model_Card::CARD_STATE_BLOCKED : Model_Card::CARD_STATE_IN_WORK
+            ),
         ];
 
         if (empty($params['card_id']) || empty($params['contract_id'])) {
@@ -133,7 +135,7 @@ class Controller_Api extends Controller_Template
         }
 
         try {
-            Access::check('card', $params['card_id']);
+            Access::check('card', $params['card_id'], $params['contract_id']);
         } catch (HTTP_Exception_404 $e) {
             $this->jsonResult(false, 'no access to card');
         }
@@ -189,6 +191,11 @@ class Controller_Api extends Controller_Template
             "TRN_KEY",
             "TRZ_COMMENT"
         ]);
+
+        foreach ($transactions as &$transaction) {
+            $transaction['TRN_COMMENT'] = $transaction['TRZ_COMMENT'];
+            unset($transaction['TRZ_COMMENT']);
+        }
 
         $this->jsonResult(true, $transactions);
     }
@@ -262,6 +269,11 @@ class Controller_Api extends Controller_Template
             "CARD_COMMENT"
         ]);
 
+        foreach ($cards as &$card) {
+            $card['CARD_STATUS'] = $card['CARD_STATE'];
+            unset($card['CARD_STATE']);
+        }
+
         $this->jsonResult(true, !empty($cardId) ? reset($cards) : $cards);
     }
 
@@ -297,6 +309,20 @@ class Controller_Api extends Controller_Template
             "CURRENCY",
             "STATE_ID",
         ]);
+
+        foreach ($contracts as &$contract) {
+            $contract['CONTRACT_STATUS'] = $contract['STATE_ID'];
+            unset($contract['STATE_ID']);
+
+            $contract['BALANCE'] = Model_Contract::getContractBalance($contract['CONTRACT_ID'], [], [
+                "BALANCE",
+                "MONTH_REALIZ",
+                "MONTH_REALIZ_CUR",
+                "LAST_MONTH_REALIZ",
+                "LAST_MONTH_REALIZ_CUR",
+                "DATE_LAST_CHANGE"
+            ]);
+        }
 
         $this->jsonResult(true, $contracts);
     }
