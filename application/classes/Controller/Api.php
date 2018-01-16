@@ -51,7 +51,7 @@ class Controller_Api extends Controller_Template
                 $managerId = $this->_api->getUserIdByToken($this->_token);
 
                 if (empty($managerId)) {
-                    $this->jsonResult(false, 'invalid token');
+                    $this->jsonResult(false);
                 } else {
                     $user = Model_Manager::getManager($managerId);
 
@@ -88,6 +88,7 @@ class Controller_Api extends Controller_Template
 
         if (empty($resultAuth)) {
             foreach (Messages::get() as $item) {
+                var_dump($item);
                 if ($item['type'] == 'error') {
                     $this->_errors[] = $item['text'];
                 }
