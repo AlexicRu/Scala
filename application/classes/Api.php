@@ -50,7 +50,7 @@ class Api
                 $this->_errors[] = 'Manager blocked';
                 break;
             default:
-                $this->_errors[] = 'Неизвестная ошибка';
+                $this->_errors[] = 'Unknown error';
         }
 
         return false;
@@ -93,7 +93,7 @@ class Api
                 $this->_errors[] = 'Token expired';
                 break;
             default:
-                $this->_errors[] = 'Неизвестная ошибка';
+                $this->_errors[] = 'Unknown error';
         }
 
         return false;

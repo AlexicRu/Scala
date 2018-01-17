@@ -24,7 +24,7 @@ class Controller_Api extends Controller_Template
             $data = array_merge($this->_errors, (array)$data, $apiErrors);
 
             if (empty($data)) {
-                $data[] = 'unknown error';
+                $data[] = 'Unknown error';
             }
 
             http_response_code(400);
@@ -46,7 +46,7 @@ class Controller_Api extends Controller_Template
 
         if (!isset($withoutToken[$action])) {
             if (empty($this->_token)) {
-                $this->jsonResult(false, 'empty token');
+                $this->jsonResult(false, 'Empty token');
             } else {
                 $managerId = $this->_api->getUserIdByToken($this->_token);
 
@@ -81,7 +81,7 @@ class Controller_Api extends Controller_Template
         $password = $this->request->post('password');
 
         if (empty($login) || empty($password)) {
-            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+            $this->jsonResult(false, 'Not enough data');
         }
 
         $resultAuth = Auth::instance()->login($login, $password, FALSE);
@@ -132,19 +132,19 @@ class Controller_Api extends Controller_Template
         ];
 
         if (empty($params['card_id']) || empty($params['contract_id'])) {
-            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+            $this->jsonResult(false, 'Not enough data');
         }
 
         try {
             Access::check('card', $params['card_id'], $params['contract_id']);
         } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false, 'no access to card');
+            $this->jsonResult(false, 'No access to card');
         }
 
         $result = Model_Card::toggleStatus($params);
 
         if(empty($result)){
-            $this->jsonResult(false, 'Статус не изменился');
+            $this->jsonResult(false, 'Status not changed');
         }
 
         $this->jsonResult(true);
@@ -161,13 +161,13 @@ class Controller_Api extends Controller_Template
         $dateTo = $this->request->query('date_to') ?: date('d.m.Y');
 
         if (empty($contractId)) {
-            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+            $this->jsonResult(false, 'Not enough data');
         }
 
         try {
             Access::check('contract', $contractId);
         } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false, 'no access to contract');
+            $this->jsonResult(false, 'No access to contract');
         }
 
         $transactions = Model_Transaction::getTransactions($contractId, [
@@ -211,13 +211,13 @@ class Controller_Api extends Controller_Template
         $contractId = $this->request->query('contract_id');
 
         if (empty($contractId) || empty($cardId)) {
-            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+            $this->jsonResult(false, 'Not enough data');
         }
 
         try {
             Access::check('card', $cardId, $contractId);
         } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false, 'no access to card');
+            $this->jsonResult(false, 'No access to card');
         }
 
         $limits = Model_Card::getOilRestrictions($cardId, [
@@ -243,20 +243,20 @@ class Controller_Api extends Controller_Template
         $cardId = $this->request->param('id') ?: false;
 
         if (empty($contractId)) {
-            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+            $this->jsonResult(false, 'Not enough data');
         }
 
         if (!empty($cardId)) {
             try {
                 Access::check('card', $cardId, $contractId);
             } catch (HTTP_Exception_404 $e) {
-                $this->jsonResult(false, 'no access to card');
+                $this->jsonResult(false, 'No access to card');
             }
         } else {
             try {
                 Access::check('contract', $contractId);
             } catch (HTTP_Exception_404 $e) {
-                $this->jsonResult(false, 'no access to contract');
+                $this->jsonResult(false, 'No access to contract');
             }
         }
 
@@ -287,13 +287,13 @@ class Controller_Api extends Controller_Template
         $clientId = $this->request->query('client_id');
 
         if (empty($clientId)) {
-            $this->jsonResult(false, 'Переданы не все необходимые параметры');
+            $this->jsonResult(false, 'Not enough data');
         }
 
         try {
             Access::check('client', $clientId);
         } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false, 'no access to client');
+            $this->jsonResult(false, 'No access to client');
         }
 
         $user = User::current();
