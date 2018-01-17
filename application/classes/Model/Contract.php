@@ -186,23 +186,22 @@ class Model_Contract extends Model
 	 *
 	 * @param $contractId
 	 */
-	public static function getContractBalance($contractId)
+	public static function getContractBalance($contractId, $params = [], $select = [])
 	{
 		if(empty($contractId)){
 			return [];
 		}
 
-		$db = Oracle::init();
+		$sql = (new Builder())->select()
+            ->from('V_WEB_CTR_BALANCE')
+            ->where('contract_id = '.Oracle::quote($contractId))
+        ;
 
-		$sql = "
-			select *
-			from ".Oracle::$prefix."V_WEB_CTR_BALANCE
-			where contract_id = ".Oracle::quote($contractId)
-		;
+        if (!empty($select)) {
+            $sql->select($select);
+        }
 
-		$balance = $db->row($sql);
-
-		return $balance;
+		return Oracle::init()->row($sql);
 	}
 
 	/**
@@ -708,15 +707,16 @@ class Model_Contract extends Model
          */
         $limitsArray = [];
 
-        foreach($limits as $group => $limit){
+        if (!empty($limits)) {
+            foreach ($limits as $group => $limit) {
 
-            $limitsArray[] =
-                implode(',', $limit['services']) . ':' .
-                $limit['param'] . ':' .
-                ($limit['unlim'] ? 5 : 4) . ':' .
-                str_replace(",", ".", (int)$limit['value']) . ':' .
-                0 . ';'
-            ;
+                $limitsArray[] =
+                    implode(',', $limit['services']) . ':' .
+                    $limit['param'] . ':' .
+                    ($limit['unlim'] ? 5 : 4) . ':' .
+                    str_replace(",", ".", (int)$limit['value']) . ':' .
+                    0 . ';';
+            }
         }
 
         if (empty($limitsArray)) {

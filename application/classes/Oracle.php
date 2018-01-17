@@ -202,7 +202,7 @@ class Oracle{
 	 */
     public static function quote($val)
     {
-        $str = str_replace(["%", "*", "_"], ["\%", "\*", "\_"], $val);
+        $str = str_replace(["%", "*", "?"], ["\%", "\*", "\?"], $val);
         $str = preg_replace('/^\\\\%|\\\\%$/', "%", $str);
 
         $postfix = '';

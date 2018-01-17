@@ -13,7 +13,7 @@ class Api
     public function __construct()
     {
         $this->_db = Oracle::init('api');
-        $this->_db->setPack(self::DB_API_PACK);
+        //$this->_db->setPack(self::DB_API_PACK);
     }
 
     public function getErrors()
@@ -43,11 +43,11 @@ class Api
         }
 
         switch ($res['p_error_code']) {
-            case 1:
-                $this->_errors[] = 'Интерфейс API для пользователя недоступен';
+            case 3:
+                $this->_errors[] = 'API for current manager is forbidden';
                 break;
-            case 2:
-                $this->_errors[] = 'Срок действия токена истек, получите токен заново';
+            case 4:
+                $this->_errors[] = 'Manager blocked';
                 break;
             default:
                 $this->_errors[] = 'Неизвестная ошибка';
@@ -77,6 +77,23 @@ class Api
 
         if ($res['p_error_code'] == Oracle::CODE_SUCCESS) {
             return $res['p_manager_id'];
+        }
+
+        switch ($res['p_error_code']) {
+            case 2:
+                $this->_errors[] = 'Invalid token';
+                break;
+            case 3:
+                $this->_errors[] = 'API for current manager is forbidden';
+                break;
+            case 4:
+                $this->_errors[] = 'Manager blocked';
+                break;
+            case 5:
+                $this->_errors[] = 'Token expired';
+                break;
+            default:
+                $this->_errors[] = 'Неизвестная ошибка';
         }
 
         return false;

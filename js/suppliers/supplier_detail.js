@@ -213,7 +213,7 @@ function agreementSave(btn)
         'date_begin':       $('[name=DATE_BEGIN]', block).val(),
         'date_end':         $('[name=DATE_END]', block).val(),
         'discount_type':    $('[name=DISCOUNT_TYPE]:checked', block).val(),
-        'tarif_id':         $('[name=TARIF_ID]', block).val()
+        'tarif_id':         getComboboxValue($('[name=TARIF_ID]', block))
     };
 
     if (

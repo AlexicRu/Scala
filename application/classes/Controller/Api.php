@@ -26,6 +26,8 @@ class Controller_Api extends Controller_Template
             if (empty($data)) {
                 $data[] = 'unknown error';
             }
+
+            http_response_code(400);
         }
 
         self::json(['success' => $result, 'data' => (array)$data]);
@@ -34,7 +36,7 @@ class Controller_Api extends Controller_Template
     public function before()
     {
         $this->_api = new Api();
-        $this->_token = $this->request->headers('token') ?: ($this->request->post('token') ?: $this->request->query('token'));
+        $this->_token = $this->request->headers('token') ?: $this->request->post('token');
 
         $action = $this->request->action();
 
@@ -49,7 +51,7 @@ class Controller_Api extends Controller_Template
                 $managerId = $this->_api->getUserIdByToken($this->_token);
 
                 if (empty($managerId)) {
-                    $this->jsonResult(false, 'invalid token');
+                    $this->jsonResult(false);
                 } else {
                     $user = Model_Manager::getManager($managerId);
 
@@ -86,6 +88,7 @@ class Controller_Api extends Controller_Template
 
         if (empty($resultAuth)) {
             foreach (Messages::get() as $item) {
+                var_dump($item);
                 if ($item['type'] == 'error') {
                     $this->_errors[] = $item['text'];
                 }
@@ -115,7 +118,7 @@ class Controller_Api extends Controller_Template
 
     /**
      * POST
-     * ищменение статуса карты
+     * изменение статуса карты
      */
     public function action_card_status()
     {
@@ -123,7 +126,9 @@ class Controller_Api extends Controller_Template
             'card_id'       => $this->request->post('card_id'),
             'contract_id'   => $this->request->post('contract_id'),
             'comment'       => $this->request->post('comment'),
-            'status'        => $this->request->post('block') ? Model_Card::CARD_STATE_BLOCKED : Model_Card::CARD_STATE_IN_WORK,
+            'status'        => is_null($this->request->post('block')) ? false : (
+                $this->request->post('block') ? Model_Card::CARD_STATE_BLOCKED : Model_Card::CARD_STATE_IN_WORK
+            ),
         ];
 
         if (empty($params['card_id']) || empty($params['contract_id'])) {
@@ -131,7 +136,7 @@ class Controller_Api extends Controller_Template
         }
 
         try {
-            Access::check('card', $params['card_id']);
+            Access::check('card', $params['card_id'], $params['contract_id']);
         } catch (HTTP_Exception_404 $e) {
             $this->jsonResult(false, 'no access to card');
         }
@@ -188,6 +193,11 @@ class Controller_Api extends Controller_Template
             "TRZ_COMMENT"
         ]);
 
+        foreach ($transactions as &$transaction) {
+            $transaction['TRN_COMMENT'] = $transaction['TRZ_COMMENT'];
+            unset($transaction['TRZ_COMMENT']);
+        }
+
         $this->jsonResult(true, $transactions);
     }
 
@@ -227,50 +237,27 @@ class Controller_Api extends Controller_Template
      * GET
      * получаем список карт по договору
      */
-    public function action_cards_list()
+    public function action_cards()
     {
         $contractId = $this->request->query('contract_id');
+        $cardId = $this->request->param('id') ?: false;
 
         if (empty($contractId)) {
             $this->jsonResult(false, 'Переданы не все необходимые параметры');
         }
 
-        try {
-            Access::check('contract', $contractId);
-        } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false, 'no access to contract');
-        }
-
-        $cards = Model_Card::getCards($contractId, false, false, [
-            "CARD_ID",
-            "HOLDER",
-            "DATE_HOLDER",
-            "CARD_STATE",
-            "BLOCK_AVAILABLE",
-            "CHANGE_LIMIT_AVAILABLE",
-            "CARD_COMMENT"
-        ]);
-
-        $this->jsonResult(true, $cards);
-    }
-
-    /**
-     * GET
-     * получаем инфу по конкретной карте
-     */
-    public function action_card()
-    {
-        $contractId = $this->request->query('contract_id');
-        $cardId = $this->request->query('card_id');
-
-        if (empty($contractId) || empty($cardId)) {
-            $this->jsonResult(false, 'Переданы не все необходимые параметры');
-        }
-
-        try {
-            Access::check('card', $cardId);
-        } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false, 'no access to card');
+        if (!empty($cardId)) {
+            try {
+                Access::check('card', $cardId, $contractId);
+            } catch (HTTP_Exception_404 $e) {
+                $this->jsonResult(false, 'no access to card');
+            }
+        } else {
+            try {
+                Access::check('contract', $contractId);
+            } catch (HTTP_Exception_404 $e) {
+                $this->jsonResult(false, 'no access to contract');
+            }
         }
 
         $cards = Model_Card::getCards($contractId, $cardId, false, [
@@ -283,14 +270,19 @@ class Controller_Api extends Controller_Template
             "CARD_COMMENT"
         ]);
 
-        $this->jsonResult(true, reset($cards));
+        foreach ($cards as &$card) {
+            $card['CARD_STATUS'] = $card['CARD_STATE'];
+            unset($card['CARD_STATE']);
+        }
+
+        $this->jsonResult(true, !empty($cardId) ? reset($cards) : $cards);
     }
 
     /**
      * GET
      * получаем список контрактов
      */
-    public function action_contracts_list()
+    public function action_contracts()
     {
         $clientId = $this->request->query('client_id');
 
@@ -319,6 +311,20 @@ class Controller_Api extends Controller_Template
             "STATE_ID",
         ]);
 
+        foreach ($contracts as &$contract) {
+            $contract['CONTRACT_STATUS'] = $contract['STATE_ID'];
+            unset($contract['STATE_ID']);
+
+            $contract['BALANCE'] = Model_Contract::getContractBalance($contract['CONTRACT_ID'], [], [
+                "BALANCE",
+                "MONTH_REALIZ",
+                "MONTH_REALIZ_CUR",
+                "LAST_MONTH_REALIZ",
+                "LAST_MONTH_REALIZ_CUR",
+                "DATE_LAST_CHANGE"
+            ]);
+        }
+
         $this->jsonResult(true, $contracts);
     }
 
@@ -326,7 +332,7 @@ class Controller_Api extends Controller_Template
      * GET
      * получаем список контрактов
      */
-    public function action_clients_list()
+    public function action_clients()
     {
         $user = User::current();
 
@@ -339,6 +345,6 @@ class Controller_Api extends Controller_Template
             'CLIENT_STATE',
         ]);
 
-        $this->jsonResult(true, $clients);
+        $this->jsonResult(true, array_values($clients));
     }
 }
