@@ -12,10 +12,12 @@ class Model_Card extends Model
 	const CARD_LIMIT_PARAM_VOLUME 	= 1;
 	const CARD_LIMIT_PARAM_RUR 		= 2;
 
-	const CARD_LIMIT_TYPE_DAY		= 1;
-	const CARD_LIMIT_TYPE_WEEK		= 2;
-	const CARD_LIMIT_TYPE_MONTH		= 3;
-	const CARD_LIMIT_TYPE_ONCE		= 4;
+	const CARD_LIMIT_TYPE_DAY		    = 1;
+	const CARD_LIMIT_TYPE_WEEK		    = 2;
+	const CARD_LIMIT_TYPE_MONTH		    = 3;
+	const CARD_LIMIT_TYPE_QUARTER	    = 4;
+	const CARD_LIMIT_TYPE_YEAR	        = 5;
+	const CARD_LIMIT_TYPE_TRANSACTION	= 10;
 
     const CARDS_GROUP_ACTION_EDIT = 1;
     const CARDS_GROUP_ACTION_DEL = 0;
