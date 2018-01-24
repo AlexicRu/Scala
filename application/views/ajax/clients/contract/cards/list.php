@@ -49,6 +49,12 @@
         return false;
     }
 
+    var cardsIcons = {};
+
+    <?foreach (Model_Card::$cardIcons as $template => $icon) {?>
+        cardsIcons['<?=$template?>'] = '<?=$icon?>';
+    <?}?>
+
     function renderAjaxPaginationCardsList(data, block)
     {
         if (data.length == 0) {
@@ -59,7 +65,13 @@
             var contentBlock = block.closest('.tabs_cards').find('.tabs_v_content');
 
             for (var i in data) {
-                var tpl = $('<div class="tab_v" onclick="cardLoad($(this))"><div><span class="icon-card gray"></span><span card_id /><div class="gray" holder /></div></div>');
+                var tpl = $('<div class="tab_v" onclick="cardLoad($(this))"><div><span card_id /><div class="gray" holder /></div></div>');
+
+                if (cardsIcons[data[i].CARD_TEMPLATE]) {
+                    tpl.find('> div').prepend('<span class="card__picture" style="background-image: url(/img/cards/'+ cardsIcons[data[i].CARD_TEMPLATE] +')"></span>');
+                } else {
+                    tpl.find('> div').prepend('<span class="icon-card gray"></span>');
+                }
 
                 tpl.attr('tab', data[i].CARD_ID);
                 tpl.find('[card_id]').text(data[i].CARD_ID);

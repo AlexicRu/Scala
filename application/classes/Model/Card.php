@@ -22,6 +22,18 @@ class Model_Card extends Model
     const CARDS_GROUP_ACTION_EDIT = 1;
     const CARDS_GROUP_ACTION_DEL = 0;
 
+    const CARD_ICON_WAY4_LUKOIL = 'Way4 Lukoil';
+    const CARD_ICON_WAY4_GPN    = 'Way4 GPN';
+    const CARD_ICON_PETROL_RN   = 'Petrol RN';
+    const CARD_ICON_NEFTIKA     = 'Neftika';
+
+    public static $cardIcons = [
+        self::CARD_ICON_WAY4_LUKOIL => 'card_lukoil.png',
+        self::CARD_ICON_WAY4_GPN    => 'card_gpn.png',
+        self::CARD_ICON_PETROL_RN   => 'card_rn.png',
+        self::CARD_ICON_NEFTIKA     => 'card_neftika.png'
+    ];
+
 	public static $cardLimitsParams = [
 		self::CARD_LIMIT_PARAM_VOLUME 	=> 'л.',
 		self::CARD_LIMIT_PARAM_RUR 		=> Text::RUR,
