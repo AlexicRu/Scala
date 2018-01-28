@@ -38,8 +38,20 @@ $user = Auth::instance()->get_user();
         <?}?>
     <?}?>
 </div>
+
 <b class="f18">Ограничения по топливу:</b>
-<?if(!empty($oilRestrictions)){?>
+<?if(!empty($oilRestrictions)){
+    $systemId = $card['SYSTEM_ID'];
+
+    switch ($systemId){
+        case 5:
+            $limitTypes = Model_Card::$cardLimitsTypesFull;
+            break;
+        default:
+            $limitTypes = Model_Card::$cardLimitsTypes;
+    }
+
+    ?>
     <table class="tbl_spacing">
         <?foreach($oilRestrictions as $restrictions){
             $restrict = reset($restrictions);
@@ -47,13 +59,19 @@ $user = Auth::instance()->get_user();
             <tr>
                 <td class="gray right">
                     <?foreach($restrictions as $restriction){?>
-                        <?=$restriction['DESCRIPTION']?>:<br>
+                        <?=$restriction['SERVICE_NAME']?>:<br>
                     <?}?>
                 </td>
                 <td class="line_inner">
-                    <?=$restrict['LIMIT_VALUE']?>
-                    <?=Model_Card::$cardLimitsParams[$restrict['LIMIT_PARAM']]?>
-                    <?=Model_Card::$cardLimitsTypes[$restrict['LIMIT_TYPE']]?>
+                    <?if ($systemId == 5) {?>
+                        <?=$restrict['LIMIT_VALUE']?>
+                        <?=Model_Card::$cardLimitsParams[$restrict['UNIT_TYPE']]?>,
+                        <?=$limitTypes[$restrict['DURATION_TYPE']]?>: <?=$restrict['DURATION_VALUE']?>
+                    <?}else{?>
+                        <?=$restrict['LIMIT_VALUE']?>
+                        <?=Model_Card::$cardLimitsParams[$restrict['UNIT_TYPE']]?>
+                        <?=$limitTypes[$restrict['DURATION_TYPE']]?>
+                    <?}?>
                 </td>
             </tr>
         <?}?>

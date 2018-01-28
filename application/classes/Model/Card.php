@@ -46,6 +46,15 @@ class Model_Card extends Model
 		//self::CARD_LIMIT_TYPE_ONCE 	=> 'единовременно',
 	];
 
+    public static $cardLimitsTypesFull = [
+        self::CARD_LIMIT_TYPE_DAY 	        => 'сутки',
+        self::CARD_LIMIT_TYPE_WEEK 	        => 'неделя',
+        self::CARD_LIMIT_TYPE_MONTH         => 'месяц',
+        self::CARD_LIMIT_TYPE_QUARTER       => 'квартал',
+        self::CARD_LIMIT_TYPE_YEAR          => 'год',
+        self::CARD_LIMIT_TYPE_TRANSACTION   => 'транзакций'
+    ];
+
 	public static $editLimitsManagerNoLimit = [
 	    1233
     ];
@@ -124,6 +133,33 @@ class Model_Card extends Model
 
 		return false;
 	}
+
+    /**
+     * получаем данные по ограничениям по топливу
+     *
+     * @param $cardId
+     */
+    public static function getOilRestrictionsV2($cardId, $select = [])
+    {
+        if(empty($cardId)){
+            return [];
+        }
+
+        $db = Oracle::init();
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_CARDS_LIMITS')
+            ->where('card_id = ' . Oracle::quote($cardId))
+        ;
+
+        if (!empty($select)) {
+            $sql->select($select);
+        }
+
+        $restrictions = $db->tree($sql, 'LIMIT_ID');
+
+        return $restrictions;
+    }
 
 	/**
 	 * получаем данные по ограничениям по топливу
@@ -323,6 +359,154 @@ class Model_Card extends Model
 
 		return false;
 	}
+
+    /**
+     * редактирование карты и лимитов
+     *
+     * @param $params
+     * @return array
+     */
+    public static function editCardLimitsV2($cardId, $contractId, $limits = [])
+    {
+        if(empty($cardId)){
+            return [false, 'Ошибка'];
+        }
+
+        $user = Auth::instance()->get_user();
+
+        $limits = (array)$limits;
+
+        if (count($limits) > 9) {
+            return [false, 'Изменение лимитов не произошло. Превышен лимит ограничений'];
+        }
+
+        $currentLimits = self::getOilRestrictionsV2($cardId);
+
+        if(
+            in_array($user['role'], array_keys(Access::$clientRoles)) &&
+            !in_array($user['MANAGER_ID'], self::$editLimitsManagerNoLimit)
+        ) {
+            foreach($limits as $limit){
+                if(
+                    ($limit['unit_type'] == 1 && $limit['value'] > 1000) ||
+                    ($limit['unit_type'] == 2 && $limit['value'] > 30000)
+                ){
+                    if(empty($currentLimits)){
+                        return [false, 'Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру'];
+                    }
+                    foreach($limit['services'] as $service){
+                        foreach ($currentLimits as $currentLimit){
+                            foreach ($currentLimit as $currentL) {
+                                if ($currentL['SERVICE_ID'] == $service && $limit['value'] != $currentL['LIMIT_VALUE']) {
+                                    return [false, 'Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру'];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $limitsIds = !empty($limits) ? array_column($limits, 'limit_id') : [];
+
+        foreach ($currentLimits as $limitId => $limit) {
+            if (!in_array($limitId, $limitsIds)) {
+                self::delLimit($limitId);
+            }
+        }
+
+        if(empty($limits)){
+            return [true, ''];
+        }
+
+        /*
+S1,S2,S3:DT1:DV1:UT1:UC1:V1:DWT1:DWV1:TiFr1:TiTo1:ID1
+
+S1,S2,S3 - набор услуг в ограничении
+DT1 - Duration type - периодичность услуги 1 - сутки, 2 недели, 3 - месяцы, 4 - кварталы, 5 - года, 10 - транзакция
+DV1 - Duration value - количество выбранных периодов
+UT1 - Unit type - параметр лимита 1 - литры, 2 - валюта
+UC1 - Unit currency - если в предыдущем параметре выбраны литры передаем "LIT", если валюта - код валюты (ISO 4217 number) пока по умолчанию передаем 643
+TC1 - Transaction count - ограничение на количество транзакций, если пустое, передаем -1 (по умолчанию передаем -1)
+V1 - Limit value - количественное значение лимита
+DWT1 - Limit of days week type - Ограничение по дням недели вкл/выкл (по умолчанию 0 - выкл)
+DWV1 - Limit of days week - Значение ограничения по дням недели, имеет вид строки из семи нулей и единиц: 0000000, 0 - выключен день, 1 - включен (по умолчанию передаем '0000000')
+TiFr1:TiTo1 - Time from / time to - Время в секундах с начала суток, показывающее период разрешенных заправок (по умолчанию передаем и там и там 0)
+ID1: Limit_id in DB. If '-1' - create new limit - Лимит полученный выборкой из БД. Если передаем значение '-1' создается новый лимит
+         */
+        $limitsArray = [];
+
+        foreach($limits as $group => $limit){
+
+            $str =
+                /*dt*/ (int)$limit['duration_type'] . ':' .
+                /*dv*/ (int)(!empty($limit['duration_value']) ? $limit['duration_value'] : 1) . ':' .
+                /*ut*/ (int)$limit['unit_type'] . ':' .
+                /*uc*/ ($limit['unit_type'] == self::CARD_LIMIT_PARAM_VOLUME ? 'LIT' : Model_Contract::CURRENCY_RUR) . ':' .
+                /*tc*/ '-1:' .
+                /*v*/  $limit['value'] . ':' .
+                /*dwt*/'0:' .
+                /*dwv*/'0:' .
+                /*tf*/ '0:' .
+                /*tt*/ '0:' .
+                /*id*/ (int)$limit['limit_id'] .
+                ';'
+            ;
+
+            $limitsArray[] =
+                /*s*/  implode(',', array_map('intval', $limit['services'])) . ':' .
+                str_replace(",", ".", $str)
+            ;
+        }
+
+        $data = [
+            'p_card_id'			=> $cardId,
+            'p_contract_id'		=> $contractId,
+            'p_limit_array'		=> [$limitsArray, SQLT_CHR],
+            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_json_str' 		=> -1,//json_encode($limits),
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = Oracle::init()->procedure('card_service_edit', $data);
+//        $res = Oracle::init()->procedure('card_service_edit', $data, true);
+//print_r($res);die;
+        switch ($res) {
+            case Oracle::CODE_ERROR:
+                return [false, 'Ошибка'];
+            case 2:
+                return [false, 'Превышен лимит ограничений'];
+            case 3:
+                return [false, 'Задвоенные лимиты'];
+        }
+
+        return [true, ''];
+    }
+
+    /**
+     * удаляем лимит
+     *
+     * @param $limitId
+     * @return bool
+     */
+    public static function delLimit($limitId)
+    {
+        if (empty($limitId)) {
+            return false;
+        }
+
+        $user = User::current();
+
+        $data = [
+            'p_limit_id'		=> $limitId,
+            'p_manager_id' 		=> $user['MANAGER_ID'],
+            'p_error_code' 		=> 'out',
+        ];
+
+        $res = Oracle::init()->procedure('card_limit_del', $data);
+
+        return $res == Oracle::CODE_SUCCESS ? true : false;
+    }
 
 	/**
 	 * редактирование карты и лимитов
