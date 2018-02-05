@@ -98,4 +98,59 @@ class Api
 
         return false;
     }
+
+    /**
+     * получаем json структуру апи
+     */
+    public static function getStructure()
+    {
+        $config = Common::getEnvironmentConfig()['api'];
+        $api = Kohana::$config->load('api')->as_array();
+
+        $api  = array_merge($api, $config);
+
+        $definitions = [];
+        $paths = [];
+
+        $apiConfigUrl = __DIR__ .
+            DIRECTORY_SEPARATOR . '..' .
+            DIRECTORY_SEPARATOR . 'config' .
+            DIRECTORY_SEPARATOR . 'api' .
+            DIRECTORY_SEPARATOR
+        ;
+
+        //definitions
+        $definitionsFiles = scandir($apiConfigUrl . 'definitions');
+
+        foreach ($definitionsFiles as $file) {
+            if (is_file($apiConfigUrl . 'definitions' . DIRECTORY_SEPARATOR . $file)) {
+                $definition = explode('.', $file)[0];
+                $definitions[$definition] = Kohana::$config->load('api/definitions/' . $definition)->as_array();
+            }
+        }
+
+        //paths
+        $pathsFiles = scandir($apiConfigUrl . 'paths');
+
+        foreach ($pathsFiles as $file) {
+            if (is_file($apiConfigUrl . 'paths' . DIRECTORY_SEPARATOR . $file)) {
+                $pathName = explode('.', $file)[0];
+                $path = Kohana::$config->load('api/paths/' . $pathName)->as_array();
+                $paths[$path['url']] = $path;
+            }
+        }
+
+        uasort($paths, function ($a, $b) {
+            if ($a['sort'] == $b['sort']) {
+                return 0;
+            }
+
+            return $a['sort'] > $b['sort'] ? 1 : -1;
+        });
+
+        $api['definitions'] = $definitions;
+        $api['paths'] = $paths;
+
+        return json_encode($api);
+    }
 }

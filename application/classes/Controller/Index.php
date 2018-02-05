@@ -50,16 +50,7 @@ class Controller_Index extends Controller_Common {
      */
     public function action_get_json()
     {
-        $state = 'dev';
-
-        if (Common::isProd()) {
-            $state = 'prod';
-        }
-
-        $config = Kohana::$config->load($state)['api'];
-        $api = Kohana::$config->load('api');
-
-        $api  = array_merge(json_decode($api['api'], true), $config);
+        $api = Api::getStructure();
 
         $html = View::factory('api/json')
             ->bind('api', $api)

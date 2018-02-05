@@ -1,1 +1,1 @@
-<?=json_encode($api)?>
+<?=$api?>

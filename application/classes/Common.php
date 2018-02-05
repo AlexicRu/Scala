@@ -94,4 +94,18 @@ class Common
         }
         return false;
     }
+
+    /**
+     * получаем конфиг для текущего состояния
+     */
+    public static function getEnvironmentConfig()
+    {
+        $state = 'dev';
+
+        if (self::isProd()) {
+            $state = 'prod';
+        }
+
+        return Kohana::$config->load($state);
+    }
 }
