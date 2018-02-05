@@ -540,10 +540,10 @@ class Controller_Control extends Controller_Common {
 
             $user = User::current();
 
-            $canEdit = true;
-            if (!in_array($user['role'], Access::$rolesForCardGroups)) {
+            $canEdit = false;
+            /*if (!in_array($user['role'], Access::$rolesForCardGroups)) {
                 $canEdit = false;
-            }
+            }*/
 
             $html = View::factory('ajax/control/cards_in_group')
                 ->bind('groupId', $groupId)
@@ -651,6 +651,25 @@ class Controller_Control extends Controller_Common {
         }
 
         $this->jsonResult(true);
+    }
+
+    /**
+     * удаление группы
+     */
+    public function action_del_cards_group()
+    {
+        $groups = (array)$this->request->post('groups');
+
+        $result = [];
+
+        foreach ($groups as $group) {
+            $result[] = [
+                'group_id' => $group,
+                'deleted' => Model_Card::editCardsGroup(['group_id' => $group], Model_Card::CARDS_GROUP_ACTION_DEL)
+            ];
+        }
+
+        $this->jsonResult($result);
     }
 
     /**

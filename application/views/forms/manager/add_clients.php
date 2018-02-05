@@ -102,7 +102,13 @@
 
         var item = close.closest('.scl_item');
 
-        $('.client_found_row[client_id='+ item.attr('client_id') +'] [type=checkbox]').click();
+        var foundRow = $('.client_found_row[client_id='+ item.attr('client_id') +']');
+
+        if (foundRow.length) {
+            $('[type=checkbox]', foundRow).click();
+        } else {
+            list.find('[client_id='+ item.attr('client_id') +']').remove();
+        }
     }
 
     function managerAddClients(btn)

@@ -11,7 +11,7 @@
             </span>
 
             <span toggle_block="cards_groups_block" class="dn action_del">
-<!--                <a href="#" class="btn btn_red btn_del_cards_groups"><i class="icon-cancel"></i> Удалить выделенные группы</a>-->
+                <a href="#" class="btn btn_red btn_del_cards_groups"><i class="icon-cancel"></i> Удалить выделенные группы</a>
                 <a href="#" class="btn btn_red btn_del_cards"><i class="icon-cancel"></i> Удалить выделенные карты</a>
                 <span class="btn btn_orange btn_icon" toggle="cards_groups_block"><i class="icon-cancel"></i></span>
             </span>
@@ -125,12 +125,14 @@
 
             $.post('/control/del_cards_group', {groups: groups}, function (data) {
 
-                for(var i in data.data.deleted){
-                    selectedGroups['group' + i].remove();
-                }
+                for(var i in data.data){
+                    var group = selectedGroups['group' + data.data[i].group_id];
 
-                for(var i in data.data.not_deleted){
-                    message(0, 'Ошибка удаления. Группа <b>'+ selectedGroups['group' + i].find('.group_name').text() +'</b> содержит карты');
+                    if (data.data[i].deleted) {
+                        group.remove();
+                    } else {
+                        message(0, 'Ошибка удаления. Группа <b>'+ group.find('.group_name').text() +'</b> содержит карты');
+                    }
                 }
 
                 $('.tabs_cards_groups .tabs_v .scroll > [tab]:first').click();

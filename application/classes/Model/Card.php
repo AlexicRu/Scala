@@ -446,7 +446,7 @@ ID1: Limit_id in DB. If '-1' - create new limit - Лимит полученны�
                 /*tc*/ '-1:' .
                 /*v*/  $limit['value'] . ':' .
                 /*dwt*/'0:' .
-                /*dwv*/'0:' .
+                /*dwv*/'0000000:' .
                 /*tf*/ '0:' .
                 /*tt*/ '0:' .
                 /*id*/ (int)$limit['limit_id'] .
@@ -469,8 +469,7 @@ ID1: Limit_id in DB. If '-1' - create new limit - Лимит полученны�
         ];
 
         $res = Oracle::init()->procedure('card_service_edit', $data);
-//        $res = Oracle::init()->procedure('card_service_edit', $data, true);
-//print_r($res);die;
+
         switch ($res) {
             case Oracle::CODE_ERROR:
                 return [false, 'Ошибка'];
