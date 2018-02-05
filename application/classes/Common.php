@@ -83,4 +83,15 @@ class Common
             <meta name="theme-color" content="#ffffff">        
         ';
     }
+
+    /**
+     * @return bool
+     */
+    public static function isProd()
+    {
+        if (Kohana::$environment == Kohana::PRODUCTION) {
+            return true;
+        }
+        return false;
+    }
 }

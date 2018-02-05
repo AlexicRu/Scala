@@ -61,7 +61,7 @@ class Controller_Telegram extends Controller_Template
      */
     public function action_set_webhook()
     {
-        $result = $this->_telegram->setWebhook($this->_config['telegram_web_hook']);
+        $result = $this->_telegram->setWebhook('https://dev.lk.glopro.ru' . $this->_config['telegram_web_hook']);
 
         if ($result->isOk()) {
             echo $result->getDescription();
@@ -74,7 +74,7 @@ class Controller_Telegram extends Controller_Template
      */
     public function action_check()
     {
-        $result = Request::getWebhookInfo();
+        $result = TelegramRequest::getWebhookInfo();
 
         echo '<pre>';
         print_r($result);

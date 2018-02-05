@@ -45,4 +45,26 @@ class Controller_Index extends Controller_Common {
         $this->jsonResult(false);
     }
 
+    /**
+     * подгружаем конфиг api
+     */
+    public function action_get_json()
+    {
+        $state = 'dev';
+
+        if (Common::isProd()) {
+            $state = 'prod';
+        }
+
+        $config = Kohana::$config->load($state)['api'];
+        $api = Kohana::$config->load('api');
+
+        $api  = array_merge(json_decode($api['api'], true), $config);
+
+        $html = View::factory('api/json')
+            ->bind('api', $api)
+        ;
+
+        $this->html($html);
+    }
 } // End Welcome

@@ -15,7 +15,7 @@ abstract class Controller_Common extends Controller_Template {
         $controller = $this->request->controller();
         $action = $this->request->action();
 
-        if(!Auth::instance()->logged_in()){
+        if(!Auth::instance()->logged_in() && !in_array($action, ['get_json'])){
             if(!in_array($action, ['login', 'logout']) && $_SERVER['REQUEST_URI'] != '/'){
                 $this->redirect('/');
             }
@@ -42,7 +42,7 @@ abstract class Controller_Common extends Controller_Template {
         }
 
         //если не аяксовый запрос
-        if(!$this->request->is_ajax() && !$this->toXls) {
+        if(!$this->request->is_ajax() && !$this->toXls && !in_array($action, ['get_json'])) {
             if($allow == false){
                 throw new HTTP_Exception_403();
             }
