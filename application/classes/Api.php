@@ -136,7 +136,11 @@ class Api
             if (is_file($apiConfigUrl . 'paths' . DIRECTORY_SEPARATOR . $file)) {
                 $pathName = explode('.', $file)[0];
                 $path = Kohana::$config->load('api/paths/' . $pathName)->as_array();
-                $paths[$path['url']] = $path;
+                $paths[$path['url']][$path['method']] = $path;
+
+                if (empty($paths[$path['url']]['sort'])) {
+                    $paths[$path['url']]['sort'] = $path['sort'];
+                }
             }
         }
 
@@ -147,6 +151,21 @@ class Api
 
             return $a['sort'] > $b['sort'] ? 1 : -1;
         });
+
+        //сортируем
+        foreach ($paths as &$methods) {
+            unset($methods['sort']);
+
+            if (count($methods) > 1) {
+                uasort($methods, function ($a, $b) {
+                    if ($a['sort'] == $b['sort']) {
+                        return 0;
+                    }
+
+                    return $a['sort'] > $b['sort'] ? 1 : -1;
+                });
+            }
+        }
 
         $api['definitions'] = $definitions;
         $api['paths'] = $paths;

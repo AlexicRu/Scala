@@ -2,6 +2,9 @@
 
 return [
     'api' => [
-        'host' => 'dev.lk.glopro.ru'
+        'host' => 'dev.lk.glopro.ru',
+        'schemes' => [
+            'http'
+        ],
     ]
 ];

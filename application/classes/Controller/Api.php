@@ -120,7 +120,7 @@ class Controller_Api extends Controller_Template
      * POST
      * изменение статуса карты
      */
-    public function action_card_status()
+    public function action_cardStatus()
     {
         $params = [
             'card_id'       => $this->request->post('card_id'),
@@ -204,33 +204,72 @@ class Controller_Api extends Controller_Template
     /**
      * GET
      * получаем лимиты по карте
+     *
+     * DELETE
+     * удаляем лимит по карте
+     *
+     * POST
+     * добавление лимита по карте
+     *
+     * PUT
+     * редактирование лимита по карте
      */
-    public function action_card_limits()
+    public function action_cardLimits()
     {
-        $cardId = $this->request->query('card_id');
-        $contractId = $this->request->query('contract_id');
+        $method = strtoupper($this->request->method());
 
-        if (empty($contractId) || empty($cardId)) {
-            $this->jsonResult(false, 'Not enough data');
+        switch ($method) {
+            case 'GET':
+                $cardId = $this->request->query('card_id');
+                $contractId = $this->request->query('contract_id');
+
+                if (empty($contractId) || empty($cardId)) {
+                    $this->jsonResult(false, 'Not enough data');
+                }
+
+                try {
+                    Access::check('card', $cardId, $contractId);
+                } catch (HTTP_Exception_404 $e) {
+                    $this->jsonResult(false, 'No access to card');
+                }
+
+                $limits = Model_Card::getOilRestrictionsV2($cardId, [
+                    "LIMIT_ID",
+                    "SERVICE_ID",
+                    "SERVICE_NAME",
+                    "CARD_ID",
+                    "DURATION_TYPE",
+                    "DURATION_VALUE",
+                    "UNIT_TYPE",
+                    "UNIT_CURRENCY",
+                    "LIMIT_VALUE",
+                    "TRN_COUNT",
+                    "DAYS_WEEK_TYPE",
+                    "DAYS_WEEK",
+                    "TIME_FROM",
+                    "TIME_TO",
+                ]);
+
+                $result = [];
+
+                foreach ($limits as $services) {
+                    $result[] = array_values($services);
+                }
+
+                break;
+            case 'DELETE':
+                $limitId = $this->request->param('id') ?: false;
+
+                $result = Model_Card::delLimit($limitId);
+
+                break;
+            case 'POST':
+                break;
+            case 'PUT':
+                break;
         }
 
-        try {
-            Access::check('card', $cardId, $contractId);
-        } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false, 'No access to card');
-        }
-
-        $limits = Model_Card::getOilRestrictions($cardId, [
-            "SERVICE_ID",
-            "DESCRIPTION",
-            "LIMIT_GROUP",
-            "LIMIT_PARAM",
-            "LIMIT_TYPE",
-            "LIMIT_VALUE",
-            "LIMIT_CURRENCY",
-        ]);
-
-        $this->jsonResult(true, $limits);
+        $this->jsonResult(true, $result);
     }
 
     /**
