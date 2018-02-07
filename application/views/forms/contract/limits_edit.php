@@ -30,7 +30,7 @@
                             <select name="limit_param">
                                 <?
                                 $param = Model_Card::$cardLimitsParams[Model_Card::CARD_LIMIT_PARAM_VOLUME];
-                                if ($limitFirst['CURRENCY'] == Model_Contract::CURRENCY_RUR) {
+                                if ($limitFirst['CURRENCY'] == Common::CURRENCY_RUR) {
                                     $param = Model_Card::$cardLimitsParams[Model_Card::CARD_LIMIT_PARAM_RUR];
                                 }
                                 foreach(Model_Card::$cardLimitsParams as $limitParam => $value){?>

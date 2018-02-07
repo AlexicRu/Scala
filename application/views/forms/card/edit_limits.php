@@ -65,17 +65,16 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card_edit_l
             <td class="gray right v_top" width="170">Ограничения по топливу:</td>
             <td>
                 <table class="table_form table_form_limits">
-                    <?foreach($oilRestrictions as $restrictions){
-                        $restriction = reset($restrictions);
+                    <?foreach($oilRestrictions as $restriction){
                         ?>
                         <tr limit_group="<?=$restriction['LIMIT_ID']?>">
                             <td>
-                                <?foreach($restrictions as $restrict){?>
+                                <?foreach($restriction['services'] as $restrictionService){?>
                                     <div class="form_elem" limit_service>
                                         <nobr>
                                             <select name="limit_service" onchange="checkServices_<?=$postfix?>()" <?=($onlyEditCnt ? 'disabled' : '')?>>
                                                 <?foreach($servicesList as $service){?>
-                                                    <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $restrict['SERVICE_ID']){?>selected<?}?>><?=$service['FOREIGN_DESC']?></option>
+                                                    <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $restrictionService['id']){?>selected<?}?>><?=$service['FOREIGN_DESC']?></option>
                                                 <?}?>
                                             </select>
 

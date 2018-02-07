@@ -158,35 +158,28 @@ class Model_Card extends Model
 
         $restrictions = $db->tree($sql, 'LIMIT_ID');
 
-        return $restrictions;
-    }
+        $result = [];
 
-	/**
-	 * получаем данные по ограничениям по топливу
-	 *
-	 * @param $cardId
-	 */
-	public static function getOilRestrictions($cardId, $select = [])
-	{
-		if(empty($cardId)){
-			return [];
-		}
+        foreach ($restrictions as $services) {
 
-		$db = Oracle::init();
+            $restrictionServices = [];
 
-		$sql = (new Builder())->select()
-            ->from('V_WEB_CRD_LIMITS')
-            ->where('card_id = ' . Oracle::quote($cardId))
-        ;
+            $restriction = reset($services);
 
-		if (!empty($select)) {
-		    $sql->select($select);
+            foreach ($services as $service) {
+                $restrictionServices[] = [
+                    'id'    => $service['SERVICE_ID'],
+                    'name'  => $service['SERVICE_NAME'],
+                ];
+            }
+
+            $restriction['services'] = $restrictionServices;
+
+            $result[] = $restriction;
         }
 
-		$restrictions = $db->tree($sql, 'LIMIT_GROUP');
-
-		return $restrictions;
-	}
+        return $result;
+    }
 
 	/**
 	 * данные по последней заправке
@@ -396,8 +389,8 @@ class Model_Card extends Model
                     }
                     foreach($limit['services'] as $service){
                         foreach ($currentLimits as $currentLimit){
-                            foreach ($currentLimit as $currentL) {
-                                if ($currentL['SERVICE_ID'] == $service && $limit['value'] != $currentL['LIMIT_VALUE']) {
+                            foreach ($currentLimit['SERVICES'] as $currentService) {
+                                if ($currentService['id'] == $service && $limit['value'] != $currentLimit['LIMIT_VALUE']) {
                                     return [false, 'Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру'];
                                 }
                             }
@@ -442,7 +435,7 @@ ID1: Limit_id in DB. If '-1' - create new limit - Лимит полученны�
                 /*dt*/ (int)$limit['duration_type'] . ':' .
                 /*dv*/ (int)(!empty($limit['duration_value']) ? $limit['duration_value'] : 1) . ':' .
                 /*ut*/ (int)$limit['unit_type'] . ':' .
-                /*uc*/ ($limit['unit_type'] == self::CARD_LIMIT_PARAM_VOLUME ? 'LIT' : Model_Contract::CURRENCY_RUR) . ':' .
+                /*uc*/ ($limit['unit_type'] == self::CARD_LIMIT_PARAM_VOLUME ? 'LIT' : Common::CURRENCY_RUR) . ':' .
                 /*tc*/ '-1:' .
                 /*v*/  $limit['value'] . ':' .
                 /*dwt*/'0:' .
@@ -505,184 +498,6 @@ ID1: Limit_id in DB. If '-1' - create new limit - Лимит полученны�
         $res = Oracle::init()->procedure('card_limit_del', $data);
 
         return $res == Oracle::CODE_SUCCESS ? true : false;
-    }
-
-	/**
-	 * редактирование карты и лимитов
-	 *
-	 * @param $params
-	 * @return array
-	 */
-	public static function editCardLimits($cardId, $contractId, $limits = [])
-	{
-		if(empty($cardId)){
-			return [false, 'Ошибка'];
-		}
-
-        $user = Auth::instance()->get_user();
-
-		$limits = (array)$limits;
-
-        if (count($limits) > 9) {
-            return [false, 'Изменение лимитов не произошло. Превышен лимит ограничений'];
-        }
-
-		if(
-		    in_array($user['role'], array_keys(Access::$clientRoles)) &&
-            !in_array($user['MANAGER_ID'], self::$editLimitsManagerNoLimit)
-        ) {
-            $currentLimits = self::getOilRestrictions($cardId);
-
-            foreach($limits as $limit){
-                if(
-                    ($limit['param'] == 1 && $limit['value'] > 1000) ||
-                    ($limit['param'] == 2 && $limit['value'] > 30000)
-                ){
-                    if(empty($currentLimits)){
-                        return [false, 'Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру'];
-                    }
-                    foreach($limit['services'] as $service){
-                        foreach ($currentLimits as $currentLimit){
-                            foreach ($currentLimit as $currentL) {
-                                if ($currentL['SERVICE_ID'] == $service && $limit['value'] != $currentL['LIMIT_VALUE']) {
-                                    return [false, 'Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру'];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-		$db = Oracle::init();
-
-		if(empty($limits)){
-            $db->procedure('card_service_refresh', ['p_card_id' => $cardId]);
-
-			return [true, ''];
-		}
-
-        /*
-        S1,S2,S3:P1:T1:V1:PCS1;
-        S4,S5,S6:P2:T2:V2:PCS2;
-
-        где S1,S2,S3 - ID услуг через "запятую" в рамках указанной группы ограничения
-        P1 - параметр лимита для указанной группы ограничения (1 - в литрах, 2 - в рублях)
-        T1 - тип лимита для указанной группы ограничения (1 - суточный, 2 - недельный, 3 - месячный)
-        V1 - размер лимита для указанной группы ограничения (дробная часть через "точку")
-        PCS1 - лимит на количество операций для указанной группы ограничения (по умолчанию пока "0" - без ограничений)
-         */
-        $limitsArray = [];
-
-		foreach($limits as $group => $limit){
-
-		    $limitsArray[] =
-                implode(',', $limit['services']) . ':' .
-                $limit['param'] . ':' .
-                $limit['type'] . ':' .
-                str_replace(",", ".", $limit['value']) . ':' .
-                0 . ';'
-            ;
-		}
-
-        $data = [
-            'p_card_id'			=> $cardId,
-            'p_contract_id'		=> $contractId,
-            'p_limit_array'		=> [$limitsArray, SQLT_CHR],
-            'p_manager_id' 		=> $user['MANAGER_ID'],
-            'p_error_code' 		=> 'out',
-        ];
-
-        $res = $db->procedure('card_service_edit_ar', $data);
-
-        switch ($res) {
-            case Oracle::CODE_ERROR:
-                return [false, 'Ошибка'];
-            case 2:
-                return [false, 'Превышен лимит ограничений'];
-            case 3:
-                return [false, 'Задвоенные лимиты'];
-        }
-
-		return [true, ''];
-	}
-
-    /**
-     * редактирование карты и лимитов
-     *
-     * @param $params
-     * @return bool
-     * @deprecated
-     */
-    public static function OLD_editCardLimits($cardId, $limits = [])
-    {
-        if(empty($cardId)){
-            return false;
-        }
-
-        $user = Auth::instance()->get_user();
-
-        if(in_array($user['role'], array_keys(Access::$clientRoles))) {
-            $currentLimits = self::getOilRestrictions($cardId);
-
-            foreach($limits as $limit){
-                if(
-                    ($limit['param'] == 1 && $limit['value'] > 1000) ||
-                    ($limit['param'] == 2 && $limit['value'] > 30000)
-                ){
-                    if(empty($currentLimits)){
-                        Messages::put('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
-                        return false;
-                    }
-                    foreach($limit['services'] as $service){
-                        foreach ($currentLimits as $currentLimit){
-                            foreach ($currentLimit as $currentL) {
-                                if ($currentL['SERVICE_ID'] == $service && $limit['value'] != $currentL['LIMIT_VALUE']) {
-                                    Messages::put('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $db = Oracle::init();
-
-        $db->procedure('card_service_refresh', ['p_card_id' => $cardId]);
-
-        if(empty($limits)){
-            $db->procedure('card_queue_limit_add', ['p_card_id' => $cardId]);
-            return true;
-        }
-
-        foreach($limits as $group => $limit){
-            foreach($limit['services'] as $service){
-                $data = [
-                    'p_card_id'			=> $cardId,
-                    'p_service_id'		=> $service,
-                    'p_limit_group'		=> $group,
-                    'p_limit_param'		=> $limit['param'],
-                    'p_limit_type'		=> $limit['type'],
-                    'p_limit_value'		=> str_replace(",", ".", $limit['value']),
-                    'p_limit_currency'	=> Model_Contract::CURRENCY_RUR,
-                    'p_limit_pcs'		=> 0, //default
-                    'p_manager_id' 		=> $user['MANAGER_ID'],
-                    'p_error_code' 		=> 'out',
-                ];
-
-                $res = $db->procedure('card_service_edit', $data);
-
-                if(!empty($res)){
-                    return false;
-                }
-            }
-        }
-
-        $db->procedure('card_queue_limit_add', ['p_card_id' => $cardId]);
-
-        return true;
     }
 
 	/**

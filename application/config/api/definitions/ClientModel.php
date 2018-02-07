@@ -3,16 +3,16 @@
 return [
     'type' => 'object',
     'properties' => [
-        'CLIENT_ID' => [
+        'client_id' => [
             'type' => 'integer'
         ],
-        'CLIENT_NAME' => [
+        'client_name' => [
             'type' => 'string'
         ],
-        'LONG_NAME' => [
+        'long_name' => [
             'type' => 'string'
         ],
-        'CLIENT_STATE' => [
+        'client_state' => [
             'type' => 'integer'
         ]
     ]

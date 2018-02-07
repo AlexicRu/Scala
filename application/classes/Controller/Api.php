@@ -30,7 +30,11 @@ class Controller_Api extends Controller_Template
             http_response_code(400);
         }
 
-        self::json(['success' => $result, 'data' => (array)$data]);
+
+        self::json([
+            'success' => $result,
+            'data' => Arr::arrayChangeKeyCaseRecursive((array)$data)
+        ]);
     }
 
     public function before()
@@ -233,7 +237,7 @@ class Controller_Api extends Controller_Template
                     $this->jsonResult(false, 'No access to card');
                 }
 
-                $limits = Model_Card::getOilRestrictionsV2($cardId, [
+                $result = Model_Card::getOilRestrictionsV2($cardId, [
                     "LIMIT_ID",
                     "SERVICE_ID",
                     "SERVICE_NAME",
@@ -250,10 +254,8 @@ class Controller_Api extends Controller_Template
                     "TIME_TO",
                 ]);
 
-                $result = [];
-
-                foreach ($limits as $services) {
-                    $result[] = array_values($services);
+                foreach ($result as &$limit) {
+                    $limit['services'] = array_column($limit['services'], 'id');
                 }
 
                 break;
@@ -385,5 +387,16 @@ class Controller_Api extends Controller_Template
         ]);
 
         $this->jsonResult(true, array_values($clients));
+    }
+
+    /**
+     * GET
+     * получаем список сервисов по карте
+     */
+    public function action_cardServices()
+    {
+        $servicesList = Listing::getServices(['TUBE_ID' => 1]);
+
+        $this->jsonResult(true, array_values($servicesList));
     }
 }

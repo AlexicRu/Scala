@@ -3,7 +3,7 @@
 return [
     'swagger' => '2.0',
     'info' => [
-        'version' => '0.7',
+        'version' => '0.8',
         'title' => 'GloPro API'
     ],
     'host' => '', //из конфига

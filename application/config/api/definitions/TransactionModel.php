@@ -3,56 +3,56 @@
 return [
     'type' => 'object',
     'properties' => [
-        'DATETIME_TRN' => [
+        'datetime_trn' => [
             'type' => 'string'
         ],
-        'CARD_ID' => [
+        'card_id' => [
             'type' => 'string'
         ],
-        'CLIENT_ID' => [
+        'client_id' => [
             'type' => 'integer'
         ],
-        'CONTRACT_ID' => [
+        'contract_id' => [
             'type' => 'integer'
         ],
-        'OPERATION_ID' => [
+        'operation_id' => [
             'type' => 'integer'
         ],
-        'SUPPLIER_TERMINAL' => [
+        'supplier_terminal' => [
             'type' => 'integer'
         ],
-        'SERVICE_ID' => [
+        'service_id' => [
             'type' => 'integer'
         ],
-        'DESCRIPTION' => [
+        'description' => [
             'type' => 'string'
         ],
-        'SERVICE_AMOUNT' => [
+        'service_amount' => [
             'type' => 'number'
         ],
-        'SERVICE_PRICE' => [
+        'service_price' => [
             'type' => 'number'
         ],
-        'SERVICE_SUMPRICE' => [
+        'service_sumprice' => [
             'type' => 'number'
         ],
-        'TRN_CURRENCY' => [
+        'trn_currency' => [
             'type' => 'integer',
-            'default' => 643
+            'default' => Common::CURRENCY_RUR
         ],
-        'PRICE_DISCOUNT' => [
+        'price_discount' => [
             'type' => 'number'
         ],
-        'SUMPRICE_DISCOUNT' => [
+        'sumprice_discount' => [
             'type' => 'number'
         ],
-        'POS_ADDRESS' => [
+        'pos_address' => [
             'type' => 'string'
         ],
-        'TRN_KEY' => [
+        'trn_key' => [
             'type' => 'string'
         ],
-        'TRN_COMMENT' => [
+        'trn_comment' => [
             'type' => 'string'
         ]
     ]

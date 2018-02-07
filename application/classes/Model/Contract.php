@@ -22,7 +22,6 @@ class Model_Contract extends Model
     ];
 
 	const DEFAULT_DATE_END				= '31.12.2099';
-    const CURRENCY_RUR 		            = 643;
 
 	const PAYMENT_SCHEME_UNLIMITED 		= 1;
 	const PAYMENT_SCHEME_PREPAYMENT 	= 2;
@@ -229,7 +228,7 @@ class Model_Contract extends Model
 			'p_contract_name' 	=> $params['contract']['CONTRACT_NAME'],
 			'p_date_begin' 		=> $params['contract']['DATE_BEGIN'],
 			'p_date_end' 		=> $params['contract']['DATE_END'],
-			'p_currency' 		=> self::CURRENCY_RUR,
+			'p_currency' 		=> Common::CURRENCY_RUR,
 			'p_state_id' 		=> $params['contract']['STATE_ID'],
 			'p_manager_id' 		=> $user['MANAGER_ID'],
 			'p_error_code' 		=> 'out',
@@ -244,7 +243,7 @@ class Model_Contract extends Model
             'p_penalties' 		        => $params['settings']['PENALTIES'],
             'p_penalties_flag' 		    => $params['settings']['PENALTIES'] ? 1 : 0,
             'p_overdraft' 		        => abs($params['settings']['OVERDRAFT']),
-            'p_invoice_currency' 		=> self::CURRENCY_RUR,
+            'p_invoice_currency' 		=> Common::CURRENCY_RUR,
             'p_invoice_period_type' 	=> $params['settings']['INVOICE_PERIOD_TYPE'],
             'p_invoice_period_value' 	=> $params['settings']['INVOICE_PERIOD_VALUE'],
             'p_goods_reciever' 	        => !empty($params['settings']['GOODS_RECIEVER']) ? $params['settings']['GOODS_RECIEVER'] : null,
@@ -315,7 +314,7 @@ class Model_Contract extends Model
 			'p_contract_name' 	=> $params['name'],
 			'p_date_begin' 		=> $params['date_start'],
 			'p_date_end' 		=> !empty($params['date_end']) ? $params['date_end'] : self::DEFAULT_DATE_END,
-			'p_currency' 		=> self::CURRENCY_RUR,
+			'p_currency' 		=> Common::CURRENCY_RUR,
 			'p_manager_id' 		=> $user['MANAGER_ID'],
 			'p_contract_id' 	=> 'out',
 			'p_error_code' 		=> 'out',
@@ -405,7 +404,7 @@ class Model_Contract extends Model
 			'p_order_num' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['num'] : null,
 			'p_order_date' 		=> $action == self::PAYMENT_ACTION_ADD ? Oracle::quote($params['date']) : null,
 			'p_value' 			=> $action != self::PAYMENT_ACTION_DELETE ? Oracle::toFloat($params['value']) : 0,
-			'p_payment_cur' 	=> $action == self::PAYMENT_ACTION_ADD ? self::CURRENCY_RUR : null,
+			'p_payment_cur' 	=> $action == self::PAYMENT_ACTION_ADD ? Common::CURRENCY_RUR : null,
 			'p_comment' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['comment'] : null,
 			'p_manager_id' 		=> $user['MANAGER_ID'],
 			'p_error_code' 		=> 'out',

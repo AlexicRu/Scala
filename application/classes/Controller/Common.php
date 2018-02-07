@@ -15,7 +15,7 @@ abstract class Controller_Common extends Controller_Template {
         $controller = $this->request->controller();
         $action = $this->request->action();
 
-        if(!Auth::instance()->logged_in() && !in_array($action, ['get_json'])){
+        if(!Auth::instance()->logged_in()/* && !in_array($action, ['get_json'])*/){
             if(!in_array($action, ['login', 'logout']) && $_SERVER['REQUEST_URI'] != '/'){
                 $this->redirect('/');
             }

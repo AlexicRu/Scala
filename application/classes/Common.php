@@ -2,6 +2,8 @@
 
 class Common
 {
+    const CURRENCY_RUR 		            = 643;
+
 	/**
 	 * генерация html для попапа
 	 *
@@ -107,5 +109,16 @@ class Common
         }
 
         return Kohana::$config->load($state);
+    }
+
+    public static function stringFromKeyValueFromArray($array, $delimiter = '<br>')
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            $result[] = $key . ' - ' . $value;
+        }
+
+        return implode($delimiter, $result);
     }
 }

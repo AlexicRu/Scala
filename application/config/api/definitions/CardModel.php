@@ -3,25 +3,25 @@
 return [
     'type' => 'object',
     'properties' => [
-        'CARD_ID' => [
+        'card_id' => [
             'type' => 'string'
         ],
-        'HOLDER' => [
+        'holder' => [
             'type' => 'string'
         ],
-        'DATE_HOLDER' => [
+        'date_holder' => [
             'type' => 'string'
         ],
-        'CARD_STATUS' => [
+        'card_status' => [
             'type' => 'integer'
         ],
-        'BLOCK_AVAILABLE' => [
+        'block_available' => [
             'type' => 'integer'
         ],
-        'CHANGE_LIMIT_AVAILABLE' => [
+        'change_limit_available' => [
             'type' => 'integer'
         ],
-        'CARD_COMMENT' => [
+        'card_comment' => [
             'type' => 'string'
         ]
     ]

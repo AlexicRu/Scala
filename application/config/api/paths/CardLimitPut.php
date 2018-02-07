@@ -4,6 +4,7 @@ return [
     'sort'  => 745,
     'url'   => '/card-limits/{limit_id}',
     'method' => 'put',
+    'deprecated' => true,
     'tags' => ['cards'],
     'summary' => 'Изменение лимита карты',
     'operationId' => 'card_limit_put',

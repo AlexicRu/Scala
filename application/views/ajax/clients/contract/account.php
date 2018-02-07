@@ -36,7 +36,7 @@
                                     <i>Неограничено</i>
                                 <?}else{
                                     $param = Model_Card::$cardLimitsParams[Model_Card::CARD_LIMIT_PARAM_VOLUME];
-                                    if ($restrict['CURRENCY'] == Model_Contract::CURRENCY_RUR) {
+                                    if ($restrict['CURRENCY'] == Common::CURRENCY_RUR) {
                                         $param = Model_Card::$cardLimitsParams[Model_Card::CARD_LIMIT_PARAM_RUR];
                                     }?>
                                     <b><?=$restrict['REST_LIMIT']?> <?=$param?></b> из <?=$restrict['LIMIT_VALUE']?> <?=$param?>

@@ -53,24 +53,22 @@ $user = Auth::instance()->get_user();
 
     ?>
     <table class="tbl_spacing">
-        <?foreach($oilRestrictions as $restrictions){
-            $restrict = reset($restrictions);
-            ?>
+        <?foreach($oilRestrictions as $restriction){?>
             <tr>
                 <td class="gray right">
-                    <?foreach($restrictions as $restriction){?>
-                        <?=$restriction['SERVICE_NAME']?>:<br>
+                    <?foreach($restriction['services'] as $service){?>
+                        <?=$service['name']?>:<br>
                     <?}?>
                 </td>
                 <td class="line_inner">
                     <?if ($systemId == 5) {?>
-                        <?=$restrict['LIMIT_VALUE']?>
-                        <?=Model_Card::$cardLimitsParams[$restrict['UNIT_TYPE']]?>,
-                        <?=$limitTypes[$restrict['DURATION_TYPE']]?>: <?=$restrict['DURATION_VALUE']?>
+                        <?=$restriction['LIMIT_VALUE']?>
+                        <?=Model_Card::$cardLimitsParams[$restriction['UNIT_TYPE']]?>,
+                        <?=$limitTypes[$restriction['DURATION_TYPE']]?>: <?=$restriction['DURATION_VALUE']?>
                     <?}else{?>
-                        <?=$restrict['LIMIT_VALUE']?>
-                        <?=Model_Card::$cardLimitsParams[$restrict['UNIT_TYPE']]?>
-                        <?=$limitTypes[$restrict['DURATION_TYPE']]?>
+                        <?=$restriction['LIMIT_VALUE']?>
+                        <?=Model_Card::$cardLimitsParams[$restriction['UNIT_TYPE']]?>
+                        <?=$limitTypes[$restriction['DURATION_TYPE']]?>
                     <?}?>
                 </td>
             </tr>
