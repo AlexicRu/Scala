@@ -222,6 +222,9 @@ class Controller_Api extends Controller_Template
     {
         $method = strtoupper($this->request->method());
 
+        $result = true;
+        $data = [];
+
         switch ($method) {
             case 'GET':
                 $cardId = $this->request->query('card_id');
@@ -237,7 +240,7 @@ class Controller_Api extends Controller_Template
                     $this->jsonResult(false, 'No access to card');
                 }
 
-                $result = Model_Card::getOilRestrictionsV2($cardId, [
+                $data = Model_Card::getOilRestrictions($cardId, [
                     "LIMIT_ID",
                     "SERVICE_ID",
                     "SERVICE_NAME",
@@ -254,24 +257,45 @@ class Controller_Api extends Controller_Template
                     "TIME_TO",
                 ]);
 
-                foreach ($result as &$limit) {
+                foreach ($data as &$limit) {
                     $limit['services'] = array_column($limit['services'], 'id');
                 }
 
                 break;
+
             case 'DELETE':
                 $limitId = $this->request->param('id') ?: false;
 
                 $result = Model_Card::delLimit($limitId);
 
                 break;
+
             case 'POST':
-                break;
+
+                $limitId        = -1;
+
             case 'PUT':
+
+                $limitId        = !empty($limitId) ? $limitId : $this->request->param('id');
+                $cardId         = $this->request->query('card_id') ?: false;
+                $contractId     = $this->request->query('contract_id') ?: false;
+                $value          = $this->request->query('value') ?: false;
+                $unitType       = $this->request->query('unit_type') ?: false;
+                $durationType   = $this->request->query('duration_type') ?: false;
+                $services       = $this->request->query('services') ?: [];
+
+                list($result, $data) = Model_Card::editCardLimitsSimple($cardId, $contractId, [
+                    'limit_id'      => $limitId,
+                    'value'         => $value,
+                    'unit_type'     => $unitType,
+                    'duration_type' => $durationType,
+                    'services'      => $services
+                ]);
+
                 break;
         }
 
-        $this->jsonResult(true, $result);
+        $this->jsonResult($result, $data);
     }
 
     /**
@@ -395,8 +419,16 @@ class Controller_Api extends Controller_Template
      */
     public function action_cardServices()
     {
-        $servicesList = Listing::getServices(['TUBE_ID' => 1]);
+        $cardId = $this->request->query('card_id');
 
-        $this->jsonResult(true, array_values($servicesList));
+        $card = Model_Card::getCard($cardId);
+
+        $servicesList = [];
+
+        if (!empty($card)) {
+            $servicesList = Listing::getServices(['TUBE_ID' => $card['TUBE_ID']]);
+        }
+
+        $this->jsonResult(true, $servicesList);
     }
 }

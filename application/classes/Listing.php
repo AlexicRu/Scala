@@ -42,8 +42,6 @@ class Listing
      */
     public static function getServices($params = [])
     {
-        $db = Oracle::init();
-
         $user = Auth::instance()->get_user();
 
         if (!empty($params['description'])) {
@@ -55,24 +53,37 @@ class Listing
             }
         }
 
-        $sql = "select distinct t.SERVICE_ID, t.{$description} from ".Oracle::$prefix."V_WEB_SERVICE_LIST t where t.agent_id = ".$user['AGENT_ID'];
+        $sql = (new Builder())->select([
+                't.SERVICE_ID',
+                't.' . $description
+            ])->distinct()
+            ->from('V_WEB_SERVICE_LIST t')
+            ->where('t.agent_id = ' . $user['AGENT_ID'])
+            ->orderBy('t.' . $description)
+            ->limit(self::$limit)
+        ;
+
 
         if(!empty($params['ids'])){
-            $sql .= " and t.SERVICE_ID in (".implode(',', $params['ids']).")";
+            $sql->where('t.SERVICE_ID in ('.implode(',', $params['ids']).')');
         } else {
 
             if (!empty($params['search'])) {
-                $sql .= " and upper(t.long_desc) like " . mb_strtoupper(Oracle::quote('%' . $params['search'] . '%'));
+                $sql->where("upper(t.long_desc) like " . mb_strtoupper(Oracle::quote('%' . $params['search'] . '%')));
             }
 
             if (!empty($params['TUBE_ID'])) {
-                $sql .= " and t.TUBE_ID = " . intval($params['TUBE_ID']);
+                $sql->where("t.TUBE_ID = " . intval($params['TUBE_ID']));
             }
         }
 
-        $sql .= " order by t.{$description}";
+        $services = Oracle::init()->query($sql);
 
-        return $db->query($db->limit($sql, 0, self::$limit));
+        foreach ($services as &$service) {
+            unset($service['RNUM']);
+        }
+
+        return $services;
     }
 
     /**

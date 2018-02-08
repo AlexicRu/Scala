@@ -42,7 +42,8 @@ return [
                         'type' => 'object',
                         'properties' => [
                             'token' => [
-                                'type' => 'string'
+                                'type' => 'string',
+                                'default' => (new Api)->getToken(User::current()['MANAGER_ID'])
                             ]
                         ]
                     ]

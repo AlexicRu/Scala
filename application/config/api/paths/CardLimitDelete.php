@@ -16,7 +16,13 @@ return [
             'in' => 'header',
             'type' => 'string',
             'required' => true
-        ]
+        ],
+        [
+            'name' => 'limit_id',
+            'in' => 'path',
+            'type' => 'integer',
+            'required' => true
+        ],
     ],
     'responses' => [
         '200' => [

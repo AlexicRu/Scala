@@ -200,7 +200,7 @@ class Controller_Clients extends Controller_Common {
             $this->html('<div class="error_block">Ошибка</div>');
         }
 
-        $oilRestrictions = Model_Card::getOilRestrictionsV2($cardId);
+        $oilRestrictions = Model_Card::getOilRestrictions($cardId);
         $lastFilling = Model_Card::getLastFilling($cardId, $contractId);
         Listing::$limit = 999;
 		$servicesList = Listing::getServices(['TUBE_ID' => $card['TUBE_ID']]);
@@ -297,7 +297,7 @@ class Controller_Clients extends Controller_Common {
         $contractId = $this->request->post('contract_id');
         $limits     = $this->request->post('limits');
 
-        list($result, $error) = Model_Card::editCardLimitsV2($cardId, $contractId, $limits);
+        list($result, $error) = Model_Card::editCardLimits($cardId, $contractId, $limits);
 
         $this->jsonResult($result, $error);
     }

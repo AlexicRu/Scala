@@ -13,6 +13,12 @@ return [
             'in' => 'header',
             'type' => 'string',
             'required' => true
+        ],
+        [
+            'name' => 'card_id',
+            'in' => 'query',
+            'type' => 'integer',
+            'required' => true
         ]
     ],
     'responses' => [
