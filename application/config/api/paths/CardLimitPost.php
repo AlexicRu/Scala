@@ -7,9 +7,6 @@ return [
     'tags' => ['cards'],
     'summary' => 'Добавление лимита карты',
     'operationId' => 'card_limit_post',
-    'consumes' => [
-        'application/x-www-form-urlencoded'
-    ],
     'parameters' => [
         [
             'name' => 'token',
@@ -18,46 +15,11 @@ return [
             'required' => true
         ],
         [
-            'name' => 'card_id',
-            'in' => 'formData',
-            'type' => 'string',
-            'required' => true
-        ],
-        [
-            'name' => 'contract_id',
-            'in' => 'formData',
-            'type' => 'integer',
-            'required' => true
-        ],
-        [
-            'name' => 'value',
-            'in' => 'formData',
-            'type' => 'integer',
-            'required' => true
-        ],
-        [
-            'name' => 'unit_type',
-            'in' => 'formData',
-            'type' => 'string',
-            'enum' => array_keys(Model_Card::$cardLimitsParams),
-            'description' => Common::stringFromKeyValueFromArray(Model_Card::$cardLimitsParams),
-            'required' => true
-        ],
-        [
-            'name' => 'duration_type',
-            'in' => 'formData',
-            'type' => 'string',
-            'enum' => array_keys(Model_Card::$cardLimitsTypesFull),
-            'description' => Common::stringFromKeyValueFromArray(Model_Card::$cardLimitsTypesFull),
-            'required' => true
-        ],
-        [
-            'name' => 'services',
-            'in' => 'formData',
-            'type' => 'array',
+            'name' => 'body',
+            'in' => 'body',
             'required' => true,
-            'items' => [
-                'type' => 'integer'
+            'schema' => [
+                '$ref' => '#/definitions/CardLimitModel'
             ]
         ],
     ],

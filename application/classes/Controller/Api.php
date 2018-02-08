@@ -9,6 +9,7 @@ class Controller_Api extends Controller_Template
      */
     private $_api;
     private $_errors = [];
+    private $_data = [];
 
     protected function json($data){
         header('Content-Type: application/json');
@@ -41,6 +42,9 @@ class Controller_Api extends Controller_Template
     {
         $this->_api = new Api();
         $this->_token = $this->request->headers('token') ?: $this->request->post('token');
+
+        $body = $this->request->body();
+        $this->_data = $body ? json_decode($body, true) : [];
 
         $action = $this->request->action();
 
@@ -275,22 +279,20 @@ class Controller_Api extends Controller_Template
                 $limitId        = -1;
 
             case 'PUT':
-
                 $limitId        = !empty($limitId) ? $limitId : $this->request->param('id');
-                $cardId         = $this->request->query('card_id') ?: false;
-                $contractId     = $this->request->query('contract_id') ?: false;
-                $value          = $this->request->query('value') ?: false;
-                $unitType       = $this->request->query('unit_type') ?: false;
-                $durationType   = $this->request->query('duration_type') ?: false;
-                $services       = $this->request->query('services') ?: [];
+                $cardId         = $this->_data['card_id'] ?: false;
+                $value          = $this->_data['limit_value'] ?: false;
+                $unitType       = $this->_data['unit_type'] ?: false;
+                $durationType   = $this->_data['duration_type'] ?: false;
+                $services       = $this->_data['services'] ?: [];
 
-                list($result, $data) = Model_Card::editCardLimitsSimple($cardId, $contractId, [
+                list($result, $data) = Model_Card::editCardLimitsSimple($cardId, -1, [[
                     'limit_id'      => $limitId,
                     'value'         => $value,
                     'unit_type'     => $unitType,
                     'duration_type' => $durationType,
                     'services'      => $services
-                ]);
+                ]]);
 
                 break;
         }

@@ -422,10 +422,10 @@ class Model_Card extends Model
      * @param $contractId
      * @param array $limits
      */
-    public static function editCardLimitsSimple($cardId, $contractId, $limits = [])
+    public static function editCardLimitsSimple($cardId, $contractId = -1, $limits = [])
     {
         try {
-            if(empty($cardId) || empty($contractId)){
+            if(empty($cardId) || !is_array($limits)){
                 throw new Exception('Некорректные входные данные');
             }
 
@@ -479,8 +479,8 @@ class Model_Card extends Model
                 'p_card_id'			=> $cardId,
                 'p_contract_id'		=> $contractId,
                 'p_limit_array'		=> [$limitsArray, SQLT_CHR],
-                'p_manager_id' 		=> $user['MANAGER_ID'],
                 'p_json_str' 		=> -1,//json_encode($limits),
+                'p_manager_id' 		=> $user['MANAGER_ID'],
                 'p_error_code' 		=> 'out',
             ];
 

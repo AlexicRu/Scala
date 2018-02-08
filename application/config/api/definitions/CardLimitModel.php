@@ -38,7 +38,7 @@ return [
             'type' => 'integer'
         ],
         'card_id' => [
-            'type' => 'integer'
+            'type' => 'string'
         ],
         'services' => [
             'type' => 'array',
@@ -46,23 +46,37 @@ return [
                 'type' => 'integer'
             ]
         ],
-        'description' => [
-            'type' => 'string'
-        ],
-        'limit_group' => [
-            'type' => 'integer'
-        ],
-        'limit_param' => [
-            'type' => 'integer'
-        ],
-        'limit_type' => [
-            'type' => 'integer'
-        ],
         'limit_value' => [
             'type' => 'integer'
         ],
-        'limit_currency' => [
-            'type' => 'string',
+        'trn_count' => [
+            'type' => 'integer'
+        ],
+        'days_week_type' => [
+            'type' => 'integer'
+        ],
+        'days_week' => [
+            'type' => 'string'
+        ],
+        'time_from' => [
+            'type' => 'integer'
+        ],
+        'time_to' => [
+            'type' => 'integer'
+        ],
+        'duration_type' => [
+            'type' => 'integer',
+            'description' => Common::stringFromKeyValueFromArray(Model_Card::$cardLimitsTypesFull),
+        ],
+        'duration_value' => [
+            'type' => 'integer'
+        ],
+        'unit_type' => [
+            'type' => 'integer',
+            'description' => Common::stringFromKeyValueFromArray(Model_Card::$cardLimitsParams),
+        ],
+        'unit_currency' => [
+            'type' => 'integer',
             'default' => Common::CURRENCY_RUR
         ]
     ]
