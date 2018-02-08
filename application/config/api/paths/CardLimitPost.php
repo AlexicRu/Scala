@@ -27,20 +27,7 @@ return [
         '200' => [
             'description' => 'Результат',
             'schema' => [
-                'type' => 'object',
-                'required' => [
-                    'success',
-                    'data'
-                ],
-                'properties' => [
-                    'success' => [
-                        'type' => 'boolean',
-                        'default' => true
-                    ],
-                    'data' => [
-                        '$ref' => '#/definitions/CardLimitModel'
-                    ]
-                ]
+                '$ref' => '#/definitions/ApiResponse'
             ]
         ],
         '400' => [
