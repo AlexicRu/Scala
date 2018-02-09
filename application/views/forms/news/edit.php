@@ -54,7 +54,7 @@
             success: function(file, response)
             {
                 if(response.success){
-                    image = response.data.file;
+                    image = response.data.file.file;
                 }
             },
             queuecomplete: function ()

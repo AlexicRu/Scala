@@ -307,3 +307,35 @@ function deleteRow(btn)
 
     fieldset.remove();
 }
+
+function checkBtnLoading(btn)
+{
+    if (btn.find('.icon-loading').length == 1) {
+        return true;
+    }
+    return false;
+}
+
+function toggleBtnLoading(btn)
+{
+    if (checkBtnLoading(btn)) {
+        btn.find('.icon-loading').remove();
+
+        var icon = btn.data('icon');
+
+        if (icon) {
+            btn.prepend('<i class="'+ icon +'" />');
+        }
+
+    } else {
+        var icon = btn.find('i');
+
+        if (icon.length == 1) {
+            btn.data('icon', icon.attr('class'));
+        }
+
+        icon.remove();
+
+        btn.prepend('<i class="icon-loading" />');
+    }
+}

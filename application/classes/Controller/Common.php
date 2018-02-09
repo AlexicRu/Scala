@@ -242,7 +242,7 @@ abstract class Controller_Common extends Controller_Template {
     protected function _initDropZone()
     {
         $this->template->styles[] = '/js/plugins/dropzone/dropzone.css';
-        $this->template->scripts[] = '/js/plugins/dropzone/dropzone.js';
+        $this->template->scripts[] = '/js/plugins/dropzone/dropzone.5.3.0.js';
     }
 
     /**

@@ -9,10 +9,10 @@
 	<title><?=$title?></title>
 
 	<?foreach($styles as $style){?>
-		<link href="<?=$style?>?t=<?=(!empty($cssSalt) ? $cssSalt : time())?>" rel="stylesheet">
+		<link href="<?=$style?>?t=<?=Common::getSalt('css')?>" rel="stylesheet">
 	<?}?>
 	<?foreach($scripts as $script){?>
-		<script src="<?=$script?>?t=<?=(!empty($jsSalt) ? $jsSalt : time())?>"></script>
+		<script src="<?=$script?>?t=<?=Common::getSalt('js')?>"></script>
 	<?}?>
 
 	<!--[if lt IE 9]>

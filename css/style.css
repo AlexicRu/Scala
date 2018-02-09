@@ -983,6 +983,13 @@ textarea {
   min-height: 200px;
   background: #ededed url(/img/load.gif) no-repeat center center;
 }
+.icon-loading {
+  background: transparent url(/img/load.gif) no-repeat center center;
+  display: inline-block;
+  vertical-align: middle;
+  width: 20px;
+  height: 16px;
+}
 .error_block {
   padding: 10px;
   text-align: center;

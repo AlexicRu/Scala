@@ -121,4 +121,32 @@ class Common
 
         return implode($delimiter, $result);
     }
+
+    /**
+     * рассчитываем соль
+     *
+     * @param string $type
+     * @throws Kohana_Exception
+     */
+    public static function getSalt($type = 'css')
+    {
+        $config = Kohana::$config->load('main');
+
+        $salt = time();
+
+        switch ($type) {
+            case 'css':
+                if (!empty($config['cssSalt']) && self::isProd()) {
+                    $salt = $config['cssSalt'];
+                }
+                break;
+            case 'js':
+                if (!empty($config['jsSalt']) && self::isProd()) {
+                    $salt = $config['jsSalt'];
+                }
+                break;
+        }
+
+        return $salt;
+    }
 }

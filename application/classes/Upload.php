@@ -39,7 +39,10 @@ class Upload extends Kohana_Upload
             $directory = self::generateFileDirectory($filename, $component);
 
             if(self::save($_FILES['file'], $filename, $_SERVER["DOCUMENT_ROOT"].$directory)){
-                return $directory.$filename;
+                return [
+                    'name'  => str_replace(" ", "_", $_FILES['file']['name']),
+                    'file'  => $directory.$filename
+                ];
             }
         }
 

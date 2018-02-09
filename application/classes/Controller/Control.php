@@ -451,7 +451,7 @@ class Controller_Control extends Controller_Common {
             $this->jsonResult(false);
         }
 
-        list($data, $mimeType) = Upload::readFile($_SERVER["DOCUMENT_ROOT"].$file);
+        list($data, $mimeType) = Upload::readFile($_SERVER["DOCUMENT_ROOT"].$file['file']);
 
         if(empty($data)){
             $this->jsonResult(false);

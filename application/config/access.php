@@ -34,10 +34,6 @@ return [
             Access::ROLE_USER,
             'u_7',
         ],
-
-        'support_index' => [
-            Access::ROLE_ROOT
-        ],
         'clients_card_withdraw' => [
             Access::ROLE_MANAGER,
             Access::ROLE_MANAGER_SALE_SUPPORT,
@@ -244,6 +240,11 @@ return [
             Access::ROLE_MANAGER_SALE,
         ],
         'clients_client_edit' => [
+            Access::ROLE_CLIENT,
+        ],
+        'support_index' => [
+            Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
             Access::ROLE_CLIENT,
         ],
         // custom
