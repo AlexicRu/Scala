@@ -33,10 +33,20 @@
 			<div class="content_inner">
 				<h1>Авторизация</h1>
 				<div class="block">
-					<form method="post" action="/login">
+					<form id="login" method="post" action="/login">
 						<input type="text" placeholder="Логин" name="login" class="input_big">
 						<input type="password" placeholder="Пароль" name="password" class="input_big">
-						<button class="btn">Войти</button>
+
+                        <?
+                        $config = Kohana::$config->load('config');
+                        ?>
+
+                        <button
+                                class="g-recaptcha btn"
+                                data-sitekey="<?=$config['recaptcha_public']?>"
+                                data-callback="onSubmit">
+                            Войти
+                        </button>
 					</form>
 				</div>
 
@@ -51,5 +61,11 @@
 			</div>
 		</div>
 	</div>
+
+    <script>
+        function onSubmit(token) {
+            $('#login').submit();
+        }
+    </script>
 </body>
 </html>

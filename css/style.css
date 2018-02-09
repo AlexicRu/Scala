@@ -1635,3 +1635,6 @@ div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-info {
   top: 22px;
   left: 10px;
 }
+#login > div {
+  display: none;
+}
