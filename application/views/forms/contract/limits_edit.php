@@ -10,7 +10,7 @@
                         <td>
                             <?foreach($limits as $limit){?>
                                 <div class="form_elem" limit_service><nobr>
-                                        <select name="limit_service">
+                                        <select name="limit_service" onchange="checkServices()">
                                             <?foreach($servicesList as $service){?>
                                                 <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $limit['SERVICE_ID']){?>selected<?}?>><?=$service['LONG_DESC']?></option>
                                             <?}?>
@@ -66,7 +66,10 @@
         $('.form_contract_limits_edit [type=checkbox]').each(function(){
             renderCheckbox($(this));
         });
+        checkServices();
     });
+
+    var services_cnt = <?=count($servicesList)?>;
 
     var services = {
         <?foreach($servicesList as $service){?>
@@ -84,6 +87,8 @@
         t.closest('[limit_service]').fadeOut();
         setTimeout(function () {
             t.closest('[limit_service]').remove();
+
+            checkServices();
         }, 300);
     }
 
@@ -96,10 +101,22 @@
             return false;
         }*/
 
-        var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" /> <button class="btn btn_small btn_red btn_contract_limits_edit_del_serviсe" onclick="contractLimitsEditDelService($(this))">&times;</button></nobr></div>');
+        var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" onchange="checkServices()" /> <button class="btn btn_small btn_red btn_contract_limits_edit_del_serviсe" onclick="contractLimitsEditDelService($(this))">&times;</button></nobr></div>');
+
+        var disabled = [
+            $('.form_contract_limits_edit [name=limit_service]:first').val()
+        ];
+        $('.form_contract_limits_edit [name=limit_service]:first option:disabled').each(function () {
+            disabled.push($(this).attr('value'));
+        });
+
+        if (disabled.length == services_cnt) {
+            message(0, 'Доступные услуги закончились');
+            return false;
+        }
 
         for (var i in services) {
-            tpl.find('select').append('<option value="' + i + '">' + services[i] + '</option>');
+            tpl.find('select').append('<option value="' + i + '" '+ (disabled.indexOf(i) != -1 ? 'disabled' : '') +'>' + services[i] + '</option>');
         }
 
         if (td.find('[limit_service]').size()) {
@@ -107,6 +124,8 @@
         } else {
             tpl.insertBefore(td.find('div'));
         }
+
+        checkServices();
     }
 
     function contractLimitsEditDelLimit(t)
@@ -115,6 +134,8 @@
             t.closest('[limit_group]').fadeOut();
             setTimeout(function () {
                 t.closest('[limit_group]').remove();
+
+                checkServices();
             }, 300);
         }
     }
@@ -204,6 +225,33 @@
                     }
                 }
             }
+        });
+    }
+
+    function checkServices()
+    {
+        var form = $('.form_contract_limits_edit');
+
+        var services = [];
+
+        $('[name=limit_service]', form).each(function () {
+            services.push($(this).val());
+        });
+
+        $('[name=limit_service]', form).each(function () {
+            var select = $(this);
+            var selectVal = select.val();
+
+            select.find('option').each(function () {
+                var option = $(this);
+                var optionVal = option.attr('value');
+
+                if (services.indexOf(optionVal) == -1 || optionVal == selectVal) {
+                    option.prop('disabled', false);
+                } else {
+                    option.prop('disabled', true);
+                }
+            });
         });
     }
 </script>
