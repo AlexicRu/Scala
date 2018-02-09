@@ -73,7 +73,8 @@
                         $period = Text::plural($contractSettings['INVOICE_PERIOD_VALUE'], ['месяц', 'месяца', 'месяцев']);
                     }
                     ?>
-                    <span toggle_block="block2"><?=$contractSettings['INVOICE_PERIOD_VALUE'].' '.$period?></span>
+                    <?=$contractSettings['INVOICE_PERIOD_VALUE'].' '.$period?>
+                    <?/*<span toggle_block="block2"><?=$contractSettings['INVOICE_PERIOD_VALUE'].' '.$period?></span>
                     <span toggle_block="block2" class="dn">
                         <select name="INVOICE_PERIOD_TYPE">
                             <?
@@ -83,7 +84,7 @@
                             ?>
                         </select>
                         <input type="text" name="INVOICE_PERIOD_VALUE" value="<?=$contractSettings['INVOICE_PERIOD_VALUE']?>">
-                    </span>
+                    </span>*/?>
                 </td>
             </tr>
             <tr>
@@ -250,8 +251,8 @@
                         AUTOBLOCK_LIMIT:        $("[name=AUTOBLOCK_LIMIT]").val(),
                         PENALTIES:              $("[name=PENALTIES]").val(),
                         OVERDRAFT:              $("[name=OVERDRAFT]").val(),
-                        INVOICE_PERIOD_TYPE:    $("[name=INVOICE_PERIOD_TYPE]").val(),
-                        INVOICE_PERIOD_VALUE:   $("[name=INVOICE_PERIOD_VALUE]").val(),
+                        //INVOICE_PERIOD_TYPE:    $("[name=INVOICE_PERIOD_TYPE]").val(),
+                        //INVOICE_PERIOD_VALUE:   $("[name=INVOICE_PERIOD_VALUE]").val(),
                         GOODS_RECIEVER:         getComboboxValue($("[name=GOODS_RECIEVER].combobox")),
                         CONTRACT_COMMENT:       $("[name=CONTRACT_COMMENT]").val(),
                         scheme:                 $("[name=scheme]").val()
