@@ -286,6 +286,14 @@ class Controller_Api extends Controller_Template
                 $durationType   = $this->_data['duration_type'] ?: false;
                 $services       = $this->_data['services'] ?: [];
 
+                try {
+                    foreach ($services as $service) {
+                        Access::check('service', $cardId, $service);
+                    }
+                } catch (HTTP_Exception_404 $e) {
+                    $this->jsonResult(false, 'No access to service');
+                }
+
                 list($result, $data) = Model_Card::editCardLimitsSimple($cardId, -1, [[
                     'limit_id'      => $limitId,
                     'value'         => $value,
@@ -423,14 +431,11 @@ class Controller_Api extends Controller_Template
     {
         $cardId = $this->request->query('card_id');
 
-        $card = Model_Card::getCard($cardId);
+        $servicesList = Model_Card::getServices($cardId, [
+            'SERVICE_ID',
+            'SYSTEM_SERVICE_NAME'
+        ]);
 
-        $servicesList = [];
-
-        if (!empty($card)) {
-            $servicesList = Listing::getServices(['TUBE_ID' => $card['TUBE_ID']]);
-        }
-
-        $this->jsonResult(true, $servicesList);
+        $this->jsonResult(true, $servicesList ?: []);
     }
 }

@@ -135,6 +135,30 @@ class Model_Card extends Model
 	}
 
     /**
+     * получаем список доступных сервисов по карте
+     *
+     * @param $cardId
+     * @param $select
+     */
+	public static function getServices($cardId, $select = [])
+    {
+        if (empty($cardId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_CARDS_SERVICE_AVAILABLE t')
+            ->where('t.card_id = ' . Oracle::quote($cardId))
+        ;
+
+        if (!empty($select)) {
+            $sql->select($select);
+        }
+
+        return Oracle::init()->query($sql);
+    }
+
+    /**
      * получаем данные по ограничениям по топливу
      *
      * @param $cardId
@@ -872,6 +896,32 @@ class Model_Card extends Model
         ];
 
         $res = Oracle::init()->func('check_manager_card', $data);
+
+        if($res == Oracle::CODE_SUCCESS){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * проверка доступа карты к сервису
+     *
+     * @param $cardId
+     * @param $serviceId
+     * @return bool
+     */
+    public static function checkServiceAccess($cardId, $serviceId)
+    {
+        if (empty($cardId) || empty($serviceId)) {
+            return false;
+        }
+
+        $data = [
+            'p_card_id' 		=> $cardId,
+            'p_service_id'		=> $serviceId,
+        ];
+
+        $res = Oracle::init()->func('check_card_service', $data);
 
         if($res == Oracle::CODE_SUCCESS){
             return true;
