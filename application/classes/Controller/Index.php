@@ -85,4 +85,29 @@ class Controller_Index extends Controller_Common {
 
         $this->html($html);
     }
+
+    /**
+     * отображаем пришедшие данные как xls
+     */
+    public function action_asXls()
+    {
+        $csv = $this->request->post('csv');
+
+        $rows = [];
+        $headers = [];
+
+        if (!empty($csv)) {
+            $rows = explode("\n", $csv);
+            foreach ($rows as &$row) {
+                $row = explode("|", $row);
+
+                foreach ($row as &$col) {
+                    $col = trim($col, '"');
+                }
+            }
+            $headers = array_shift($rows);
+        }
+
+        $this->showXls('export', $rows, $headers);
+    }
 } // End Welcome

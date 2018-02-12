@@ -253,7 +253,7 @@ abstract class Controller_Common extends Controller_Template {
     {
         $this->template->styles[] = '/js/plugins/jsgrid/jsgrid.min.css';
         $this->template->styles[] = '/js/plugins/jsgrid/jsgrid-theme.min.css';
-        $this->template->scripts[] = '/js/plugins/jsgrid/jsgrid.min.js';
+        $this->template->scripts[] = '/js/plugins/jsgrid/jsgrid.js';
     }
 
     /**
