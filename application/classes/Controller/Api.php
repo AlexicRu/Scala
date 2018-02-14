@@ -405,7 +405,7 @@ class Controller_Api extends Controller_Template
 
     /**
      * GET
-     * получаем список контрактов
+     * получаем список клиентов
      */
     public function action_clients()
     {

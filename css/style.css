@@ -1208,6 +1208,14 @@ sup.required {
 .n_date {
   margin-bottom: 7px;
 }
+.client {
+  display: inline-block;
+  vertical-align: top;
+  width: 48%;
+}
+.client:nth-child(2n) {
+  margin-left: 20px;
+}
 .clients_btn {
   height: 60px;
   text-align: right;

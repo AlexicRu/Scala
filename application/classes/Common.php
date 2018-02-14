@@ -149,4 +149,36 @@ class Common
 
         return $salt;
     }
+
+    /**
+     * строим дерево
+     *
+     * @param $result
+     * @param $field
+     * @param bool $noArray
+     * @param bool $subField
+     * @return array
+     */
+    public static function buildTreeFromDBResult($result, $field, $noArray = false, $subField = false)
+    {
+        $return = [];
+
+        if(!empty($result)){
+            $check = reset($result);
+
+            if(!isset($check[$field])){
+                return $return;
+            }
+
+            foreach($result as $row){
+                if($noArray) {
+                    $return[$row[$field]] = !empty($subField) ? $row[$subField] : $row;
+                }else{
+                    $return[$row[$field]][] =  !empty($subField) ? $row[$subField] : $row;
+                }
+            }
+        }
+
+        return $return;
+    }
 }
