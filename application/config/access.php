@@ -28,6 +28,7 @@ return [
         ],
         'control_index' => [
             Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
             Access::ROLE_CLIENT,
             Access::ROLE_USER_SECOND,
@@ -62,24 +63,28 @@ return [
         ],
         'control_tariffs' => [
             Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
             'u_7',
         ],
         'control_dots' => [
             Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
             'u_7',
         ],
         'control_connect_1c' => [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
-
+            Access::ROLE_ADMIN_READONLY,
         ],
         'administration_index' => [
             Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
         ],
         'suppliers_index' => [
             Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
         ],
         'suppliers_supplier_add' => [
@@ -96,6 +101,7 @@ return [
         ],
         'suppliers_supplier_detail' => [
             Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
         ],
         'suppliers_agreement_add' => [
@@ -112,10 +118,12 @@ return [
             Access::ROLE_SUPERVISOR,
         ],
         'references_index' => [
-            Access::ROLE_ADMIN
+            Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
         ],
         'references_sources' => [
-            Access::ROLE_ADMIN
+            Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
         ],
         'references_addresses' => [
             Access::ROLE_ROOT
@@ -139,12 +147,14 @@ return [
         ],
         'control_dots_groups' => [
             Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
         ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,
             Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
 			Access::ROLE_MANAGER,
         ],
         'view_penalties' => [
@@ -153,6 +163,7 @@ return [
             Access::ROLE_MANAGER_SALE_SUPPORT,
             Access::ROLE_MANAGER,
             Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
         ],
         'view_balance_sheet' => [
@@ -161,6 +172,7 @@ return [
         'download_bill_as_xls' => [
             Access::ROLE_ROOT,
             Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
             Access::ROLE_MANAGER,
             Access::ROLE_MANAGER_SALE_SUPPORT,
@@ -178,10 +190,12 @@ return [
         ],
         'show_supplier_contract_group_dots' => [
             Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
         ],
         'view_export_1c_tab' => [
-            Access::ROLE_ADMIN
+            Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
         ],
         'root' => [
             Access::ROLE_ROOT
@@ -265,6 +279,24 @@ return [
         ],
         'view_payment_block' => [
             Access::ROLE_CLIENT
+        ]
+    ],
+    'skip_readonly' => [
+        Access::ROLE_CLIENT => [
+            'auth_user',
+            'notification_change_status',
+            'ctrl_card_group_add',
+            'ctrl_card_group_collection',
+            'ctrl_card_group_edit',
+            'client_contract_notify_config',
+            'ctrl_manager_change_password',
+            'ctrl_manager_edit',
+        ],
+        Access::ROLE_ADMIN_READONLY => [
+            'auth_user',
+            'notification_change_status',
+            'ctrl_manager_change_password',
+            'ctrl_manager_edit',
         ]
     ]
 ];

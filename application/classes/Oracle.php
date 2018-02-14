@@ -252,17 +252,8 @@ class Oracle{
 		//если роль КЛИЕНТ, то процедуры (add|edit) выполнять нельзя
         $user = User::current();
 
-		if ($user['role'] == Access::ROLE_CLIENT && !in_array($procedure, [
-            'auth_user',
-            'notification_change_status',
-            'ctrl_card_group_add',
-            'ctrl_card_group_collection',
-            'ctrl_card_group_edit',
-            'client_contract_notify_config',
-            'ctrl_manager_change_password',
-            'ctrl_manager_edit',
-        ])) {
-		    Messages::put('Данной роли разрешен только просмотр', 'info');
+		if (Access::checkReadOnly($procedure, $user['role'])) {
+            Messages::put('Данной роли разрешен только просмотр', 'info');
             return self::CODE_ERROR;
         }
 

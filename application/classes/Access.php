@@ -9,11 +9,12 @@ class Access
     const ROLE_ADMIN 	                = 2;
     const ROLE_SUPERVISOR               = 3;
     const ROLE_MANAGER                  = 4;
-    const ROLE_USER		                = 99;
-    const ROLE_USER_SECOND		        = 98;
     const ROLE_MANAGER_SALE		        = 5;
     const ROLE_MANAGER_SALE_SUPPORT		= 6;
+    const ROLE_ADMIN_READONLY		    = 7;
     const ROLE_CLIENT		            = 97;
+    const ROLE_USER_SECOND		        = 98;
+    const ROLE_USER		                = 99;
 
     public static $roles = [
         self::ROLE_MANAGER              => 'Менеджер сопровождения',
@@ -33,21 +34,28 @@ class Access
 
     public static $adminRoles = [
         self::ROLE_ADMIN,
+        self::ROLE_ADMIN_READONLY,
         self::ROLE_ROOT,
         self::ROLE_GOD
     ];
 
     public static $rolesForCardGroups = [
         self::ROLE_ADMIN,
+        self::ROLE_ADMIN_READONLY,
         self::ROLE_ROOT,
         self::ROLE_GOD,
         self::ROLE_CLIENT,
     ];
 
+    public static $readonlyRoles = [
+        self::ROLE_CLIENT,
+        self::ROLE_ADMIN_READONLY,
+    ];
+
     /**
      * функция проверки доступа
      */
-    public static function allow($action, $onlySee = false)
+    public static function allow($action, $readOnly = false)
     {
         if(empty($action)){
             return true;
@@ -85,7 +93,7 @@ class Access
 
         //если нет явного запрета или наоборот, доступа только конкретной роли
 
-        if(!$onlySee && in_array($user['role'], [self::ROLE_CLIENT])){
+        if(!$readOnly && in_array($user['role'], self::$readonlyRoles)){
             return false;
         }
 
@@ -147,4 +155,27 @@ class Access
             throw new HTTP_Exception_404();
         }
     }
+
+    /**
+     * проверка доступа к процедуре процедуры
+     *
+     * @param $procedure
+     * @param $role
+     * @return bool
+     */
+    public static function checkReadOnly($procedure, $role)
+    {
+        if (empty($role) || empty($procedure)) {
+            return false;
+        }
+
+        $access = Kohana::$config->load('access')['skip_readonly'];
+
+        if (isset($access[$role]) && !in_array($procedure, $access[$role])) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
