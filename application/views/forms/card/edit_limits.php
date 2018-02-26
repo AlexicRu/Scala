@@ -7,7 +7,8 @@ $canAddService = true;
 $canDelLimit = true;
 $canAddLimit = true;
 $canSave = true;
-$onlyEditCnt = false;
+$editSelect = true;
+$editServiceSelect = true;
 $cntServiceForLimit = 1;
 $cntServiceForFirstLimit = 1;
 $limitParams = Model_Card::$cardLimitsParams;
@@ -29,7 +30,8 @@ switch ($systemId) {
         $canAddLimit = false;
         $canDelService = false;
         $canAddService = false;
-        $onlyEditCnt = true;
+        $editSelect = false;
+        $editServiceSelect = false;
         break;
     case 4:
         $canDelService = false;
@@ -42,6 +44,7 @@ switch ($systemId) {
         $cntServiceForFirstLimit = 999;
         $limitTypes = Model_Card::$cardLimitsTypesFull;
         $cntTypes = true;
+        $editSelect = false;
         break;
     case 6:
         $cntServiceForLimit = 999;
@@ -72,7 +75,7 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card_edit_l
                                 <?foreach($restriction['services'] as $restrictionService){?>
                                     <div class="form_elem" limit_service>
                                         <nobr>
-                                            <select name="limit_service" onchange="checkServices_<?=$postfix?>()" <?=($onlyEditCnt ? 'disabled' : '')?>>
+                                            <select name="limit_service" onchange="checkServices_<?=$postfix?>()" <?=(empty($editServiceSelect) ? 'disabled' : '')?>>
                                                 <?foreach($servicesList as $service){?>
                                                     <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $restrictionService['id']){?>selected<?}?>><?=$service['FOREIGN_DESC']?></option>
                                                 <?}?>
@@ -99,7 +102,7 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card_edit_l
                                 <input type="text" name="limit_value" value="<?=$restriction['LIMIT_VALUE']?>" placeholder="Объем / сумма" class="input_mini">
                             </td>
                             <td class="v_top">
-                                <select name="unit_type" <?=($onlyEditCnt ? 'disabled' : '')?>>
+                                <select name="unit_type" <?=(empty($editSelect) ? 'disabled' : '')?>>
                                     <?foreach($limitParams as $limitParam => $value){?>
                                         <option value="<?=$limitParam?>" <?if($limitParam == $restriction['UNIT_TYPE']){?>selected<?}?>><?=$value?></option>
                                     <?}?>
@@ -107,11 +110,11 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card_edit_l
                             </td>
                             <?if ($cntTypes) {?>
                                 <td class="v_top">
-                                     <input type="text" name="duration_value" value="<?=$restriction['DURATION_VALUE']?>" placeholder="Кол-во" class="input_mini">
+                                     <input type="text" name="duration_value" value="<?=$restriction['DURATION_VALUE']?>" placeholder="Кол-во" class="input_mini" disabled>
                                 </td>
                             <?}?>
                             <td class="v_top">
-                                <select name="duration_type" <?=($onlyEditCnt ? 'disabled' : '')?>>
+                                <select name="duration_type" <?=(empty($editSelect) ? 'disabled' : '')?>>
                                     <?foreach($limitTypes as $limitType => $value){?>
                                         <option value="<?=$limitType?>" <?if($limitType == $restriction['DURATION_TYPE']){?>selected<?}?>><?=$value?></option>
                                     <?}?>
