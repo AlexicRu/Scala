@@ -4,7 +4,7 @@
     }
 </style>
 
-<h1>Рассчет тарифов</h1>
+<h1>Расчет тарифов</h1>
 
 <div class="tabs_block tabs_switcher tabs_administration_calc_tariffs">
     <div class="tabs">
