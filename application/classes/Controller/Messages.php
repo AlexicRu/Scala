@@ -24,6 +24,8 @@ class Controller_Messages extends Controller_Common {
 				$this->jsonResult(false);
 			}
 
+			$messages = Model_Message::parseBBCodes($messages);
+
 			$this->jsonResult(true, ['items' => $messages, 'more' => $more]);
 		}
 

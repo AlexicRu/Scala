@@ -15,7 +15,7 @@ abstract class Controller_Common extends Controller_Template {
         $controller = $this->request->controller();
         $action = $this->request->action();
 
-        if(!Auth::instance()->logged_in()/* && !in_array($action, ['get_json'])*/){
+        if(!Auth::instance()->logged_in()){
             if(!in_array($action, ['login', 'logout']) && $_SERVER['REQUEST_URI'] != '/'){
                 $this->redirect('/');
             }
@@ -58,6 +58,7 @@ abstract class Controller_Common extends Controller_Template {
 
             $this->_checkCustomDesign();
             $this->_appendFilesBefore();
+            $this->_actionsBefore();
         }
 
         //если все таки аякс
@@ -93,7 +94,11 @@ abstract class Controller_Common extends Controller_Template {
         View::set_global('errors', $this->errors);
 
         if(Auth::instance()->logged_in()) {
-            View::set_global('notices', Model_Message::getList(['status' => Model_Message::MESSAGE_STATUS_NOTREAD]));
+            $notices = Model_Message::getList(['status' => Model_Message::MESSAGE_STATUS_NOTREAD]);
+
+            $notices = Model_Message::clearBBCodes($notices);
+
+            View::set_global('notices', $notices);
 
             if(!$this->request->is_ajax()) {
                 $this->_checkGlobalMessages();
@@ -327,6 +332,8 @@ abstract class Controller_Common extends Controller_Template {
         ]);
 
         if (!empty($globalMessages)) {
+            $globalMessages = Model_Message::parseBBCodes($globalMessages, false);
+
             $popupGlobalMessages = Common::popupForm('ВАЖНО!', 'common/global_messages', [
                 'globalMessages' => $globalMessages
             ]);
@@ -334,6 +341,22 @@ abstract class Controller_Common extends Controller_Template {
             View::set_global('popupGlobalMessages', $popupGlobalMessages);
 
             Model_Message::makeRead(['note_type' => Model_Message::MESSAGE_TYPE_GLOBAL]);
+        }
+    }
+
+    /**
+     * выполняем функции перед загрузкой страницы
+     */
+    private function _actionsBefore()
+    {
+        //проверка флага установки прочитанности сообщения
+        $noteGuid = $this->request->query('read');
+
+        if (!empty($noteGuid)) {
+            Model_Message::makeRead([
+                'note_guid' => $noteGuid,
+                'note_type' => Model_Message::MESSAGE_TYPE_COMMON
+            ]);
         }
     }
 } // End Common
