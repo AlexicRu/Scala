@@ -426,9 +426,9 @@ class Model_Card extends Model
 
         $limitsIds = !empty($limits) ? array_column($limits, 'limit_id') : [];
 
-        foreach ($currentLimits as $limitId => $limit) {
-            if (!in_array($limitId, $limitsIds)) {
-                self::delLimit($limitId);
+        foreach ($currentLimits as $limit) {
+            if (!in_array($limit['LIMIT_ID'], $limitsIds)) {
+                self::delLimit($limit['LIMIT_ID']);
             }
         }
 
