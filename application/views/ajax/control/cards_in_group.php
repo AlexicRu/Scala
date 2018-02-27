@@ -4,7 +4,7 @@
 
 <script>
     $(function(){
-        paginationAjax('/control/load_group_cards/', 'ajax_block_cards_group_<?=$groupId?>', renderAjaxPaginationCardsGroup<?=$groupId?>, {group_id: <?=$groupId?>, can_edit:<?=(int)$canEdit?>});
+        paginationAjax('/control/load-group-cards/', 'ajax_block_cards_group_<?=$groupId?>', renderAjaxPaginationCardsGroup<?=$groupId?>, {group_id: <?=$groupId?>, can_edit:<?=(int)$canEdit?>});
     });
 
     function renderAjaxPaginationCardsGroup<?=$groupId?>(data, block, params)

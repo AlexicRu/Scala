@@ -58,7 +58,7 @@
                 return false;
             }
 
-            $.post('/clients/contract_payment_add', {params:params}, function(data){
+            $.post('/clients/contract-payment-add', {params:params}, function(data){
                 if(data.success){
                     message(1, data.data);
                     loadContract('account');

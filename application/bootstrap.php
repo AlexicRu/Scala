@@ -171,12 +171,12 @@ Cache::$default = 'memcache';
 Route::set('suppliers', 'suppliers/<id>', array('id' => '[\d]+'))
     ->defaults(array(
         'controller' => 'suppliers',
-        'action'     => 'supplier_detail',
+        'action'     => 'supplier-detail',
     ));
 Route::set('news', 'news/<id>', array('id' => '[\d]+'))
     ->defaults(array(
         'controller' => 'news',
-        'action'     => 'news_detail',
+        'action'     => 'news-detail',
     ));
 
 Route::set('auth', '<action>', array('action' => '^(login|logout)$'))

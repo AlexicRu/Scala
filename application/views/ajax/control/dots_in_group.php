@@ -4,7 +4,7 @@
 
 <script>
     $(function(){
-        paginationAjax('/control/load_group_dots/', 'ajax_block_dots_<?=$groupId?>', renderAjaxPaginationDots<?=$groupId?>, {group_id: <?=$groupId?>, can_edit:<?=(int)$canEdit?>});
+        paginationAjax('/control/load-group-dots/', 'ajax_block_dots_<?=$groupId?>', renderAjaxPaginationDots<?=$groupId?>, {group_id: <?=$groupId?>, can_edit:<?=(int)$canEdit?>});
     });
 
     function renderAjaxPaginationDots<?=$groupId?>(data, block, params)

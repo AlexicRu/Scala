@@ -67,7 +67,7 @@ class Controller_References extends Controller_Common {
     /**
      * грузим список услуг
      */
-    public function action_service_list_load()
+    public function action_serviceListLoad()
     {
         $tubeId = $this->request->post('tube_id');
 
@@ -79,7 +79,7 @@ class Controller_References extends Controller_Common {
     /**
      * добавление новой услуги
      */
-    public function action_add_convert_service()
+    public function action_addConvertService()
     {
         $serviceId = $this->request->post('service_id');
         $tubeId = $this->request->post('tube_id');
@@ -96,7 +96,7 @@ class Controller_References extends Controller_Common {
     /**
      * старт загрузки получения списка карт
      */
-    public function action_card_list_load()
+    public function action_cardListLoad()
     {
         $tubeId = $this->request->post('tube_id');
 
@@ -111,7 +111,7 @@ class Controller_References extends Controller_Common {
     /**
      * редактирование трубы
      */
-    public function action_tube_name_edit()
+    public function action_tubeNameEdit()
     {
         $tubeId = $this->request->post('tube_id');
         $name = $this->request->post('name');

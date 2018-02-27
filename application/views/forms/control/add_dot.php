@@ -28,7 +28,7 @@
 
             var groupId = $('.tabs_group_dots .tab_v.active [name=group_id]').val();
 
-            $.post('/control/show_dots', { postfix: 'popup_list', show_checkbox:1, group_id:groupId }, function (data) {
+            $.post('/control/show-dots', { postfix: 'popup_list', show_checkbox:1, group_id:groupId }, function (data) {
                 block.removeClass('block_loading');
 
                 block.html(data);
@@ -49,7 +49,7 @@
                 return false;
             }
 
-            $.post('/control/add_dots_to_group', {pos_ids:posIds, group_id:groupId}, function (data) {
+            $.post('/control/add-dots-to-group', {pos_ids:posIds, group_id:groupId}, function (data) {
                 if(data.success){
                     message(1, 'Точки успешно добавлены');
 

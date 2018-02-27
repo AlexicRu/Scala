@@ -1,4 +1,4 @@
-<h1>Список клиентов <?if(Access::allow('clients_client_add')){?><a href="#client_add" class="btn fancy">+ Добавить клиента</a><?}?></h1>
+<h1>Список клиентов <?if(Access::allow('clients_client-add')){?><a href="#client_add" class="btn fancy">+ Добавить клиента</a><?}?></h1>
 <?
 if(!empty($_REQUEST['search'])){?>
     <h3>Результаты поиска</h3>
@@ -44,6 +44,6 @@ if(!empty($clients)){
     <div class="block">Клиенты не найдены</div>
 <?}?>
 
-<?if(Access::allow('clients_client_add')){?>
+<?if(Access::allow('clients_client-add')){?>
     <?=$popupClientAdd?>
 <?}?>

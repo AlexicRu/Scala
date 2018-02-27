@@ -11,7 +11,7 @@ class Controller_News extends Controller_Common {
 
 	public function action_index()
 	{
-		if($this->_isPost()) {
+		if($this->isPost()) {
 			$params = [
 				'offset' => $this->request->post('offset'),
 				'pagination' => true
@@ -41,7 +41,7 @@ class Controller_News extends Controller_Common {
      *
      * @throws HTTP_Exception_404
      */
-	public function action_news_detail()
+	public function action_newsDetail()
     {
         $newsId = $this->request->param('id');
 
@@ -64,7 +64,7 @@ class Controller_News extends Controller_Common {
     /**
      * добавление новости
      */
-    public function action_news_edit()
+    public function action_newsEdit()
     {
         $params = $this->request->post('params');
 

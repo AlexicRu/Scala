@@ -68,7 +68,7 @@ $(function(){
     });
 
     $('.mark_read').on('click', function () {
-        $.post('/messages/make_read', {}, function (data) {
+        $.post('/messages/make-read', {}, function (data) {
             if(data.success){
                 message(1, 'Сообщения отмечены прочитанными');
                 $('.notices').fadeOut();

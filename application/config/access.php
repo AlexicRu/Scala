@@ -13,7 +13,7 @@
 return [
     'allow' => [ //для всех остальных ролей будет запрещено
         // functions
-        'clients_card_toggle' => [
+        'clients_card-toggle' => [
             Access::ROLE_MANAGER,
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
@@ -21,7 +21,7 @@ return [
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE_SUPPORT,
         ],
-        'client_cabinet_create' => [
+        'client_cabinet-create' => [
             Access::ROLE_ADMIN,
             Access::ROLE_MANAGER,
             Access::ROLE_SUPERVISOR,
@@ -35,13 +35,13 @@ return [
             Access::ROLE_USER,
             'u_7',
         ],
-        'clients_card_withdraw' => [
+        'clients_card-withdraw' => [
             Access::ROLE_MANAGER,
             Access::ROLE_MANAGER_SALE_SUPPORT,
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR
         ],
-        'clients_bill_add' => [
+        'clients_bill-add' => [
             'a_1',
             'a_2',
             'a_6',
@@ -50,10 +50,10 @@ return [
             'a_4',
 			'a_16',
         ],
-        'news_news_edit' => [
+        'news_news-edit' => [
             Access::ROLE_ADMIN,
         ],
-        'clients_bill_print' => [
+        'clients_bill-print' => [
             'a_1',
             'a_2',
             'a_6',
@@ -73,7 +73,7 @@ return [
             Access::ROLE_SUPERVISOR,
             'u_7',
         ],
-        'control_connect_1c' => [
+        'control_connect-1c' => [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
             Access::ROLE_ADMIN_READONLY,
@@ -87,33 +87,33 @@ return [
             Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
         ],
-        'suppliers_supplier_add' => [
+        'suppliers_supplier-add' => [
             Access::ROLE_ADMIN,
         ],
-        'suppliers_supplier_edit' => [
+        'suppliers_supplier-edit' => [
             Access::ROLE_ADMIN,
         ],
-        'suppliers_contract_add' => [
+        'suppliers_contract-add' => [
             Access::ROLE_ADMIN,
         ],
-        'suppliers_contract_edit' => [
+        'suppliers_contract-edit' => [
             Access::ROLE_ADMIN,
         ],
-        'suppliers_supplier_detail' => [
+        'suppliers_supplier-etail' => [
             Access::ROLE_ADMIN,
             Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
         ],
-        'suppliers_agreement_add' => [
+        'suppliers_agreement-add' => [
             Access::ROLE_ADMIN,
         ],
-        'suppliers_agreement_edit' => [
+        'suppliers_agreement-edit' => [
             Access::ROLE_ADMIN,
         ],
-        'clients_edit_login' => [
+        'clients_edit-login' => [
             Access::ROLE_ADMIN,
         ],
-        'managers_edit_manager_clients_contract_binds' => [
+        'managers_edit-manager-clients-contract-binds' => [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
         ],
@@ -134,18 +134,18 @@ return [
         'references_converter' => [
             Access::ROLE_ROOT
         ],
-        'clients_contract_limits_edit' => [
+        'clients_contract-limits-edit' => [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
             Access::ROLE_MANAGER,
         ],
-        'control_firms_groups' => [
+        'control_firms-groups' => [
             Access::ROLE_ROOT
         ],
-        'administration_calc_tariffs' => [
+        'administration_calc-tariffs' => [
             Access::ROLE_ROOT
         ],
-        'control_dots_groups' => [
+        'control_dots-groups' => [
             Access::ROLE_ADMIN,
             Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
@@ -188,7 +188,7 @@ return [
             Access::ROLE_SUPERVISOR,
             Access::ROLE_MANAGER_SALE_SUPPORT
         ],
-        'show_supplier_contract_group_dots' => [
+        'view_supplier_contract_group_dots' => [
             Access::ROLE_ADMIN,
             Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
@@ -210,37 +210,37 @@ return [
             Access::ROLE_MANAGER_SALE_SUPPORT,
             Access::ROLE_CLIENT,
         ],
-        'clients_client_add' => [
+        'clients_client-add' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
             Access::ROLE_MANAGER,
         ],
-        'clients_contract_add' => [
+        'clients_contract-add' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
         ],
-        'clients_contract_edit' => [
+        'clients_contract-edit' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
         ],
-        'clients_card_add' => [
+        'clients_card-add' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
         ],
-        'clients_card_edit_limits' => [
+        'clients_card-edit-limits' => [
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
         ],
-        'clients_payment_add' => [
+        'clients_payment-add' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
         ],
-        'clients_payment_del' => [
+        'clients_payment-del' => [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
@@ -253,7 +253,7 @@ return [
         'manager_setting' => [
             Access::ROLE_MANAGER_SALE,
         ],
-        'clients_client_edit' => [
+        'clients_client-edit' => [
             Access::ROLE_CLIENT,
         ],
         'support_index' => [

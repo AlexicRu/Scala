@@ -28,7 +28,7 @@
                 return false;
             }
 
-            $.post('/control/edit_cards_group', {params:params}, function(data){
+            $.post('/control/edit-cards-group', {params:params}, function(data){
                 if(data.success){
                     message(1, 'Группа успешно обновлена');
                     setTimeout(function () {

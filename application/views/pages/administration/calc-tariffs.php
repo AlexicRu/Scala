@@ -59,7 +59,7 @@
             iteration: block.find('fieldset').length + 1
         };
 
-        $.post('/administration/calc_tariffs_render_client', params, function (data) {
+        $.post('/administration/calc-tariffs-render-client', params, function (data) {
             block.append(data)
         });
     }
@@ -85,7 +85,7 @@
         block.find('.btns .btn').hide();
         block.find('.btns .calc_tariffs_client_go').show();
 
-        $.post('/administration/calc_tariff', params, function (data) {
+        $.post('/administration/calc-tariff', params, function (data) {
             block.find('.btns .btn').hide();
             if (data.success) {
                 block.find('.btns .calc_tariffs_client_ok').show();

@@ -18,7 +18,7 @@
             params.group_id = $('[name=group_id_<?=$postfix?>]').val();
         }
 
-        paginationAjax('/control/load_dots/', 'ajax_block_dots_list_<?=$postfix?>', renderAjaxPaginationDotsList<?=$postfix?>, params);
+        paginationAjax('/control/load-dots/', 'ajax_block_dots_list_<?=$postfix?>', renderAjaxPaginationDotsList<?=$postfix?>, params);
     });
 
     function renderFilterDotsList<?=$postfix?>(block, params)
@@ -136,6 +136,6 @@
 
         block.empty().addClass('block_loading');
 
-        paginationAjax('/control/load_dots/', 'ajax_block_dots_list_<?=$postfix?>', renderAjaxPaginationDotsList<?=$postfix?>, params);
+        paginationAjax('/control/load-dots/', 'ajax_block_dots_list_<?=$postfix?>', renderAjaxPaginationDotsList<?=$postfix?>, params);
     }
 </script>

@@ -7,14 +7,14 @@ return array(
     'control'           => ['title' => 'Управление', 'icon' => 'icon-set', 'children' => [
         'managers'      => 'Менеджеры',
         'tariffs'       => 'Тарифы',
-        'connect_1c'    => 'Связь с 1С',
-        'cards_groups'  => 'Группы карт',
-        'firms_groups'  => 'Группы фирм',
-        'dots_groups'   => 'Группы ТО',
+        '1c-connect'    => 'Связь с 1С',
+        'cards-groups'  => 'Группы карт',
+        'firms-groups'  => 'Группы фирм',
+        'dots-groups'   => 'Группы ТО',
     ]],
     'references'        => ['title' => 'Справочники', 'icon' => 'icon-contract', 'children' => [
         'sources'       => 'Источники данных',
-        'addresses'     => 'Адресный справочник',
+        'addresses'     => 'Адреса',
         'currency'      => 'Валюты',
         'services'      => 'Услуги',
         'cards'         => 'Список карт',
@@ -22,7 +22,7 @@ return array(
     ]],
     'administration'    => ['title' => 'Сервис', 'icon' => 'icon-service', 'children' => [
         'transactions'  => 'Транзакции',
-        'calc_tariffs'  => 'Расчет тарифов'
+        'calc-tariffs'  => 'Расчет тарифов'
     ]],
     'news'              => ['title' => 'Новости', 'icon' => 'icon-news'],
     'support'           => ['title' => 'Поддержка', 'icon' => 'icon-question'],

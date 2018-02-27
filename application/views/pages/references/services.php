@@ -68,7 +68,7 @@
             return false;
         }
 
-        $.post('/references/add_convert_service', params, function (data) {
+        $.post('/references/add-convert-service', params, function (data) {
             if (data.success) {
                 message('success', 'Услуга успшно добавлена');
 
@@ -91,7 +91,7 @@
             return false;
         }
 
-        $.post('/references/service_list_load', {tube_id: source}, function (data) {
+        $.post('/references/service-list-load', {tube_id: source}, function (data) {
             if (data.success) {
                 drawTable(data.data);
                 //changeSelect(data.data);

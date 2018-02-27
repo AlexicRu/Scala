@@ -6,7 +6,7 @@ $user = Auth::instance()->get_user();
 
 <div class="fr">
     <?if(Access::allow('clients_card_toggle_full')){?>
-        <?if(in_array($card['BLOCK_AVAILABLE'], [1,2]) || Access::allow('clients_card_toggle')){?>
+        <?if(in_array($card['BLOCK_AVAILABLE'], [1,2]) || Access::allow('clients_card-toggle')){?>
             <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
                 <button class="btn btn_green btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span style="display: none"><i class="icon-block"></i> Заблокировать</span><span><i class="icon-backblock"></i> Разблокировать</span></button>
             <?}else{?>
@@ -14,7 +14,7 @@ $user = Auth::instance()->get_user();
             <?}?>
         <?}?>
     <?}?>
-    <?if(Access::allow('clients_card_withdraw')){?>
+    <?if(Access::allow('clients_card-withdraw')){?>
         <a href="#" class="btn btn_orange" onclick="cardWithdraw('<?=$card['CARD_ID']?>', <?=$card['BLOCK_AVAILABLE']?>)"><i class="icon-cancel"></i> Изъять</a>
     <?}?>
     <?if(Access::allow('clients_card_edit')){?>
@@ -33,7 +33,7 @@ $user = Auth::instance()->get_user();
 
 <div class="fr">
     <?if(Access::allow('clients_card_edit')){?>
-        <?if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card_edit_limits')){?>
+        <?if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-limits')){?>
             <a href="#card_edit_limits_<?=$card['CARD_ID']?>" class="fancy btn btn_icon"><i class="icon-pen"></i></a>
         <?}?>
     <?}?>
@@ -88,6 +88,6 @@ $user = Auth::instance()->get_user();
 
 <script>
     $(function(){
-        paginationAjax('/clients/card_operations_history/<?=$card['CARD_ID']?>?contract_id=' + $('[name=contracts_list]').val(), 'ajax_block_operations_history_<?=$card['CARD_ID']?>', renderAjaxPaginationOperationsHistory);
+        paginationAjax('/clients/card-operations-history/<?=$card['CARD_ID']?>?contract_id=' + $('[name=contracts_list]').val(), 'ajax_block_operations_history_<?=$card['CARD_ID']?>', renderAjaxPaginationOperationsHistory);
     });
 </script>

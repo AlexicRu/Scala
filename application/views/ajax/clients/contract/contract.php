@@ -19,7 +19,7 @@
         </select>
     </span>
 
-    <?if(Access::allow('clients_contract_edit')){?>
+    <?if(Access::allow('clients_contract-edit')){?>
         <div class="fr" toggle_block="block2"><button class="btn" toggle="block2"><i class="icon-pen"></i> Редактировать</button></div>
         <div class="fr dn" toggle_block="block2">
             <button class="btn btn_green btn_contract_save btn_reverse"><i class="icon-ok"></i> Сохранить</button>
@@ -236,7 +236,7 @@
             }
         });
 
-        <?if(Access::allow('clients_contract_edit')){?>
+        <?if(Access::allow('clients_contract-edit')){?>
             $(".btn_contract_save").on('click', function(){
                 var params = {
                     contract:{
@@ -270,7 +270,7 @@
                     return false;
                 }
 
-                $.post('/clients/contract_edit/<?=$contractSettings['CONTRACT_ID']?>', {params:params}, function(data){
+                $.post('/clients/contract-edit/<?=$contractSettings['CONTRACT_ID']?>', {params:params}, function(data){
                     if(data.success){
                         message(1, 'Контракт обновлен');
 

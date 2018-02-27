@@ -29,7 +29,7 @@
             return false;
         }
 
-        $.post('/suppliers/agreement_add', {params:params}, function(data){
+        $.post('/suppliers/agreement-add', {params:params}, function(data){
             if(data.success){
                 message(1, 'Соглашение успешно добавлено');
                 loadSupplierContract('agreements');

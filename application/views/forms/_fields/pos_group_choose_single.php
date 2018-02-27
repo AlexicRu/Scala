@@ -1,5 +1,5 @@
 <span class="form_field" field="<?=$type?>">
-    <input type="text" name="<?=$name?>" class="custom_field combobox input_wide" url="/help/list_pos_group" autocomplete="off">
+    <input type="text" name="<?=$name?>" class="custom_field combobox input_wide" url="/help/list-pos-group" autocomplete="off">
 </span>
 
 <script>

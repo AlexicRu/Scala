@@ -28,7 +28,7 @@ $(function(){
             return false;
         }
 
-        $.post('/clients/client_edit/' + clientId, { params:params }, function(data){
+        $.post('/clients/client-edit/' + clientId, { params:params }, function(data){
             if(data.success){
                 message(1, 'Клиент обновлен');
 

@@ -70,7 +70,7 @@
         if(block.text() == '' || force == true){
             block.empty().addClass('block_loading');
 
-            $.post('/control/load_tariff/' + tariff, { version: $('[tab='+ tariff +']').attr('version') }, function(data){
+            $.post('/control/load-tariff/' + tariff, { version: $('[tab='+ tariff +']').attr('version') }, function(data){
                 block.html(data).removeClass('block_loading');
             });
         }

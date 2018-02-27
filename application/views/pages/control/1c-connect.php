@@ -28,7 +28,7 @@
         </div>
         <?if (Access::allow('view_export_1c_tab')) {?>
         <div tab_content="export" class="tab_content">
-            <?include('connect_1c/export_1c.php')?>
+            <? include('1c_connect/1c_export.php') ?>
         </div>
         <?}?>
     </div>
@@ -37,7 +37,7 @@
 <script>
     $(function(){
         dropzone = new Dropzone('.connect_1c_payments', {
-            url: "/control/upload_pays",
+            url: "/control/upload-pays",
             acceptedFiles: '.txt, .json, .xls, .xlsx',
             addedfile: function () {
                 $('.load_connect1c_payments_btn').prop('disabled', true);
@@ -149,7 +149,7 @@
             });
         });
 
-        $.post('/clients/contract_payment_add', {'multi': 1, payments: payments}, function (data) {
+        $.post('/clients/contract-payment-add', {'multi': 1, payments: payments}, function (data) {
             if(data.success){
                 message(1, 'Платежи успешно добавлены');
                 $(".connect_1c_result_block").jsGrid("destroy");

@@ -20,7 +20,7 @@
             </select>
         </span>
     
-        <?if(Access::allow('suppliers_contract_edit')){?>
+        <?if(Access::allow('suppliers_contract-edit')){?>
             <div class="fr" toggle_block="toggle_contract"><button class="btn" toggle="toggle_contract"><i class="icon-pen"></i> Редактировать</button></div>
             <div class="fr dn" toggle_block="toggle_contract">
                 <button class="btn btn_green btn_reverse" onclick="editSupplierContract()"><i class="icon-ok"></i> Сохранить</button>
@@ -84,7 +84,7 @@
                         </div>
                     </td>
                 </tr><?*/?>
-                <?if(Access::allow('show_supplier_contract_group_dots')){?>
+                <?if(Access::allow('view_supplier_contract_group_dots')){?>
                 <tr>
                     <td class="gray right">Группы точек:</td>
                     <td>

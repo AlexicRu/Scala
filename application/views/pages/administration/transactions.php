@@ -29,8 +29,8 @@
             no_filter: true
         };
 
-        paginationAjax('/administration/transactions_errors', 'ajax_block_administration_transactions_errors', renderAjaxPaginationAdminTransactions, params);
-        paginationAjax('/administration/transactions_history', 'ajax_block_administration_transactions_history', renderAjaxPaginationAdminTransactions);
+        paginationAjax('/administration/transactions-errors', 'ajax_block_administration_transactions_errors', renderAjaxPaginationAdminTransactions, params);
+        paginationAjax('/administration/transactions-history', 'ajax_block_administration_transactions_history', renderAjaxPaginationAdminTransactions);
     });
 
     function renderAjaxPaginationAdminTransactionsFilter(data, block, params)
@@ -127,7 +127,7 @@
 
     function transactionCancelToXls()
     {
-        window.open('/administration/transactions_errors?to_xls=1');
+        window.open('/administration/transactions-errors?to_xls=1');
     }
     function transactionHistoryToXls()
     {
@@ -137,7 +137,7 @@
             rnum.push($(this).attr('rnum'));
         });
 
-        window.open('/administration/transactions_history?to_xls=1&rnum=' + rnum.join(','));
+        window.open('/administration/transactions-history?to_xls=1&rnum=' + rnum.join(','));
     }
 
     function filterTransactions(e, btn)
@@ -162,6 +162,6 @@
 
         block.empty().addClass('block_loading');
 
-        paginationAjax('/administration/transactions_history', 'ajax_block_administration_transactions_history', renderAjaxPaginationAdminTransactions, params);
+        paginationAjax('/administration/transactions-history', 'ajax_block_administration_transactions_history', renderAjaxPaginationAdminTransactions, params);
     }
 </script>

@@ -31,7 +31,7 @@
                 return false;
             }
 
-            $.post('/control/add_cards_group', {params:params}, function(data){
+            $.post('/control/add-cards-group', {params:params}, function(data){
                 if(data.success){
                     message(1, 'Группа успешно добавлена');
                     setTimeout(function () {

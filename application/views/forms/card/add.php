@@ -41,7 +41,7 @@
                 return false;
             }
 
-            $.post('/clients/card_add', {params:params}, function(data){
+            $.post('/clients/card-add', {params:params}, function(data){
                 if(data.success){
                     message(1, 'Карта успешно добавлена');
                     loadContract('cards');

@@ -58,7 +58,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * редактирование клиента
 	 */
-	public function action_client_edit()
+	public function action_clientEdit()
 	{
 		$clientId = $this->request->param('id');
 		$params = $this->request->post('params');
@@ -173,7 +173,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * редактирование контракта
 	 */
-	public function action_contract_edit()
+	public function action_contractEdit()
 	{
 		$contractId = $this->request->param('id');
 		$params = $this->request->post('params');
@@ -228,7 +228,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * добавление нового клиента
 	 */
-	public function action_client_add()
+	public function action_clientAdd()
 	{
 		$params = $this->request->post('params');
 
@@ -242,9 +242,8 @@ class Controller_Clients extends Controller_Common {
 
 	/**
 	 * добавление контракта
-	 *
 	 */
-	public function action_contract_add()
+	public function action_contractAdd()
 	{
 		$params = $this->request->post('params');
 
@@ -264,7 +263,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * добавляем новую карту
 	 */
-	public function action_card_add()
+	public function action_cardAdd()
 	{
 		$params = $this->request->post('params');
 
@@ -291,7 +290,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * редактирование лимитов карты
      */
-    public function action_card_edit_limits()
+    public function action_cardEditLimits()
     {
         $cardId     = $this->request->post('card_id');
         $contractId = $this->request->post('contract_id');
@@ -305,7 +304,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * редактирование карты
 	 */
-	public function action_card_edit_holder()
+	public function action_cardEditHolder()
 	{
         $cardId     = $this->request->post('card_id');
         $contractId = $this->request->post('contract_id');
@@ -325,7 +324,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * добавление нового платежа по контракту
 	 */
-	public function action_contract_payment_add()
+	public function action_contractPaymentAdd()
 	{
         $payments = [$this->request->post('params')];
 		$multi = $this->request->post('multi') ?: 0;
@@ -349,7 +348,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * удаляем платеж по контракту
 	 */
-	public function action_contract_payment_delete()
+	public function action_contractPaymentDelete()
 	{
 		$params = $this->request->post('params');
 
@@ -385,7 +384,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * блокируем/разблокируем карту
 	 */
-	public function action_card_toggle()
+	public function action_cardToggle()
 	{
 		$params = $this->request->post('params');
 
@@ -401,7 +400,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * аяксово+постранично получаем историю операций
 	 */
-	public function action_card_operations_history()
+	public function action_cardOperationsHistory()
 	{
 		$cardId = $this->request->param('id');
 		$contractId = $this->request->query('contract_id');
@@ -423,7 +422,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * аяксово+постранично получаем историю операций
 	 */
-	public function action_account_payments_history()
+	public function action_accountPaymentsHistory()
 	{
 		$contractId = $this->request->param('id');
 		$params = [
@@ -443,7 +442,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * создание ЛК для пользователя
 	 */
-	public function action_cabinet_create()
+	public function action_cabinetCreate()
 	{
 		$params = $this->request->post('params');
 
@@ -459,7 +458,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * изымаем новую карту
 	 */
-	public function action_card_withdraw()
+	public function action_cardWithdraw()
 	{
 		$params = $this->request->post('params');
 
@@ -475,9 +474,9 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * список состояний контракта
 	 */
-	public function action_contract_history()
+	public function action_contractHistory()
 	{
-		if($this->_isPost()) {
+		if($this->isPost()) {
 			$params = [
 				'contract_id'	=> $this->request->post('contract_id'), 
 				'offset' 		=> $this->request->post('offset'),
@@ -497,7 +496,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * выставляем счет клиенту
      */
-	public function action_add_bill()
+	public function action_addBill()
     {
         $contractId = $this->request->query('contract_id');
         $sum = $this->request->query('sum');
@@ -528,7 +527,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * настройка уведомлений
      */
-    public function action_edit_contract_notices()
+    public function action_editContractNotices()
     {
         $params = $this->request->post('params');
         $contractId = $this->request->post('contract_id');
@@ -545,7 +544,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * список выставленных счетов по контракту
      */
-    public function action_bills_list()
+    public function action_billsList()
     {
         $params = [
             'contract_id'	=> $this->request->post('contract_id'),
@@ -565,7 +564,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * грузим список карт
      */
-    public function action_cards_list()
+    public function action_cardsList()
     {
         $contractId = $this->request->query('contract_id');
         $query = $this->request->post('query');
@@ -597,7 +596,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * редактируем логин пользователя
      */
-    public function action_edit_login()
+    public function action_editLogin()
     {
         $login = $this->request->post('login');
         $managerId = $this->request->post('manager_id');
@@ -613,7 +612,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * редактирование лимитов договора
      */
-    public function action_contract_limits_edit()
+    public function action_contractLimitsEdit()
     {
         $limits = $this->request->post('limits');
         $contractId = $this->request->post('contract_id');
@@ -636,7 +635,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * изменяем лимит
      */
-    public function action_contract_increase_limit()
+    public function action_contractIncreaseLimit()
     {
         $amount = $this->request->post('amount');
         $groupId = $this->request->post('group_id');
@@ -654,7 +653,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * отрисовываем блок продукта для выставления счета
      */
-    public function action_add_bill_product_template()
+    public function action_addBillProductTemplate()
     {
         $iteration = $this->request->post('iteration');
 

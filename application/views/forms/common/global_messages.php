@@ -14,7 +14,7 @@
 
 <script>
     function globalMessagesMarkAsRead() {
-        //$.post('/messages/make_read', {type: <?=Model_Message::MESSAGE_TYPE_GLOBAL?>}, function () {
+        //$.post('/messages/make-read', {type: <?=Model_Message::MESSAGE_TYPE_GLOBAL?>}, function () {
             $.fancybox.close();
         //})
     }

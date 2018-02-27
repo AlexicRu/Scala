@@ -44,7 +44,7 @@
 
         var iteration = $('.client_contract_elem', block).length + 1;
 
-        $.get('/control/client_contract_form?iteration=' + iteration, function (data) {
+        $.get('/control/client-contract-form?iteration=' + iteration, function (data) {
             block.append(data);
         });
     }
@@ -73,6 +73,6 @@
             params.contracts.push(value);
         });
 
-        window.open('/control/export_1c?' + $.param(params));
+        window.open('/control/1c-export?' + $.param(params));
     }
 </script>

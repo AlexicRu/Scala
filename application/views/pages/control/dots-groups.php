@@ -122,7 +122,7 @@
                 return false;
             }
 
-            $.post('/control/del_dots', {dots: dots, group_id:group_id}, function (data) {
+            $.post('/control/del-dots', {dots: dots, group_id:group_id}, function (data) {
                 if (data.success) {
                     for (var i in selectedDots) {
                         selectedDots[i].remove();
@@ -151,7 +151,7 @@
                 return false;
             }
 
-            $.post('/control/del_group_dots', {groups: groups}, function (data) {
+            $.post('/control/del-group-dots', {groups: groups}, function (data) {
 
                 for(var i in data.data.deleted){
                     selectedGroups['group' + i].remove();
@@ -176,7 +176,7 @@
         if(tabContent.text() == '' || force == true){
             tabContent.empty().parent().addClass('block_loading');
 
-            $.post('/control/group_dots/' + groupId, {}, function(data){
+            $.post('/control/group-dots/' + groupId, {}, function(data){
                 tabContent.html(data).parent().removeClass('block_loading');
             });
         }
@@ -207,6 +207,6 @@
         }
 
         var group_id = group.attr('tab').replace('group_dot', '');
-        window.open('/control/load_group_dots/?group_id=' + group_id + '&to_xls=1');
+        window.open('/control/load-group-dots/?group_id=' + group_id + '&to_xls=1');
     }
 </script>

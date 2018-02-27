@@ -3,7 +3,7 @@
         <?=(!empty($params['placeholder']) ? 'placeholder="'.$params['placeholder'].'"' : '')?>
         <?=(!isset($params['weight']) ? 'weight="'.$params['weight'].'"' : '')?>
         depend_on="<?=$params['depend_on']?>"
-        url="/help/list_suppliers_contracts">
+        url="/help/list-suppliers-contracts">
 </span>
 
 <script>

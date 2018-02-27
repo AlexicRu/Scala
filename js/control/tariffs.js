@@ -103,7 +103,7 @@ function addSectionCondition(t)
 
     tpl.appendTo(list);
 
-    $.post('/control/get_tariff_reference_tpl', { uid_section: uidSection, used_conditions: usedConditions[uidSection], index: $('.tsc_item', block).length}, function (data) {
+    $.post('/control/get-tariff-reference-tpl', { uid_section: uidSection, used_conditions: usedConditions[uidSection], index: $('.tsc_item', block).length}, function (data) {
         if(data.success){
             tpl.removeClass('block_loading').append(data.data.html);
 
@@ -150,13 +150,11 @@ function addSection(t)
 
     var uidSection = tariffId + '_' + sectionNum;
 
-    /**/
-
     var tpl = $('<div />');
 
     tpl.appendTo(list);
 
-    $.post('/control/get_tariff_section_tpl', { uid_section: uidSection, section_num: sectionNum}, function (data) {
+    $.post('/control/get-tariff-section-tpl', { uid_section: uidSection, section_num: sectionNum}, function (data) {
         if(data.success){
             tpl.removeClass('block_loading').replaceWith(data.data.html);
         }else{
@@ -267,7 +265,7 @@ function saveTariff(btn)
         return false;
     }
 
-    $.post('/control/edit_tariff', {tariff_id: tariffId, params: params}, function (data) {
+    $.post('/control/edit-tariff', {tariff_id: tariffId, params: params}, function (data) {
         if(data.success){
             message(1, 'Тариф успешно сохранен');
         }else{

@@ -42,7 +42,7 @@
 
     $(function () {
         dropzone = new Dropzone('.feedback_files', {
-            url: "/index/upload_file",
+            url: "/index/upload-file",
             autoProcessQueue: false,
             addRemoveLinks: true,
             maxFilesize: 3,

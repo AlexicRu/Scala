@@ -113,7 +113,7 @@
 <div class="more_info dn" toggle_block="supplier_info">
     <a href="#" class="btn btn_gray btn_min_width" toggle="supplier_info">Скрыть информацию о поставщике</a> &nbsp;
 
-    <?if(Access::allow('suppliers_supplier_edit')){?>
+    <?if(Access::allow('suppliers_supplier-edit')){?>
     <button class="btn" toggle="edit_supplier" toggle_block="edit_supplier"><i class="icon-pen"></i> Редактировать</button> &nbsp;
 
     <button class="btn btn_green dn btn_reverse" toggle_block="edit_supplier" onclick="saveSupplierInfo(<?=$supplier['ID']?>)"><i class="icon-ok"></i> Сохранить</button>

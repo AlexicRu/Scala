@@ -47,7 +47,7 @@
 
     $(function(){
         dropzone = new Dropzone('.news_edit_image', {
-            url: "/index/upload_file?component=image",
+            url: "/index/upload-file?component=image",
             autoProcessQueue: false,
             addRemoveLinks: true,
             maxFiles: 1,
@@ -94,7 +94,7 @@
             return false;
         }
 
-        $.post('/news/news_edit', {params:params}, function(data){
+        $.post('/news/news-edit', {params:params}, function(data){
             if(data.success){
                 <?if(!empty($detail['NEWS_ID'])){?>
                     message(1, 'Новость успешно отредактированна');

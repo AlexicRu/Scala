@@ -21,7 +21,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * аяксово грузим поставщиков
      */
-    public function action_suppliers_list()
+    public function action_suppliersList()
     {
         $params = [
             'offset' 		    => $this->request->post('offset'),
@@ -40,7 +40,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * Детальная страница по поставщику
      */
-    public function action_supplier_detail()
+    public function action_supplierDetail()
     {
         $supplierId = $this->request->param('id');
 
@@ -68,7 +68,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * редактирование поставщика
      */
-    public function action_supplier_edit()
+    public function action_supplierEdit()
     {
         $supplierId = $this->request->param('id');
         $params = $this->request->post('params');
@@ -146,7 +146,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * редактирование контракта
      */
-    public function action_contract_edit()
+    public function action_contractEdit()
     {
         $contractId = $this->request->param('id');
         $params = $this->request->post('params');
@@ -162,7 +162,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * добавление контракта
      */
-    public function action_contract_add()
+    public function action_contractAdd()
     {
         $params = $this->request->post('params');
 
@@ -178,7 +178,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * создание нового поставщика
      */
-    public function action_supplier_add()
+    public function action_supplierAdd()
     {
         $params = $this->request->post('params');
 
@@ -217,7 +217,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * редактирование соглашения
      */
-    public function action_agreement_edit()
+    public function action_agreementEdit()
     {
         $params = $this->request->post('params');
 
@@ -233,7 +233,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * добавление нового соглашения
      */
-    public function action_agreement_add()
+    public function action_agreementAdd()
     {
         $params = $this->request->post('params');
 

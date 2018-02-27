@@ -91,7 +91,7 @@
             return false;
         }
 
-        $.post('/managers/add_manager', {params:params}, function (data) {
+        $.post('/managers/add-manager', {params:params}, function (data) {
             if(data.success){
                 message(1, 'Менеджер успешно добавлен');
                 $.fancybox.close();

@@ -4,7 +4,7 @@
 
 <script>
     $(function () {
-        paginationAjax('/clients/cards_list/?contract_id=' + $('[name=contracts_list]').val(), 'ajax_block_cards_list', renderAjaxPaginationCardsList);
+        paginationAjax('/clients/cards-list/?contract_id=' + $('[name=contracts_list]').val(), 'ajax_block_cards_list', renderAjaxPaginationCardsList);
 
         $(".cards_search").on('keypress', function(e){
             if(e.keyCode == 13){
@@ -23,7 +23,7 @@
             .closest('.tabs_cards').find('.tabs_v_content').empty()
         ;
 
-        paginationAjax('/clients/cards_list/?contract_id=' + $('[name=contracts_list]').val(), 'ajax_block_cards_list', renderAjaxPaginationCardsList, params);
+        paginationAjax('/clients/cards-list/?contract_id=' + $('[name=contracts_list]').val(), 'ajax_block_cards_list', renderAjaxPaginationCardsList, params);
     }
 
     /**

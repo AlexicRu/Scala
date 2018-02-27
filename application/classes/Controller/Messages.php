@@ -11,7 +11,7 @@ class Controller_Messages extends Controller_Common {
 
 	public function action_index()
 	{
-		if($this->_isPost()) {
+		if($this->isPost()) {
 			$params = [
 				'offset'        => $this->request->post('offset'),
 				'search'        => $this->request->post('search'),
@@ -39,7 +39,7 @@ class Controller_Messages extends Controller_Common {
 	/**
 	 * отмечаем все сообщения пользователя прочитанными
 	 */
-	public function action_make_read()
+	public function action_makeRead()
 	{
         $noteType = $this->request->post('type') ?: Model_Message::MESSAGE_TYPE_COMMON;
 

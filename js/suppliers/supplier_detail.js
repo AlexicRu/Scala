@@ -7,7 +7,7 @@ $(function () {
     supplierId = $('[name=supplier_id]').val();
 
     dropzone = new Dropzone('.supplier-detail__avatar-dropzone', {
-        url: "/index/upload_file?component=supplier",
+        url: "/index/upload-file?component=supplier",
         autoProcessQueue: false,
         addRemoveLinks: true,
         maxFiles: 1,
@@ -66,7 +66,7 @@ function _saveSupplierInfo()
         return false;
     }*/
 
-    $.post('/suppliers/supplier_edit/' + supplierId, { params:params }, function(data){
+    $.post('/suppliers/supplier-edit/' + supplierId, { params:params }, function(data){
         if(data.success){
             message(1, 'Поставщик обновлен');
 
@@ -144,7 +144,7 @@ function editSupplierContract()
         return;
     }
 
-    $.post('/suppliers/contract_edit/' + contractId, {params:params}, function (data) {
+    $.post('/suppliers/contract-edit/' + contractId, {params:params}, function (data) {
         if (data.success) {
             message(1, 'Контракт успешно обновлен');
 
@@ -224,7 +224,7 @@ function agreementSave(btn)
         return false;
     }
 
-    $.post('/suppliers/agreement_edit', {params:params}, function (data) {
+    $.post('/suppliers/agreement-edit', {params:params}, function (data) {
         if (data.success) {
             message(1, 'Соглашение успешно обновлено');
             loadAgreement($('.tabs_agreements .tab_v.active'), true);

@@ -43,7 +43,7 @@ class Controller_Reports extends Controller_Common {
     /**
      * подгружаем шаблон отчета
      */
-	public function action_load_report_template()
+	public function action_loadReportTemplate()
     {
         $reportId = $this->request->param('id');
 

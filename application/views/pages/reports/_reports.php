@@ -80,7 +80,7 @@
         if(block.text() == '' || force == true){
             block.empty().addClass('block_loading');
 
-            $.post('/reports/load_report_template/' + reportId, {}, function(data){
+            $.post('/reports/load-report-template/' + reportId, {}, function(data){
                 block.html(data).removeClass('block_loading');
             });
         }

@@ -63,7 +63,7 @@
             return false;
         }
 
-        $.post('/references/tube_name_edit', {tube_id:tubeId, name:name}, function (data) {
+        $.post('/references/tube-name-edit', {tube_id:tubeId, name:name}, function (data) {
             if (data.success) {
                 message(1, 'Наименование изменено');
                 block.find('.reference_sources_tube_name').text(name);
@@ -84,7 +84,7 @@
 
         btn.text('Идет загрузка...');
 
-        $.post('/references/card_list_load', {tube_id: tubeId}, function (data) {
+        $.post('/references/card-list-load', {tube_id: tubeId}, function (data) {
             if (data.success) {
 
             } else {

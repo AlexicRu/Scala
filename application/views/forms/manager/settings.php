@@ -78,7 +78,7 @@ if(empty($changeRole)){
                 <tr class="form_attention">
                     <td class="gray right" width="<?=$width?>">Логин:</td>
                     <td>
-                        <?if (Access::allow('clients_edit_login')) {?>
+                        <?if (Access::allow('clients_edit-login')) {?>
                             <div toggle_block="edit_login">
                                 <span class="login_value"><?=$manager['LOGIN']?></span>
                                 <span class="btn btn_small" toggle="edit_login"><i class="icon icon-pen"></i></span>
@@ -155,7 +155,7 @@ if(empty($changeRole)){
             manager_id: managerId
         };
 
-        $.post('/clients/edit_login', params, function (data) {
+        $.post('/clients/edit-login', params, function (data) {
             if(data.success){
                 message(1, 'Логин обновлен');
                 txt.text(data.data.login)

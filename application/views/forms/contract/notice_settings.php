@@ -73,7 +73,7 @@
             notice_email_barrier_value: $('[name=notice_email_barrier_value]', form).val()
         };
 
-        $.post('/clients/edit_contract_notices', {contract_id: $('[name=contracts_list]').val(), params:params}, function (data) {
+        $.post('/clients/edit-contract-notices', {contract_id: $('[name=contracts_list]').val(), params:params}, function (data) {
             if(data.success){
                 message(1, 'Настройки уведомлений обновлены');
                 $.fancybox.close();

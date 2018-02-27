@@ -18,7 +18,7 @@
             params.group_id = $('[name=group_id_<?=$postfix?>]').val();
         }
 
-        paginationAjax('/control/load_cards/', 'ajax_block_group_cards_list_<?=$postfix?>', renderAjaxPaginationGroupCardsList<?=$postfix?>, params);
+        paginationAjax('/control/load-cards/', 'ajax_block_group_cards_list_<?=$postfix?>', renderAjaxPaginationGroupCardsList<?=$postfix?>, params);
     });
 
     function renderFilterGroupCardsList<?=$postfix?>(block, params)
@@ -114,6 +114,6 @@
 
         block.empty().addClass('block_loading');
 
-        paginationAjax('/control/load_cards/', 'ajax_block_group_cards_list_<?=$postfix?>', renderAjaxPaginationGroupCardsList<?=$postfix?>, params);
+        paginationAjax('/control/load-cards/', 'ajax_block_group_cards_list_<?=$postfix?>', renderAjaxPaginationGroupCardsList<?=$postfix?>, params);
     }
 </script>

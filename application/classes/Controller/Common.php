@@ -12,8 +12,8 @@ abstract class Controller_Common extends Controller_Template {
 
     public function before()
     {
-        $controller = $this->request->controller();
-        $action = $this->request->action();
+        $controller = Text::camelCaseToDashed($this->request->controller());
+        $action = Text::camelCaseToDashed($this->request->action());
 
         if(!Auth::instance()->logged_in()){
             if(!in_array($action, ['login', 'logout']) && $_SERVER['REQUEST_URI'] != '/'){
@@ -21,7 +21,7 @@ abstract class Controller_Common extends Controller_Template {
             }
             $this->template = 'not_auth';
         }else{
-            if($controller == 'Index' && $action == 'index') {
+            if($controller == 'index' && $action == 'index') {
                 $this->redirect('/clients');
             }
 
@@ -42,15 +42,15 @@ abstract class Controller_Common extends Controller_Template {
         }
 
         //если не аяксовый запрос
-        if(!$this->request->is_ajax() && !$this->toXls && !in_array($action, ['get_json'])) {
+        if(!$this->request->is_ajax() && !$this->toXls && !in_array($action, ['get-json'])) {
             if($allow == false){
                 throw new HTTP_Exception_403();
             }
 
             //рендерим шаблон страницы
-            if (!in_array($controller, ['Index'])) {
+            if (!in_array($controller, ['index'])) {
                 try {
-                    $this->tpl = View::factory('pages/' . strtolower($controller) . '/' . $action);
+                    $this->tpl = View::factory('pages/' . $controller . '/' . $action);
                 } catch (Exception $e) {
                     throw new HTTP_Exception_404();
                 }
@@ -110,7 +110,7 @@ abstract class Controller_Common extends Controller_Template {
         parent::after();
     }
 
-    protected function html($data){
+    public function html($data){
         echo $data;
         exit;
     }
@@ -119,7 +119,7 @@ abstract class Controller_Common extends Controller_Template {
      * show xml
      * @param $xml
      */
-    protected function _showXml($xml)
+    public function showXml($xml)
     {
         header('Content-type: text/xml');
         header('Content-Disposition: attachment; filename="export.xml"');
@@ -128,18 +128,18 @@ abstract class Controller_Common extends Controller_Template {
         exit;
     }
 
-    protected function json($data){
+    public function json($data){
         header('Content-Type: application/json');
         echo json_encode($data);
         exit;
     }
 
-    protected function jsonResult($result, $data = [])
+    public function jsonResult($result, $data = [])
     {
         self::json(['success' => $result, 'data' => $data, 'messages' => Messages::get()]);
     }
 
-    protected function _isPost()
+    public function isPost()
     {
         return HTTP_Request::POST == $this->request->method();
     }

@@ -212,7 +212,7 @@
             return;
         }
 
-        $.post('/clients/contract_limits_edit', {contract_id : $('[name=contracts_list]').val(), limits: limits}, function (data) {
+        $.post('/clients/contract-limits-edit', {contract_id : $('[name=contracts_list]').val(), limits: limits}, function (data) {
             if (data.success) {
                 message(1, 'Ограничения по договору успешно обновлены');
                 loadContract('account');

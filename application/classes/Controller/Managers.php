@@ -50,7 +50,7 @@ class Controller_Managers extends Controller_Common {
     /**
      * блокируем/разблокируем
      */
-    public function action_manager_toggle()
+    public function action_managerToggle()
     {
         $params = $this->request->post('params');
 
@@ -66,7 +66,7 @@ class Controller_Managers extends Controller_Common {
     /**
      * грузим список клиентов по менеджеру
      */
-    public function action_load_clients()
+    public function action_loadClients()
     {
         $managerId = $this->request->post('manager_id');
         $params = $this->request->post('params');
@@ -89,7 +89,7 @@ class Controller_Managers extends Controller_Common {
     /**
      * удаляем кдинта у менеджера
      */
-    public function action_del_client()
+    public function action_delClient()
     {
         $managerId = $this->request->post('manager_id');
         $clientId = $this->request->post('client_id');
@@ -105,7 +105,7 @@ class Controller_Managers extends Controller_Common {
     /**
      * добавление менеджера
      */
-    public function action_add_manager()
+    public function action_addManager()
     {
         $params = $this->request->post('params');
 
@@ -120,7 +120,7 @@ class Controller_Managers extends Controller_Common {
     /**
      * добавление клиентов
      */
-    public function action_add_clients()
+    public function action_addClients()
     {
         $params = $this->request->post('params');
 
@@ -135,7 +135,7 @@ class Controller_Managers extends Controller_Common {
     /**
      * список доступный клиентов
      */
-    public function action_managers_clients()
+    public function action_managersClients()
     {
         $params = $this->request->post('params');
 
@@ -147,7 +147,7 @@ class Controller_Managers extends Controller_Common {
     /**
      * редактируем доступы менеджера к контрактам конкретного клиента
      */
-    public function action_edit_manager_clients_contract_binds()
+    public function action_editManagerClientsContractBinds()
     {
         $clientId = $this->request->post('client_id');
         $managerId = $this->request->post('manager_id');

@@ -80,7 +80,7 @@ class Controller_Control extends Controller_Common {
     /**
      * страницы групп точек
      */
-    public function action_dots_groups()
+    public function action_dotsGroups()
     {
         $this->title[] = 'Группы точек';
 
@@ -105,7 +105,7 @@ class Controller_Control extends Controller_Common {
     /**
      * оболочка для постраничной загрузки списка точек группы
      */
-    public function action_group_dots()
+    public function action_groupDots()
     {
         $groupId = $this->request->param('id');
 
@@ -129,7 +129,7 @@ class Controller_Control extends Controller_Common {
     /**
      * получаем список точек по группе
      */
-    public function action_load_group_dots()
+    public function action_loadGroupDots()
     {
         $params = [
             'group_id'	    => $this->request->post('group_id') ?: $this->request->query('group_id'),
@@ -162,7 +162,7 @@ class Controller_Control extends Controller_Common {
     /**
      * удаляем группы точек
      */
-    public function action_del_group_dots()
+    public function action_delGroupDots()
     {
         $groupsIds = $this->request->post('groups');
 
@@ -199,7 +199,7 @@ class Controller_Control extends Controller_Common {
     /**
      * удаление точек из группы
      */
-    public function action_del_dots()
+    public function action_delDots()
     {
         $groupId = $this->request->post('group_id');
         $dots = $this->request->post('dots');
@@ -212,7 +212,7 @@ class Controller_Control extends Controller_Common {
     /**
      * добавляем группу точек
      */
-    public function action_add_dots_group()
+    public function action_addDotsGroup()
     {
         $params = $this->request->post('params');
 
@@ -228,7 +228,7 @@ class Controller_Control extends Controller_Common {
     /**
      * редактирование группы точек
      */
-    public function action_edit_dots_group()
+    public function action_editDotsGroup()
     {
         $params = $this->request->post('params');
 
@@ -244,7 +244,7 @@ class Controller_Control extends Controller_Common {
     /**
      * показываем таб списка точек, сами точки будут аяксом постранично грузиться
      */
-    public function action_show_dots()
+    public function action_showDots()
     {
         $postfix = $this->request->post('postfix') ?: '';
         $showCheckbox = $this->request->post('show_checkbox') ?: '';
@@ -262,7 +262,7 @@ class Controller_Control extends Controller_Common {
     /**
      * аяксовая постраничная загрузка точек
      */
-    public function action_load_dots()
+    public function action_loadDots()
     {
         $params = [
             'POS_ID'        => $this->request->post('POS_ID'),
@@ -308,7 +308,7 @@ class Controller_Control extends Controller_Common {
     /**
      * добавляем точки к конкретной группе
      */
-    public function action_add_dots_to_group()
+    public function action_addDotsToGroup()
     {
         $posIds = $this->request->post('pos_ids');
         $groupId = $this->request->post('group_id');
@@ -339,7 +339,7 @@ class Controller_Control extends Controller_Common {
     /**
      * загрудаем выбранный тариф
      */
-    public function action_load_tariff()
+    public function action_loadTariff()
     {
         $tariffId = $this->request->param('id');
 
@@ -362,7 +362,7 @@ class Controller_Control extends Controller_Common {
     /**
      * грузим свеженький шаблон шаблон условий
      */
-    public function action_get_tariff_reference_tpl()
+    public function action_getTariffReferenceTpl()
     {
         $usedConditions = $this->request->post('used_conditions');
         $uidSection = $this->request->post('uid_section');
@@ -399,7 +399,7 @@ class Controller_Control extends Controller_Common {
     /**
      * подгружаем пустой шаблон секции
      */
-    public function action_get_tariff_section_tpl()
+    public function action_getTariffSectionTpl()
     {
         $uidSection = $this->request->post('uid_section');
         $sectionNum = $this->request->post('section_num');
@@ -416,7 +416,7 @@ class Controller_Control extends Controller_Common {
     /**
      * сохраняем тариф
      */
-    public function action_edit_tariff()
+    public function action_editTariff()
     {
         $params = $this->request->post('params');
         $tariffId = $this->request->post('tariff_id');
@@ -432,7 +432,7 @@ class Controller_Control extends Controller_Common {
     /**
      * страница загрузки транзакций
      */
-    public function action_connect_1c()
+    public function action_1cConnect()
     {
         $this->title[] = 'Связь с 1с';
 
@@ -443,7 +443,7 @@ class Controller_Control extends Controller_Common {
     /**
      * считываем файл с платежами
      */
-    public function action_upload_pays()
+    public function action_uploadPays()
     {
         $file = Upload::uploadFile('pays');
 
@@ -465,7 +465,7 @@ class Controller_Control extends Controller_Common {
     /**
      * страница работыс группами фирм
      */
-    public function action_firms_groups()
+    public function action_firmsGroups()
     {
         $this->title[] = 'Группы фирм';
 
@@ -489,7 +489,7 @@ class Controller_Control extends Controller_Common {
     /**
      * страница работыс группами карт
      */
-    public function action_cards_groups()
+    public function action_cardsGroups()
     {
         $this->title[] = 'Группы карт';
 
@@ -513,7 +513,7 @@ class Controller_Control extends Controller_Common {
     /**
      * добавление группы карт
      */
-    public function action_add_cards_group()
+    public function action_addCardsGroup()
     {
         $params = $this->request->post('params');
 
@@ -529,7 +529,7 @@ class Controller_Control extends Controller_Common {
     /**
      * грузим список карт по группе
      */
-    public function action_load_group_cards()
+    public function action_loadGroupCards()
     {
         //если это есть значит уже грузим данные а не страницу
         $offset = $this->request->post('offset');
@@ -582,7 +582,7 @@ class Controller_Control extends Controller_Common {
     /**
      * редактирование группы карт
      */
-    public function action_edit_cards_group()
+    public function action_editCardsGroup()
     {
         $params = $this->request->post('params');
 
@@ -598,7 +598,7 @@ class Controller_Control extends Controller_Common {
     /**
      * показываем карты, сами карты будут аяксом постранично грузиться
      */
-    public function action_show_group_cards()
+    public function action_showGroupCards()
     {
         $postfix = $this->request->post('postfix') ?: '';
         $showCheckbox = $this->request->post('show_checkbox') ?: '';
@@ -616,7 +616,7 @@ class Controller_Control extends Controller_Common {
     /**
      * аяксовая постраничная загрузка точек
      */
-    public function action_load_cards()
+    public function action_loadCards()
     {
         $params = [
             'CARD_ID'           => $this->request->post('CARD_ID'),
@@ -639,7 +639,7 @@ class Controller_Control extends Controller_Common {
     /**
      * добавляем точки к конкретной группе
      */
-    public function action_add_cards_to_group()
+    public function action_addCardsToGroup()
     {
         $cardsIds = $this->request->post('cards_ids');
         $groupId = $this->request->post('group_id');
@@ -656,7 +656,7 @@ class Controller_Control extends Controller_Common {
     /**
      * удаление группы
      */
-    public function action_del_cards_group()
+    public function action_delCardsGroup()
     {
         $groups = (array)$this->request->post('groups');
 
@@ -675,7 +675,7 @@ class Controller_Control extends Controller_Common {
     /**
      * удаление карт из группы
      */
-    public function action_del_cards_from_group()
+    public function action_delCardsFromGroup()
     {
         $cardsNumbers = $this->request->post('cards_numbers');
         $groupId = $this->request->post('group_id');
@@ -688,7 +688,7 @@ class Controller_Control extends Controller_Common {
     /**
      * рендерим блок формы
      */
-    public function action_client_contract_form()
+    public function action_clientContractForm()
     {
         $iteration = $this->request->query('iteration') ?: 1;
 
@@ -702,7 +702,7 @@ class Controller_Control extends Controller_Common {
     /**
      * экспорт данный для 1с
      */
-    public function action_export_1c()
+    public function action_1cExport()
     {
         $get = $this->request->query();
 
@@ -741,6 +741,6 @@ class Controller_Control extends Controller_Common {
             $delivery->addChild('sale', $item['SALE']);
         }
 
-        $this->_showXml($xml->asXML());
+        $this->showXml($xml->asXML());
     }
 }

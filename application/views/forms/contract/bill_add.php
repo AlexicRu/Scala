@@ -87,7 +87,7 @@
             return false;
         }
 
-        window.location.href = '/clients/add_bill?' + $.param(params);
+        window.location.href = '/clients/add-bill?' + $.param(params);
         $.fancybox.close();
     }
 
@@ -134,7 +134,7 @@
     {
         var block = $('.form_client_add_bill_products');
 
-        $.post('/clients/add_bill_product_template', {}, function (data) {
+        $.post('/clients/add-bill-product-template', {}, function (data) {
             block.append(data);
             $('[name=client_add_bill_summ]').prop('disabled', true);
             recalcNDS();

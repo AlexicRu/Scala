@@ -58,7 +58,7 @@
                 comment: comment
             };
 
-            $.post('/managers/manager_toggle', {params:params}, function (data) {
+            $.post('/managers/manager-toggle', {params:params}, function (data) {
                 if (data.success) {
                     t.toggleClass('btn_red').toggleClass('btn_green').find('span').toggle();
 
@@ -81,7 +81,7 @@
 
         block.empty().addClass(CLASS_LOADING);
 
-        $.post('/managers/load_clients', { manager_id: managerId, params: params }, function (data) {
+        $.post('/managers/load-clients', { manager_id: managerId, params: params }, function (data) {
             block.removeClass(CLASS_LOADING);
             block.html(data);
 
@@ -103,7 +103,7 @@
             manager_id: managerId
         };
 
-        $.post('/managers/del_client', params, function (data) {
+        $.post('/managers/del-client', params, function (data) {
             if(data.success){
                 message(1, 'Клиент успешно удален');
                 line.fadeOut();
@@ -113,7 +113,7 @@
         });
     }
 
-    <?if(Access::allow('managers_edit_manager_clients_contract_binds')) {?>
+    <?if(Access::allow('managers_edit-manager-clients-contract-binds')) {?>
     function saveManagerClientContractBinds(btn)
     {
         var line = btn.closest('[client_id]');
@@ -128,7 +128,7 @@
             binds: binds
         };
 
-        $.post('/managers/edit_manager_clients_contract_binds', params, function(data) {
+        $.post('/managers/edit-manager-clients-contract-binds', params, function(data) {
             if (data.success) {
                 message(1, 'Доступы менеджера к договорам обновлены');
             } else {

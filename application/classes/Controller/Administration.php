@@ -27,7 +27,7 @@ class Controller_Administration extends Controller_Common
     /**
      * грузим отказные транзакции
      */
-    public function action_transactions_errors()
+    public function action_transactionsErrors()
     {
         $params = [
             'offset' 		=> $this->request->post('offset'),
@@ -66,7 +66,7 @@ class Controller_Administration extends Controller_Common
     /**
      * грузим историю операций
      */
-    public function action_transactions_history()
+    public function action_transactionsHistory()
     {
         $params = [
             'filter'        => $this->request->post('filter'),
@@ -107,7 +107,7 @@ class Controller_Administration extends Controller_Common
     /**
      * расчет тарифов
      */
-    public function action_calc_tariffs()
+    public function action_calcTariffs()
     {
         $this->_initJsGrid();
     }
@@ -115,7 +115,7 @@ class Controller_Administration extends Controller_Common
     /**
      * отрисовываем блок клиента
      */
-    public function action_calc_tariffs_render_client()
+    public function action_calcTariffsRenderClient()
     {
         $iteration = $this->request->post('iteration');
 
@@ -126,7 +126,7 @@ class Controller_Administration extends Controller_Common
         $this->html($html);
     }
 
-    public function action_calc_tariff()
+    public function action_calcTariff()
     {
         $this->jsonResult(1, []);
     }

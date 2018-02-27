@@ -26,7 +26,7 @@
 
         block.addClass('block_loading');
 
-        $.post('/control/show_dots', { postfix: 'dots_info' }, function (data) {
+        $.post('/control/show-dots', { postfix: 'dots_info' }, function (data) {
             block.removeClass('block_loading');
 
             block.html(data);
@@ -41,6 +41,6 @@
             pos_id.push($(this).attr('pos_id'));
         });
 
-        window.open('/control/load_dots?to_xls=1&pos_id=' + pos_id.join(','));
+        window.open('/control/load-dots?to_xls=1&pos_id=' + pos_id.join(','));
     }
 </script>

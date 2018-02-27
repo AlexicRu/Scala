@@ -30,7 +30,7 @@
             return false;
         }
 
-        $.post('/clients/contract_increase_limit', params, function(data){
+        $.post('/clients/contract-increase-limit', params, function(data){
             if (data.success) {
                 message(1, 'Лимит успешно изменен');
                 loadContract('account');

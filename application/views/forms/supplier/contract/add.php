@@ -47,7 +47,7 @@
             return false;
         }
 
-        $.post('/suppliers/contract_add', {params:params}, function(data){
+        $.post('/suppliers/contract-add', {params:params}, function(data){
             if(data.success){
                 message(1, 'Договор успешно добавлен');
                 setTimeout(function(){

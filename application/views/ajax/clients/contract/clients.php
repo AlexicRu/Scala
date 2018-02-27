@@ -10,7 +10,7 @@
                 <a href="#" class="red del" onclick="delManagersClient($(this))">Удалить <i class="icon-cancel"></i></a>
             </div>
 
-            <?if(Access::allow('managers_edit_manager_clients_contract_binds')) {?>
+            <?if(Access::allow('managers_edit-manager-clients-contract-binds')) {?>
                 <div class="line_inner__second_line">
                     <table class="table_form">
                         <tr>

@@ -21,7 +21,7 @@
         <?}}?>
 </select>
 
-<?if(Access::allow('suppliers_contract_add')){?>
+<?if(Access::allow('suppliers_contract-add')){?>
     &nbsp;&nbsp;&nbsp;<a href="#supplier_contract_add" class="btn fancy">+ Создать договор</a>
 
     <?=$popupSupplierContractAdd?>

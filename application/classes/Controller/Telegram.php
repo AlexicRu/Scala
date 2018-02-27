@@ -59,7 +59,7 @@ class Controller_Telegram extends Controller_Template
     /**
      * устанавливаем webhook
      */
-    public function action_set_webhook()
+    public function action_setWebhook()
     {
         $result = $this->_telegram->setWebhook('https://dev.lk.glopro.ru' . $this->_config['telegram_web_hook']);
 

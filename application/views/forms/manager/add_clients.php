@@ -38,7 +38,7 @@
             manager_id: $('.tab_content[manager_id]:visible').attr('manager_id')
         };
 
-        ajax = $.post('/managers/managers_clients', {params:params}, function (data) {
+        ajax = $.post('/managers/managers-clients', {params:params}, function (data) {
             list.removeClass('block_loading');
 
             for(var i in data.data){
@@ -125,7 +125,7 @@
             return false;
         }
 
-        $.post('/managers/add_clients', {params:params}, function (data) {
+        $.post('/managers/add-clients', {params:params}, function (data) {
             if(data.success){
                 message(1, 'Клиенты успешно добавлены');
                 $.fancybox.close();

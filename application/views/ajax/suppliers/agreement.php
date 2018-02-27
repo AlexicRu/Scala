@@ -15,7 +15,7 @@ $toggle = 'agreement'.$agreement['AGREEMENT_ID'];
             <input type="text" name="DATE_END" value="<?=$agreement['WEB_DATE_END']?>" class="input_big input_medium datepicker" readonly>
         </span>
 
-        <?if(Access::allow('suppliers_agreement_edit')){?>
+        <?if(Access::allow('suppliers_agreement-edit')){?>
             <div class="fr" toggle_block="<?=$toggle?>"><button class="btn" toggle="<?=$toggle?>"><i class="icon-pen"></i> Редактировать</button></div>
             <div class="fr dn" toggle_block="<?=$toggle?>">
                 <button class="btn btn_green btn_reverse" onclick="agreementSave($(this))"><i class="icon-ok"></i> Сохранить</button>

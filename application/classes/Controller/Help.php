@@ -25,7 +25,7 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список точек для combobox
      */
-    public function action_list_card_group()
+    public function action_listCardGroup()
     {
         $params = [
             'search'        => $this->_search,
@@ -53,7 +53,7 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список точек для combobox
      */
-    public function action_list_pos_group()
+    public function action_listPosGroup()
     {
         $params = [
             'search'        => $this->_search,
@@ -82,7 +82,7 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список стран для combobox
      */
-    public function action_list_country()
+    public function action_listCountry()
     {
         $res = Listing::getCountries($this->_search, $this->_ids);
 
@@ -105,7 +105,7 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список услуг для combobox
      */
-    public function action_list_service()
+    public function action_listService()
     {
         $res = Listing::getServices(['search' => $this->_search, 'ids' => $this->_ids]);
 
@@ -128,7 +128,7 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список карт для combobox
      */
-    public function action_list_card()
+    public function action_listCard()
     {
         $res = Listing::getCards($this->_search, $this->_ids);
 
@@ -151,7 +151,7 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список доступных карт для combobox
      */
-    public function action_list_cards_available()
+    public function action_listCardsAvailable()
     {
         $res = Listing::getCardsAvailable($this->_search, $this->_ids);
 
@@ -174,7 +174,7 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список клиентов для combobox
      */
-    public function action_list_client()
+    public function action_listClient()
     {
         $res = Model_Client::getClientsList($this->_search, ['ids' => $this->_ids, 'limit' => 10]);
 
@@ -197,7 +197,7 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список клиентов для combobox
      */
-    public function action_list_supplier()
+    public function action_listSupplier()
     {
         $res = Listing::getSuppliers($this->_search, $this->_ids);
 
@@ -220,7 +220,7 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список клиентов для combobox
      */
-    public function action_list_manager()
+    public function action_listManager()
     {
         $res = Model_Manager::getManagersList([
             'search' => $this->_search,
@@ -248,7 +248,7 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список клиентов для combobox
      */
-    public function action_list_manager_sale()
+    public function action_listManagerSale()
     {
         $res = Model_Manager::getManagersList([
             'search' => $this->_search,
@@ -281,7 +281,7 @@ class Controller_Help extends Controller_Common
      * получаем список контрактов клиентов для combobox
      * _depend
      */
-    public function action_list_clients_contracts()
+    public function action_listClientsContracts()
     {
         $clientId = $this->request->post('client_id');
 
@@ -322,7 +322,7 @@ class Controller_Help extends Controller_Common
      * получаем список контрактов поставщика для combobox
      * _depend
      */
-    public function action_list_suppliers_contracts()
+    public function action_listSuppliersContracts()
     {
         $supplierId = $this->request->post('supplier_id');
 
@@ -347,7 +347,7 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список доступных тарифов
      */
-    public function action_list_contract_tariffs()
+    public function action_listContractTariffs()
     {
         $contractTariffs = Model_Contract::getTariffs([
             'tarif_name' => $this->_search,
@@ -374,7 +374,7 @@ class Controller_Help extends Controller_Common
     /**
      * получаем список клиентов для combobox
      */
-    public function action_list_tube()
+    public function action_listTube()
     {
         $res = Listing::getTubes($this->_search, $this->_ids);
 

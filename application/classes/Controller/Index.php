@@ -61,7 +61,7 @@ class Controller_Index extends Controller_Common {
     /**
      * грузим файлы аяксово
      */
-	public function action_upload_file()
+	public function action_uploadFile()
     {
         $component = $this->request->query('component') ?: 'file';
 
@@ -75,7 +75,7 @@ class Controller_Index extends Controller_Common {
     /**
      * подгружаем конфиг api
      */
-    public function action_get_json()
+    public function action_getJson()
     {
         $api = Api::getStructure();
 

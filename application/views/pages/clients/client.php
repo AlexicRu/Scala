@@ -123,11 +123,11 @@
 <div class="more_info dn" toggle_block="block1">
     <a href="#" class="btn btn_gray btn_min_width" toggle="block1">Скрыть информацию о компании</a> &nbsp;
 
-    <?if(Access::allow('clients_client_edit')){?>
+    <?if(Access::allow('clients-client-edit')){?>
         <button class="btn" toggle="edit_client" toggle_block="edit_client"><i class="icon-pen"></i> Редактировать</button> &nbsp;
     <?}?>
 
-    <?if(Access::allow('client_cabinet_create') && empty($client['EXISTS_OFFICE'])){?>
+    <?if(Access::allow('client_cabinet-create') && empty($client['EXISTS_OFFICE'])){?>
         <a href="#client_cabinet_create" class="btn btn_green fancy">+ Создать ЛК</a>
     <?}?>
 
@@ -149,13 +149,13 @@
     <?}}?>
 </select>
 
-<?if(Access::allow('clients_contract_add')){?>
+<?if(Access::allow('clients_contract-add')){?>
     &nbsp;&nbsp;&nbsp;<a href="#contract_add" class="btn fancy">+ Создать договор</a>
 
     <?=$popupContractAdd?>
 <?}?>
 
-<?if(Access::allow('client_cabinet_create')){?>
+<?if(Access::allow('client_cabinet-create')){?>
     <?=$popupCabinetCreate?>
 <?}?>
 

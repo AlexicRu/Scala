@@ -1,10 +1,10 @@
 <div class="tc_top_line">
     <span class="gray">Баланс по договору:</span> <?=number_format($balance['BALANCE'], 2, ',', ' ')?> <?=Text::RUR?>
     <div class="fr">
-        <?if(Access::allow('clients_bill_add')){?>
+        <?if(Access::allow('clients_bill-add')){?>
             <a href="#contract_bill_add" class="fancy btn">Выставить счет</a>
         <?}?>
-        <?if(Access::allow('clients_bill_print')){?>
+        <?if(Access::allow('clients_bill-print')){?>
             <a href="#contract_bill_print" class="fancy btn">Печать счетов</a>
         <?}?>
     </div>
@@ -12,7 +12,7 @@
 <div class="as_table">
     <div class="col line_inner">
         <?if(Access::allow('view_contract_balances')){?>
-            <?if(Access::allow('clients_contract_limits_edit')){?>
+            <?if(Access::allow('clients-contract-limits-edit')){?>
                 <div class="fr"><a href="#contract_limits_edit" class="fancy btn btn_green btn_icon"><i class="icon-pen"></i></a></div>
             <?}?>
 
@@ -67,7 +67,7 @@
             <?=number_format($turnover['LAST_MONTH_REALIZ'], 2, ',', ' ')?> л. / <?=number_format($turnover['LAST_MONTH_REALIZ_CUR'], 2, ',', ' ')?> <?=Text::RUR?>
         </div>
     </div><div class="col">
-        <?if(Access::allow('clients_payment_add')){?>
+        <?if(Access::allow('clients_payment-add')){?>
             <div class="fr">
                 <a href="#contract_payment_add" class="fancy btn">+ Добавить платеж</a>
             </div>
@@ -79,7 +79,7 @@
         </div>
         <script>
             $(function(){
-                paginationAjax('/clients/account_payments_history/' + $('[name=contracts_list]').val(), 'ajax_block_payments_history', renderAjaxPaginationPaymentsHistory);
+                paginationAjax('/clients/account-payments-history/' + $('[name=contracts_list]').val(), 'ajax_block_payments_history', renderAjaxPaginationPaymentsHistory);
             });
             function renderAjaxPaginationPaymentsHistory(data, block)
             {
@@ -90,7 +90,7 @@
                         '<span class="gray" /> &nbsp;&nbsp;&nbsp; '+
                         '<b>' +
                     '</div>');
-                    <?if(Access::allow('clients_payment_del')){?>
+                    <?if(Access::allow('clients_payment-del')){?>
                         tpl.append('<div class="fr"><a href="#" class="red del link_del_contract_payment">Удалить <i class="icon-cancel"></i></a></div>');
                     <?}?>
 
@@ -119,25 +119,25 @@
     </div>
 </div>
 
-<?if(Access::allow('clients_payment_add')){?>
+<?if(Access::allow('clients_payment-add')){?>
     <?=$popupContractPaymentAdd?>
 <?}?>
-<?if(Access::allow('clients_bill_add')){?>
+<?if(Access::allow('clients_bill-add')){?>
     <?=$popupContractBillAdd?>
 <?}?>
-<?if(Access::allow('clients_bill_print')){?>
+<?if(Access::allow('clients_bill-print')){?>
     <?=$popupContractBillPrint?>
 <?}?>
-<?if(Access::allow('view_contract_balances') && Access::allow('clients_contract_limits_edit')){?>
+<?if(Access::allow('view_contract_balances') && Access::allow('clients_contract-limits-edit')){?>
     <?=$popupContractLimitsEdit?>
 <?}?>
-<?if(Access::allow('clients_contract_increase_limit')){?>
+<?if(Access::allow('clients_contract-increase-limit')){?>
     <?=$popupContractLimitIncrease?>
 <?}?>
 
 <script>
     $(function(){
-        <?if(Access::allow('clients_payment_del')){?>
+        <?if(Access::allow('clients_payment-del')){?>
             $(document).off('click', '.link_del_contract_payment').on('click', '.link_del_contract_payment', function(){
                 var t = $(this);
                 var row = t.closest('[guid]');
@@ -151,7 +151,7 @@
                     guid:           row.attr('guid')
                 };
 
-                $.post('/clients/contract_payment_delete', {params:params}, function(data){
+                $.post('/clients/contract-payment-delete', {params:params}, function(data){
                     if(data.success){
                         message(1, 'Платеж успешно удален');
                         loadContract('account');

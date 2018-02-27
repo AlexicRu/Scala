@@ -61,7 +61,7 @@ switch ($systemId) {
         break;
 }
 
-if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card_edit_limits')){?>
+if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-limits')){?>
 
     <table class="table_form form_card_edit form_card_edit_<?=$postfix?>">
         <tr>
@@ -319,7 +319,7 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card_edit_l
             return;
         }
 
-        $.post('/clients/card_edit_limits', params, function (data) {
+        $.post('/clients/card-edit-limits', params, function (data) {
             if (data.success) {
                 message(1, 'Лимиты карты успешно обновлена');
                 $.fancybox.close();

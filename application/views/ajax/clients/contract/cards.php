@@ -12,7 +12,7 @@
 </div>
 <div class="tabs_vertical_block tabs_switcher tabs_cards">
     <div class="tabs_v">
-        <?if(Access::allow('clients_card_add')){?>
+        <?if(Access::allow('clients_card-add')){?>
             <div class="before_scroll">
                 <div class="tab_v"><div>
                     <a href="#card_add" class="fancy"><span class="icon-card"></span> Добавить карту</a>
@@ -26,7 +26,7 @@
     <div class="tabs_v_content"></div>
 </div>
 
-<?if(Access::allow('clients_card_add')){?>
+<?if(Access::allow('clients_card-add')){?>
     <?=$popupCardAdd?>
 <?}?>
 
@@ -54,7 +54,7 @@
                     comment: comment
                 };
 
-                $.post('/clients/card_toggle', {params:params}, function (data) {
+                $.post('/clients/card-toggle', {params:params}, function (data) {
                     if (data.success) {
                         t.toggleClass('btn_red').toggleClass('btn_green').find('span').toggle();
 
@@ -117,7 +117,7 @@
             contract_id: $('[name=contracts_list]').val()
         };
 
-        $.post('/clients/card_withdraw', {params:params}, function (data) {
+        $.post('/clients/card-withdraw', {params:params}, function (data) {
             if (data.success) {
 
                 message(1, blockAvailable == 2 ? 'Карта откреплена от договора! Проверьте статус в сторонней системе!' : 'Успешное изъятие');
