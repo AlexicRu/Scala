@@ -5,7 +5,7 @@ $postfix = $card['CARD_ID'];
     <tr>
         <td class="gray right" width="170">Держатель:</td>
         <td>
-            <input type="text" name="card_edit_holder" class="input_big input_grand" value="<?=$card['HOLDER']?>" maxlength="200">
+            <input type="text" name="card_edit_holder" class="input_big input_grand" value="<?=Text::quotesForForms($card['HOLDER'])?>" maxlength="200">
         </td>
     </tr>
     <tr>

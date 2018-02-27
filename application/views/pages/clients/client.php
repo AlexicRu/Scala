@@ -5,7 +5,7 @@
     <span toggle_block="edit_client" uid="client_name"><?=$client['NAME']?></span>
     <span toggle_block="edit_client" uid="client_name" class="dn">
         <nobr>
-            <input type="text" class="input_big input_grand" name="NAME" value="<?=$client['NAME']?>"
+            <input type="text" class="input_big input_grand" name="NAME" value="<?=Text::quotesForForms($client['NAME'])?>"
                 <?=(!empty($client['NAME']) && Access::deny('edit_client_full') ? 'disabled' : '')?>
             >*
         </nobr>
@@ -14,7 +14,7 @@
 
 <p>
     <span toggle_block="edit_client" uid="client_long_name"><?if($client['LONG_NAME']){?><?=$client['LONG_NAME']?><?}?></span>
-    <span toggle_block="edit_client" uid="client_long_name" class="dn"><input type="text" class="input_grand" placeholder="Полное название" name="LONG_NAME" value="<?=$client['LONG_NAME']?>"></span>
+    <span toggle_block="edit_client" uid="client_long_name" class="dn"><input type="text" class="input_grand" placeholder="Полное название" name="LONG_NAME" value="<?=Text::quotesForForms($client['LONG_NAME'])?>"></span>
 </p>
 
 <div toggle_block="block1" class="dn edit_client_block">

@@ -4,7 +4,7 @@
             <td class="gray right" width="200">Название:</td>
             <td>
                 <input type="hidden" name="tarif_id" value="<?=(!empty($tariff['TARIF_ID']) ? $tariff['TARIF_ID'] : 0)?>">
-                <input type="text" name="tarif_name" class="input_big input_grand" value="<?=(!empty($tariff['TARIF_NAME']) ? $tariff['TARIF_NAME'] : '')?>">
+                <input type="text" name="tarif_name" class="input_big input_grand" value="<?=(!empty($tariff['TARIF_NAME']) ? Text::quotesForForms($tariff['TARIF_NAME']) : '')?>">
             </td>
         </tr>
     </table>

@@ -9,10 +9,10 @@
     </div>
 
     <h2 toggle_block="edit_supplier" uid="supplier_name"><?=$supplier['SUPPLIER_NAME']?></h2>
-    <h2 toggle_block="edit_supplier" uid="supplier_name" class="dn"><input type="text" class="input_big input_grand" name="NAME" value="<?=$supplier['SUPPLIER_NAME']?>"></h2>
+    <h2 toggle_block="edit_supplier" uid="supplier_name" class="dn"><input type="text" class="input_big input_grand" name="NAME" value="<?=Text::quotesForForms($supplier['SUPPLIER_NAME'])?>"></h2>
 
     <p toggle_block="edit_supplier" uid="LONG_NAME"><?=$supplier['LONG_NAME']?></p>
-    <p toggle_block="edit_supplier" uid="LONG_NAME" class="dn"><input type="text" class="input_grand" name="LONG_NAME" value="<?=$supplier['LONG_NAME']?>"></p>
+    <p toggle_block="edit_supplier" uid="LONG_NAME" class="dn"><input type="text" class="input_grand" name="LONG_NAME" value="<?=Text::quotesForForms($supplier['LONG_NAME'])?>"></p>
 </div>
 
 <div toggle_block="supplier_info" class="dn">

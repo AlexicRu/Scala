@@ -47,4 +47,15 @@ class Text extends Kohana_Text
         }
         return $str;
     }
+
+    /**
+     * меняем кавычки для полей форм
+     *
+     * @param $str
+     * @return mixed
+     */
+    public static function quotesForForms($str)
+    {
+        return str_replace('"', '&quot;', $str);
+    }
 }

@@ -32,7 +32,7 @@
 			<a href="#"><span class="icon-menu"></span></a>
 		</div>
 		<div class="search">
-			<form action="/clients" method="post"><button class="icon-find"></button><input type="text" name="search" placeholder="Поиск..." value="<?=(!empty($_REQUEST['search']) ? $_REQUEST['search'] : '')?>"></form>
+			<form action="/clients" method="post"><button class="icon-find"></button><input type="text" name="search" placeholder="Поиск..." value="<?=(!empty($_REQUEST['search']) ? Text::quotesForForms($_REQUEST['search']) : '')?>"></form>
 		</div>
 		<div class="personal">
 			<div class="avatar" <?/*style="background-image: url(/img/pic/01.png)"*/?>><i class="icon-user"></i></div>
