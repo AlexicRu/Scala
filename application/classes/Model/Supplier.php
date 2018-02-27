@@ -74,8 +74,8 @@ class Model_Supplier extends Model
 
         $data = [
             'p_supplier_id'     => $supplierId,
-            'p_supplier_name'   => $params['NAME'],
-            'p_long_name'       => $params['LONG_NAME'] ?: $params['NAME'],
+            'p_supplier_name'   => $params['SUPPLIER_NAME'],
+            'p_long_name'       => $params['LONG_NAME'] ?: $params['SUPPLIER_NAME'],
             'p_tin'             => $params['INN'],
             'p_iec'             => $params['KPP'],
             'p_psrn'            => $params['OGRN'],

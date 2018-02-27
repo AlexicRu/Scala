@@ -190,7 +190,6 @@ abstract class Controller_Common extends Controller_Template {
                 '/js/plugins/jGrowl/jGrowl.js',
                 '/js/plugins/fancy/jquery.fancybox.js',
                 '/js/ui.js',
-                '/js/functions.js',
                 '/js/common.js',
             ];
         }else{
@@ -198,7 +197,6 @@ abstract class Controller_Common extends Controller_Template {
             $this->template->scripts = [
                 'https://www.google.com/recaptcha/api.js',
                 '/js/plugins/jquery.2.1.3.min.js',
-                '/js/common.js',
             ];
         }
 
@@ -259,6 +257,14 @@ abstract class Controller_Common extends Controller_Template {
         $this->template->styles[] = '/js/plugins/jsgrid/jsgrid.min.css';
         $this->template->styles[] = '/js/plugins/jsgrid/jsgrid-theme.min.css';
         $this->template->scripts[] = '/js/plugins/jsgrid/jsgrid.js';
+    }
+
+    /**
+     * подключаем VueJs
+     */
+    protected function _initVueJs()
+    {
+        $this->template->scripts[] = 'https://cdn.jsdelivr.net/npm/vue';
     }
 
     /**

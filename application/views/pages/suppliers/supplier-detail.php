@@ -28,9 +28,3 @@
 <?}?>
 
 <div class="supplier-contract"></div>
-
-<script>
-    $(function () {
-        loadSupplierContract();
-    })
-</script>

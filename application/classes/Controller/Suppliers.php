@@ -50,6 +50,8 @@ class Controller_Suppliers extends Controller_Common {
             throw new HTTP_Exception_404();
         }
 
+        $this->_initVueJs();
+
         $supplierContracts = Model_Supplier_Contract::getList(['supplier_id' => $supplierId]);
 
         $this->title[] = $supplier['SUPPLIER_NAME'];
