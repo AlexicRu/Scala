@@ -28,7 +28,7 @@
 
             var groupId = $('.tabs_cards_groups .tab_v.active [name=group_id]').val();
 
-            $.post('/control/show-group-cards', { postfix: 'popup_list', show_checkbox:1, group_id:groupId }, function (data) {
+            $.post('/control/show-cards', { postfix: 'popup_list', show_checkbox:1, group_id:groupId }, function (data) {
                 block.removeClass('block_loading');
 
                 block.html(data);

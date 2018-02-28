@@ -89,7 +89,7 @@ class Controller_Control extends Controller_Common {
         $dotsGroups = Model_Dot::getGroups($filter);
 
         $popupAddDotsGroup = Common::popupForm('Добавление группы точек', 'control/add_dots_group');
-        $popupAddDot = Common::popupForm('Добавление точек', 'control/add_dot');
+        $popupAddDots = Common::popupForm('Добавление точек', 'control/add_dots');
 
         $popupEditDotsGroup = Common::popupForm('Редактирование группы точек', 'control/edit_dots_group');
 
@@ -97,7 +97,7 @@ class Controller_Control extends Controller_Common {
             ->bind('dotsGroups', $dotsGroups)
             ->bind('filter', $filter)
             ->bind('popupEditDotsGroup', $popupEditDotsGroup)
-            ->bind('popupAddDot', $popupAddDot)
+            ->bind('popupAddDots', $popupAddDots)
             ->bind('popupAddDotsGroup', $popupAddDotsGroup)
         ;
     }
@@ -207,6 +207,22 @@ class Controller_Control extends Controller_Common {
         $result = Model_Dot::editDotsToGroup($groupId, $dots, Model_Dot::ACTION_DEL);
 
         $this->jsonResult($result);
+    }
+
+    /**
+     * добавляем группу фирм
+     */
+    public function action_addFirmsGroup()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Firm::addFirmsGroup($params);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
     }
 
     /**
@@ -471,18 +487,18 @@ class Controller_Control extends Controller_Common {
 
         $filter = $this->request->query('filter');
 
-        $groups = Model_Card::getGroups($filter);
+        $firmsGroups = Model_Firm::getFirmsGroups($filter);
 
-        $popupAddCards = Common::popupForm('Добавление карт', 'control/add_cards');
-        $popupAddGroup = Common::popupForm('Добавление группы', 'control/add_group');
-        $popupEditGroup = Common::popupForm('Редактирование группы', 'control/edit_group');
+        $popupAddFirms = Common::popupForm('Добавление фирм', 'control/add_firms');
+        $popupAddFirmsGroup = Common::popupForm('Добавление группы фирм', 'control/add_firms_group');
+        $popupEditFirmsGroup = Common::popupForm('Редактирование группы фирм', 'control/edit_firms_group');
 
         $this->tpl
-            ->bind('groups', $groups)
+            ->bind('firmsGroups', $firmsGroups)
             ->bind('filter', $filter)
-            ->bind('popupAddCards', $popupAddCards)
-            ->bind('popupAddGroup', $popupAddGroup)
-            ->bind('popupEditGroup', $popupEditGroup)
+            ->bind('popupAddFirms', $popupAddFirms)
+            ->bind('popupAddFirmsGroup', $popupAddFirmsGroup)
+            ->bind('popupEditFirmsGroup', $popupEditFirmsGroup)
         ;
     }
 
@@ -524,6 +540,57 @@ class Controller_Control extends Controller_Common {
         }
 
         $this->jsonResult(true);
+    }
+
+    /**
+     * грузим список фирм по группе
+     */
+    public function action_loadGroupFirms()
+    {
+        //если это есть значит уже грузим данные а не страницу
+        $offset = $this->request->post('offset');
+
+        if(is_null($offset) && !$this->toXls){
+
+            $groupId = $this->request->param('id');
+
+            $user = User::current();
+
+            $canEdit = true;
+            if (!in_array($user['role'], Access::$adminRoles)) {
+                $canEdit = false;
+            }
+
+            $html = View::factory('ajax/control/firms_in_group')
+                ->bind('groupId', $groupId)
+                ->bind('canEdit', $canEdit);
+
+            $this->html($html);
+        }else{
+            $params = [
+                'group_id'      => $this->request->post('group_id'),
+                'offset'        => $offset,
+                'pagination'    => $this->toXls ? false : true
+            ];
+
+            $result = Model_Card::getGroupCards($params);
+
+            if ($this->toXls){
+                $this->showXls('group_firms', $result, [
+                    'CLIENT_ID'         => 'CLIENT ID',
+                    'HOLDER'            => 'Владелец',
+                    'DESCRIPTION_RU'    => 'Описание'
+                ]);
+            } else {
+                list($items, $more) = $result;
+            }
+
+            if (empty($items)) {
+                $this->jsonResult(false);
+            }
+
+            $this->jsonResult(true, ['items' => $items, 'more' => $more]);
+        }
     }
 
     /**
@@ -598,13 +665,13 @@ class Controller_Control extends Controller_Common {
     /**
      * показываем карты, сами карты будут аяксом постранично грузиться
      */
-    public function action_showGroupCards()
+    public function action_showCards()
     {
         $postfix = $this->request->post('postfix') ?: '';
         $showCheckbox = $this->request->post('show_checkbox') ?: '';
         $groupId = $this->request->post('group_id') ?: '';
 
-        $html = View::factory('ajax/control/show_group_cards')
+        $html = View::factory('ajax/control/cards')
             ->bind('postfix', $postfix)
             ->bind('showCheckbox', $showCheckbox)
             ->bind('groupId', $groupId)

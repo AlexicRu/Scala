@@ -170,23 +170,6 @@
         });
     }
 
-    function showDotsList()
-    {
-        var block = $('[tab_content=info]');
-
-        if(block.html() != ''){
-            return true;
-        }
-
-        block.addClass('block_loading');
-
-        $.post('/control/show-dots', {  }, function (data) {
-            block.removeClass('block_loading');
-
-            block.html(data);
-        });
-    }
-
     function groupCardsToXls()
     {
         var group = $(".tabs_cards_groups .tab_v[tab].active");

@@ -7,6 +7,10 @@ abstract class Controller_Common extends Controller_Template {
     public $errors = [];
     public $scripts = [];
     public $styles = [];
+
+    /**
+     * @var View
+     */
     public $tpl = '';
     public $toXls = false;
 
