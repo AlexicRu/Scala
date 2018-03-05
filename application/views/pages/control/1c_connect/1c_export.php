@@ -34,10 +34,6 @@
 </table>
 
 <script>
-    $(function () {
-        renderNewClientForm();
-    });
-
     function renderNewClientForm()
     {
         var block = $('.client_contracts_list');

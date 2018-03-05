@@ -150,6 +150,15 @@ return [
             Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
         ],
+        'control_1c-export' => [
+            'a_1',
+            'a_2',
+            'a_4',
+            'a_6',
+            'a_14',
+            'a_16',
+            'a_18',
+        ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,
@@ -192,10 +201,6 @@ return [
             Access::ROLE_ADMIN,
             Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
-        ],
-        'view_export_1c_tab' => [
-            Access::ROLE_ADMIN,
-            Access::ROLE_ADMIN_READONLY,
         ],
         'root' => [
             Access::ROLE_ROOT

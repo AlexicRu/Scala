@@ -783,31 +783,12 @@ class Controller_Control extends Controller_Common {
             $get['contracts'] = $contracts;
         }
 
-        $data = Model_Report::exportTo1c($get);
+        $user = User::current();
 
-        //render xml
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"></root>');
+        $report = Report_1c_Common::factory($user['AGENT_ID']);
 
-        $oldClient = false;
-        foreach ($data as $item) {
-            if ($oldClient != $item['ID']) {
-                $oldClient = $item['ID'];
-                $client = $xml->addChild('client');
-                $client->addAttribute('id', $item['ID']);
-                $client->addAttribute('name', $item['NAME']);
-            }
+        $data = $report->getDataForExport($get);
 
-            $delivery = $client->addChild('delivery');
-            $delivery->addChild('territory_id', $item['TERRITORY_ID']);
-            $delivery->addChild('supplier_id', $item['SUPPLIER_ID']);
-            $delivery->addChild('unit_type', $item['UNIT_TYPE']);
-            $delivery->addChild('vat_rate', $item['VAT_RATE']);
-            $delivery->addChild('recharge_vat', $item['RECHARGE_VAT']);
-            $delivery->addChild('volume', $item['VOLUME']);
-            $delivery->addChild('cost', $item['COST']);
-            $delivery->addChild('sale', $item['SALE']);
-        }
-
-        $this->showXml($xml->asXML());
+        $this->showXml($report->generateXmlForExport($data));
     }
 }
