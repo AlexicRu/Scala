@@ -436,6 +436,10 @@ class Controller_Clients extends Controller_Common {
 			$this->jsonResult(false);
 		}
 
+		foreach ($paymentsHistory as &$elem) {
+		    $elem['PAY_COMMENT'] = Text::parseUrl($elem['PAY_COMMENT']);
+        }
+
 		$this->jsonResult(true, ['items' => $paymentsHistory, 'more' => $more]);
 	}
 

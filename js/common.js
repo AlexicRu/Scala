@@ -393,3 +393,10 @@ function vueRawData(data)
 {
     return JSON.parse(JSON.stringify(data));
 }
+
+function renderTootip()
+{
+    $('.tooltip').tooltipster({
+        theme: 'tooltipster-shadow'
+    });
+}

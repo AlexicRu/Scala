@@ -114,6 +114,8 @@
 
                     block.append(tpl);
                 }
+
+                renderTootip();
             }
         </script>
     </div>

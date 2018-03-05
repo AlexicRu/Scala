@@ -114,9 +114,11 @@
             <tr>
                 <td class="gray right">Комментарий к договору:</td>
                 <td>
-                    <span toggle_block="block2"><?=($contractSettings['CONTRACT_COMMENT'] ?: '<i class="gray">отсутствует</i>')?></span>
+                    <span toggle_block="block2"><?=($contractSettings['CONTRACT_COMMENT'] ?
+                            Text::parseUrl($contractSettings['CONTRACT_COMMENT'])
+                            : '<i class="gray">отсутствует</i>')?></span>
                     <span toggle_block="block2" class="dn">
-                        <input type="text" name="CONTRACT_COMMENT" value="<?=$contractSettings['CONTRACT_COMMENT']?>">
+                        <textarea name="CONTRACT_COMMENT"><?=$contractSettings['CONTRACT_COMMENT']?></textarea>
                     </span>
                 </td>
             </tr>
@@ -223,6 +225,7 @@
 <script>
     $(function(){
         renderElements();
+        renderTootip();
 
         $("select[name=scheme]").on('change', function(){
             var t = $(this);

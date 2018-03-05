@@ -58,4 +58,75 @@ class Text extends Kohana_Text
     {
         return str_replace('"', '&quot;', $str);
     }
+
+    /**
+     * парсим урлы из текста и пытаемся отрендеритьпревью сайта
+     *
+     * @param $str
+     */
+    public static function parseUrl($str)
+    {
+        $pattern = '~[a-z]+://\S+~';
+
+        if($num_found = preg_match_all($pattern, $str, $urls))
+        {
+            $config = Kohana::$config->load('config');
+            $cache = Cache::instance();
+
+            $urls = $urls[0];
+            $replace = [];
+
+            foreach ($urls as $url) {
+                $key = 'opengraph_url_' . $url;
+
+                $siteInfo = $cache->get($key);
+
+                if (empty($siteInfo)) {
+                    $requestUrl = 'https://opengraph.io/api/1.1/site/' . urlencode($url);
+
+                    $requestUrl = $requestUrl . '?app_id=' . $config['opengraph'];
+
+                    $siteInformationJSON = file_get_contents($requestUrl);
+                    $siteInfo = json_decode($siteInformationJSON, true);
+
+                    if (!empty($siteInfo['hybridGraph'])) {
+                        $cache->set($key, $siteInfo['hybridGraph'], 60 * 60 * 24 * 365);
+                    }
+
+                    $siteInfo = $siteInfo['hybridGraph'];
+                }
+
+                if (empty($siteInfo)) {
+                    $charsCnt = mb_strlen($url);
+                    $name = $url;
+
+                    if ($charsCnt > 50) {
+                        $name = mb_strcut($str, 0, 40) . '...' . mb_strcut($str, -7, 7);
+                    }
+
+                    $replace[$url] = '<a href="'. $url .'" target="_blank">'. $name .'</a>';
+                } else {
+
+                    $uniqid = uniqid();
+                    $replace[$url] = '<a 
+                            href="'. $url .'" 
+                            target="_blank"
+                            class="tooltip" data-tooltip-content="#tooltip_content_'.$uniqid.'"
+                        ><i class="icon icon-reply"></i> '. $siteInfo['title'] .'</a>
+                        <div style="display: none">
+                            <div id="tooltip_content_'.$uniqid.'" class="tooltip__content">
+                                <div class="tooltip__img"><img src="'.$siteInfo['image'].'"></div>
+                                <div class="tooltip__name">'.self::quotesForForms($siteInfo['title']).'</div>
+                                <div class="tooltip__info">'.self::quotesForForms($siteInfo['description']).'</div>
+                            </div>                        
+                        </div>
+                    ';
+                }
+            }
+
+            $str = str_replace(array_keys($replace), array_values($replace), $str);
+        }
+
+        return $str;
+    }
 }

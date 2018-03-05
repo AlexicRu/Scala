@@ -1638,3 +1638,23 @@ div.jGrowl div.jGrowl-notification.jgrowl-glopro.jgrowl-group-info {
 #login > div {
   display: none;
 }
+.tooltip__content {
+  padding-left: 120px;
+  max-width: 400px;
+}
+.tooltip__img {
+  margin-left: -120px;
+  float: left;
+}
+.tooltip__img img {
+  max-height: 100px;
+  max-width: 100px;
+}
+.tooltip__name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.tooltip__info {
+  max-height: 75px;
+  overflow-y: hidden;
+}

@@ -220,6 +220,8 @@ abstract class Controller_Common extends Controller_Template {
     private function _appendFilesAfter()
     {
         if(Auth::instance()->logged_in()) {
+            $this->_initTooltipster();
+
             $this->template->styles[] = '/css/ui.css';
             $this->template->styles[] = '/css/style.css';
             $this->template->styles[] = '/css/design.css';
@@ -269,6 +271,16 @@ abstract class Controller_Common extends Controller_Template {
     protected function _initVueJs()
     {
         $this->template->scripts[] = 'https://cdn.jsdelivr.net/npm/vue';
+    }
+
+    /**
+     * подключаем Tooltipster
+     */
+    protected function _initTooltipster()
+    {
+        $this->template->styles[] = '/js/plugins/tooltipster/css/tooltipster.bundle.min.css';
+        $this->template->styles[] = '/js/plugins/tooltipster/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css';
+        $this->template->scripts[] = '/js/plugins/tooltipster/js/tooltipster.bundle.min.js';
     }
 
     /**
