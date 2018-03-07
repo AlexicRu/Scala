@@ -161,7 +161,14 @@ class Model_Report extends Model
             $params['report_type_id'] = self::REPORT_TYPE_DB_ALL;
         }
 
-        $sql = (new Builder())->select()
+        $sql = (new Builder())->select([
+            'REPORT_ID',
+            'REPORT_NAME',
+            'WEB_NAME',
+            'DESCRIPTION',
+            'REPORT_GROUP_ID',
+            'REPORT_TYPE_ID',
+        ])->distinct()
             ->from('V_WEB_REPORTS_AVAILABLE t')
             ->where("t.agent_id in (0, {$user['AGENT_ID']})")
             ->where("t.role_id in (0, {$user['role']})")
