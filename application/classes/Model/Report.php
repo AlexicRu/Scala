@@ -36,6 +36,13 @@ class Model_Report extends Model
     ];
 
     public static $formatHeaders = [
+        'xlsx' => [
+            'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition: attachment;filename=__NAME__',
+            'Cache-Control: must-revalidate',
+            'Content-Transfer-Encoding: binary',
+            'Pragma: public',
+        ],
         'xls' => [
             'Content-Type: application/vnd.ms-excel',
             'Content-Disposition: attachment;filename=__NAME__',
@@ -44,10 +51,8 @@ class Model_Report extends Model
         'pdf' => [
             'Cache-Control: must-revalidate',
             'Pragma: public',
-            'Content-Description: File Transfer',
             'Content-Disposition: attachment;filename=__NAME__',
             'Content-Transfer-Encoding: binary',
-            //'Content-Length: ' . strlen($report),
             'Content-Type: application/pdf',
         ]
     ];
