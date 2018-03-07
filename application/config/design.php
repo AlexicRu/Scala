@@ -44,6 +44,10 @@ return array(
         'title' => 'Clever Oil',
         'class' => 'cleveroil'
     ],
+    'gpnlkgloproru' => [
+        'title' => 'ГПН-КП',
+        'class' => 'gpn'
+    ],
     'pnggloproru' => [
         'title' => 'Презентация ГПН-КП',
         'class' => 'png'

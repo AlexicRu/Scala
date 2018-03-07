@@ -255,6 +255,7 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&subset=cyrillic');
 @Roboto: 'Roboto', sans-serif;
 
+.custom_view_gpn,
 .custom_view_png{
   background: @colorWhiteDark url(/img/gpn/isometric.png);
   font-family: @Roboto;
@@ -364,7 +365,7 @@
     color: @colorWhite; border-color:@colorBlueDark; background: @colorBlueDark; font-family: @Roboto; box-shadow: 0 3px 10px rgba(0,0,0,0.2); padding-top: 11px; padding-bottom: 12px; font-weight: normal;
 
     &:hover, &.btn_reverse, &.active{
-      background: @colorBlue; border-color:@colorBlue;
+      background: @colorBlue; border-color:@colorBlue; color:@colorWhite;
     }
     &:disabled{
       color:@colorWhite!important; border-color:@colorGray!important; background: @colorGray!important;

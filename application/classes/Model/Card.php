@@ -266,7 +266,6 @@ class Model_Card extends Model
 		$data = [
 			'p_contract_id' 	=> $params['contract_id'],
 			'p_card_id' 		=> $params['card_id'],
-			'p_card_type' 		=> 1, //1-EMV, 2 - PayFlex, 3 - Loyalty
 			'p_holder' 			=> empty($params['holder']) ? '' : $params['holder'],
 			'p_expire_date' 	=> !empty($params['expire_date']) ? date('m/Y', strtotime($params['expire_date'])) : '',
 			'v_action' 			=> $action,
