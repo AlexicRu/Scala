@@ -77,7 +77,11 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
                                         <nobr>
                                             <select name="limit_service" onchange="checkServices_<?=$postfix?>()" <?=(empty($editServiceSelect) ? 'disabled' : '')?>>
                                                 <?foreach($servicesList as $service){?>
-                                                    <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $restrictionService['id']){?>selected<?}?>><?=$service['FOREIGN_DESC']?></option>
+                                                    <option
+                                                            group="<?=$service['SYSTEM_SERVICE_GROUP']?>"
+                                                            value="<?=$service['SERVICE_ID']?>"
+                                                            <?if($service['SERVICE_ID'] == $restrictionService['id']){?>selected<?}?>
+                                                    ><?=$service['FOREIGN_DESC']?></option>
                                                 <?}?>
                                             </select>
 
@@ -157,7 +161,10 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
     var services_cnt_<?=$postfix?> = <?=count($servicesList)?>;
     var services_<?=$postfix?> = {
         <?foreach($servicesList as $service){?>
-        "<?=$service['SERVICE_ID']?>": "<?=$service['FOREIGN_DESC']?>",
+            "<?=$service['SERVICE_ID']?>": {
+                name: "<?=$service['FOREIGN_DESC']?>",
+                group: "<?=$service['SYSTEM_SERVICE_GROUP']?>"
+            },
         <?}?>
     };
     var limitParams_<?=$postfix?> = {
@@ -210,11 +217,16 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
             <?if ($canDelService){?>'<button class="btn btn_small btn_red btn_card_edit_del_serviсe" onclick="cardEditDelService_<?=$postfix?>($(this))">&times;</button>'+<?}?>
             '</nobr></div>');
 
+        var selectFirst = $('.form_card_edit_<?=$postfix?> [name=limit_service]:first');
+        var group = selectFirst.find('option:selected').attr('group');
         var disabled = [
-            $('.form_card_edit_<?=$postfix?> [name=limit_service]:first').val()
+            selectFirst.val()
         ];
-        $('.form_card_edit_<?=$postfix?> [name=limit_service]:first option:disabled').each(function () {
-            disabled.push($(this).attr('value'));
+        $('option', selectFirst).each(function () {
+            var t = $(this);
+            if (t.is(":disabled") || t.attr('group') != group) {
+                disabled.push($(this).attr('value'));
+            }
         });
 
         if (disabled.length == services_cnt_<?=$postfix?>) {
@@ -223,7 +235,8 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
         }
 
         for (var i in services_<?=$postfix?>) {
-            tpl.find('select').append('<option value="' + i + '" '+ (disabled.indexOf(i) != -1 ? 'disabled' : '') +'>' + services_<?=$postfix?>[i] + '</option>');
+            var service = services_<?=$postfix?>[i];
+            tpl.find('select').append('<option value="' + i + '" '+ (disabled.indexOf(i) != -1 ? 'disabled' : '') +' group="'+ service.group +'">' + service.name + '</option>');
         }
 
         if (td.find('[limit_service]').size()) {
@@ -349,12 +362,15 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
         $('[name=limit_service]', form).each(function () {
             var select = $(this);
             var selectVal = select.val();
+            var group = select.closest('td').find('[name=limit_service]:first option:selected').attr('group');
+            var cnt = select.closest('td').find('[name=limit_service]').length;
 
             select.find('option').each(function () {
                 var option = $(this);
                 var optionVal = option.attr('value');
+                var optionGroup = option.attr('group');
 
-                if (services.indexOf(optionVal) == -1 || optionVal == selectVal) {
+                if ((services.indexOf(optionVal) == -1 || optionVal == selectVal) && (optionGroup == group || cnt == 1)) {
                     option.prop('disabled', false);
                 } else {
                     option.prop('disabled', true);

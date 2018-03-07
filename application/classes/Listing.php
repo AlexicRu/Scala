@@ -2,6 +2,9 @@
 
 class Listing
 {
+    const SERVICE_GROUP_FUEL = 'Топливо';
+    const SERVICE_GROUP_WASH = 'Услуги мойки';
+
     public static $limit = 10;
 
     /**
@@ -55,6 +58,7 @@ class Listing
 
         $sql = (new Builder())->select([
                 't.SERVICE_ID',
+                't.SYSTEM_SERVICE_GROUP',
                 't.' . $description
             ])->distinct()
             ->from('V_WEB_SERVICE_LIST t')
