@@ -33,6 +33,7 @@ class Model_Transaction_Parser extends Model
     private function _prepareRows($rows, $mimeType)
     {
         switch ($mimeType) {
+            case Upload::MIME_TYPE_OFFICE:
             case Upload::MIME_TYPE_XLS:
             case Upload::MIME_TYPE_XLSX:
                 $data = self::_prepareXls($rows);
@@ -114,10 +115,9 @@ class Model_Transaction_Parser extends Model
              * Если значение запроса не определено, тогда на место договора в таблице макета выставляем надпись "Не определен", а в значение статус - "Неизвестно".
              * Если значение определено, тогда на место договора в таблице макета выставляем найденное имя договора, запомнив его ID (нужно будет в дальнейшем)
              */
-
+            $row['ORDER_DATE']      = Date::guessDate($row['ORDER_DATE']);
             $row['OPERATION']       = !empty($row['OPERATION']) ? $row['OPERATION'] : 50;
-            $row['PAYMENT_DATE']    = !empty($row['PAYMENT_DATE']) ? $row['PAYMENT_DATE'] : $row['ORDER_DATE'];
-
+            $row['PAYMENT_DATE']    = !empty($row['PAYMENT_DATE']) ? Date::guessDate($row['PAYMENT_DATE']) : $row['ORDER_DATE'];
             $row['OPERATION_NAME']  = $row['OPERATION'] == 50 ? 'Пополнение счета' : 'Списание со счета';
             $row['CAN_ADD']         = 0;
             $row['CONTRACT_NAME']   = 'Не определен';

@@ -3,6 +3,7 @@
 class Upload extends Kohana_Upload
 {
     const MIME_TYPE_XLS = 'application/vnd.ms-excel';
+    const MIME_TYPE_OFFICE = 'application/vnd.ms-office';
     const MIME_TYPE_XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
     const MIME_TYPE_TXT = 'text/plain';
 
@@ -60,6 +61,7 @@ class Upload extends Kohana_Upload
         $mimeType = mime_content_type($file);
 
         switch ($mimeType) {
+            case self::MIME_TYPE_OFFICE:
             case self::MIME_TYPE_XLS:
             case self::MIME_TYPE_XLSX:
                 $objPHPExcel = PHPExcel_IOFactory::load($file);

@@ -2,7 +2,7 @@
 
 class Date extends Kohana_Date {
 
-    public static function month_ru($month = false, $type = 1)
+    public static function monthRu($month = false, $type = 1)
     {
 		$months = array(
 			1 => 'Январь',
@@ -39,5 +39,37 @@ class Date extends Kohana_Date {
         $month = $month ?: date("n", time());
 		
         return $months[$month];
+    }
+
+    /**
+     * немного махинаций с датами, пытаемся угадать, что же нам пришло, так как excel присылает что попало
+     *
+     * @param $dateStr
+     * @param $exportFormat
+     * @return string
+     */
+    public static function guessDate($dateStr, $exportFormat = 'Y-m-d')
+    {
+        $delimiter = strpos($dateStr, '-') !== false ? '-' : (strpos($dateStr, '/') !== false ? '/' : '.');
+        $dateArr = explode($delimiter, $dateStr);
+        $format = "d{$delimiter}m{$delimiter}y";
+
+        if (count($dateArr) == 3) {
+            if (strlen($dateArr[0]) == 4) {
+                $format = "Y{$delimiter}m{$delimiter}d";
+            } else if (strlen($dateArr[2]) == 4) {
+                $format = "d{$delimiter}m{$delimiter}Y";
+            } else {
+                //y-m-d
+                $year = date('y');
+                if ($dateArr[0] == $year && $dateArr[2] != $year) {
+                    $format = "y{$delimiter}m{$delimiter}d";
+                }
+            }
+        }
+
+        $date = DateTime::createFromFormat($format, $dateStr);
+
+        return $date->format($exportFormat);
     }
 }
