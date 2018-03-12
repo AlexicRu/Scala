@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<title>404 - страница не найдена</title>
 
-	<link href="/css/style.css" rel="stylesheet">
+	<link href="/assets/css/style.css" rel="stylesheet">
 </head>
 
 <body>

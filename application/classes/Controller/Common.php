@@ -185,22 +185,22 @@ abstract class Controller_Common extends Controller_Template {
     {
         if(Auth::instance()->logged_in()) {
             $this->template->styles = [
-                '/js/plugins/jGrowl/jGrowl.css',
-                '/js/plugins/fancy/jquery.fancybox.css',
+                '/assets/js/plugins/jGrowl/jGrowl.css',
+                '/assets/js/plugins/fancy/jquery.fancybox.css',
             ];
             $this->template->scripts = [
-                '/js/plugins/jquery.2.1.3.min.js',
-                '/js/plugins/jquery-ui.1.11.2.min.js',
-                '/js/plugins/jGrowl/jGrowl.js',
-                '/js/plugins/fancy/jquery.fancybox.js',
-                '/js/ui.js',
-                '/js/common.js',
+                '/assets/js/plugins/jquery.2.1.3.min.js',
+                '/assets/js/plugins/jquery-ui.1.11.2.min.js',
+                '/assets/js/plugins/jGrowl/jGrowl.js',
+                '/assets/js/plugins/fancy/jquery.fancybox.js',
+                '/assets/js/ui.js',
+                '/assets/js/common.js',
             ];
         }else{
             $this->template->styles = [];
             $this->template->scripts = [
                 'https://www.google.com/recaptcha/api.js',
-                '/js/plugins/jquery.2.1.3.min.js',
+                '/assets/js/plugins/jquery.2.1.3.min.js',
             ];
         }
 
@@ -222,14 +222,14 @@ abstract class Controller_Common extends Controller_Template {
         if(Auth::instance()->logged_in()) {
             $this->_initTooltipster();
 
-            $this->template->styles[] = '/css/ui.css';
-            $this->template->styles[] = '/css/style.css';
-            $this->template->styles[] = '/css/design.css';
+            $this->template->styles[] = '/assets/css/ui.css';
+            $this->template->styles[] = '/assets/css/style.css';
+            $this->template->styles[] = '/assets/css/design.css';
 
-            $this->template->scripts[] = '/js/site.js';
+            $this->template->scripts[] = '/assets/js/site.js';
         }else{
-            $this->template->styles[] = '/css/style.css';
-            $this->template->styles[] = '/css/design.css';
+            $this->template->styles[] = '/assets/css/style.css';
+            $this->template->styles[] = '/assets/css/design.css';
         }
     }
 
@@ -238,12 +238,12 @@ abstract class Controller_Common extends Controller_Template {
      */
     protected function _initWYSIWYG()
     {
-        $this->template->styles[] = '/js/plugins/trumbowyg/ui/trumbowyg.min.css';
-        $this->template->styles[] = '/js/plugins/trumbowyg/plugins/colors/ui/trumbowyg.colors.min.css';
-        $this->template->scripts[] = '/js/plugins/trumbowyg/trumbowyg.min.js';
-        $this->template->scripts[] = '/js/plugins/trumbowyg/plugins/colors/trumbowyg.colors.min.js';
-        $this->template->scripts[] = '/js/plugins/trumbowyg/plugins/noembed/trumbowyg.noembed.min.js';
-        $this->template->scripts[] = '/js/plugins/trumbowyg/plugins/upload/trumbowyg.upload.min.js';
+        $this->template->styles[] = '/assets/js/plugins/trumbowyg/ui/trumbowyg.min.css';
+        $this->template->styles[] = '/assets/js/plugins/trumbowyg/plugins/colors/ui/trumbowyg.colors.min.css';
+        $this->template->scripts[] = '/assets/js/plugins/trumbowyg/trumbowyg.min.js';
+        $this->template->scripts[] = '/assets/js/plugins/trumbowyg/plugins/colors/trumbowyg.colors.min.js';
+        $this->template->scripts[] = '/assets/js/plugins/trumbowyg/plugins/noembed/trumbowyg.noembed.min.js';
+        $this->template->scripts[] = '/assets/js/plugins/trumbowyg/plugins/upload/trumbowyg.upload.min.js';
     }
 
     /**
@@ -251,8 +251,8 @@ abstract class Controller_Common extends Controller_Template {
      */
     protected function _initDropZone()
     {
-        $this->template->styles[] = '/js/plugins/dropzone/dropzone.css';
-        $this->template->scripts[] = '/js/plugins/dropzone/dropzone.5.3.0.js';
+        $this->template->styles[] = '/assets/js/plugins/dropzone/dropzone.css';
+        $this->template->scripts[] = '/assets/js/plugins/dropzone/dropzone.5.3.0.js';
     }
 
     /**
@@ -260,9 +260,9 @@ abstract class Controller_Common extends Controller_Template {
      */
     protected function _initJsGrid()
     {
-        $this->template->styles[] = '/js/plugins/jsgrid/jsgrid.min.css';
-        $this->template->styles[] = '/js/plugins/jsgrid/jsgrid-theme.min.css';
-        $this->template->scripts[] = '/js/plugins/jsgrid/jsgrid.js';
+        $this->template->styles[] = '/assets/js/plugins/jsgrid/jsgrid.min.css';
+        $this->template->styles[] = '/assets/js/plugins/jsgrid/jsgrid-theme.min.css';
+        $this->template->scripts[] = '/assets/js/plugins/jsgrid/jsgrid.js';
     }
 
     /**
@@ -278,9 +278,9 @@ abstract class Controller_Common extends Controller_Template {
      */
     protected function _initTooltipster()
     {
-        $this->template->styles[] = '/js/plugins/tooltipster/css/tooltipster.bundle.min.css';
-        $this->template->styles[] = '/js/plugins/tooltipster/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css';
-        $this->template->scripts[] = '/js/plugins/tooltipster/js/tooltipster.bundle.min.js';
+        $this->template->styles[] = '/assets/js/plugins/tooltipster/css/tooltipster.bundle.min.css';
+        $this->template->styles[] = '/assets/js/plugins/tooltipster/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css';
+        $this->template->scripts[] = '/assets/js/plugins/tooltipster/js/tooltipster.bundle.min.js';
     }
 
     /**

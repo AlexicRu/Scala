@@ -339,8 +339,8 @@ class Controller_Control extends Controller_Common {
      */
     public function action_tariffs()
     {
-        $this->scripts[] = '/js/control/tariffs.js';
-        $this->scripts[] = '/js/plugins/jquery.mask.js';
+        $this->scripts[] = '/assets/js/control/tariffs.js';
+        $this->scripts[] = '/assets/js/plugins/jquery.mask.js';
 
         $filter = $this->request->query('filter') ?: ['only_managers' => 1];
 

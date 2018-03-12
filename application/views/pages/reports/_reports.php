@@ -1,4 +1,4 @@
-<script src="/js/reports/reports.js"></script>
+<script src="/assets/js/reports/reports.js"></script>
 
 <?if(empty($reports)){?>
     <div class="error_block">Нет доступных отчетов</div>

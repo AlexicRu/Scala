@@ -1,4 +1,4 @@
-<script src="/js/suppliers/supplier_detail.js"></script>
+<script src="/assets/js/suppliers/supplier_detail.js"></script>
 
 <div class="back_link">&larr; <a href="/suppliers">Вернуться назад</a></div>
 

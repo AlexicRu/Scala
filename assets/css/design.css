@@ -2,7 +2,7 @@
 .custom_view_glopro .logo a,
 .custom_view_cleveroil .logo a,
 .custom_view_scala .logo a {
-  background-image: url(/img/GloPro-logo-pack/GloPro-main-logo.svg);
+  background-image: url(../img/GloPro-logo-pack/GloPro-main-logo.svg);
   width: 140px;
 }
 .custom_view_glopro aside,
@@ -56,11 +56,11 @@
   color: rgba(255, 255, 255, 0.5);
 }
 .custom_view_scala .logo a {
-  background-image: url(/img/logo.svg);
+  background-image: url(../img/logo.svg);
 }
 .custom_view_oilst .logo a,
 .custom_view_modulcard .logo a {
-  background-image: url(/img/projects/logo_modul_b.png);
+  background-image: url(../img/projects/logo_modul_b.png);
 }
 .custom_view_oilst aside,
 .custom_view_modulcard aside {
@@ -105,15 +105,8 @@
 .custom_view_modulcard .sub_menu_items a.act {
   color: white;
 }
-/*.custom_view_modulcard{
-  .logo{
-    a{
-      background-image: url(/img/projects/logo_white_mini.png);
-    }
-  }
-}*/
 .custom_view_mo47 .logo a {
-  background-image: url(/img/projects/mo47.png);
+  background-image: url(../img/projects/mo47.png);
 }
 .custom_view_mo47 aside {
   background: #ddd;
@@ -140,7 +133,7 @@
   color: rgba(255, 255, 255, 0.5);
 }
 .custom_view_vegix .logo a {
-  background-image: url(/img/projects/vegix.png);
+  background-image: url(../img/projects/vegix.png);
 }
 .custom_view_vegix aside {
   background: #fff;
@@ -171,7 +164,7 @@
   color: #f90e24;
 }
 .custom_view_piteroil .logo a {
-  background-image: url(/img/projects/piter.jpg);
+  background-image: url(../img/projects/piter.jpg);
 }
 .custom_view_piteroil aside {
   background: #f7d463;
@@ -211,7 +204,7 @@
   background: #320a09;
 }
 .custom_view_interoil .logo a {
-  background-image: url(/img/projects/interoil.png);
+  background-image: url(../img/projects/interoil.png);
 }
 .custom_view_interoil aside {
   background: #fffbf5;
@@ -242,7 +235,7 @@
   color: #af4821;
 }
 .custom_view_neftregion .logo a {
-  background-image: url(/img/projects/parlamentk.png);
+  background-image: url(../img/projects/parlamentk.png);
 }
 .custom_view_neftregion aside {
   background: #0e1d29;
@@ -269,7 +262,7 @@
   color: rgba(255, 255, 255, 0.5);
 }
 .custom_view_alberit .logo a {
-  background-image: url(/img/projects/alberit.png);
+  background-image: url(../img/projects/alberit.png);
 }
 .custom_view_alberit aside {
   background: #292929;
@@ -300,11 +293,11 @@
   color: rgba(255, 255, 255, 0.5);
 }
 .custom_view_cleveroil .logo a {
-  background-image: url(/img/projects/LogoClever.jpg);
+  background-image: url(../img/projects/LogoClever.jpg);
 }
 .custom_view_gpn,
 .custom_view_png {
-  background: #e2e2e3 url(/img/gpn/isometric.png);
+  background: #e2e2e3 url(../img/gpn/isometric.png);
   font-family: 'Roboto', sans-serif;
   color: #1e1e1e;
 }
@@ -376,7 +369,7 @@
 }
 .custom_view_gpn .logo a,
 .custom_view_png .logo a {
-  background-image: url(/img/gpn/gpn-logo.png);
+  background-image: url(../img/gpn/gpn-logo.png);
   width: 140px;
   height: 50px;
 }

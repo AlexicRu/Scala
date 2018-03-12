@@ -981,10 +981,10 @@ textarea {
 }
 .block_loading {
   min-height: 200px;
-  background: #ededed url(/img/load.gif) no-repeat center center;
+  background: #ededed url(../img/load.gif) no-repeat center center;
 }
 .icon-loading {
-  background: transparent url(/img/load.gif) no-repeat center center;
+  background: transparent url(../img/load.gif) no-repeat center center;
   display: inline-block;
   vertical-align: middle;
   width: 20px;
@@ -1501,7 +1501,7 @@ fieldset {
   margin-left: -110px;
   width: 80px;
   height: 80px;
-  background: url(/img/GloPro-logo-pack/GloPro-main-logo.svg) no-repeat center;
+  background: url(../img/GloPro-logo-pack/GloPro-main-logo.svg) no-repeat center;
   background-size: contain;
   display: inline-block;
 }
