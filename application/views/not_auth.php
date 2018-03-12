@@ -41,12 +41,15 @@
                         $config = Kohana::$config->load('config');
                         ?>
 
+                        <?/*?>
                         <button
                                 class="g-recaptcha btn"
                                 data-sitekey="<?=$config['recaptcha_public']?>"
                                 data-callback="onSubmit">
                             Войти
                         </button>
+                        <?*/?>
+                        <button class="btn">Войти</button>
 					</form>
 				</div>
 
