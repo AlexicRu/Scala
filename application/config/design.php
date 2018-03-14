@@ -52,4 +52,8 @@ return array(
         'title' => 'Презентация ГПН-КП',
         'class' => 'png'
     ],
+    'dealergpncardcom' => [
+        'title' => 'ГПН-КП',
+        'class' => 'png'
+    ],
 );

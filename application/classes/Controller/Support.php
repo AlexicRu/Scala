@@ -30,7 +30,9 @@ class Controller_Support extends Controller_Common {
         $text = $this->request->post('text');
         $files = $this->request->post('files');
 
-        $subject = 'Сообщение из ЛК - Тема: ' . $subject;
+        $user = User::current();
+
+        $subject = 'ЛК [Agent '. $user['AGENT_ID'] .' - '. $user['LOGIN'] .'] ' . $subject;
         $description = 'Email: ' . $email . "\n\n" . $text;
 
         $result = (new Redmine())->createIssue($subject, $description, (array)$files);

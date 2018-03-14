@@ -22,5 +22,7 @@ return [
         '.*\.alberit\.ru',
         'cleveroil\.ru',
         '.*\.cleveroil\.ru',
+        'gpn-card\.com',
+        '.*\.gpn-card\.com',
     ],
 ];
