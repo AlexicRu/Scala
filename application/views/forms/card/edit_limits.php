@@ -2,49 +2,51 @@
 $postfix = $card['CARD_ID'];
 $systemId = $card['SYSTEM_ID'];
 
-$canDelService = true;
-$canAddService = true;
-$canDelLimit = true;
-$canAddLimit = true;
-$canSave = true;
-$editSelect = true;
-$editServiceSelect = true;
-$cntServiceForLimit = 1;
-$cntServiceForFirstLimit = 1;
-$limitParams = Model_Card::$cardLimitsParams;
-$limitTypes = Model_Card::$cardLimitsTypes;
-$cntTypes = false;
+$canDelService              = true;
+$canAddService              = true;
+$canDelLimit                = true;
+$canAddLimit                = true;
+$canSave                    = true;
+$editSelect                 = true;
+$editServiceSelect          = true;
+$cntServiceForLimit         = 1;
+$cntServiceForFirstLimit    = 1;
+$limitParams                = Model_Card::$cardLimitsParams;
+$limitTypes                 = Model_Card::$cardLimitsTypes;
+$cntTypes                   = false;
+$canUseFloat                = true;
 
 switch ($systemId) {
     case 1:
-        $canDelService = false;
-        $canAddService = false;
-        $canDelLimit = false;
-        $canAddLimit = false;
-        $canSave = false;
+        $canDelService  = false;
+        $canAddService  = false;
+        $canDelLimit    = false;
+        $canAddLimit    = false;
+        $canSave        = false;
         break;
     case 2:
         break;
     case 3:
-        $canDelLimit = false;
-        $canAddLimit = false;
-        $canDelService = false;
-        $canAddService = false;
-        $editSelect = false;
-        $editServiceSelect = false;
+        $canDelLimit        = false;
+        $canAddLimit        = false;
+        $canDelService      = false;
+        $canAddService      = false;
+        $editSelect         = false;
+        $editServiceSelect  = false;
         break;
     case 4:
-        $canDelService = false;
-        $canAddService = false;
-        $canDelLimit = false;
-        $canAddLimit = false;
-        $canSave = false;
+        $canDelService  = false;
+        $canAddService  = false;
+        $canDelLimit    = false;
+        $canAddLimit    = false;
+        $canSave        = false;
         break;
     case 5:
         $cntServiceForFirstLimit = 999;
-        $limitTypes = Model_Card::$cardLimitsTypesFull;
-        $cntTypes = true;
-        $editSelect = false;
+        $limitTypes     = Model_Card::$cardLimitsTypesFull;
+        $cntTypes       = true;
+        $editSelect     = false;
+        $canUseFloat    = false;
         break;
     case 6:
         $cntServiceForLimit = 999;
@@ -103,7 +105,11 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
                                 </div>
                             </td>
                             <td class="v_top">
-                                <input type="text" name="limit_value" value="<?=$restriction['LIMIT_VALUE']?>" placeholder="Объем / сумма" class="input_mini">
+                                <?if ($canUseFloat) {?>
+                                    <input type="text" name="limit_value" value="<?=$restriction['LIMIT_VALUE']?>" placeholder="Объем / сумма" class="input_mini">
+                                <?}else{?>
+                                    <input type="number" name="limit_value" value="<?=$restriction['LIMIT_VALUE']?>" placeholder="Объем / сумма" class="input_mini" onkeypress="$(this).val(parseInt($(this).val()))">
+                                <?}?>
                             </td>
                             <td class="v_top">
                                 <select name="unit_type" <?=(empty($editSelect) ? 'disabled' : '')?>>
