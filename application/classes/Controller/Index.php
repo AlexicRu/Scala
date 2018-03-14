@@ -110,4 +110,26 @@ class Controller_Index extends Controller_Common {
 
         $this->showXls('export', $rows, $headers);
     }
+
+    /**
+     * скачиваем файл с проверками
+     */
+    public function action_file()
+    {
+        $file = $this->request->param('file');
+
+        if (!Access::file($file)) {
+            throw new HTTP_Exception_403();
+        }
+
+        $path = $_SERVER['DOCUMENT_ROOT'];
+        $directory = DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
+
+        if (!file_exists($path . $directory . $file)) {
+            throw new HTTP_Exception_404();
+        }
+
+        header("X-Accel-Redirect: " . $directory . $file);
+        die;
+    }
 } // End Welcome

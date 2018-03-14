@@ -249,7 +249,6 @@ class Oracle{
 			return self::CODE_ERROR;
 		}
 
-		//если роль КЛИЕНТ, то процедуры (add|edit) выполнять нельзя
         $user = User::current();
 
 		if (Access::checkReadOnly($procedure, $user['role'])) {

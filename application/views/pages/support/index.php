@@ -10,7 +10,7 @@
         </div>
         <div tab_content="documents" class="tab_content">
             <b>Инструкции:</b><br><br>
-            <span class="f20">Инструкция по работе с ЛК системы</span> &nbsp; <a href="/assets/files/Инструкция_по_работе_с_ЛК_системы.docx" class="btn btn_small"><i class="icon-download icon"></i> Скачать</a>
+            <span class="f20">Инструкция по работе с ЛК системы</span> &nbsp; <a href="/file/Инструкция_по_работе_с_ЛК_системы_Администратор.docx" class="btn btn_small"><i class="icon-download icon"></i> Скачать</a>
         </div>
     </div>
 </div>

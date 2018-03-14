@@ -67,7 +67,7 @@ class Access
             return true;
         }
 
-        if(Kohana::$environment == Kohana::DEVELOPMENT && $user['MANAGER_ID'] == 7) return true;
+        if(!Common::isProd() && $user['MANAGER_ID'] == 7) return true;
 
         $access = Kohana::$config->load('access')->as_array();
 
@@ -98,6 +98,36 @@ class Access
         }
 
         return true;
+    }
+
+    /**
+     * функция проверки доступа к скачиванию файлов
+     * по умолчанию запрет
+     */
+    public static function file($file)
+    {
+        if(empty($file)){
+            return false;
+        }
+
+        $user = User::current();
+
+        if(!Common::isProd() && $user['MANAGER_ID'] == 7) return true;
+
+        $access = Kohana::$config->load('access')['files'];
+
+        if(
+            // если задано разрешение и есть роль/агент/юзер, то можно
+            isset($access[$file]) && (
+                    in_array($user['role'], $access[$file]) ||
+                    in_array('u_'.$user['MANAGER_ID'], $access[$file]) ||
+                    in_array('a_'.$user['AGENT_ID'], $access[$file])
+                )
+        ){
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -157,7 +187,7 @@ class Access
     }
 
     /**
-     * проверка доступа к процедуре процедуры
+     * проверка доступа к процедуре
      *
      * @param $procedure
      * @param $role

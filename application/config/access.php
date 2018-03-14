@@ -286,6 +286,9 @@ return [
             Access::ROLE_CLIENT
         ]
     ],
+    /*
+     * данные роли имеют доступ только на чтение, но указанные процедуры выполнять можно
+     */
     'skip_readonly' => [
         Access::ROLE_CLIENT => [
             'auth_user',
@@ -302,6 +305,11 @@ return [
             'notification_change_status',
             'ctrl_manager_change_password',
             'ctrl_manager_edit',
+        ]
+    ],
+    'files' => [
+        'Инструкция_по_работе_с_ЛК_системы_Администратор.docx' => [
+            Access::ROLE_ADMIN
         ]
     ]
 ];

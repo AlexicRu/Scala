@@ -168,11 +168,18 @@ Cache::$default = 'memcache';
  * defaults for the URI.
  */
 
+Route::set('file', 'file/<file>', array('file' => '.+'))
+    ->defaults(array(
+        'controller' => 'index',
+        'action'     => 'file',
+    ));
+
 Route::set('suppliers', 'suppliers/<id>', array('id' => '[\d]+'))
     ->defaults(array(
         'controller' => 'suppliers',
         'action'     => 'supplier-detail',
     ));
+
 Route::set('news', 'news/<id>', array('id' => '[\d]+'))
     ->defaults(array(
         'controller' => 'news',
