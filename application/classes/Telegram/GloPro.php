@@ -1,60 +1,53 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class TelegramParser
+class Telegram_GloPro extends Telegram_Common
 {
-    private $_cache;
-    private $_config;
-    private $_params;
-    private $_command;
-    private $_postData;
-    private $_telegramUser;
-    private $_chatId;
+    protected $_bot = 'GloPro';
 
-    private $_debug = false;
-    private $_cacheKey = 'telegram_auth_';
-    private $_cacheTime = 60*60*24; //на день
-    private $_answer = [];
+    protected $_cache;
 
-    private $_commandsWithoutAuth = [
+    protected $_cacheKey = 'telegram_glopro_auth_';
+    protected $_cacheTime = 60*60*24; //на день
+
+    protected $_commandsWithoutAuth = [
+        '/start',
         '/help',
         'login',
         'logout',
     ];
 
-    public function __construct($postData)
+    /**
+     * функция инициализации
+     *
+     * @param $postData
+     * @throws Cache_Exception
+     */
+    public function init($postData)
     {
-        $this->_telegramUser = !empty($postData['message']['from']['username']) ? $postData['message']['from']['username'] : '';
+        parent::init($postData);
+
         $this->_cacheKey .= $this->_telegramUser;
 
-        $this->_chatId = !empty($postData['message']['chat']['id']) ? $postData['message']['chat']['id'] : false;
-
         $this->_cache = Cache::instance();
+    }
 
-        $this->_config = Kohana::$config->load('config');
-
+    /**
+     * общая функция обработки
+     */
+    public function parse()
+    {
         //разбираем пришедшие запросы
         if (!empty($postData['message']['text'])) {
 
             $data = explode(' ', strtolower($postData['message']['text']));
 
-            $this->_postData = $postData;
             $this->_command = array_shift($data);
             $this->_params = !empty($data) ? $data : [];
         } else if(!empty($postData['message']['contact'])) {
 
         }
-    }
 
-    /**
-     * установим режим тестирования
-     */
-    public function debug()
-    {
-        $this->_debug = true;
-
-        $this->_answer[] = '<b>command:</b> ' . $this->_command;
-        $this->_answer[] = '<b>params:</b> ' . (empty($this->_params) ? 'empty' : print_r($this->_params, 1));
-        $this->_answer[] = '<b>debug:</b> ' . print_r($this->_postData, 1);
+        $this->execute();
     }
 
     /**
@@ -78,6 +71,7 @@ class TelegramParser
             }
 
             switch ($this->_command) {
+                case '/start':
                 case '/help':
                     $this->_buildHelpAnswer();
                     break;
@@ -97,19 +91,9 @@ class TelegramParser
     }
 
     /**
-     * возвращаем ответ
-     *
-     * @return string
-     */
-    public function getResponse()
-    {
-        return implode(PHP_EOL, $this->_answer);
-    }
-
-    /**
      * проверяем авторизовался ли пользователь
      */
-    private function _checkAuth()
+    protected function _checkAuth()
     {
         $user = $this->_cache->get($this->_cacheKey);
 
@@ -135,7 +119,7 @@ class TelegramParser
     /**
      * авторизация
      */
-    private function _commandLogin()
+    protected function _commandLogin()
     {
         $login = !empty($this->_params[0]) ? $this->_params[0] : false;
         $password = !empty($this->_params[1]) ? $this->_params[1] : false;
@@ -145,7 +129,7 @@ class TelegramParser
         }
 
         if (Auth::instance()->login($login, $password, FALSE)) {
-            $value = $login.md5($this->_config['cookie_salt']).Auth::instance()->hash($password);
+            $value = $login . md5($this->_config['cookie_salt']) . Auth::instance()->hash($password);
 
             $this->_cache->set($this->_cacheKey, $value, $this->_cacheTime);
 
@@ -158,7 +142,7 @@ class TelegramParser
     /**
      * выход
      */
-    private function _commandLogout()
+    protected function _commandLogout()
     {
         if ($this->_cache->delete($this->_cacheKey)) {
             $this->_answer[] = 'Разлогинивание прошло успешно';
@@ -170,21 +154,26 @@ class TelegramParser
     /**
      * создает ответ для /help
      */
-    private function _buildHelpAnswer()
+    protected function _buildHelpAnswer()
     {
-        $this->_answer[] = '<i>Доступные команды:</i>';
-        $this->_answer[] = '<b>/help</b> - вывод помощи';
+        parent::_buildHelpAnswer();
+
         $this->_answer[] = '<b>login</b> <i>login</i> <i>password</i> - авторизация на сутки';
         $this->_answer[] = '<b>logout</b> - разлогинивание';
     }
 
     /**
-     * возвращаем идентификатор чата
+     * возвращаем ответ
      *
-     * @return bool
+     * @return string
      */
-    public function getChatId()
+    public function getAnswer()
     {
-        return $this->_chatId;
+        if ($this->_debug) {
+            $this->_answer[] = '<b>command:</b> ' . $this->_command;
+            $this->_answer[] = '<b>params:</b> ' . (empty($this->_params) ? 'empty' : print_r($this->_params, 1));
+        }
+
+        return parent::getAnswer();
     }
 }

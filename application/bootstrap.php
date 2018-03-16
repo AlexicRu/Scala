@@ -168,6 +168,12 @@ Cache::$default = 'memcache';
  * defaults for the URI.
  */
 
+Route::set('telegram', 'telegram/<bot>(/<action>)')
+    ->defaults(array(
+        'controller' => 'telegram',
+        'action'     => 'index',
+    ));
+
 Route::set('file', 'file/<file>', array('file' => '.+'))
     ->defaults(array(
         'controller' => 'index',

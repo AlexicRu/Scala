@@ -116,7 +116,7 @@ function renderDatePicker(elem)
 
     var options = {
         dateFormat: "dd.mm.yy",
-        buttonImage: "/img/icon_calendar.png",
+        buttonImage: "/assets/img/icon_calendar.png",
         showOn: "button",
         buttonImageOnly: true,
         changeMonth:true,

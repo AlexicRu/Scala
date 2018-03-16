@@ -1,24 +1,18 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-use \Longman\TelegramBot\Request as TelegramRequest;
-use \Longman\TelegramBot\Entities\KeyboardButton;
-
 class Controller_Telegram extends Controller_Template
 {
-    private $_config;
-
     /**
-     * @var \Longman\TelegramBot\Telegram
+     * @var Telegram_Common
      */
-    private $_telegram;
+    private $_bot;
 
     public function before()
     {
         $this->auto_render = false;
+        $bot = $this->request->param('bot');
 
-        $this->_config = Kohana::$config->load('config');
-
-        $this->_telegram = new \Longman\TelegramBot\Telegram($this->_config['telegram_token'], $this->_config['telegram_bot']);
+        $this->_bot = Telegram_Common::factory($bot);
     }
 
     /**
@@ -28,32 +22,11 @@ class Controller_Telegram extends Controller_Template
     {
         $postData = json_decode(file_get_contents("php://input"), true);
 
-        $telegramParser = new TelegramParser($postData);
-        //$telegramParser->debug();
-        $telegramParser->execute();
+        $this->_bot->init($postData);
 
-        $response = $telegramParser->getResponse();
+        $this->_bot->parse();
 
-        $data = [
-            'parse_mode' => 'HTML',
-            'chat_id' => $telegramParser->getChatId(),
-            'text' => $response,
-        ];
-
-        if (!empty($postData['message']['contact'])) {
-            $data['reply_markup'] = ['remove_keyboard' => true];
-        } else {
-            $data['reply_markup'] = [
-                'keyboard' => [
-                    [
-                        (new KeyboardButton('Отправить контакт'))->setRequestContact(true)
-                    ]
-                ],
-                'resize_keyboard' => true
-            ];
-        }
-
-        TelegramRequest::sendMessage($data);
+        $this->_bot->answer();
     }
 
     /**
@@ -61,23 +34,17 @@ class Controller_Telegram extends Controller_Template
      */
     public function action_setWebhook()
     {
-        $result = $this->_telegram->setWebhook('https://dev.lk.glopro.ru' . $this->_config['telegram_web_hook']);
-
-        if ($result->isOk()) {
-            echo $result->getDescription();
-        }
-        die;
+        $this->_bot->setWebHook();
     }
 
     /**
      * проверка состояния webhook
      */
-    public function action_check()
+    public function action_checkWebhook()
     {
-        $result = TelegramRequest::getWebhookInfo();
+        $result = $this->_bot->checkWebHook();
 
         echo '<pre>';
         print_r($result);
-        die;
     }
 }
