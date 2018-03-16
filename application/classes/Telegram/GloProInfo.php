@@ -17,16 +17,12 @@ class Telegram_GloProInfo extends Telegram_Common
             $this->_command = array_shift($data);
             $this->_params = !empty($data) ? $data : [];
         } else if (!empty($this->_postData['message']['contact'])) {
-            //связываем аккаунт
             $phone = $this->_postData['message']['contact']['phone_number'];
 
-            $res = Oracle::init()->procedure('ctrl_manager_telegram_access', [
-                'p_phone_number'       => $phone,
-                'p_telegram_chat_id'   => $this->_chatId,
-                'p_error_code'         => 'out',
-            ]);
+            //связываем аккаунт
+            $res = Model_Manager::connectToTelegram($phone, $this->_chatId);
 
-            if ($res == Oracle::CODE_SUCCESS) {
+            if (!empty($res)) {
                 $this->_answer[] = 'Доступ получен';
             } else {
                 $this->_answer[] = 'Ошибка получения доступа';

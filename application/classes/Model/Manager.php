@@ -458,4 +458,29 @@ class Model_Manager extends Model
 
         return Oracle::init()->tree($sql, 'CLIENT_ID', false, 'CONTRACT_ID');
     }
+
+    /**
+     * связываем менеджера и чат в телеграме
+     *
+     * @param $phone
+     * @param $chatId
+     * @return bool
+     */
+    public static function connectToTelegram($phone, $chatId)
+    {
+        if (empty($phone) || empty($chatId)) {
+            return false;
+        }
+
+        $res = Oracle::init()->procedure('ctrl_manager_telegram_access', [
+            'p_phone_number'       => $phone,
+            'p_telegram_chat_id'   => $chatId,
+            'p_error_code'         => 'out',
+        ]);
+
+        if ($res == Oracle::CODE_SUCCESS) {
+            return true;
+        }
+        return false;
+    }
 }
