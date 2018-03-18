@@ -99,10 +99,6 @@ class Listing
      */
     public static function getCards($search, $ids = [])
     {
-        if(empty($search) && empty($ids)){
-            return false;
-        }
-
         $db = Oracle::init();
 
         $user = Auth::instance()->get_user();

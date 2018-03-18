@@ -89,6 +89,10 @@
 
         window.location.href = '/clients/add-bill?' + $.param(params);
         $.fancybox.close();
+
+        setTimeout(function () {
+            paginationAjaxRefresh('ajax_block_client_bills_list');
+        }, 1000);
     }
 
     function calcRowSumm(item)

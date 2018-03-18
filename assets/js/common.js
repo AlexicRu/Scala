@@ -149,12 +149,22 @@ function renderScroll(elem)
     }, 500);
 }
 
+function paginationAjaxRefresh(name)
+{
+    var outer = $('.' + name + '_out');
+    var block = $('.' + name);
+    outer.data('offset', 0);
+    block.empty();
+
+    outer.find('.ajax_block_more .ajax_block_load').click();
+}
+
 function paginationAjax(url, name, callback, params)
 {
     var outer = $('.' + name + '_out');
     var block = $('<div class="' + name + '" />');
     var btnBlock = $('<div class="ajax_block_more" />');
-    var more = $('<button class="btn btn_small">Загрузить еще...</button>');
+    var more = $('<button class="btn btn_small ajax_block_load">Загрузить еще...</button>');
     var all = $('<button class="btn btn_small">Загрузить все</button>');
 
     outer.addClass('ajax_pagination_out');
@@ -171,9 +181,11 @@ function paginationAjax(url, name, callback, params)
     outer.data('offset', 0);
 
     _paginationAjaxLoad(url, outer, block, callback, params);
+
     more.on('click', function(){
         _paginationAjaxLoad(url, outer, block, callback, params);
     });
+
     all.on('click', function(){
         params.show_all = true;
         _paginationAjaxLoad(url, outer, block, callback, params);
