@@ -1,4 +1,3 @@
-<?/*Common::addJs('clients/client.js');*/?>
 <script src="/assets/build/js/clients/client.js"></script>
 
 <div class="back_link">&larr; <a href="/clients">Вернуться назад</a></div>
