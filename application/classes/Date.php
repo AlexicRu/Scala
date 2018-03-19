@@ -50,6 +50,9 @@ class Date extends Kohana_Date {
      */
     public static function guessDate($dateStr, $exportFormat = 'Y-m-d')
     {
+        $dateTimeArr = explode(' ', $dateStr);
+        $dateStr = array_shift($dateTimeArr);
+
         $delimiter = strpos($dateStr, '-') !== false ? '-' : (strpos($dateStr, '/') !== false ? '/' : '.');
         $dateArr = explode($delimiter, $dateStr);
         $format = "d{$delimiter}m{$delimiter}y";

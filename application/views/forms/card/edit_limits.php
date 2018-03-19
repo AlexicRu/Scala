@@ -1,6 +1,6 @@
 <?
 $postfix = $card['CARD_ID'];
-$systemId = 5;//$card['SYSTEM_ID'];
+$systemId = $card['SYSTEM_ID'];
 
 $canDelService              = true;
 $canAddService              = true;
