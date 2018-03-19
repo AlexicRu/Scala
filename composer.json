@@ -3,7 +3,7 @@
     "longman/telegram-bot": "v0.44.1",
     "sentry/sentry": "v1.7.*",
     "jaspersoft/rest-client": "v2.0.0",
-    "phpoffice/phpexcel": "v1.8.1",
-    "kbsali/redmine-api": "~1.0"
+    "kbsali/redmine-api": "~1.0",
+    "phpoffice/phpspreadsheet": "^1.2"
   }
 }

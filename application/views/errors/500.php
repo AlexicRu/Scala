@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<title>500 - ошибка сервера</title>
 
-	<link href="/assets/css/style.css" rel="stylesheet">
+	<link href="/assets/build/css/style.css" rel="stylesheet">
 </head>
 
 <body>

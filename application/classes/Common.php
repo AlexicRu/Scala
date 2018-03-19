@@ -149,4 +149,28 @@ class Common
 
         return $salt;
     }
+
+    /**
+     * добавляем js для подключения в шапку
+     *
+     * @param $file
+     */
+    public static function addJs($file)
+    {
+        $js = (array)(new View())->js;
+
+        View::set_global('js', array_merge($js, ['/assets/build/js/' + $file]));
+    }
+
+    /**
+     * добавляем css для подключения в шапку
+     *
+     * @param $file
+     */
+    public static function addCss($file)
+    {
+        $css = (array)(new View())->css;
+
+        View::set_global('css', array_merge($css, ['/assets/build/css/' + $file]));
+    }
 }

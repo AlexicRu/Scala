@@ -7,7 +7,7 @@ class PHPToExcel
 
     public function __construct()
     {
-        $this->_phpExcel = new PHPExcel();
+        $this->_phpExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
     }
 
     public function dispay($filename = 'file', $data = array(), $headers = array())
@@ -22,7 +22,7 @@ class PHPToExcel
             $this->addSheet($data, $headers);
         }
 
-        $objWriter = PHPExcel_IOFactory::createWriter($this->_phpExcel, 'Excel5');
+        $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($this->_phpExcel, 'Excel5');
         $objWriter->save('php://output');
         $fileContent = ob_get_contents();
         ob_clean();

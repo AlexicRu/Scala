@@ -1,4 +1,5 @@
-<script src="/assets/js/suppliers/supplier_detail.js"></script>
+<?/*Common::addJs('suppliers/supplier_detail.js');*/?>
+<script src="/assets/build/js/suppliers/supplier_detail.js"></script>
 
 <div class="back_link">&larr; <a href="/suppliers">Вернуться назад</a></div>
 

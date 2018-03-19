@@ -112,6 +112,10 @@ class Access
 
         $user = User::current();
 
+        if(in_array($user['role'], [self::ROLE_ROOT])){
+            return true;
+        }
+
         if(!Common::isProd() && $user['MANAGER_ID'] == 7) return true;
 
         $access = Kohana::$config->load('access')['files'];

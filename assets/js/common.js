@@ -1,5 +1,9 @@
 var CLASS_LOADING = 'block_loading';
 
+if (typeof Dropzone == 'function') {
+    Dropzone.autoDiscover = false;
+}
+
 $(function() {
     $('.message_close').on('click', function () {
         var t = $(this);

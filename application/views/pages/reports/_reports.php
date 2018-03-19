@@ -1,4 +1,4 @@
-<script src="/assets/js/reports/reports.js"></script>
+<?Common::addJs('reports/reports.js');?>
 
 <?if(empty($reports)){?>
     <div class="error_block">Нет доступных отчетов</div>

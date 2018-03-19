@@ -64,7 +64,7 @@ class Upload extends Kohana_Upload
             case self::MIME_TYPE_OFFICE:
             case self::MIME_TYPE_XLS:
             case self::MIME_TYPE_XLSX:
-                $objPHPExcel = PHPExcel_IOFactory::load($file);
+                $objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load($file);
 
                 foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
                     $data = $worksheet->toArray();
