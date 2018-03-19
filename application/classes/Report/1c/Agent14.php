@@ -3,7 +3,7 @@
 /**
  * OptTrade BP
  */
-class Report_1c_Common_Agent14 extends Report_1c_Common
+class Report_1c_Agent14 extends Report_1c_Common
 {
     protected static $_agentId = 14;
 }

@@ -11,7 +11,7 @@ abstract class Report_1c_Common
      */
     public static function factory($company)
     {
-        $className = 'Report_1c_Common_Agent' . ucfirst($company);
+        $className = 'Report_1c_Agent' . ucfirst($company);
 
         if (!class_exists($className)) {
             throw new HTTP_Exception_500('Wrong report company');

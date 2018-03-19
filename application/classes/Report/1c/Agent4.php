@@ -3,7 +3,7 @@
 /**
  * Piter
  */
-class Report_1c_Common_Agent4 extends Report_1c_Common
+class Report_1c_Agent4 extends Report_1c_Common
 {
     protected static $_agentId = 4;
 }

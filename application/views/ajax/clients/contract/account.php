@@ -13,7 +13,7 @@
     <div class="col line_inner">
         <?if(Access::allow('view_contract_balances')){?>
             <?if(Access::allow('clients-contract-limits-edit')){?>
-                <div class="fr"><a href="#contract_limits_edit" class="fancy btn btn_green btn_icon"><i class="icon-pen"></i></a></div>
+                <div class="fr"><a href="#contract_limits_edit" class="fancy btn btn_green btn_icon btn_small"><i class="icon-pen"></i></a></div>
             <?}?>
 
             <b class="f18">Остатки по договору:</b>

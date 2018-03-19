@@ -3,7 +3,7 @@
 /**
  * Parlament
  */
-class Report_1c_Common_Agent6 extends Report_1c_Common
+class Report_1c_Agent6 extends Report_1c_Common
 {
     protected static $_agentId = 6;
 }

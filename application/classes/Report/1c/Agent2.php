@@ -3,7 +3,7 @@
 /**
  * Modul
  */
-class Report_1c_Common_Agent2 extends Report_1c_Common
+class Report_1c_Agent2 extends Report_1c_Common
 {
     protected static $_agentId = 2;
 
