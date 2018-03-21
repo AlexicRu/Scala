@@ -26,7 +26,7 @@
                 $.fancybox.update();
             }, 100);
 
-            var groupId = $('.tabs_group_dots .tab_v.active [name=group_id]').val();
+            var groupId = $('.tabs_dots_groups .tab_v.active [name=group_id]').val();
 
             $.post('/control/show-dots', { postfix: 'popup_list', show_checkbox:1, group_id:groupId }, function (data) {
                 block.removeClass('block_loading');
@@ -37,7 +37,7 @@
 
         $('.btn_add_dots_to_group_go').on('click', function () {
             var block = $('.popup_list');
-            var groupId = $('.tabs_group_dots .tab_v.active [name=group_id]').val();
+            var groupId = $('.tabs_dots_groups .tab_v.active [name=group_id]').val();
             var posIds = [];
 
             $('[name=pos_id]:checked', block).each(function () {
@@ -53,7 +53,7 @@
                 if(data.success){
                     message(1, 'Точки успешно добавлены');
 
-                    var tab = $('.tabs_group_dots .tab_v.active');
+                    var tab = $('.tabs_dots_groups .tab_v.active');
 
                     loadGroupDots(tab, true);
                 }  else {

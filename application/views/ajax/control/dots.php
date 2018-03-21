@@ -107,10 +107,10 @@
             renderCheckbox(tpl.find('.td_check [type=checkbox]'));
         }
 
-        if($('.tabs_group_dots .action_del', block).is(':visible')){
+        if($('.tabs_dots_groups .action_del', block).is(':visible')){
             $('.td_edit', block).show();
         }
-        if($('.tabs_group_dots .action_del', block).is(':visible') || $('[name=show_dots_<?=$postfix?>]').length){
+        if($('.tabs_dots_groups .action_del', block).is(':visible') || $('[name=show_dots_<?=$postfix?>]').length){
             $('.td_check', block).show();
         }
     }

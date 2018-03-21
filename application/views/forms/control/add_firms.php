@@ -1,9 +1,9 @@
 <div class="popup_list_preview">
-    <span class="btn btn_green">Загрузить точки</span>
+    <span class="btn btn_green">Загрузить фирмы</span>
 </div>
 <div class="popup_list"></div>
 <div class="popup_list_btns">
-    <span class="btn btn_reverse btn_add_dots_to_group_go">+ Добавить точки</span>
+    <span class="btn btn_reverse btn_add_firms_to_group_go">+ Добавить фирмы</span>
     <span class="btn btn_red pre_fancy_close">Отмена</span>
 </div>
 
@@ -26,18 +26,18 @@
                 $.fancybox.update();
             }, 100);
 
-            var groupId = $('.tabs_group_dots .tab_v.active [name=group_id]').val();
+            var groupId = $('.tabs_firms_groups .tab_v.active [name=group_id]').val();
 
-            $.post('/control/show-dots', { postfix: 'popup_list', show_checkbox:1, group_id:groupId }, function (data) {
+            $.post('/control/show-firms', { postfix: 'popup_list', show_checkbox:1, group_id:groupId }, function (data) {
                 block.removeClass('block_loading');
 
                 block.html(data);
             });
         });
 
-        $('.btn_add_dots_to_group_go').on('click', function () {
+        $('.btn_add_firms_to_group_go').on('click', function () {
             var block = $('.popup_list');
-            var groupId = $('.tabs_group_dots .tab_v.active [name=group_id]').val();
+            var groupId = $('.tabs_firms_groups .tab_v.active [name=group_id]').val();
             var posIds = [];
 
             $('[name=pos_id]:checked', block).each(function () {
@@ -45,19 +45,19 @@
             });
 
             if(posIds.length == 0){
-                message(0, 'Не выбрано ни одной точки');
+                message(0, 'Не выбрано ни одной фирмы');
                 return false;
             }
 
-            $.post('/control/add-dots-to-group', {pos_ids:posIds, group_id:groupId}, function (data) {
+            $.post('/control/add-firms-to-group', {pos_ids:posIds, group_id:groupId}, function (data) {
                 if(data.success){
-                    message(1, 'Точки успешно добавлены');
+                    message(1, 'Фирмы успешно добавлены');
 
-                    var tab = $('.tabs_group_dots .tab_v.active');
+                    var tab = $('.tabs_firms_groups .tab_v.active');
 
-                    loadGroupDots(tab, true);
+                    loadGroupfirms(tab, true);
                 }  else {
-                    message(0, 'Ошибка добавления точек');
+                    message(0, 'Ошибка добавления фирм');
                 }
                 $('.pre_fancy_close').click();
             });

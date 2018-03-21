@@ -60,10 +60,10 @@
             renderCheckbox(tpl.find('.td_check [type=checkbox]'));
         }
 
-        if($('.tabs_group_dots .action_del').is(':visible')){
+        if($('.tabs_dots_groups .action_del').is(':visible')){
             $('.td_check, .td_edit').show();
         }
 
-        renderScroll($('.tabs_group_dots .scroll'));
+        renderScroll($('.tabs_dots_groups .scroll'));
     }
 </script>
