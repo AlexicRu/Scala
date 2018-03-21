@@ -15,6 +15,7 @@ $limitParams                = Model_Card::$cardLimitsParams;
 $limitTypes                 = Model_Card::$cardLimitsTypes;
 $cntTypes                   = false;
 $canUseFloat                = true;
+$cntLimits                  = 999;
 
 switch ($systemId) {
     case 1:
@@ -53,12 +54,21 @@ switch ($systemId) {
         //можно все
         break;
     case 7:
-    case 8:
         $limitParams = [
             Model_Card::CARD_LIMIT_PARAM_RUR => $limitParams[Model_Card::CARD_LIMIT_PARAM_RUR]
         ];
         $limitTypes = [
-            Model_Card::CARD_LIMIT_PARAM_RUR => $limitTypes[Model_Card::CARD_LIMIT_TYPE_DAY]
+            Model_Card::CARD_LIMIT_TYPE_DAY => $limitTypes[Model_Card::CARD_LIMIT_TYPE_DAY]
+        ];
+        break;
+    case 8:
+        $cntLimits = 1;
+        $cntServiceForFirstLimit = 999;
+        $limitParams = [
+            Model_Card::CARD_LIMIT_PARAM_RUR => $limitParams[Model_Card::CARD_LIMIT_PARAM_RUR]
+        ];
+        $limitTypes = [
+            Model_Card::CARD_LIMIT_TYPE_DAY => $limitTypes[Model_Card::CARD_LIMIT_TYPE_DAY]
         ];
         break;
 }
@@ -219,8 +229,11 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
             }
         <?}?>
 
-        var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" onchange="checkServices_<?=$postfix?>()" /> '+
-            <?if ($canDelService){?>'<button class="btn btn_small btn_red btn_card_edit_del_serviсe" onclick="cardEditDelService_<?=$postfix?>($(this))">&times;</button>'+<?}?>
+        var tpl = $('<div class="form_elem" limit_service><nobr>' +
+            '<select name="limit_service" onchange="checkServices_<?=$postfix?>()" <?=(!$editServiceSelect ? 'disabled' : '')?> /> '+
+            <?if ($canDelService){?>
+                '<button class="btn btn_small btn_red btn_card_edit_del_serviсe" onclick="cardEditDelService_<?=$postfix?>($(this))">&times;</button>'+
+            <?}?>
             '</nobr></div>');
 
         var selectFirst = $('.form_card_edit_<?=$postfix?> [name=limit_service]:first');
@@ -268,23 +281,34 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
 
     function cardEditAddLimit_<?=$postfix?>(t)
     {
+        var tbl = t.closest('table');
+
+        if ($('tr[limit_group]', table).length >= <?=$cntLimits?>) {
+            message(0, 'Достигнуто максимальное кол-во лимитов');
+            return false;
+        }
+
         var table = t.closest('table');
         var tpl = $('<tr limit_group="-1">' +
             '<td><div><nobr>' +
-            <?if ($canAddService){?>'<button class="btn btn_small btn_green btn_card_edit_add_serviсe" onclick="cardEditAddService_<?=$postfix?>($(this))">+ добавить услугу</button>' +<?}?>
-            <?if ($canDelLimit){?>'<button class="btn btn_small btn_red btn_card_edit_del_limit" onclick="cardEditDelLimit_<?=$postfix?>($(this))">&times; удалить лимит</button>' +<?}?>
+            <?if ($canAddService){?>
+                '<button class="btn btn_small btn_green btn_card_edit_add_serviсe" onclick="cardEditAddService_<?=$postfix?>($(this))">+ добавить услугу</button>' +
+            <?}?>
+            <?if ($canDelLimit){?>
+                '<button class="btn btn_small btn_red btn_card_edit_del_limit" onclick="cardEditDelLimit_<?=$postfix?>($(this))">&times; удалить лимит</button>' +
+            <?}?>
             '</div></nobr></td>' +
             <?if ($canUseFloat) {?>
-            '<td class="v_top"><input type="text" name="limit_value" class="input_mini" placeholder="Объем / сумма"></td>' +
+                '<td class="v_top"><input type="text" name="limit_value" class="input_mini" placeholder="Объем / сумма"></td>' +
             <?}else{?>
-            '<td class="v_top"><input type="number" name="limit_value" class="input_mini" placeholder="Объем / сумма" onkeypress="$(this).val(parseInt($(this).val()))"></td>' +
+                '<td class="v_top"><input type="number" name="limit_value" class="input_mini" placeholder="Объем / сумма" onkeypress="$(this).val(parseInt($(this).val()))"></td>' +
             <?}?>
-            '<td class="v_top"><select name="unit_type" /></td>'+
+            '<td class="v_top"><select name="unit_type" <?=(!$editSelect ? 'disabled' : '')?> /></td>'+
             <?if ($cntTypes) {?>
-            '<td class="v_top"><input type="text" name="duration_value" placeholder="Кол-во" class="input_mini" /></td>' +
+                '<td class="v_top"><input type="text" name="duration_value" placeholder="Кол-во" class="input_mini" /></td>' +
             <?}?>
-            '<td class="v_top"><select name="duration_type" /></td>' +
-            '</tr>');
+            '<td class="v_top"><select name="duration_type" <?=(!$editSelect ? 'disabled' : '')?> /></td>' +
+        '</tr>');
 
         for (var i in limitParams_<?=$postfix?>) {
             tpl.find('select[name=unit_type]').append('<option value="' + i + '">' + limitParams_<?=$postfix?>[i] + '</option>');
