@@ -200,7 +200,7 @@ function renderComboBoxMulti(combo, params)
     }
 
     combo.data('rendered', true);
-    combo.attr('placeholder', 'Поиск...');
+    combo.attr('placeholder', (params && params['placeholder']) ? params['placeholder'] : 'Поиск...');
 
     var url = combo.attr('url');
 
@@ -223,10 +223,15 @@ function renderComboBoxMulti(combo, params)
     var hiddenValue = wrapper.find('[name=combobox_multi_value]');
 
     combo.on('keyup', function () {
-        if(params && params['depend']){
-            var dependWrapper = outer.closest('.with_depend');
-            var dependCombo = $('[name=' + params['depend'] + ']');
-            setComboboxValue(dependCombo, false);
+        if(params && params['depend_to']){
+            var dependWrapper = outer.parents('.with_depend:last');
+            var dependCombo = $('[name=' + params['depend_to'] + ']', dependWrapper);
+
+            if (dependCombo.hasClass('combobox_multi')) {
+                resetComboboxMultiValue(dependCombo);
+            } else {
+                setComboboxValue(dependCombo, false);
+            }
         }
 
         var t = $(this);
@@ -389,9 +394,9 @@ function renderComboBox(combo, params)
     var hiddenValue = outer.find('[name=combobox_value]');
 
     combo.on('keyup', function () {
-        if(params && params['depend']){
-            var dependWrapper = outer.closest('.with_depend');
-            var dependCombo = $('[name=' + params['depend'] + ']', dependWrapper);
+        if(params && params['depend_to']){
+            var dependWrapper = outer.parents('.with_depend:last');
+            var dependCombo = $('[name=' + params['depend_to'] + ']', dependWrapper);
 
             if (dependCombo.hasClass('combobox_multi')) {
                 resetComboboxMultiValue(dependCombo);
@@ -505,9 +510,9 @@ function setComboboxValue(combo, value)
 
 function getComboboxValue(combo, skipDepend)
 {
-    if(combo.attr('depend') && skipDepend != true){
-        var outerDepend = combo.closest('.with_depend');
-        var dependField = combo.attr('depend');
+    if(combo.attr('depend_to') && skipDepend != true){
+        var outerDepend = combo.parents('.with_depend:last');
+        var dependField = combo.attr('depend_to');
         combo = $('[name='+ dependField +']', outerDepend);
 
         if(combo.hasClass('combobox_multi')){

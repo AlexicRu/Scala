@@ -93,36 +93,42 @@ class Listing
     /**
      * список карт
      *
-     * @param $search
-     * @param $search
+     * @param string $params
+     * @param array $ids
      * @return array|bool|int
      */
-    public static function getCards($search, $ids = [])
+    public static function getCards($params, $ids = [])
     {
         $db = Oracle::init();
 
-        $user = Auth::instance()->get_user();
+        $user = User::current();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_CARDS_ALL t where t.agent_id = ".$user['AGENT_ID'];
-
-        if(!empty($search)){
-            $sql .= " and t.CARD_ID like ".Oracle::quote('%'.$search.'%');
-        }
+        $sql = (new Builder())->select()
+            ->from('V_WEB_CARDS_ALL t')
+            ->where('t.agent_id = ' . $user['AGENT_ID'])
+            ->orderBy('t.card_id')
+            ->limit(self::$limit)
+        ;
 
         if(!empty($ids)){
-            $sql .= " and t.CARD_ID in (".implode(',', $ids).")";
+            $sql->where("t.CARD_ID in (".implode(',', $ids).")");
+        } else {
+            if(!empty($params['search'])){
+                $sql->where("t.CARD_ID like ".Oracle::quote('%'.$params['search'].'%'));
+            }
+            if(!empty($params['contract_id'])){
+                $sql->where("t.contract_id = ".(int)$params['contract_id']);
+            }
         }
 
-        $sql .= " order by t.card_id";
-
-        return $db->query($db->limit($sql, 0, self::$limit));
+        return $db->query($sql);
     }
 
     /**
      * список карт
      *
-     * @param $search
-     * @param ids
+     * @param string $search
+     * @param array ids
      * @return array|bool|int
      */
     public static function getCardsAvailable($search, $ids = [])

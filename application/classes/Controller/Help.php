@@ -130,7 +130,12 @@ class Controller_Help extends Controller_Common
      */
     public function action_listCard()
     {
-        $res = Listing::getCards($this->_search, $this->_ids);
+        $contractId = $this->request->post('contract_id');
+
+        $res = Listing::getCards([
+            'search'        => $this->_search,
+            'contract_id'   => $contractId
+        ], $this->_ids);
 
         if(empty($res)){
             $this->jsonResult(false);

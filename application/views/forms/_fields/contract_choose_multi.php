@@ -1,31 +1,45 @@
-<?$dependFieldName = 'client_contract_choose_multi';?>
+<?
+$dependToField = 'client_contract_choose_single';
+$dependToFieldName = !empty($params['depend_to_field_name']) ? $params['depend_to_field_name'] : $dependToField;
+$params['placeholder'] = 'Договор';
+$params['depend_on'] = [
+    'field' => $dependToFieldName,
+    'name' => 'client_id'
+];
+?>
 
 <div class="with_depend">
-    <span class="form_field" field="<?=$type?>">
-        <input type="text" name="<?=$name?>" class="custom_field combobox input_wide" url="/help/list-client" autocomplete="off"
-               depend="<?=$dependFieldName?>"
-               <?if (!empty($params['weight'])){?>weight="<?=$params['weight']?>"<?}?>
-        >
-    </span>
 
-    <div>
+    <div class="depend_to">
         <?
         $data = [
-            'placeholder' => 'Договор',
-            'depend_on' => $name,
+            'placeholder' => 'Клиент',
+            'depend_to' => $name
         ];
-        if(isset($params['weight'])){
-            $data['weight'] = $params['weight'];
-        }
         ?>
-        <?=Common::buildFormField('_depend/' . $dependFieldName, $dependFieldName, false, $data)?>
+        <?=Common::buildFormField($dependToField, $dependToFieldName, false, $data)?>
     </div>
+
+    <div class="depend_on">
+        <span class="form_field" field="<?=$type?>">
+            <input type="text" name="<?=$name?>" class="custom_field combobox combobox_multi input_wide <?=(!empty($params['classes']) ? $params['classes'] : '')?>" autocomplete="off"
+                <?=(isset($params['weight']) ? 'weight="'.$params['weight'].'"' : '')?>
+                <?if (!empty($params['depend_to'])){?>depend_to="<?=$params['depend_to']?>"<?}?>
+                url="/help/list-clients-contracts">
+        </span>
+    </div>
+
 </div>
 
 <script>
     $(function () {
         $('[name=<?=$name?>]').each(function () {
-            renderComboBox($(this), {'depend': '<?=$dependFieldName?>'});
+            var t = $(this);
+
+            renderComboBoxMulti(t, <?=json_encode($params)?>);
+            <?if (!empty($value)) {?>
+                setFormFieldValue(t.parent(), '<?=$value?>');
+            <?}?>
         });
     });
 </script>
