@@ -1,4 +1,4 @@
-<script src="/assets/build/js/reports/reports.js"></script>
+<script src="<?=Common::getAssetsLink()?>js/reports/reports.js"></script>
 
 <?if(empty($reports)){?>
     <div class="error_block">Нет доступных отчетов</div>

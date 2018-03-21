@@ -159,7 +159,7 @@ class Common
     {
         $js = (array)(new View())->js;
 
-        View::set_global('js', array_merge($js, ['/assets/build/js/' + $file]));
+        View::set_global('js', array_merge($js, [Common::getAssetsLink() . 'js/' . $file]));
     }
 
     /**
@@ -171,6 +171,11 @@ class Common
     {
         $css = (array)(new View())->css;
 
-        View::set_global('css', array_merge($css, ['/assets/build/css/' + $file]));
+        View::set_global('css', array_merge($css, [Common::getAssetsLink() . 'css/' . $file]));
+    }
+
+    public static function getAssetsLink()
+    {
+        return self::isProd() ? '/assets/build/' : '/assets/';
     }
 }

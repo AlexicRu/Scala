@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<title>403 - доступ запрещен</title>
 
-	<link href="/assets/build/css/style.css" rel="stylesheet">
+	<link href="<?=Common::getAssetsLink()?>css/style.css" rel="stylesheet">
 </head>
 
 <body>

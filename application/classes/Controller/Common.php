@@ -233,16 +233,16 @@ abstract class Controller_Common extends Controller_Template {
         if(Auth::instance()->logged_in()) {
             $this->_initTooltipster();
 
-            $this->template->styles[] = '/assets/build/css/ui.css';
-            $this->template->styles[] = '/assets/build/css/style.css';
-            $this->template->styles[] = '/assets/build/css/design.css';
+            $this->template->styles[] = Common::getAssetsLink() . 'css/ui.css';
+            $this->template->styles[] = Common::getAssetsLink() . 'css/style.css';
+            $this->template->styles[] = Common::getAssetsLink() . 'css/design.css';
 
-            $this->template->scripts[] = '/assets/build/js/ui.js';
-            $this->template->scripts[] = '/assets/build/js/common.js';
-            $this->template->scripts[] = '/assets/build/js/site.js';
+            $this->template->scripts[] = Common::getAssetsLink() . 'js/ui.js';
+            $this->template->scripts[] = Common::getAssetsLink() . 'js/common.js';
+            $this->template->scripts[] = Common::getAssetsLink() . 'js/site.js';
         }else{
-            $this->template->styles[] = '/assets/build/css/style.css';
-            $this->template->styles[] = '/assets/build/css/design.css';
+            $this->template->styles[] = Common::getAssetsLink() . 'css/style.css';
+            $this->template->styles[] = Common::getAssetsLink() . 'css/design.css';
         }
     }
 

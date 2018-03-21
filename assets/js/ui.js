@@ -258,6 +258,8 @@ function renderComboBoxMulti(combo, params)
             postParams[params['depend_on']['name']] = value;
         }
 
+        t.addClass('loading');
+
         ajaxComboBoxMulti = $.post(url, postParams, function(data){
             if(data.success){
                 if(params && params.show_all){
@@ -280,6 +282,8 @@ function renderComboBoxMulti(combo, params)
                 }
                 result.show();
             }
+
+            t.removeClass('loading');
 
             ajaxComboBoxMulti = false;
         });
@@ -429,6 +433,8 @@ function renderComboBox(combo, params)
         hiddenValue.val('');
         checkRenderTo(combo, {}, true);
 
+        t.addClass('loading');
+
         ajaxComboBox = $.post(url, postParams, function(data){
             if(data.success){
                 if(params && params.show_all){
@@ -451,6 +457,8 @@ function renderComboBox(combo, params)
                 }
                 result.show();
             }
+
+            t.removeClass('loading');
 
             ajaxComboBox = false;
         });
