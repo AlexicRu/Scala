@@ -34,9 +34,9 @@ class Access
 
     public static $adminRoles = [
         self::ROLE_ADMIN,
-        self::ROLE_ADMIN_READONLY,
         self::ROLE_ROOT,
-        self::ROLE_GOD
+        self::ROLE_GOD,
+        self::ROLE_SUPERVISOR,
     ];
 
     public static $rolesForCardGroups = [
