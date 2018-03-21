@@ -39,14 +39,6 @@ class Access
         self::ROLE_SUPERVISOR,
     ];
 
-    public static $rolesForCardGroups = [
-        self::ROLE_ADMIN,
-        self::ROLE_ADMIN_READONLY,
-        self::ROLE_ROOT,
-        self::ROLE_GOD,
-        self::ROLE_CLIENT,
-    ];
-
     public static $readonlyRoles = [
         self::ROLE_CLIENT,
         self::ROLE_ADMIN_READONLY,
