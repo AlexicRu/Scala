@@ -27,6 +27,8 @@ class Model_Card extends Model
     const CARD_ICON_PETROL_RN   = 'Petrol RN';
     const CARD_ICON_NEFTIKA     = 'Neftika';
 
+    const CARD_SYSTEM_GPN = 5;
+
     public static $cardIcons = [
         self::CARD_ICON_WAY4_LUKOIL => 'card_lukoil.png',
         self::CARD_ICON_WAY4_GPN    => 'card_gpn.png',
@@ -453,6 +455,7 @@ class Model_Card extends Model
             }
 
             $user = User::current();
+            $card = Model_Card::getCard($cardId);
 
             /*
     S1,S2,S3:DT1:DV1:UT1:UC1:V1:DWT1:DWV1:TiFr1:TiTo1:ID1
@@ -473,7 +476,7 @@ class Model_Card extends Model
 
             foreach($limits as $group => $limit){
 
-                if (empty($limit['duration_type']) || empty($limit['unit_type']) || empty($limit['value'])) {
+                if (empty($limit['duration_type']) || empty($limit['unit_type']) || (empty($limit['value']) && $card['SYSTEM_ID'] == Model_Card::CARD_SYSTEM_GPN)) {
                     throw new Exception('Недостаточно данных по лимиту');
                 }
 

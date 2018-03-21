@@ -2,6 +2,9 @@
 
 class PHPToExcel
 {
+    /**
+     * @var null|\PhpOffice\PhpSpreadsheet\Spreadsheet
+     */
     private $_phpExcel = null;
     private $_isFirstSheetHasData = false;
 
@@ -10,26 +13,24 @@ class PHPToExcel
         $this->_phpExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
     }
 
-    public function dispay($filename = 'file', $data = array(), $headers = array())
+    public function display($filename = 'file', $data = array(), $headers = array())
     {
-        header("Content-Type:   application/vnd.ms-excel; charset=utf-8");
-        header("Content-Disposition: attachment; filename=".$filename.".xls");  //File name extension was wrong
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Cache-Control: private",false);
+        $mime = implode(', ', Kohana::$config->load('mimes')['xlsx']);
 
         if(!empty($data) || !empty($headers)) {
             $this->addSheet($data, $headers);
         }
 
-        $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($this->_phpExcel, 'Excel5');
+        $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($this->_phpExcel, 'Xlsx');
+
+        header("Content-Type: ". $mime ."; charset=utf-8");
+        header("Content-Disposition: attachment; filename=".$filename.".xlsx");  //File name extension was wrong
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Cache-Control: private",false);
+
         $objWriter->save('php://output');
-        $fileContent = ob_get_contents();
-        ob_clean();
 
-        unset($this->_phpExcel);
-
-        echo  $fileContent;
         die;
     }
 

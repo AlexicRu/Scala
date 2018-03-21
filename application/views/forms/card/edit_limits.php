@@ -41,7 +41,7 @@ switch ($systemId) {
         $canAddLimit    = false;
         $canSave        = false;
         break;
-    case 5:
+    case Model_Card::CARD_SYSTEM_GPN:
         $cntServiceForFirstLimit = 999;
         $limitTypes     = Model_Card::$cardLimitsTypesFull;
         $cntTypes       = true;
@@ -274,7 +274,11 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
             <?if ($canAddService){?>'<button class="btn btn_small btn_green btn_card_edit_add_serviсe" onclick="cardEditAddService_<?=$postfix?>($(this))">+ добавить услугу</button>' +<?}?>
             <?if ($canDelLimit){?>'<button class="btn btn_small btn_red btn_card_edit_del_limit" onclick="cardEditDelLimit_<?=$postfix?>($(this))">&times; удалить лимит</button>' +<?}?>
             '</div></nobr></td>' +
+            <?if ($canUseFloat) {?>
             '<td class="v_top"><input type="text" name="limit_value" class="input_mini" placeholder="Объем / сумма"></td>' +
+            <?}else{?>
+            '<td class="v_top"><input type="number" name="limit_value" class="input_mini" placeholder="Объем / сумма" onkeypress="$(this).val(parseInt($(this).val()))"></td>' +
+            <?}?>
             '<td class="v_top"><select name="unit_type" /></td>'+
             <?if ($cntTypes) {?>
             '<td class="v_top"><input type="text" name="duration_value" placeholder="Кол-во" class="input_mini" /></td>' +
@@ -347,9 +351,7 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
                 message(0, 'Ошибка обновления лимитов карты');
 
                 if(data.data){
-                    for(var i in data.data){
-                        message(0, data.data[i].text);
-                    }
+                    message(0, data.data);
                 }
             }
         });

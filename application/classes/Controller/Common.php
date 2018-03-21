@@ -353,7 +353,7 @@ abstract class Controller_Common extends Controller_Template {
         }
 
         $PHPToExcel = new PHPToExcel();
-        $PHPToExcel->dispay($filename . '_'.date('Ymd'), $rows, $headers);
+        $PHPToExcel->display($filename . '_'.date('Ymd'), $rows, $headers);
     }
 
     /**

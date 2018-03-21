@@ -361,7 +361,7 @@ class Model_Contract extends Model
 
             $sql->whereStart();
 		    foreach ($params['order_date'] as $date) {
-		        $sql->whereOr("order_date = '".Oracle::toDate($date, 'd.m.Y G:i:s')."'");
+		        $sql->whereOr("order_date = ".Oracle::quote($date));
             }
             $sql->whereEnd();
         }

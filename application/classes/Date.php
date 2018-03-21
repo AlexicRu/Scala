@@ -48,7 +48,7 @@ class Date extends Kohana_Date {
      * @param $exportFormat
      * @return string
      */
-    public static function guessDate($dateStr, $exportFormat = 'Y-m-d')
+    public static function guessDate($dateStr, $exportFormat = 'd.m.Y')
     {
         $dateTimeArr = explode(' ', $dateStr);
         $dateStr = array_shift($dateTimeArr);
