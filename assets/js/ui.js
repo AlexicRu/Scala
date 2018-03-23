@@ -249,7 +249,8 @@ function renderComboBoxMulti(combo, params)
         };
 
         if(params && params['depend_on']){
-            var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]'), true);
+            var dependWrapper = outer.parents('.with_depend:last');
+            var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]', dependWrapper), true);
 
             if(value == ''){
                 return;
@@ -421,7 +422,8 @@ function renderComboBox(combo, params)
         var postParams = { search:val };
 
         if(params && params['depend_on']){
-            var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]'), true);
+            var dependWrapper = outer.parents('.with_depend:last');
+            var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]', dependWrapper), true);
 
             if(value == ''){
                 return;

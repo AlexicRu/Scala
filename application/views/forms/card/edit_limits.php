@@ -303,11 +303,11 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
             <?}else{?>
                 '<td class="v_top"><input type="number" name="limit_value" class="input_mini" placeholder="Объем / сумма" onkeypress="$(this).val(parseInt($(this).val()))"></td>' +
             <?}?>
-            '<td class="v_top"><select name="unit_type" <?=(!$editSelect ? 'disabled' : '')?> /></td>'+
+            '<td class="v_top"><select name="unit_type" /></td>'+
             <?if ($cntTypes) {?>
                 '<td class="v_top"><input type="text" name="duration_value" placeholder="Кол-во" class="input_mini" /></td>' +
             <?}?>
-            '<td class="v_top"><select name="duration_type" <?=(!$editSelect ? 'disabled' : '')?> /></td>' +
+            '<td class="v_top"><select name="duration_type" /></td>' +
         '</tr>');
 
         for (var i in limitParams_<?=$postfix?>) {
