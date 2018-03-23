@@ -28,7 +28,6 @@ return [
         ],
         'control_index' => [
             Access::ROLE_ADMIN,
-            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
             Access::ROLE_CLIENT,
             Access::ROLE_USER_SECOND,
@@ -63,24 +62,20 @@ return [
         ],
         'control_tariffs' => [
             Access::ROLE_ADMIN,
-            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
             'u_7',
         ],
         'control_dots' => [
             Access::ROLE_ADMIN,
-            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
             'u_7',
         ],
         'control_connect-1c' => [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
-            Access::ROLE_ADMIN_READONLY,
         ],
         'administration_index' => [
             Access::ROLE_ADMIN,
-            Access::ROLE_ADMIN_READONLY,
         ],
         'suppliers_index' => [
             Access::ROLE_ADMIN,
@@ -119,11 +114,9 @@ return [
         ],
         'references_index' => [
             Access::ROLE_ADMIN,
-            Access::ROLE_ADMIN_READONLY,
         ],
         'references_sources' => [
             Access::ROLE_ADMIN,
-            Access::ROLE_ADMIN_READONLY,
         ],
         'references_addresses' => [
             Access::ROLE_ROOT
@@ -147,7 +140,6 @@ return [
         ],
         'control_dots-groups' => [
             Access::ROLE_ADMIN,
-            Access::ROLE_ADMIN_READONLY,
             Access::ROLE_SUPERVISOR,
         ],
         'control_1c-export' => [
@@ -307,6 +299,9 @@ return [
             'ctrl_manager_edit',
         ]
     ],
+    /*
+     * доступы к скачиванию файлов
+     */
     'files' => [
         'Инструкция_по_работе_с_ЛК_системы_Администратор.docx' => [
             Access::ROLE_ADMIN
