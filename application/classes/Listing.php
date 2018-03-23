@@ -58,7 +58,6 @@ class Listing
 
         $sql = (new Builder())->select([
                 't.SERVICE_ID',
-                't.SYSTEM_SERVICE_GROUP',
                 't.' . $description
             ])->distinct()
             ->from('V_WEB_SERVICE_LIST t')
@@ -66,7 +65,6 @@ class Listing
             ->orderBy('t.' . $description)
             ->limit(self::$limit)
         ;
-
 
         if(!empty($params['ids'])){
             $sql->where('t.SERVICE_ID in ('.implode(',', $params['ids']).')');
@@ -78,6 +76,12 @@ class Listing
 
             if (!empty($params['TUBE_ID'])) {
                 $sql->where("t.TUBE_ID = " . intval($params['TUBE_ID']));
+            }
+
+            if (!empty($params['SYSTEM_SERVICE_GROUP'])) {
+                $sql->columns([
+                    't.SYSTEM_SERVICE_GROUP'
+                ]);
             }
         }
 

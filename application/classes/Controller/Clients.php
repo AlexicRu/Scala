@@ -203,7 +203,10 @@ class Controller_Clients extends Controller_Common {
         $oilRestrictions = Model_Card::getOilRestrictions($cardId);
         $lastFilling = Model_Card::getLastFilling($cardId, $contractId);
         Listing::$limit = 999;
-		$servicesList = Listing::getServices(['TUBE_ID' => $card['TUBE_ID']]);
+		$servicesList = Listing::getServices([
+		    'SYSTEM_SERVICE_GROUP' => true,
+		    'TUBE_ID' => $card['TUBE_ID']
+        ]);
 
 		$popupCardHolderEdit = Common::popupForm('Редактирование держателя карты', 'card/edit_holder', [
             'card' 				=> $card,
