@@ -153,7 +153,7 @@ Kohana::modules(array(
  * If you have not defined a cookie salt in your Cookie class then
  * uncomment the line below and define a preferrably long salt.
  */
-Cookie::$salt = $config['cookie_salt'];
+Cookie::$salt = $config['salt'];
 
 //логирование ошибок
 $sentryClient = new Raven_Client($config['sentry_dsn'], [
@@ -192,7 +192,7 @@ Route::set('news', 'news/<id>', array('id' => '[\d]+'))
         'action'     => 'news-detail',
     ));
 
-Route::set('auth', '<action>', array('action' => '^(login|logout)$'))
+Route::set('auth', '<action>(/<hash>)', array('action' => '^(login|logout|force-login)$'))
 	->defaults(array(
 		'controller' => 'index',
 		'action'     => 'index',

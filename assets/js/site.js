@@ -1,6 +1,10 @@
 $(function(){
-    $('.hamburger a').on('click', function(){
+    $('.hamburger a.menu-toggle').on('click', function(){
         $('.wrapper').toggleClass('menu_collapsed');
+    });
+
+    $('.hamburger a.clients-toggle').on('click', function(){
+        $('.clients-toggle').toggleClass('active');
     });
 
     $(document).on('click', "[tab]", function(){

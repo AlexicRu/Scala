@@ -101,7 +101,7 @@ class Telegram_GloPro extends Telegram_Common
             return false;
         }
 
-        $user = explode(md5($this->_config['cookie_salt']), $user);
+        $user = explode(md5($this->_config['salt']), $user);
         $login = $user[0];
         $passwordHash = !empty($user[1]) ? $user[1] : false;
 
@@ -129,7 +129,7 @@ class Telegram_GloPro extends Telegram_Common
         }
 
         if (Auth::instance()->login($login, $password, FALSE)) {
-            $value = $login . md5($this->_config['cookie_salt']) . Auth::instance()->hash($password);
+            $value = $login . md5($this->_config['salt']) . Auth::instance()->hash($password);
 
             $this->_cache->set($this->_cacheKey, $value, $this->_cacheTime);
 

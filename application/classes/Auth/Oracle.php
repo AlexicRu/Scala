@@ -30,8 +30,14 @@ class Auth_Oracle extends Auth {
                 'Telegram'  => true,
                 'Api'       => true
             ];
+            $actionsPasswordHashAvailable = [
+                'forceLogin'  => true,
+            ];
 
-            if (isset($controllersPasswordHashAvailable[$request->controller()])) {
+            if (
+                isset($controllersPasswordHashAvailable[$request->controller()]) ||
+                isset($actionsPasswordHashAvailable[$request->action()])
+            ) {
                 $password = $password['hash'];
             }
         }

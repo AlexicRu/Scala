@@ -29,26 +29,25 @@
 			<a href="/"></a>
 		</div>
 		<div class="hamburger">
-			<a href="#"><span class="icon-menu"></span></a>
+            <?if (empty($user)) {?>
+			    <a href="#" class="menu-toggle"><span class="icon-menu"></span></a>
+            <?}else{?>
+                <a href="#" class="clients-toggle"><span class="icon-clients"></span></a>
+                <div class="clients-float-list clients-toggle block">
+                    <?foreach ($user['list'] as $login) {?>
+                        <div>
+                            <?=User::getName($login)?> &nbsp; <a href="/force-login/<?=Common::encrypt($user['MANAGER_ID'] . ' ' . $login['MANAGER_ID'])?>" class="btn btn_small">Авторизоваться</a>
+                        </div>
+                    <?}?>
+                </div>
+            <?}?>
 		</div>
 		<div class="search">
 			<form action="/clients" method="post"><button class="icon-find"></button><input type="text" name="search" placeholder="Поиск..." value="<?=(!empty($_REQUEST['search']) ? Text::quotesForForms($_REQUEST['search']) : '')?>"></form>
 		</div>
 		<div class="personal">
 			<div class="avatar" <?/*style="background-image: url(/img/pic/01.png)"*/?>><i class="icon-user"></i></div>
-			<div class="personal_name">
-			<?
-			if(!empty($user['M_NAME'])){
-				echo $user['M_NAME'];
-			}elseif(!empty($user['MANAGER_NAME']) && !empty($user['MANAGER_SURNAME']) && !empty($user['MANAGER_MIDDLENAME'])){
-				echo $user['MANAGER_NAME'].' '.$user['MANAGER_SURNAME'].' '.$user['MANAGER_MIDDLENAME'];
-			}elseif(!empty($user['FIRM_NAME'])){
-				echo $user['FIRM_NAME'];
-			}else{
-				echo $user['LOGIN'];
-			}
-			?>
-			</div>
+			<div class="personal_name"><?=User::getName($user)?></div>
 		</div>
 		<div class="mail">
 			<a href="/messages"><span class="icon-mail"><?if(count($notices)){?><span><?=count($notices)?></span><?}?></span></a>
