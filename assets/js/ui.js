@@ -1,5 +1,7 @@
-var show_all_value = -1;
-var show_all_name = '-- Все --';
+var SHOW_ALL_VALUE          = -1;
+var SHOW_ALL_NAME           = '-- Все --';
+var SHOW_NOT_FOUNT_VALUE    = 0;
+var SHOW_NOT_FOUND_NAME     = 'Не найдено';
 
 $(function(){
     renderElements();
@@ -265,24 +267,38 @@ function renderComboBoxMulti(combo, params)
             if(data.success){
                 if(params && params.show_all){
                     data.data.unshift({
-                        name: show_all_name,
-                        value: show_all_value
+                        name: SHOW_ALL_NAME,
+                        value: SHOW_ALL_VALUE
                     });
                 }
-
-                for(var i in data.data){
-                    var tpl = $('<div class="combobox_multi_result_item" onclick="selectComboBoxMultiResult($(this))"></div>');
-                    tpl.attr('value', data.data[i].value);
-                    tpl.text(data.data[i].name);
-
-                    if(selected.find('.combobox_multi_selected_item[value='+ data.data[i].value +']').length){
-                        tpl.addClass('combobox_multi_result_item_selected');
-                    }
-
-                    tpl.appendTo(result);
-                }
-                result.show();
             }
+
+            if (data.data && data.data.length == 0) {
+                data.data.unshift({
+                    name: SHOW_NOT_FOUND_NAME,
+                    value: SHOW_NOT_FOUNT_VALUE,
+                    disabled: true
+                });
+            }
+
+            for(var i in data.data){
+                var tpl = $('<div class="combobox_multi_result_item"></div>');
+                tpl.attr('value', data.data[i].value);
+                tpl.text(data.data[i].name);
+                if(data.data[i].disabled) {
+                    tpl.attr('disabled', true);
+                } else {
+                    tpl.attr('onclick', 'selectComboBoxMultiResult($(this))');
+                }
+
+                if(selected.find('.combobox_multi_selected_item[value='+ data.data[i].value +']').length){
+                    tpl.addClass('combobox_multi_result_item_selected');
+                }
+
+                tpl.appendTo(result);
+            }
+
+            result.show();
 
             t.removeClass('loading');
 
@@ -309,18 +325,18 @@ function selectComboBoxMultiResult(item)
         return;
     }
 
-    if (value == show_all_value) {
+    if (value == SHOW_ALL_VALUE) {
         //если выбрали все, то все остальное выключаем
-        selected.find('.combobox_multi_selected_item[value!="'+ show_all_value +'"]').each(function () {
+        selected.find('.combobox_multi_selected_item[value!="'+ SHOW_ALL_VALUE +'"]').each(function () {
             var t = $(this);
             wrapper.find('.combobox_multi_result_item_selected[value='+ t.attr('value') +']').removeClass('combobox_multi_result_item_selected');
             uncheckComboBoxMultiItem(t);
         });
     } else {
         //если выбрали что-то отличное от все, то выключаемв все
-        var itemAll = selected.find('.combobox_multi_selected_item[value='+ show_all_value +']');
+        var itemAll = selected.find('.combobox_multi_selected_item[value='+ SHOW_ALL_VALUE +']');
         if (itemAll.length) {
-            wrapper.find('.combobox_multi_result_item_selected[value='+ show_all_value +']').removeClass('combobox_multi_result_item_selected');
+            wrapper.find('.combobox_multi_result_item_selected[value='+ SHOW_ALL_VALUE +']').removeClass('combobox_multi_result_item_selected');
             uncheckComboBoxMultiItem(itemAll);
         }
     }
@@ -441,24 +457,38 @@ function renderComboBox(combo, params)
             if(data.success){
                 if(params && params.show_all){
                     data.data.unshift({
-                        name: show_all_name,
-                        value: show_all_value
+                        name: SHOW_ALL_NAME,
+                        value: SHOW_ALL_VALUE
                     });
                 }
-
-                for(var i in data.data){
-                    var tpl = $('<div class="combobox_result_item" onclick="selectComboBoxResult($(this))"></div>');
-                    tpl.attr('value', data.data[i].value);
-                    tpl.text(data.data[i].name);
-
-                    if(hiddenValue.val() == data.data[i].value){
-                        tpl.addClass('combobox_result_item_selected');
-                    }
-
-                    tpl.appendTo(result);
-                }
-                result.show();
             }
+
+            if (data.data && data.data.length == 0) {
+                data.data.unshift({
+                    name: SHOW_NOT_FOUND_NAME,
+                    value: SHOW_NOT_FOUNT_VALUE,
+                    disabled: true
+                });
+            }
+
+            for(var i in data.data){
+                var tpl = $('<div class="combobox_result_item"></div>');
+                tpl.attr('value', data.data[i].value);
+                tpl.text(data.data[i].name);
+                if(data.data[i].disabled) {
+                    tpl.attr('disabled', true);
+                } else {
+                    tpl.attr('onclick', 'selectComboBoxResult($(this))');
+                }
+
+                if(hiddenValue.val() == data.data[i].value){
+                    tpl.addClass('combobox_result_item_selected');
+                }
+
+                tpl.appendTo(result);
+            }
+
+            result.show();
 
             t.removeClass('loading');
 
@@ -499,11 +529,11 @@ function setComboboxValue(combo, value)
         combo.val('');
         hiddenValue.val('');
     }else{
-        if (value == show_all_value && combo.data('show_all')){
-            combo.val(show_all_name);
-            hiddenValue.val(show_all_value);
+        if (value == SHOW_ALL_VALUE && combo.data('show_all')){
+            combo.val(SHOW_ALL_NAME);
+            hiddenValue.val(SHOW_ALL_VALUE);
 
-            checkRenderTo(combo, {value:show_all_value, text:show_all_name});
+            checkRenderTo(combo, {value:SHOW_ALL_VALUE, text:SHOW_ALL_NAME});
         } else {
 
             $.post(combo.attr('url'), {ids: value}, function (data) {
@@ -548,8 +578,8 @@ function getComboboxMultiValue(combo)
 
     var hiddenArray = hiddenValue.split(',');
 
-    if (hiddenArray.indexOf(show_all_value.toString()) != -1) {
-        return [show_all_value];
+    if (hiddenArray.indexOf(SHOW_ALL_VALUE.toString()) != -1) {
+        return [SHOW_ALL_VALUE];
     }
 
     return hiddenArray;
@@ -573,8 +603,8 @@ function setComboboxMultiValue(combo, value)
     var list = value ? value.split(',') : [];
 
     for(var i in list){
-        if (parseInt(list[i]) == show_all_value && combo.data('show_all')){
-            renderComboBoxMultiSelectedItem(show_all_value, show_all_name, wrapper);
+        if (parseInt(list[i]) == SHOW_ALL_VALUE && combo.data('show_all')){
+            renderComboBoxMultiSelectedItem(SHOW_ALL_VALUE, SHOW_ALL_NAME, wrapper);
             continue;
         }
 

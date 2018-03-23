@@ -1,5 +1,5 @@
 <span class="form_field" field="<?=$type?>">
-    <input type="text" name="<?=$name?>" class="custom_field combobox input_wide" autocomplete="off"
+    <input type="text" name="<?=$name?>" class="custom_field combobox" autocomplete="off"
         <?=(isset($params['weight']) ? 'weight="'.$params['weight'].'"' : '')?>
         url="/help/list-client">
 </span>

@@ -22,7 +22,7 @@ $params['depend_on'] = [
 
     <div class="depend_on">
         <span class="form_field" field="<?=$type?>">
-            <input type="text" name="<?=$name?>" class="custom_field combobox input_wide <?=(!empty($params['classes']) ? $params['classes'] : '')?>" autocomplete="off"
+            <input type="text" name="<?=$name?>" class="custom_field combobox <?=(!empty($params['classes']) ? $params['classes'] : '')?>" autocomplete="off"
                 <?=(isset($params['weight']) ? 'weight="'.$params['weight'].'"' : '')?>
                 <?if (!empty($params['depend_to'])){?>depend_to="<?=$params['depend_to']?>"<?}?>
                 url="/help/list-clients-contracts">

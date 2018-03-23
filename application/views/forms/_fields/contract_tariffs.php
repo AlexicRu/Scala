@@ -1,5 +1,5 @@
 <span class="form_field" field="<?=$type?>">
-    <input type="text" name="<?=$name?>" class="custom_field combobox input_wide <?=(!empty($params['classes']) ? $params['classes'] : '')?>" url="/help/list-contract-tariffs" autocomplete="off">
+    <input type="text" name="<?=$name?>" class="custom_field combobox <?=(!empty($params['classes']) ? $params['classes'] : '')?>" url="/help/list-contract-tariffs" autocomplete="off">
 </span>
 
 <script>
