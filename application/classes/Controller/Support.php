@@ -35,8 +35,15 @@ class Controller_Support extends Controller_Common {
         $subject = 'ЛК [Agent '. $user['AGENT_ID'] .' - '. $user['LOGIN'] .'] ' . $subject;
         $description = 'Email: ' . $email . "\n\n" . $text;
 
-        $result = (new Redmine())->createIssue($subject, $description, (array)$files);
+        $issueId = (new Redmine())->createIssue($subject, $description, (array)$files);
 
-        $this->jsonResult($result);
+        if (!empty($issueId)) {
+            $subject = 'Заявка №'. $issueId .' ' . $subject;
+            $message = 'Ваша заявка успешно принята в работу!<br><br>' . $text;
+
+            Email::send($email, Email::FROM, $subject, $message);
+        }
+
+        $this->jsonResult((bool)$issueId);
     }
 }

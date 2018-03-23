@@ -414,7 +414,7 @@ class Model_Card extends Model
                     }
                     foreach($limit['services'] as $service){
                         foreach ($currentLimits as $currentLimit){
-                            foreach ($currentLimit['SERVICES'] as $currentService) {
+                            foreach ($currentLimit['services'] as $currentService) {
                                 if ($currentService['id'] == $service && $limit['value'] != $currentLimit['LIMIT_VALUE']) {
                                     return [false, 'Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру'];
                                 }

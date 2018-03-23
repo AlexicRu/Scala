@@ -57,6 +57,6 @@ class Redmine
             }
         }
 
-        return !empty($issue->id) ? true : false;
+        return !empty($issue->id) ? $issue->id : false;
     }
 }
