@@ -68,7 +68,7 @@
                 var tpl = $('<div class="tab_v" onclick="cardLoad($(this))"><div><span card_id /><div class="gray" holder /></div></div>');
 
                 if (cardsIcons[data[i].CARD_TEMPLATE]) {
-                    tpl.find('> div').prepend('<span class="card__picture" style="background-image: url(/assets/img/cards/'+ cardsIcons[data[i].CARD_TEMPLATE] +')"></span>');
+                    tpl.find('> div').prepend('<span class="card__picture" style="background-image: url(<?=Common::getAssetsLink()?>img/cards/'+ cardsIcons[data[i].CARD_TEMPLATE] +')"></span>');
                 } else {
                     tpl.find('> div').prepend('<span class="icon-card gray"></span>');
                 }

@@ -192,7 +192,7 @@ Route::set('news', 'news/<id>', array('id' => '[\d]+'))
         'action'     => 'news-detail',
     ));
 
-Route::set('auth', '<action>(/<hash>)', array('action' => '^(login|logout|force-login)$'))
+Route::set('auth', '<action>(/<hash>)', array('action' => '(login|logout|force-login)', 'hash' => '.*'))
 	->defaults(array(
 		'controller' => 'index',
 		'action'     => 'index',

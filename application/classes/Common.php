@@ -200,7 +200,7 @@ class Common
         $hmac           = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
         $ciphertext     = base64_encode( $iv.$hmac.$ciphertext_raw );
 
-        return $ciphertext;
+        return str_replace(array('+', '/'), array('-', '_'), $ciphertext);
     }
 
     /**
@@ -213,7 +213,7 @@ class Common
     public static function decrypt($ciphertext)
     {
         $key                = Kohana::$config->load('config')['salt'];
-        $c                  = base64_decode($ciphertext);
+        $c                  = base64_decode(str_replace(array('-', '_'), array('+', '/'), $ciphertext));
         $ivlen              = openssl_cipher_iv_length($cipher="AES-128-CBC");
         $iv                 = substr($c, 0, $ivlen);
         $hmac               = substr($c, $ivlen, $sha2len=32);

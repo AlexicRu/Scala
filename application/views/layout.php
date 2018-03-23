@@ -29,14 +29,16 @@
 			<a href="/"></a>
 		</div>
 		<div class="hamburger">
-            <?if (empty($user)) {?>
+            <?if (empty($user['managers_binds'])) {?>
 			    <a href="#" class="menu-toggle"><span class="icon-menu"></span></a>
-            <?}else{?>
-                <a href="#" class="clients-toggle"><span class="icon-clients"></span></a>
+            <?}else{
+                $currentManager = reset($user['managers_binds']);
+                ?>
+                <a href="#" class="clients-toggle"><span class="icon-clients"></span> <?=$currentManager['WEB_NAME_CURRENT']?></a>
                 <div class="clients-float-list clients-toggle block">
-                    <?foreach ($user['list'] as $login) {?>
+                    <?foreach ($user['managers_binds'] as $manager) {?>
                         <div>
-                            <?=User::getName($login)?> &nbsp; <a href="/force-login/<?=Common::encrypt($user['MANAGER_ID'] . ' ' . $login['MANAGER_ID'])?>" class="btn btn_small">Авторизоваться</a>
+                            <?=$manager['WEB_NAME_TO']?> &nbsp; <a href="/force-login/<?=Common::encrypt($user['MANAGER_ID'] . ' ' . $manager['MANAGER_TO'])?>" class="btn btn_small">Переключиться</a>
                         </div>
                     <?}?>
                 </div>
