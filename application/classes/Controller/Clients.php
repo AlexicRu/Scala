@@ -471,11 +471,11 @@ class Controller_Clients extends Controller_Common {
 
 		$result = Model_Card::withdrawCard($params);
 
-		if($result === true){
-			$this->jsonResult(true);
+		if(empty($result)){
+			$this->jsonResult(false);
 		}
 
-		$this->jsonResult(false);
+		$this->jsonResult(true);
 	}
 
 	/**

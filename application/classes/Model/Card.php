@@ -581,11 +581,11 @@ class Model_Card extends Model
 
 		$res = $db->procedure('card_contract_withdraw', $data);
 
-		if(!empty($res)){
-			return $res;
+		if($res == Oracle::CODE_SUCCESS){
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
     /**
