@@ -296,14 +296,63 @@ class Model_Manager extends Model
                 'p_error_code' 		=> 'out',
             ];
 
-            $res = $db->procedure('ctrl_manager_client_add', $data, true);
+            $res = $db->procedure('ctrl_manager_client_add', $data);
 
-            if($res['p_error_code'] != Oracle::CODE_SUCCESS){
-                return $res['p_error_code'];
+            if($res != Oracle::CODE_SUCCESS){
+                return $res;
             }
         }
 
         return Oracle::CODE_SUCCESS;
+    }
+
+    /**
+     * добавляем отчеты
+     *
+     * @param $params
+     * @param $action 1-add 2-remove
+     */
+    public static function editReports($params, $action = 1)
+    {
+        if(empty($params['ids']) || empty($params['manager_id'])){
+            return Oracle::CODE_ERROR;
+        }
+
+        $db = Oracle::init();
+
+        $user = Auth::instance()->get_user();
+
+        foreach($params['ids'] as $id){
+            $data = [
+                'p_manager_for_id' 	=> $params['manager_id'],
+                'p_report_id' 	    => $id,
+                'p_action' 	        => $action,
+                'p_manager_who_id' 	=> $user['MANAGER_ID'],
+                'p_error_code' 		=> 'out',
+            ];
+
+            $res = $db->procedure('ctrl_manager_report', $data);
+
+            if($res != Oracle::CODE_SUCCESS){
+                return $res;
+            }
+        }
+
+        return Oracle::CODE_SUCCESS;
+    }
+
+    /**
+     * у выбранного менеджера удаляем отчет
+     *
+     * @param $managerId
+     * @param $clientId
+     */
+    public static function delReport($managerId, $clientId)
+    {
+        return self::editReports([
+            'manager_id' => $managerId,
+            'ids' => [$clientId],
+        ], 2);
     }
 
     /**
@@ -345,6 +394,60 @@ class Model_Manager extends Model
         }
 
         $sql .= " order by t.client_id desc ";
+
+        return $db->query($sql);
+    }
+
+    /**
+     * получаем список доступный отчетов по манагеру
+     *
+     * @param array $params
+     * @return array
+     */
+    public static function getReportsList($params = [])
+    {
+        $db = Oracle::init();
+
+        $user = User::current();
+
+        if (empty($params['manager_id'])) {
+            $managerId = $user['MANAGER_ID'];
+        } else {
+            $managerId = $params['manager_id'];
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_REPORTS_LIST r')
+        ;
+
+        if (in_array($user['ROLE_ID'], array_keys(Access::$clientRoles))) {
+
+            $subSql = (new Builder())->select(1)
+                ->from('V_WEB_REPORTS_AVAILABLE t')
+                ->whereIn('t.agent_id', [0, $user['AGENT_ID']])
+                ->whereIn('t.manager_id', [0, $managerId])
+                ->where('t.report_id = r.report_id')
+            ;
+
+            $sql
+                ->where('r.REPORT_TYPE_ID = ' . Model_Report::REPORT_GROUP_CLIENT)
+                ->where('not exists ('. $subSql->build() .')')
+            ;
+        } else {
+            $subSql = (new Builder())->select(1)
+                ->from('V_WEB_REPORTS_AVAILABLE t')
+                ->whereIn('t.agent_id', [0, $user['AGENT_ID']])
+                ->where('t.report_id = r.report_id')
+            ;
+
+            $sql
+                ->where('not exists ('. $subSql->build() .')')
+            ;
+        }
+
+        if(!empty($params['search'])){
+            $sql->where("upper(r.WEB_NAME) like " . mb_strtoupper(Oracle::quote('%'.$params['search'].'%')));
+        }
 
         return $db->query($sql);
     }

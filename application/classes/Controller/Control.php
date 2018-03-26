@@ -66,12 +66,14 @@ class Controller_Control extends Controller_Common {
         ;
 
         $popupManagerAddClients = Common::popupForm('Добавление клиентов', 'manager/add_clients');
+        $popupManagerAddReports = Common::popupForm('Доступные для добавления отчеты', 'manager/add_reports');
 
         $html = View::factory('ajax/control/manager')
             ->bind('managerId', $managerId)
             ->bind('manager', $manager)
             ->bind('managerSettingsForm', $managerSettingsForm)
             ->bind('popupManagerAddClients', $popupManagerAddClients)
+            ->bind('popupManagerAddReports', $popupManagerAddReports)
         ;
 
         $this->html($html);

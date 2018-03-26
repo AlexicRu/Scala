@@ -1,6 +1,8 @@
+<script src="<?=Common::getAssetsLink()?>js/managers/managers.js"></script>
+
 <div class="tabs_block tabs_switcher">
     <div class="tabs">
-        <span tab="info" class="tab active">Информация</span><span class="tab" tab="clients" onclick="showManagersClients(<?=$managerId?>)">Клиенты</span>
+        <span tab="info" class="tab active">Информация</span><span class="tab" tab="clients" onclick="showManagersClients(<?=$managerId?>)">Клиенты</span><span class="tab" tab="reports" onclick="showManagersReports(<?=$managerId?>)">Отчеты</span>
     </div>
     <div class="tabs_content">
         <div tab_content="info" class="tab_content active">
@@ -18,8 +20,6 @@
             <h2>ID: <?=$managerId?></h2>
 
             <?=$managerSettingsForm?>
-            <?=$popupManagerAddClients?>
-
         </div>
         <div tab_content="clients" class="tab_content" manager_id="<?=$managerId?>">
             <div class="fr clients_btn">
@@ -34,107 +34,15 @@
             <div class="clr"></div>
             <div class="client_list"></div>
         </div>
+        <div tab_content="reports" class="tab_content" manager_id="<?=$managerId?>">
+            <div class="fr clients_btn">
+                <a href="#manager_add_reports" class="fancy btn">Добавить отчеты</a>
+            </div>
+            <div class="clr"></div>
+            <div class="report_list"></div>
+        </div>
     </div>
 </div>
 
-<script>
-    function searchManagerClients(input, managerId)
-    {
-        showManagersClients(managerId, {search: input.val()}, true)
-    }
-
-    <?if(Access::allow('manager_toggle')) {?>
-    function managerStateToggle(managerId, t)
-    {
-        var comment = '';
-
-        if(t.hasClass('btn_red')){
-            comment = prompt('Причина блокировки:');
-        }
-
-        if(comment != null) {
-            var params = {
-                manager_id: managerId,
-                comment: comment
-            };
-
-            $.post('/managers/manager-toggle', {params:params}, function (data) {
-                if (data.success) {
-                    t.toggleClass('btn_red').toggleClass('btn_green').find('span').toggle();
-
-                    message(1, 'Статус менеджера изменен');
-                } else {
-                    message(0, 'Ошибка обновления');
-                }
-            });
-        }
-    }
-    <?}?>
-
-    function showManagersClients(managerId, params, force)
-    {
-        var block = $('[tab_content=clients][manager_id='+ managerId +'] .client_list');
-
-        if(block.html() != '' && !force){
-            return true;
-        }
-
-        block.empty().addClass(CLASS_LOADING);
-
-        $.post('/managers/load-clients', { manager_id: managerId, params: params }, function (data) {
-            block.removeClass(CLASS_LOADING);
-            block.html(data);
-
-            renderScroll($('.tabs_managers .scroll'));
-        });
-    }
-
-    function delManagersClient(btn)
-    {
-        if(!confirm('Удаляем клиента?')){
-            return false;
-        }
-        var line = btn.closest('[client_id]');
-        var clientId = line.attr('client_id');
-        var managerId = line.attr('manager_id');
-
-        var params = {
-            client_id: clientId,
-            manager_id: managerId
-        };
-
-        $.post('/managers/del-client', params, function (data) {
-            if(data.success){
-                message(1, 'Клиент успешно удален');
-                line.fadeOut();
-            }else{
-                message(0, errorStr('Ошибка удаления клиента', data.data));
-            }
-        });
-    }
-
-    <?if(Access::allow('managers_edit-manager-clients-contract-binds')) {?>
-    function saveManagerClientContractBinds(btn)
-    {
-        var line = btn.closest('[client_id]');
-        var clientId = line.attr('client_id');
-        var managerId = line.attr('manager_id');
-
-        var binds = getComboboxMultiValue($('[name=manager_clients_contract_binds'+ clientId +']', line));
-
-        var params = {
-            client_id: clientId,
-            manager_id: managerId,
-            binds: binds
-        };
-
-        $.post('/managers/edit-manager-clients-contract-binds', params, function(data) {
-            if (data.success) {
-                message(1, 'Доступы менеджера к договорам обновлены');
-            } else {
-                message(0, 'Ошибка обновления доступов');
-            }
-        });
-    }
-    <?}?>
-</script>
+<?=$popupManagerAddClients?>
+<?=$popupManagerAddReports?>

@@ -161,6 +161,12 @@ class Model_Report extends Model
             $params['report_type_id'] = self::REPORT_TYPE_DB_ALL;
         }
 
+        if (empty($params['manager_id'])) {
+            $managerId = $user['MANAGER_ID'];
+        } else {
+            $managerId = $params['manager_id'];
+        }
+
         $sql = (new Builder())->select([
             'REPORT_ID',
             'REPORT_NAME',
@@ -172,7 +178,7 @@ class Model_Report extends Model
             ->from('V_WEB_REPORTS_AVAILABLE t')
             ->where("t.agent_id in (0, {$user['AGENT_ID']})")
             ->where("t.role_id in (0, {$user['role']})")
-            ->where("t.manager_id in (0, {$user['MANAGER_ID']})")
+            ->where("t.manager_id in (0, {$managerId})")
             ->where("t.report_type_id in (0, {$params['report_type_id']})")
         ;
 

@@ -105,7 +105,7 @@ class Builder
         if (empty($array)) {
             return $this;
         }
-        if (is_string($array)) {
+        if (!is_array($array)) {
             $array = [$array];
         }
 
@@ -173,6 +173,25 @@ class Builder
         $this->_where[] = [
             'connector' => 'and',
             'where'     => $where,
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param $param
+     * @param $array
+     * @return $this
+     */
+    public function whereIn($param, $array)
+    {
+        if (empty($param) || empty($array)) {
+            return $this;
+        }
+
+        $this->_where[] = [
+            'connector' => 'and',
+            'where'     => $param . ' in (' . implode(', ', (array)$array) . ')',
         ];
 
         return $this;

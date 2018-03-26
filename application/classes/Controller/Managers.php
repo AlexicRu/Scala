@@ -86,8 +86,45 @@ class Controller_Managers extends Controller_Common {
         $this->html($html);
     }
 
+
     /**
-     * удаляем кдинта у менеджера
+     * грузим список отчетов по менеджеру
+     */
+    public function action_loadReports()
+    {
+        $managerId = $this->request->post('manager_id');
+        $params = $this->request->post('params');
+
+        $search = !empty($params['search']) ? $params['search'] : null;
+
+        $reports = Model_Report::getAvailableReports($search, ['manager_id' => $managerId]);
+
+        $html = View::factory('ajax/managers/reports')
+            ->bind('reports', $reports)
+            ->bind('managerId', $managerId)
+        ;
+
+        $this->html($html);
+    }
+
+    /**
+     * удаляем отчет у менеджера
+     */
+    public function action_delReport()
+    {
+        $managerId = $this->request->post('manager_id');
+        $reportId = $this->request->post('report_id');
+
+        $error = Model_Manager::delReport($managerId, $reportId);
+
+        if(!empty($error)){
+            $this->jsonResult(false, $error);
+        }
+        $this->jsonResult(true);
+    }
+
+    /**
+     * удаляем клиента у менеджера
      */
     public function action_delClient()
     {
@@ -133,6 +170,21 @@ class Controller_Managers extends Controller_Common {
     }
 
     /**
+     * добавление отчетов
+     */
+    public function action_addReports()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Manager::editReports($params);
+
+        if($result == Oracle::CODE_SUCCESS){
+            $this->jsonResult(true);
+        }
+        $this->jsonResult(false, $result);
+    }
+
+    /**
      * список доступный клиентов
      */
     public function action_managersClients()
@@ -140,6 +192,18 @@ class Controller_Managers extends Controller_Common {
         $params = $this->request->post('params');
 
         $clients = Model_Manager::getClientsList($params);
+
+        $this->jsonResult(true, $clients);
+    }
+
+    /**
+     * список доступный отчетов
+     */
+    public function action_managersReports()
+    {
+        $params = $this->request->post('params');
+
+        $clients = Model_Manager::getReportsList($params);
 
         $this->jsonResult(true, $clients);
     }
