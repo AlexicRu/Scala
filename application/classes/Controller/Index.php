@@ -45,18 +45,52 @@ class Controller_Index extends Controller_Common {
 			$this->redirect('/');
 		}
 
-		if(Auth::instance()->login($post['login'], $post['password'], FALSE)){
+		if(Auth::instance()->login($post['login'], $post['password'])){
 			$this->redirect('/clients');
 		}
 
         $this->redirect('/');
 	}
 
+    /**
+     * разлогинивание
+     *
+     * @throws HTTP_Exception
+     */
 	public function action_logout()
 	{
 		Auth::instance()->logout();
 		$this->redirect('/');
 	}
+
+    /**
+     * принудительная авторизация
+     *
+     * @throws HTTP_Exception_403
+     */
+	public function action_forceLogin()
+    {
+        $hash = $this->request->param('hash');
+
+        if (empty($hash)) {
+            throw new HTTP_Exception_403();
+        }
+
+        $params = explode(" ", Common::decrypt($hash));
+
+        $userFrom   = $params[0];
+        $userTo     = !empty($params[1]) ? $params[1] : false;
+
+        if (User::checkForceLogin($userFrom, $userTo)) {
+            $manager = Model_Manager::getManager(['MANAGER_ID' => (int)$userTo]);
+
+            if(Auth::instance()->login($manager['LOGIN'], ['hash' => $manager['PASSWORD']])){
+                $this->redirect('/clients');
+            }
+        }
+
+        throw new HTTP_Exception_403();
+    }
 
     /**
      * грузим файлы аяксово

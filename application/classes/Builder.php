@@ -20,6 +20,16 @@ class Builder
     private $_distinct  = false;
 
     /**
+     * echo $sql;
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->build();
+    }
+
+    /**
      * @return $this
      */
     public function select($array = [])

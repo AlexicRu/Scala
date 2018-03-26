@@ -120,15 +120,15 @@ header{
 .hamburger, .mail, .settings, .logout{
   width: 70px; text-align: center; font-size: 20px;
   > a{
-    display: table-cell; width: 70px; height: 70px; color:#7e7e7e; text-decoration: none; vertical-align: middle;
+    display: table-cell; width: 70px; height: 70px; color:#7e7e7e; text-decoration: none; vertical-align: middle; padding: 0 20px;
     .transition();
-    &:hover{
+    &:hover, &.active{
       background: #f6f6f6;
     }
   }
 }
 .hamburger{
-  border-left: 1px solid #d8d9da; border-right:1px solid #d8d9da; font-size: 22px;
+  border-left: 1px solid #d8d9da; border-right:1px solid #d8d9da; font-size: 22px;  white-space: nowrap;
 }
 .search{
   white-space: nowrap;
@@ -1213,5 +1213,16 @@ div.jGrowl div.jGrowl-notification {
   }
   &__info{
     max-height: 75px; overflow-y: hidden;
+  }
+}
+.clients-float-list{
+  display: none; z-index: 100; text-align: left;
+  position: fixed;
+  top: 50px;
+  left: 210px;
+  box-shadow: 0 0 30px rgba(0,0,0,.1);
+
+  &.active{
+    display: block;
   }
 }

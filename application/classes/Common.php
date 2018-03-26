@@ -183,4 +183,45 @@ class Common
     {
         return self::isProd() ? '/assets/build/' : '/assets/';
     }
+
+    /**
+     * шифруем
+     *
+     * @param $plaintext
+     * @return string
+     * @throws Kohana_Exception
+     */
+    public static function encrypt($plaintext)
+    {
+        $key            = Kohana::$config->load('config')['salt'];
+        $ivlen          = openssl_cipher_iv_length($cipher="AES-128-CBC");
+        $iv             = openssl_random_pseudo_bytes($ivlen);
+        $ciphertext_raw = openssl_encrypt($plaintext, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
+        $hmac           = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
+        $ciphertext     = base64_encode( $iv.$hmac.$ciphertext_raw );
+
+        return str_replace(array('+', '/'), array('-', '_'), $ciphertext);
+    }
+
+    /**
+     * дешифруем
+     *
+     * @param $ciphertext
+     * @return string
+     * @throws Kohana_Exception
+     */
+    public static function decrypt($ciphertext)
+    {
+        $key                = Kohana::$config->load('config')['salt'];
+        $c                  = base64_decode(str_replace(array('-', '_'), array('+', '/'), $ciphertext));
+        $ivlen              = openssl_cipher_iv_length($cipher="AES-128-CBC");
+        $iv                 = substr($c, 0, $ivlen);
+        $hmac               = substr($c, $ivlen, $sha2len=32);
+        $ciphertext_raw     = substr($c, $ivlen+$sha2len);
+        $original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
+        $calcmac            = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
+
+        //с PHP 5.6+ сравнение, не подверженное атаке по времени
+        return hash_equals($hmac, $calcmac) ? $original_plaintext : '';
+    }
 }

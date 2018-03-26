@@ -30,8 +30,14 @@ class Auth_Oracle extends Auth {
                 'Telegram'  => true,
                 'Api'       => true
             ];
+            $actionsPasswordHashAvailable = [
+                'forceLogin'  => true,
+            ];
 
-            if (isset($controllersPasswordHashAvailable[$request->controller()])) {
+            if (
+                isset($controllersPasswordHashAvailable[$request->controller()]) ||
+                isset($actionsPasswordHashAvailable[$request->action()])
+            ) {
                 $password = $password['hash'];
             }
         }
@@ -153,6 +159,7 @@ class Auth_Oracle extends Auth {
 
         $user['clients'] = $db->column("select CLIENT_ID from ".Oracle::$prefix."V_WEB_MANAGER_CLIENTS where MANAGER_ID = ".$user['MANAGER_ID'], 'CLIENT_ID');
         $user['contracts'] = Model_Manager::getContractsTree($user['MANAGER_ID']);
+        $user['managers_binds'] = User::getManagersBinds($user['MANAGER_ID']);
 
         parent::complete_login($user);
     }

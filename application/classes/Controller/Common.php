@@ -23,7 +23,7 @@ abstract class Controller_Common extends Controller_Template {
         $action = Text::camelCaseToDashed($this->request->action());
 
         if(!Auth::instance()->logged_in()){
-            if(!in_array($action, ['login', 'logout']) && $_SERVER['REQUEST_URI'] != '/'){
+            if(!in_array($action, ['login', 'logout', 'force-login']) && $_SERVER['REQUEST_URI'] != '/'){
                 $this->redirect('/');
             }
             $this->template = 'not_auth';
