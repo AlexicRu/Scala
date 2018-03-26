@@ -253,9 +253,9 @@ class Model_Contract extends Model
         ];
 
 		$res = $db->procedure('client_contract_edit', $data);
-		$res1 = $db->procedure('client_contract_settings_edit', $data1, true);
+		$res1 = $db->procedure('client_contract_settings_edit', $data1);
 
-		if(empty($res) || empty($res1)){
+		if($res == Oracle::CODE_SUCCESS && $res1 == Oracle::CODE_SUCCESS){
 			return true;
 		}
 
