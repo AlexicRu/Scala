@@ -3,34 +3,7 @@
 class Telegram_GloProInfo extends Telegram_Common
 {
     protected $_bot = 'GloProInfo';
-
-    /**
-     * общая функция обработки
-     */
-    public function parse()
-    {
-        //разбираем пришедшие запросы
-        if (!empty($postData['message']['text'])) {
-
-            $data = explode(' ', strtolower($postData['message']['text']));
-
-            $this->_command = array_shift($data);
-            $this->_params = !empty($data) ? $data : [];
-        } else if (!empty($this->_postData['message']['contact'])) {
-            $phone = $this->_postData['message']['contact']['phone_number'];
-
-            //связываем аккаунт
-            $res = Model_Manager::connectToTelegram($phone, $this->_chatId);
-
-            if (!empty($res)) {
-                $this->_answer[] = 'Доступ получен';
-            } else {
-                $this->_answer[] = 'Ошибка получения доступа';
-            }
-        }
-
-        $this->execute();
-    }
+    protected $_requestContact = true;
 
     /**
      * выполняем команду

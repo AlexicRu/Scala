@@ -129,4 +129,18 @@ class Text extends Kohana_Text
 
         return $str;
     }
+
+    /**
+     * получаем текстовое написание валюты
+     *
+     * @param $currency
+     */
+    public static function getCurrency($currency)
+    {
+        if ($currency == Common::CURRENCY_RUR) {
+            return self::RUR;
+        }
+
+        return '';
+    }
 }

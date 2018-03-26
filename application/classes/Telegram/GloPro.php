@@ -12,8 +12,8 @@ class Telegram_GloPro extends Telegram_Common
     protected $_commandsWithoutAuth = [
         '/start',
         '/help',
-        'login',
-        'logout',
+        '/login',
+        '/logout',
     ];
 
     /**
@@ -29,25 +29,6 @@ class Telegram_GloPro extends Telegram_Common
         $this->_cacheKey .= $this->_telegramUser;
 
         $this->_cache = Cache::instance();
-    }
-
-    /**
-     * общая функция обработки
-     */
-    public function parse()
-    {
-        //разбираем пришедшие запросы
-        if (!empty($postData['message']['text'])) {
-
-            $data = explode(' ', strtolower($postData['message']['text']));
-
-            $this->_command = array_shift($data);
-            $this->_params = !empty($data) ? $data : [];
-        } else if(!empty($postData['message']['contact'])) {
-
-        }
-
-        $this->execute();
     }
 
     /**
@@ -75,11 +56,23 @@ class Telegram_GloPro extends Telegram_Common
                 case '/help':
                     $this->_buildHelpAnswer();
                     break;
-                case 'login':
+                case '/login':
                     $this->_commandLogin();
                     break;
-                case 'logout':
+                case '/logout':
                     $this->_commandLogout();
+                    break;
+                case '/clients':
+                    $this->_commandClients();
+                    break;
+                case '/contracts':
+                    $this->_commandContracts();
+                    break;
+                case '/cards':
+                    $this->_commandCards();
+                    break;
+                case '/balance':
+                    $this->_commandBalance();
                     break;
                 default:
                     throw new Exception('Команда <b>'.$this->_command.'</b> не найдена');
@@ -158,8 +151,12 @@ class Telegram_GloPro extends Telegram_Common
     {
         parent::_buildHelpAnswer();
 
-        $this->_answer[] = '<b>login</b> <i>login</i> <i>password</i> - авторизация на сутки';
-        $this->_answer[] = '<b>logout</b> - разлогинивание';
+        $this->_answer[] = '/login <i>LOGIN</i> <i>PASSWORD</i> - авторизация на сутки';
+        $this->_answer[] = '/logout - разлогинивание';
+        $this->_answer[] = '/clients <i>CLIENT_NAME_PART</i> - получение списка клиентов';
+        $this->_answer[] = '/contracts <i>CLIENT_ID</i> - получение списка контактов клиента';
+        $this->_answer[] = '/cards <i>CONTRACT_ID</i> <i>CARD_ID_PART</i> - получение списка карт договора';
+        $this->_answer[] = '/balance <i>CONTRACT_ID</i> - получение баланса контракта';
     }
 
     /**
@@ -175,5 +172,94 @@ class Telegram_GloPro extends Telegram_Common
         }
 
         return parent::getAnswer();
+    }
+
+    /**
+     * Получаем список клиентов
+     */
+    protected function _commandClients()
+    {
+        $clientNamePart = !empty($this->_params[0]) ? $this->_params[0] : null;
+
+        $clients = Model_Client::getClientsList($clientNamePart);
+
+        if (empty($clients)) {
+            $this->_answer[] = '<b>Клиенты не найдены</b>';
+        }
+
+        foreach ($clients as $client) {
+            $this->_answer[] = '/contracts'. $client['CLIENT_ID'] . ' ' . (!empty($client['LONG_NAME']) ? $client['LONG_NAME'] : $client['CLIENT_NAME']);
+        }
+    }
+
+    /**
+     * получаем список контрактов по конкретномпу клиенту
+     */
+    protected function _commandContracts()
+    {
+        $clientId = !empty($this->_params[0]) ? $this->_params[0] : $this->_id;
+
+        if (empty($clientId)) {
+            $this->_answer[] = '<i>Не передан ID клиента</i>';
+            return;
+        }
+
+        $contracts = Model_Contract::getContracts($clientId);
+
+        if (empty($contracts)) {
+            $this->_answer[] = '<b>Контракты не найдены</b>';
+        }
+
+        foreach ($contracts as $contract) {
+            $this->_answer[] =
+                '/cards'. $contract['CONTRACT_ID'] . ' ' .
+                '/balance'. $contract['CONTRACT_ID'] . ' ' .
+                $contract['CONTRACT_NAME'];
+        }
+    }
+
+    /**
+     * получаем список карт по конкретномпу договору
+     */
+    protected function _commandCards()
+    {
+        $contractId = !empty($this->_params[0]) ? $this->_params[0] : $this->_id;
+        $cardIdPart = !empty($this->_params[0]) ? $this->_params[0] : false;
+
+        if (empty($contractId)) {
+            $this->_answer[] = '<i>Не передан ID контракта</i>';
+            return;
+        }
+
+        $cards = Model_Card::getCards($contractId, false, ['query' => $cardIdPart]);
+
+        if (empty($cards)) {
+            $this->_answer[] = '<b>Карты не найдены</b>';
+        }
+
+        foreach ($cards as $card) {
+            $this->_answer[] = $card['CARD_ID'];
+        }
+    }
+
+    /**
+     * получаем список карт по конкретномпу договору
+     */
+    protected function _commandBalance()
+    {
+        $contractId = !empty($this->_params[0]) ? $this->_params[0] : $this->_id;
+
+        if (empty($contractId)) {
+            $this->_answer[] = '<i>Не передан ID контракта</i>';
+            return;
+        }
+
+        $balance = Model_Contract::getContractBalance($contractId);
+
+        if (empty($balance)) {
+            $this->_answer[] = '<b>Данные не найдены</b>';
+        }
+
+        $this->_answer[] = 'Баланс контракта: <b>'. number_format($balance['BALANCE'], 2, '.', ' ') .' '. Text::getCurrency($balance['CURRENCY']) .'</b>';
     }
 }

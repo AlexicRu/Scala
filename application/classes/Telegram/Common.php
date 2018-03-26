@@ -15,12 +15,14 @@ abstract class Telegram_Common
     protected $_bot;
     protected $_params;
     protected $_command;
+    protected $_id;
 
-    protected $_debug       = false;
-    protected $_answer      = [];
-    protected $_postData    = [];
-    protected $_config      = [];
-    protected $_configBot   = [];
+    protected $_requestContact  = false;
+    protected $_debug           = false;
+    protected $_answer          = [];
+    protected $_postData        = [];
+    protected $_config          = [];
+    protected $_configBot       = [];
 
     /**
      * @param string $bot
@@ -43,9 +45,43 @@ abstract class Telegram_Common
     }
 
     /**
+     * функция выбопления
+     */
+    abstract public function execute();
+
+    /**
      * общая функция обработки
      */
-    abstract public function parse();
+    public function parse()
+    {
+        //разбираем пришедшие запросы
+        if (!empty($this->_postData['message']['text'])) {
+
+            $data = explode(' ', strtolower($this->_postData['message']['text']));
+
+            $this->_command = array_shift($data);
+            $this->_id      = preg_replace("/\D+/", "", $this->_command);
+            $this->_params  = !empty($data) ? $data : [];
+
+            if (!empty($this->_id)) {
+                $this->_command = str_replace($this->_id, '', $this->_command);
+            }
+
+        } else if ($this->_requestContact && !empty($this->_postData['message']['contact'])) {
+            $phone = $this->_postData['message']['contact']['phone_number'];
+
+            //связываем аккаунт
+            $res = Model_Manager::connectToTelegram($phone, $this->_chatId);
+
+            if (!empty($res)) {
+                $this->_answer[] = 'Доступ получен';
+            } else {
+                $this->_answer[] = 'Ошибка получения доступа';
+            }
+        }
+
+        $this->execute();
+    }
 
     /**
      * включаем работу с api
@@ -70,7 +106,7 @@ abstract class Telegram_Common
     public function init($postData)
     {
         $this->_postData        = $postData;
-        $this->_telegramUser    = !empty($postData['message']['from']['username']) ? $postData['message']['from']['username'] : '';
+        $this->_telegramUser    = !empty($postData['message']['from']['id']) ? $postData['message']['from']['id'] : '';
         $this->_chatId          = !empty($postData['message']['chat']['id']) ? $postData['message']['chat']['id'] : false;
 
         if ($this->_configBot['debug']) {
@@ -144,22 +180,23 @@ abstract class Telegram_Common
         }
 
         $data = [
-            'parse_mode' => 'HTML',
-            'chat_id' => $this->_chatId,
-            'text' => $answer,
+            'parse_mode'    => 'HTML',
+            'chat_id'       => $this->_chatId,
+            'text'          => $answer,
+            'reply_markup'  => ['remove_keyboard' => true]
         ];
 
-        if (!empty($this->_postData['message']['contact'])) {
-            $data['reply_markup'] = ['remove_keyboard' => true];
-        } else {
-            $data['reply_markup'] = [
-                'keyboard' => [
-                    [
-                        (new KeyboardButton('Отправить контакт'))->setRequestContact(true)
-                    ]
-                ],
-                'resize_keyboard' => true
-            ];
+        if ($this->_requestContact) {
+            if (empty($this->_postData['message']['contact'])) {
+                $data['reply_markup'] = [
+                    'keyboard' => [
+                        [
+                            (new KeyboardButton('Отправить контакт'))->setRequestContact(true)
+                        ]
+                    ],
+                    'resize_keyboard' => true
+                ];
+            }
         }
 
         TelegramRequest::sendMessage($data);
@@ -171,6 +208,6 @@ abstract class Telegram_Common
     protected function _buildHelpAnswer()
     {
         $this->_answer[] = '<i>Доступные команды:</i>';
-        $this->_answer[] = '<b>/help</b> - вывод помощи';
+        $this->_answer[] = '<a href="/help">/help</a> - вывод помощи';
     }
 }

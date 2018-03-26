@@ -174,6 +174,11 @@ class Common
         View::set_global('css', array_merge($css, [Common::getAssetsLink() . 'css/' . $file]));
     }
 
+    /**
+     * получаем ссылку на файлы
+     *
+     * @return string
+     */
     public static function getAssetsLink()
     {
         return self::isProd() ? '/assets/build/' : '/assets/';
