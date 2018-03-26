@@ -83,11 +83,17 @@ class Model_Supplier_Agreement extends Model
 
         $res = $db->procedure('splrs_cntr_agreement_edit', $data);
 
-        if($res == Oracle::CODE_SUCCESS){
-            return true;
+        switch ($res) {
+            case Oracle::CODE_SUCCESS:
+                $result = true;
+                break;
+            case Oracle::CODE_ERROR_EXISTS:
+                Messages::put('Уже есть соглашение на данный период');
+            default:
+                $result = false;
         }
 
-        return false;
+        return $result;
     }
 
     /**
