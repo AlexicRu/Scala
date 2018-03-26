@@ -26,46 +26,49 @@
     <tr>
         <td></td>
         <td>
-            <span class="btn btn_reverse btn_add_contract_payment_go">+ Добавить платеж</span>
+            <span class="btn btn_reverse" onclick="submitForm($(this), addContractPaymentGo)">+ Добавить платеж</span>
             <span class="btn btn_red fancy_close">Отмена</span>
         </td>
     </tr>
 </table>
 
 <script>
-    $(function(){
-        $('.btn_add_contract_payment_go').on('click', function(){
-            var params = {
-                contract_id:    $('[name=contracts_list]').val(),
-                num:            $('[name=add_contract_payment_num]').val(),
-                date:           $('[name=add_contract_payment_date]').val(),
-                value:          $('[name=add_contract_payment_value]').val(),
-                comment:        $('[name=add_contract_payment_comment]').val()
-            };
+    function addContractPaymentGo(btn)
+    {
+        var params = {
+            contract_id:    $('[name=contracts_list]').val(),
+            num:            $('[name=add_contract_payment_num]').val(),
+            date:           $('[name=add_contract_payment_date]').val(),
+            value:          $('[name=add_contract_payment_value]').val(),
+            comment:        $('[name=add_contract_payment_comment]').val()
+        };
 
-            if(params.num == ''){
-                message(0, 'Введите номер');
-                return false;
+        if(params.num == ''){
+            message(0, 'Введите номер');
+            endSubmitForm();
+            return false;
+        }
+
+        if(params.date == ''){
+            message(0, 'Введите дату');
+            endSubmitForm();
+            return false;
+        }
+
+        if(params.value == ''){
+            message(0, 'Введите сумму');
+            endSubmitForm();
+            return false;
+        }
+
+        $.post('/clients/contract-payment-add', {params:params}, function(data){
+            if(data.success){
+                message(1, data.data);
+                loadContract('account');
+            }else{
+                message(0, data.data);
             }
-
-            if(params.date == ''){
-                message(0, 'Введите дату');
-                return false;
-            }
-
-            if(params.value == ''){
-                message(0, 'Введите сумму');
-                return false;
-            }
-
-            $.post('/clients/contract-payment-add', {params:params}, function(data){
-                if(data.success){
-                    message(1, data.data);
-                    loadContract('account');
-                }else{
-                    message(0, data.data);
-                }
-            });
+            endSubmitForm();
         });
-    });
+    }
 </script>
