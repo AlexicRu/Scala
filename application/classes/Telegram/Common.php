@@ -71,7 +71,7 @@ abstract class Telegram_Common
             $phone = $this->_postData['message']['contact']['phone_number'];
 
             //связываем аккаунт
-            $res = Model_Manager::connectToTelegram($phone, $this->_chatId);
+            $res = User::connectToTelegram($phone, $this->_chatId);
 
             if (!empty($res)) {
                 $this->_answer[] = 'Доступ получен';
