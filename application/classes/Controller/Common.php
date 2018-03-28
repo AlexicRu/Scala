@@ -204,8 +204,6 @@ abstract class Controller_Common extends Controller_Template {
                 '/assets/plugins/jquery.2.1.3.min.js',
             ];
         }
-
-        $this->template->favicon = Common::getFaviconRawData();
     }
 
     private function _appendFiles()

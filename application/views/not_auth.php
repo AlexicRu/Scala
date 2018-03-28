@@ -2,7 +2,7 @@
 <html lang="ru-RU">
 <head>
 
-    <?=(!empty($favicon) ? $favicon : '')?>
+    <?=Common::getFaviconRawData($customView)?>
 
 	<meta charset="UTF-8">
 
@@ -20,7 +20,7 @@
     }?>
 </head>
 
-<body class="custom_view_<?=(!empty($customView) ? $customView : 'glopro')?>">
+<body class="custom_view_<?=$customView?>">
 	<header>
 		<div class="logo">
 			<a href="/"></a>

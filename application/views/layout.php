@@ -2,7 +2,7 @@
 <html lang="ru-RU">
 <head>
 
-    <?=$favicon?>
+    <?=Common::getFaviconRawData($customView)?>
 
 	<meta charset="UTF-8">
 
