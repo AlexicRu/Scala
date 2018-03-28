@@ -202,7 +202,6 @@ function renderComboBoxMulti(combo, params)
     }
 
     combo.data('rendered', true);
-    combo.attr('placeholder', (params && params['placeholder']) ? params['placeholder'] : 'Поиск...');
 
     var url = combo.attr('url');
 
@@ -252,13 +251,13 @@ function renderComboBoxMulti(combo, params)
 
         if(params && params['depend_on']){
             var dependWrapper = outer.parents('.with_depend:last');
-            var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]', dependWrapper), true);
+            var value = getComboboxValue($('[name="'+ params['depend_on']['name'] + '"]', dependWrapper), true);
 
             if(value == ''){
                 return;
             }
 
-            postParams[params['depend_on']['name']] = value;
+            postParams[params['depend_on']['param']] = value;
         }
 
         t.addClass('loading');
@@ -398,7 +397,6 @@ function renderComboBox(combo, params)
     }
 
     combo.data('rendered', true);
-    combo.attr('placeholder', (params && params['placeholder']) ? params['placeholder'] : 'Поиск...');
 
     var url = combo.attr('url');
 
@@ -439,13 +437,13 @@ function renderComboBox(combo, params)
 
         if(params && params['depend_on']){
             var dependWrapper = outer.parents('.with_depend:last');
-            var value = getComboboxValue($('[name="'+ params['depend_on']['field'] + '"]', dependWrapper), true);
+            var value = getComboboxValue($('[name="'+ params['depend_on']['name'] + '"]', dependWrapper), true);
 
             if(value == ''){
                 return;
             }
 
-            postParams[params['depend_on']['name']] = value;
+            postParams[params['depend_on']['param']] = value;
         }
 
         hiddenValue.val('');

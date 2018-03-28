@@ -59,4 +59,5 @@ gulp.task('watch', ['build'], function() {
 
 gulp.task('build', ['css', 'js', 'fonts', 'image']);
 gulp.task('fast', ['css', 'js']);
+gulp.task('images', ['image']);
 gulp.task('default', ['watch']);

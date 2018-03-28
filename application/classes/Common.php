@@ -43,9 +43,24 @@ class Common
 	public static function buildFormField($type, $name, $value = false, $params = [])
     {
         try {
+            $configFields = Kohana::$config->load('fields')->as_array();
+
             $value = is_array($value) ? implode(',', $value) : $value;
 
-            $content = View::factory('forms/_fields/' . $type)
+            $templateUrl = 'forms/_fields/' . $type;
+
+            if (isset($configFields[$type])) {
+                $templateUrl = 'forms/_fields/_template';
+
+                //чтобы можно было подменять отдельные значения зависимых полей
+                if (isset($configFields[$type]['depend_on']) && isset($params['depend_on'])) {
+                    $params['depend_on'] = array_merge($configFields[$type]['depend_on'], $params['depend_on']);
+                }
+
+                $params = array_merge($configFields[$type], $params);
+            }
+
+            $content = View::factory($templateUrl)
                 ->bind('type', $type)
                 ->bind('name', $name)
                 ->bind('value', $value)

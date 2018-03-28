@@ -7,7 +7,7 @@
             <td rowspan="2" class="gray right">Договор:</td>
             <td rowspan="2">
                 <?=Common::buildFormField('contract_choose_single', 'contract_' . $iteration, false, [
-                    'depend_to_field_name' => 'client_' . $iteration
+                    'depend_on' => ['name' => 'client_' . $iteration]
                 ])?>
             </td>
             <td class="gray right">Текущий тариф:</td>

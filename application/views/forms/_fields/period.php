@@ -5,10 +5,7 @@
 
 <script>
     $(function () {
-        $('[name=<?=$name?>_start]').each(function () {
-            renderDatePicker($(this));
-        });
-        $('[name=<?=$name?>_end]').each(function () {
+        $('[name=<?=$name?>_start], [name=<?=$name?>_end]').each(function () {
             renderDatePicker($(this));
         });
     });
