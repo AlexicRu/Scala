@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru-RU">
 <head>
-    <?=Common::getFaviconRawData($customView)?>
+    <?=Common::getFaviconRawData()?>
 
 	<meta charset="UTF-8">
 	<title>500 - ошибка сервера</title>
