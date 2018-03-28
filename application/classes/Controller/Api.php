@@ -117,14 +117,6 @@ class Controller_Api extends Controller_Template
     }
 
     /**
-     * test
-     */
-    public function action_test()
-    {
-        $this->jsonResult(true, ['test' => true]);
-    }
-
-    /**
      * POST
      * изменение статуса карты
      */
@@ -244,7 +236,7 @@ class Controller_Api extends Controller_Template
                     $this->jsonResult(false, 'No access to card');
                 }
 
-                $data = Model_Card::getOilRestrictions($cardId, [
+                $data = Model_Card::getOilRestrictions($cardId, false, [
                     "LIMIT_ID",
                     "SERVICE_ID",
                     "SERVICE_NAME",
@@ -270,7 +262,7 @@ class Controller_Api extends Controller_Template
             case 'DELETE':
                 $limitId = $this->request->param('id') ?: false;
 
-                $result = Model_Card::delLimit($limitId);
+                list($result, $data) = Model_Card::delLimit($limitId);
 
                 break;
 

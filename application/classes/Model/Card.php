@@ -65,6 +65,12 @@ class Model_Card extends Model
 	    1233, 1499
     ];
 
+	private static $_selectedCards = [];
+
+	public static $cantDelCardLimitSystems = [
+	    1, 3, 4
+    ];
+
 	/**
 	 * получаем список доступный карт по контракту
 	 *
@@ -102,9 +108,9 @@ class Model_Card extends Model
 
         if(!empty($params['status'])){
             if($params['status'] == 'work'){
-                $sql->where('CARD_STATE != '.Model_Card::CARD_STATE_BLOCKED);
+                $sql->where('CARD_STATE != '.self::CARD_STATE_BLOCKED);
             } else {
-                $sql->where('CARD_STATE = '.Model_Card::CARD_STATE_BLOCKED);
+                $sql->where('CARD_STATE = '.self::CARD_STATE_BLOCKED);
             }
         }
 
@@ -128,16 +134,20 @@ class Model_Card extends Model
 
 	/**
 	 * вытягиваем одну карту
+     *
+     * используем статический массив, так как карту иногда надо достать много раз внутри этого класса в рамках одной функции
 	 */
 	public static function getCard($cardId, $contractId = false)
 	{
-		$card = self::getCards($contractId, $cardId);
+	    $key = $cardId . '_' . (int)$contractId;
 
-		if(!empty($card)){
-			return reset($card);
-		}
+	    if (empty(self::$_selectedCards[$key])) {
+            $cards = self::getCards($contractId, $cardId);
 
-		return false;
+            self::$_selectedCards[$key] = !empty($cards) ? reset($cards) : false;
+        }
+
+        return self::$_selectedCards[$key];
 	}
 
     /**
@@ -169,9 +179,9 @@ class Model_Card extends Model
      *
      * @param $cardId
      */
-    public static function getOilRestrictions($cardId, $select = [])
+    public static function getOilRestrictions($cardId, $limitId = false, $select = [])
     {
-        if(empty($cardId)){
+        if(empty($cardId) && empty($limitId)){
             return [];
         }
 
@@ -179,8 +189,15 @@ class Model_Card extends Model
 
         $sql = (new Builder())->select()
             ->from('V_WEB_CARDS_LIMITS')
-            ->where('card_id = ' . Oracle::quote($cardId))
         ;
+
+        if (!empty($cardId)) {
+            $sql->where('card_id = ' . Oracle::quote($cardId));
+        }
+
+        if (!empty($limitId)) {
+            $sql->where('limit_id = ' . (int)$limitId);
+        }
 
         if (!empty($select)) {
             $sql->select($select);
@@ -211,6 +228,19 @@ class Model_Card extends Model
         return $result;
     }
 
+    /**
+     * получаем инфу по конкретному лимиту
+     *
+     * @param $limitId
+     * @return bool|mixed
+     */
+    public static function getLimit($limitId)
+    {
+        $result = self::getOilRestrictions(false, $limitId);
+
+        return !empty($result[0]) ? $result[0] : false;
+    }
+
 	/**
 	 * данные по последней заправке
 	 *
@@ -225,7 +255,7 @@ class Model_Card extends Model
 
 		$db = Oracle::init();
 
-		$card = Model_Card::getCard($cardId);
+		$card = self::getCard($cardId);
 
 		$where = ["card_id = ".Oracle::quote($cardId)];
 
@@ -304,7 +334,7 @@ class Model_Card extends Model
 
         $contractId = !empty($params['CONTRACT_ID']) ? $params['CONTRACT_ID'] : false;
 
-		$card = Model_Card::getCard($cardId, $contractId);
+		$card = self::getCard($cardId, $contractId);
         $user = Auth::instance()->get_user();
 
 		$where = [
@@ -394,46 +424,23 @@ class Model_Card extends Model
             return [false, 'Ошибка'];
         }
 
-        $user = Auth::instance()->get_user();
-
-        $limits = (array)$limits;
-
-        if (count($limits) > 9) {
-            return [false, 'Изменение лимитов не произошло. Превышен лимит ограничений'];
-        }
-
         $currentLimits = self::getOilRestrictions($cardId);
 
-        if(
-            in_array($user['role'], array_keys(Access::$clientRoles)) &&
-            !in_array($user['MANAGER_ID'], self::$editLimitsManagerNoLimit)
-        ) {
-            foreach($limits as $limit){
-                if(
-                    ($limit['unit_type'] == 1 && $limit['value'] > 1000) ||
-                    ($limit['unit_type'] == 2 && $limit['value'] > 30000)
-                ){
-                    if(empty($currentLimits)){
-                        return [false, 'Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру'];
-                    }
-                    foreach($limit['services'] as $service){
-                        foreach ($currentLimits as $currentLimit){
-                            foreach ($currentLimit['services'] as $currentService) {
-                                if ($currentService['id'] == $service && $limit['value'] != $currentLimit['LIMIT_VALUE']) {
-                                    return [false, 'Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру'];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        $checkResult = self::checkCardLimits($cardId, $contractId, $limits, $currentLimits);
+
+        if (empty($checkResult[0])) {
+            return $checkResult;
         }
 
         $limitsIds = !empty($limits) ? array_column($limits, 'limit_id') : [];
 
         foreach ($currentLimits as $limit) {
             if (!in_array($limit['LIMIT_ID'], $limitsIds)) {
-                self::delLimit($limit['LIMIT_ID']);
+                $result = self::delLimit($limit['LIMIT_ID'], $limit);
+
+                if (empty($result[0])) {
+                    return $result;
+                }
             }
         }
 
@@ -442,6 +449,63 @@ class Model_Card extends Model
         }
 
         return self::editCardLimitsSimple($cardId, $contractId, $limits);
+    }
+
+    /**
+     * проверяем корректность лимитов
+     */
+    public static function checkCardLimits($cardId, $contractId, $limits, $currentLimits = [])
+    {
+        try {
+            if (empty($currentLimits)) {
+                $currentLimits = self::getOilRestrictions($cardId);
+            }
+
+            $user = User::current();
+
+            if (
+                (count($limits) > 9) ||
+                (count($limits) == 1 && $limits[0]['limit_id'] == -1 && count($currentLimits) == 9)
+            ) {
+                throw new Exception('Изменение лимитов не произошло. Превышен лимит ограничений');
+            }
+
+            if (
+                in_array($user['role'], array_keys(Access::$clientRoles)) &&
+                !in_array($user['MANAGER_ID'], self::$editLimitsManagerNoLimit)
+            ) {
+                foreach ($limits as $limit) {
+                    if (
+                        ($limit['unit_type'] == 1 && $limit['value'] > 1000) ||
+                        ($limit['unit_type'] == 2 && $limit['value'] > 30000)
+                    ) {
+                        if (empty($currentLimits)) {
+                            throw new Exception('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
+                        }
+                        foreach ($limit['services'] as $service) {
+                            foreach ($currentLimits as $currentLimit) {
+                                foreach ($currentLimit['services'] as $currentService) {
+                                    if ($currentService['id'] == $service && $limit['value'] != $currentLimit['LIMIT_VALUE']) {
+                                        throw new Exception('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $card = self::getCard($cardId);
+            $systemId = $card['SYSTEM_ID'];
+
+            //проверка в зависимости от системы карт
+            //todo
+
+        } catch (Exception $e) {
+            return [false, $e->getMessage()];
+        }
+
+        return [true, ''];
     }
 
     /**
@@ -459,7 +523,7 @@ class Model_Card extends Model
             }
 
             $user = User::current();
-            $card = Model_Card::getCard($cardId);
+            $card = self::getCard($cardId);
 
             /*
     S1,S2,S3:DT1:DV1:UT1:UC1:V1:DWT1:DWV1:TiFr1:TiTo1:ID1
@@ -480,7 +544,7 @@ class Model_Card extends Model
 
             foreach($limits as $group => $limit){
 
-                if (empty($limit['duration_type']) || empty($limit['unit_type']) || (empty($limit['value']) && $card['SYSTEM_ID'] == Model_Card::CARD_SYSTEM_GPN)) {
+                if (empty($limit['duration_type']) || empty($limit['unit_type']) || (empty($limit['value']) && $card['SYSTEM_ID'] == self::CARD_SYSTEM_GPN)) {
                     throw new Exception('Недостаточно данных по лимиту');
                 }
 
@@ -535,25 +599,43 @@ class Model_Card extends Model
      * удаляем лимит
      *
      * @param $limitId
-     * @return bool
+     * @return array
      */
-    public static function delLimit($limitId)
+    public static function delLimit($limitId, $limit = [])
     {
-        if (empty($limitId)) {
-            return false;
+        try {
+            if (empty($limitId)) {
+                throw new Exception('Некорректные входные параметры');
+            }
+
+            if (empty($limit)) {
+                $limit = self::getLimit($limitId);
+            }
+
+            $card = self::getCard($limit['CARD_ID']);
+
+            if (in_array($card['SYSTEM_ID'], self::$cantDelCardLimitSystems)) {
+                throw new Exception('Отсутствует доступ на удаление лимитов');
+            }
+
+            $user = User::current();
+
+            $data = [
+                'p_limit_id' => $limitId,
+                'p_manager_id' => $user['MANAGER_ID'],
+                'p_error_code' => 'out',
+            ];
+
+            $res = Oracle::init()->procedure('card_limit_del', $data);
+
+            if ($res != Oracle::CODE_SUCCESS) {
+                throw new Exception('Ошибка');
+            }
+        } catch (Exception $e) {
+            return [false, $e->getMessage()];
         }
 
-        $user = User::current();
-
-        $data = [
-            'p_limit_id'		=> $limitId,
-            'p_manager_id' 		=> $user['MANAGER_ID'],
-            'p_error_code' 		=> 'out',
-        ];
-
-        $res = Oracle::init()->procedure('card_limit_del', $data);
-
-        return $res == Oracle::CODE_SUCCESS ? true : false;
+        return [true, ''];
     }
 
 	/**

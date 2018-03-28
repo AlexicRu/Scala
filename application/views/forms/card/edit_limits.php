@@ -4,7 +4,7 @@ $systemId = $card['SYSTEM_ID'];
 
 $canDelService              = true;
 $canAddService              = true;
-$canDelLimit                = true;
+$canDelLimit                = in_array($systemId, Model_Card::$cantDelCardLimitSystems);
 $canAddLimit                = true;
 $canSave                    = true;
 $editSelect                 = true;
@@ -21,14 +21,10 @@ switch ($systemId) {
     case 1:
         $canDelService  = false;
         $canAddService  = false;
-        $canDelLimit    = false;
         $canAddLimit    = false;
         $canSave        = false;
         break;
-    case 2:
-        break;
     case 3:
-        $canDelLimit        = false;
         $canAddLimit        = false;
         $canDelService      = false;
         $canAddService      = false;
@@ -38,7 +34,6 @@ switch ($systemId) {
     case 4:
         $canDelService  = false;
         $canAddService  = false;
-        $canDelLimit    = false;
         $canAddLimit    = false;
         $canSave        = false;
         break;

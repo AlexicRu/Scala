@@ -83,7 +83,7 @@ return [
             Access::ROLE_SUPERVISOR,
         ],
         'suppliers_supplier-add' => [
-            Access::ROLE_ADMIN,
+            Access::ROLE_ROOT,
         ],
         'suppliers_supplier-edit' => [
             Access::ROLE_ADMIN,
