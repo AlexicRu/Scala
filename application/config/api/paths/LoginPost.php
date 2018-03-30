@@ -6,6 +6,7 @@ return [
     'method' => 'post',
     'tags' => ['main'],
     'summary' => 'Авторизация',
+    'description' => User::loggedIn() ? 'В описании можели положительного ответа указан токен' : 'После авторизации обновите страницу для получения полной документации',
     'operationId' => 'login',
     'consumes' => [
         'application/x-www-form-urlencoded'
@@ -21,7 +22,8 @@ return [
             'name' => 'password',
             'in' => 'formData',
             'type' => 'string',
-            'required' => true
+            'required' => true,
+            'format' => 'password'
         ]
     ],
     'responses' => [
@@ -43,7 +45,7 @@ return [
                         'properties' => [
                             'token' => [
                                 'type' => 'string',
-                                'default' => (new Api)->getToken(User::current()['MANAGER_ID'])
+                                'default' => !empty(User::current()) ? (new Api)->getToken(User::current()['MANAGER_ID']) : false
                             ]
                         ]
                     ]

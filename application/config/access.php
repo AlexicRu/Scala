@@ -83,7 +83,7 @@ return [
             Access::ROLE_SUPERVISOR,
         ],
         'suppliers_supplier-add' => [
-            Access::ROLE_ROOT,
+            Access::ROLE_ADMIN,
         ],
         'suppliers_supplier-edit' => [
             Access::ROLE_ADMIN,
@@ -277,6 +277,15 @@ return [
         'view_payment_block' => [
             Access::ROLE_CLIENT
         ]
+    ],
+    /*
+     * функции без авторизации
+     */
+    'without_auth' => [
+        'index_login',
+        'index_logout',
+        'index_force-login',
+        'index_get-json',
     ],
     /*
      * данные роли имеют доступ только на чтение, но указанные процедуры выполнять можно

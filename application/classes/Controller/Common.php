@@ -22,8 +22,10 @@ abstract class Controller_Common extends Controller_Template {
         $controller = Text::camelCaseToDashed($this->request->controller());
         $action = Text::camelCaseToDashed($this->request->action());
 
-        if(!Auth::instance()->logged_in()){
-            if(!in_array($action, ['login', 'logout', 'force-login']) && $_SERVER['REQUEST_URI'] != '/'){
+        $withoutAuth = Kohana::$config->load('access')['without_auth'];
+
+        if(!User::loggedIn()){
+            if(!in_array($controller . '_' . $action, $withoutAuth) && $_SERVER['REQUEST_URI'] != '/'){
                 $this->redirect('/');
             }
             $this->template = 'not_auth';

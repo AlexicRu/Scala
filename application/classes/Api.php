@@ -119,8 +119,16 @@ class Api
             DIRECTORY_SEPARATOR
         ;
 
-        //definitions
-        $definitionsFiles = scandir($apiConfigUrl . 'definitions');
+        if (User::loggedIn()) {
+            //definitions
+            $definitionsFiles = scandir($apiConfigUrl . 'definitions');
+
+            //paths
+            $pathsFiles = scandir($apiConfigUrl . 'paths');
+        } else {
+            $pathsFiles = ['LoginPost.php'];
+            $definitionsFiles = ['ApiBadResponse.php', 'ApiResponse.php'];
+        }
 
         foreach ($definitionsFiles as $file) {
             if (is_file($apiConfigUrl . 'definitions' . DIRECTORY_SEPARATOR . $file)) {
@@ -128,9 +136,6 @@ class Api
                 $definitions[$definition] = Kohana::$config->load('api/definitions/' . $definition)->as_array();
             }
         }
-
-        //paths
-        $pathsFiles = scandir($apiConfigUrl . 'paths');
 
         foreach ($pathsFiles as $file) {
             if (is_file($apiConfigUrl . 'paths' . DIRECTORY_SEPARATOR . $file)) {

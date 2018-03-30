@@ -13,6 +13,16 @@ class User
     }
 
     /**
+     * залогинен ли?
+     *
+     * @return mixed
+     */
+    public static function loggedIn()
+    {
+        return Auth::instance()->logged_in();
+    }
+
+    /**
      * проверяем доступность логина из под одного пользователя в другого
      *
      * @param $userFrom
@@ -21,6 +31,7 @@ class User
      */
     public static function checkForceLogin($userFrom, $userTo)
     {
+        //todo
         return true;
     }
 
