@@ -26,7 +26,7 @@
                 <tr>
                     <td class="gray right">Выбор из справочника</td>
                     <td>
-                        <?=Common::buildFormField('service_choose_single', 'add_service_in_service')?>
+                        <?=Form::buildField('service_choose_single', 'add_service_in_service')?>
                     </td>
                 </tr>
                 <tr>

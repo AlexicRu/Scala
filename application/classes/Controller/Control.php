@@ -34,7 +34,7 @@ class Controller_Control extends Controller_Common {
 
         $managers = Model_Manager::getManagersList($params);
 
-        $popupManagerAdd = Common::popupForm('Добавление менеджера', 'manager/add');
+        $popupManagerAdd = Form::popup('Добавление менеджера', 'manager/add');
 
         $this->tpl
             ->bind('managers', $managers)
@@ -65,8 +65,8 @@ class Controller_Control extends Controller_Common {
             ->set('changeRole', 1)
         ;
 
-        $popupManagerAddClients = Common::popupForm('Добавление клиентов', 'manager/add_clients');
-        $popupManagerAddReports = Common::popupForm('Доступные для добавления отчеты', 'manager/add_reports');
+        $popupManagerAddClients = Form::popup('Добавление клиентов', 'manager/add_clients');
+        $popupManagerAddReports = Form::popup('Доступные для добавления отчеты', 'manager/add_reports');
 
         $html = View::factory('ajax/control/manager')
             ->bind('managerId', $managerId)
@@ -90,10 +90,10 @@ class Controller_Control extends Controller_Common {
 
         $dotsGroups = Model_Dot::getGroups($filter);
 
-        $popupAddDotsGroup = Common::popupForm('Добавление группы точек', 'control/add_dots_group');
-        $popupAddDots = Common::popupForm('Добавление точек', 'control/add_dots');
+        $popupAddDotsGroup = Form::popup('Добавление группы точек', 'control/add_dots_group');
+        $popupAddDots = Form::popup('Добавление точек', 'control/add_dots');
 
-        $popupEditDotsGroup = Common::popupForm('Редактирование группы точек', 'control/edit_dots_group');
+        $popupEditDotsGroup = Form::popup('Редактирование группы точек', 'control/edit_dots_group');
 
         $this->tpl
             ->bind('dotsGroups', $dotsGroups)
@@ -491,9 +491,9 @@ class Controller_Control extends Controller_Common {
 
         $firmsGroups = Model_Firm::getFirmsGroups($filter);
 
-        $popupAddFirms = Common::popupForm('Добавление фирм', 'control/add_firms');
-        $popupAddFirmsGroup = Common::popupForm('Добавление группы фирм', 'control/add_firms_group');
-        $popupEditFirmsGroup = Common::popupForm('Редактирование группы фирм', 'control/edit_firms_group');
+        $popupAddFirms = Form::popup('Добавление фирм', 'control/add_firms');
+        $popupAddFirmsGroup = Form::popup('Добавление группы фирм', 'control/add_firms_group');
+        $popupEditFirmsGroup = Form::popup('Редактирование группы фирм', 'control/edit_firms_group');
 
         $this->tpl
             ->bind('firmsGroups', $firmsGroups)
@@ -515,9 +515,9 @@ class Controller_Control extends Controller_Common {
 
         $cardsGroups = Model_Card::getGroups($filter);
 
-        $popupAddCards = Common::popupForm('Добавление карт', 'control/add_cards');
-        $popupAddCardsGroup = Common::popupForm('Добавление группы карт', 'control/add_cards_group');
-        $popupEditCardsGroup = Common::popupForm('Редактирование группы точек', 'control/edit_cards_group');
+        $popupAddCards = Form::popup('Добавление карт', 'control/add_cards');
+        $popupAddCardsGroup = Form::popup('Добавление группы карт', 'control/add_cards_group');
+        $popupEditCardsGroup = Form::popup('Редактирование группы точек', 'control/edit_cards_group');
 
         $this->tpl
             ->bind('cardsGroups', $cardsGroups)

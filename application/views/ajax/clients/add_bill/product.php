@@ -6,7 +6,7 @@
         <tr>
             <td>
                 Вид топлива:<br>
-                <?=Common::buildFormField('service_choose_single', 'add_bill_product_service_' . $iteration)?>
+                <?=Form::buildField('service_choose_single', 'add_bill_product_service_' . $iteration)?>
             </td>
             <td>
                 Кол-во:<br>

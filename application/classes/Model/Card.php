@@ -1022,4 +1022,85 @@ class Model_Card extends Model
         }
         return false;
     }
+
+    /**
+     * получаем настройки лимитов по карте
+     *
+     * @param $cardId
+     */
+    public static function getCardLimitSettings($cardId)
+    {
+        $card = Model_Card::getCard($cardId);
+        $systemId = 5;//$card['SYSTEM_ID'];
+
+        $settings = [
+            'canDelService'             => true,
+            'canAddService'             => true,
+            'canDelLimit'               => in_array($systemId, Model_Card::$cantDelCardLimitSystems),
+            'canAddLimit'               => true,
+            'canSave'                   => true,
+            'editSelect'                => true,
+            'editServiceSelect'         => true,
+            'cntServiceForLimit'        => 1,
+            'cntServiceForFirstLimit'   => 1,
+            'limitParams'               => self::$cardLimitsParams,
+            'limitTypes'                => self::$cardLimitsTypes,
+            'cntTypes'                  => false,
+            'canUseFloat'               => true,
+            'cntLimits'                 => 999,
+        ];
+
+        switch ($systemId) {
+            case 1:
+                $settings['canDelService']  = false;
+                $settings['canAddService']  = false;
+                $settings['canAddLimit']    = false;
+                $settings['canSave']        = false;
+                break;
+            case 3:
+                $settings['canAddLimit']        = false;
+                $settings['canDelService']      = false;
+                $settings['canAddService']      = false;
+                $settings['editSelect']         = false;
+                $settings['editServiceSelect']  = false;
+                break;
+            case 4:
+                $settings['canDelService']  = false;
+                $settings['canAddService']  = false;
+                $settings['canAddLimit']    = false;
+                $settings['canSave']        = false;
+                break;
+            case self::CARD_SYSTEM_GPN:
+                $settings['cntServiceForFirstLimit'] = 999;
+                $settings['limitTypes']     = Model_Card::$cardLimitsTypesFull;
+                $settings['cntTypes']       = true;
+                $settings['editSelect']     = false;
+                $settings['canUseFloat']    = false;
+                break;
+            case 6:
+                $settings['cntServiceForLimit'] = 999;
+                //можно все
+                break;
+            case 7:
+                $settings['limitParams'] = [
+                    self::CARD_LIMIT_PARAM_RUR => $settings['limitParams'][self::CARD_LIMIT_PARAM_RUR]
+                ];
+                $settings['limitTypes'] = [
+                    self::CARD_LIMIT_TYPE_DAY => $settings['limitTypes'][self::CARD_LIMIT_TYPE_DAY]
+                ];
+                break;
+            case 8:
+                $settings['cntLimits'] = 1;
+                $settings['cntServiceForFirstLimit'] = 999;
+                $settings['limitParams'] = [
+                    self::CARD_LIMIT_PARAM_RUR => $settings['limitParams'][self::CARD_LIMIT_PARAM_RUR]
+                ];
+                $settings['limitTypes'] = [
+                    self::CARD_LIMIT_TYPE_DAY => $settings['limitTypes'][self::CARD_LIMIT_TYPE_DAY]
+                ];
+                break;
+        }
+
+        return $settings;
+    }
 }

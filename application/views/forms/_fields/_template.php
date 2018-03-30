@@ -17,7 +17,7 @@ if ($renderDepend) {?>
             ];
             $params['depend_on']['name'] = !empty($params['depend_on']['name']) ? $params['depend_on']['name'] : $params['depend_on']['field'];
             ?>
-            <?=Common::buildFormField($params['depend_on']['field'], $params['depend_on']['name'], false, $data)?>
+            <?=Form::buildField($params['depend_on']['field'], $params['depend_on']['name'], false, $data)?>
         </div>
 
         <div class="depend_on">

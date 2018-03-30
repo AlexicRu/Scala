@@ -11,7 +11,7 @@ class Controller_Suppliers extends Controller_Common {
 
 	public function action_index()
 	{
-        $popupSupplierAdd = Common::popupForm('Добавление нового поставщика', 'supplier/add');
+        $popupSupplierAdd = Form::popup('Добавление нового поставщика', 'supplier/add');
 
         $this->tpl
             ->bind('popupSupplierAdd', $popupSupplierAdd)
@@ -58,7 +58,7 @@ class Controller_Suppliers extends Controller_Common {
 
         $this->_initDropZone();
 
-        $popupSupplierContractAdd = Common::popupForm('Добавление нового договора', 'supplier/contract/add');
+        $popupSupplierContractAdd = Form::popup('Добавление нового договора', 'supplier/contract/add');
 
         $this->tpl
             ->bind('supplier', $supplier)
@@ -115,7 +115,7 @@ class Controller_Suppliers extends Controller_Common {
             case 'agreements':
                 $agreements = Model_Supplier_Agreement::getList(['contract_id' => $contractId]);
 
-                $popupAgreementAdd = Common::popupForm('Добавление нового соглашения', 'supplier/agreement/add');
+                $popupAgreementAdd = Form::popup('Добавление нового соглашения', 'supplier/agreement/add');
 
                 $content = View::factory('ajax/suppliers/contract/agreements')
                     ->bind('agreements', $agreements)

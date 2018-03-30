@@ -52,7 +52,7 @@ $toggle = 'agreement'.$agreement['AGREEMENT_ID'];
                                 <input type="radio" name="DISCOUNT_TYPE" value="<?=Model_Supplier_Agreement::DISCOUNT_TYPE_FROM_TARIFF?>" <?=($agreement['DISCOUNT_TYPE'] == Model_Supplier_Agreement::DISCOUNT_TYPE_FROM_TARIFF ? 'checked' : '')?> onchange="checkAgreementDiscountType($(this))">
                                 По тарифу
                             </label>
-                            <?=Common::buildFormField('contract_tariffs', 'TARIF_ID', $agreement['TARIF_ID'])?>
+                            <?=Form::buildField('contract_tariffs', 'TARIF_ID', $agreement['TARIF_ID'])?>
                         </div>
                     </div>
                 </td>

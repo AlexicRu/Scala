@@ -1,72 +1,5 @@
 <?
 $postfix = $card['CARD_ID'];
-$systemId = $card['SYSTEM_ID'];
-
-$canDelService              = true;
-$canAddService              = true;
-$canDelLimit                = in_array($systemId, Model_Card::$cantDelCardLimitSystems);
-$canAddLimit                = true;
-$canSave                    = true;
-$editSelect                 = true;
-$editServiceSelect          = true;
-$cntServiceForLimit         = 1;
-$cntServiceForFirstLimit    = 1;
-$limitParams                = Model_Card::$cardLimitsParams;
-$limitTypes                 = Model_Card::$cardLimitsTypes;
-$cntTypes                   = false;
-$canUseFloat                = true;
-$cntLimits                  = 999;
-
-switch ($systemId) {
-    case 1:
-        $canDelService  = false;
-        $canAddService  = false;
-        $canAddLimit    = false;
-        $canSave        = false;
-        break;
-    case 3:
-        $canAddLimit        = false;
-        $canDelService      = false;
-        $canAddService      = false;
-        $editSelect         = false;
-        $editServiceSelect  = false;
-        break;
-    case 4:
-        $canDelService  = false;
-        $canAddService  = false;
-        $canAddLimit    = false;
-        $canSave        = false;
-        break;
-    case Model_Card::CARD_SYSTEM_GPN:
-        $cntServiceForFirstLimit = 999;
-        $limitTypes     = Model_Card::$cardLimitsTypesFull;
-        $cntTypes       = true;
-        $editSelect     = false;
-        $canUseFloat    = false;
-        break;
-    case 6:
-        $cntServiceForLimit = 999;
-        //можно все
-        break;
-    case 7:
-        $limitParams = [
-            Model_Card::CARD_LIMIT_PARAM_RUR => $limitParams[Model_Card::CARD_LIMIT_PARAM_RUR]
-        ];
-        $limitTypes = [
-            Model_Card::CARD_LIMIT_TYPE_DAY => $limitTypes[Model_Card::CARD_LIMIT_TYPE_DAY]
-        ];
-        break;
-    case 8:
-        $cntLimits = 1;
-        $cntServiceForFirstLimit = 999;
-        $limitParams = [
-            Model_Card::CARD_LIMIT_PARAM_RUR => $limitParams[Model_Card::CARD_LIMIT_PARAM_RUR]
-        ];
-        $limitTypes = [
-            Model_Card::CARD_LIMIT_TYPE_DAY => $limitTypes[Model_Card::CARD_LIMIT_TYPE_DAY]
-        ];
-        break;
-}
 
 if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-limits')){?>
 
@@ -76,74 +9,15 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
             <td>
                 <table class="table_form table_form_limits">
                     <?foreach($oilRestrictions as $restriction){
-                        ?>
-                        <tr limit_group="<?=$restriction['LIMIT_ID']?>">
-                            <td>
-                                <?foreach($restriction['services'] as $restrictionService){?>
-                                    <div class="form_elem" limit_service>
-                                        <nobr>
-                                            <select name="limit_service" onchange="checkServices_<?=$postfix?>()" <?=(empty($editServiceSelect) ? 'disabled' : '')?>>
-                                                <?foreach($servicesList as $service){?>
-                                                    <option
-                                                            group="<?=$service['SYSTEM_SERVICE_GROUP']?>"
-                                                            value="<?=$service['SERVICE_ID']?>"
-                                                            <?if($service['SERVICE_ID'] == $restrictionService['id']){?>selected<?}?>
-                                                    ><?=$service['FOREIGN_DESC']?></option>
-                                                <?}?>
-                                            </select>
-
-                                            <?if ($canDelService) {?>
-                                                <button class="btn btn_small btn_red btn_card_edit_del_serviсe" onclick="cardEditDelService_<?=$postfix?>($(this))">&times;</button>
-                                            <?}?>
-                                        </nobr>
-                                    </div>
-                                <?}?>
-                                <div>
-                                    <nobr>
-                                        <?if ($canAddService) {?>
-                                            <button class="btn btn_small btn_green btn_card_edit_add_serviсe" onclick="cardEditAddService_<?=$postfix?>($(this))">+ добавить услугу</button>
-                                        <?}?>
-                                        <?if ($canDelLimit) {?>
-                                            <button class="btn btn_small btn_red btn_card_edit_del_limit" onclick="cardEditDelLimit_<?=$postfix?>($(this))">&times; удалить лимит</button>
-                                        <?}?>
-                                    </nobr>
-                                </div>
-                            </td>
-                            <td class="v_top">
-                                <?if ($canUseFloat) {?>
-                                    <input type="text" name="limit_value" value="<?=$restriction['LIMIT_VALUE']?>" placeholder="Объем / сумма" class="input_mini">
-                                <?}else{?>
-                                    <input type="number" name="limit_value" value="<?=$restriction['LIMIT_VALUE']?>" placeholder="Объем / сумма" class="input_mini" onkeypress="$(this).val(parseInt($(this).val()))">
-                                <?}?>
-                            </td>
-                            <td class="v_top">
-                                <select name="unit_type" <?=(empty($editSelect) ? 'disabled' : '')?>>
-                                    <?foreach($limitParams as $limitParam => $value){?>
-                                        <option value="<?=$limitParam?>" <?if($limitParam == $restriction['UNIT_TYPE']){?>selected<?}?>><?=$value?></option>
-                                    <?}?>
-                                </select>
-                            </td>
-                            <?if ($cntTypes) {?>
-                                <td class="v_top">
-                                     <input type="text" name="duration_value" value="<?=$restriction['DURATION_VALUE']?>" placeholder="Кол-во" class="input_mini" disabled>
-                                </td>
-                            <?}?>
-                            <td class="v_top">
-                                <select name="duration_type" <?=(empty($editSelect) ? 'disabled' : '')?>>
-                                    <?foreach($limitTypes as $limitType => $value){?>
-                                        <option value="<?=$limitType?>" <?if($limitType == $restriction['DURATION_TYPE']){?>selected<?}?>><?=$value?></option>
-                                    <?}?>
-                                </select>
-                            </td>
-                        </tr>
-                    <?}?>
-                    <?if ($canAddLimit) {?>
+                        echo Form::buildLimit($card['CARD_ID'], $restriction, $postfix);
+                    }?>
+                    <?if ($settings['canAddLimit']) {?>
                         <tr>
                             <td><button class="btn btn_green btn_card_edit_add_limit" onclick="cardEditAddLimit_<?=$postfix?>($(this))">+ Добавить ограничение</button></td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <?if ($cntTypes) {?><td></td><?}?>
+                            <?if ($settings['cntTypes']) {?><td></td><?}?>
                         </tr>
                     <?}?>
                 </table>
@@ -152,7 +26,7 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
         <tr>
             <td></td>
             <td>
-                <?if ($canSave) {?>
+                <?if ($settings['canSave']) {?>
                     <span class="btn btn_reverse" onclick="cardEditGo_<?=$postfix?>($(this))"><i class="icon-ok"></i> Сохранить лимиты</span>
                 <?}?>
                 <span class="btn btn_red fancy_close">Отмена</span>
@@ -178,16 +52,6 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
             },
         <?}?>
     };
-    var limitParams_<?=$postfix?> = {
-        <?foreach($limitParams as $limitParam => $value){?>
-        "<?=$limitParam?>": "<?=$value?>",
-        <?}?>
-    };
-    var limitTypes_<?=$postfix?> = {
-        <?foreach($limitTypes as $limitType => $value){?>
-        "<?=$limitType?>": "<?=$value?>",
-        <?}?>
-    };
 
     function cardEditDelService_<?=$postfix?>(t)
     {
@@ -203,63 +67,69 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
     {
         var td = t.closest('td');
 
-        <?if ($cntServiceForLimit != $cntServiceForFirstLimit) {?>
+        <?if ($settings['cntServiceForLimit'] != $settings['cntServiceForFirstLimit']) {?>
             var tr = t.closest('tr');
 
             if (tr.index() == 0) {
-                if (td.find('[limit_service]').length == <?=$cntServiceForFirstLimit?>) {
-                    message(0, 'Максимум услуг на первый лимит: <?=$cntServiceForFirstLimit?>');
+                if (td.find('[limit_service]').length == <?=$settings['cntServiceForFirstLimit']?>) {
+                    message(0, 'Максимум услуг на первый лимит: <?=$settings['cntServiceForFirstLimit']?>');
                     return false;
                 }
             } else {
-                if(td.find('[limit_service]').length == <?=$cntServiceForLimit?>){
-                    message(0, 'Максимум услуг на лимит: <?=$cntServiceForLimit?>');
+                if(td.find('[limit_service]').length == <?=$settings['cntServiceForLimit']?>){
+                    message(0, 'Максимум услуг на лимит: <?=$settings['cntServiceForLimit']?>');
                     return false;
                 }
             }
         <?} else {?>
-            if(td.find('[limit_service]').length == <?=$cntServiceForLimit?>){
-                message(0, 'Максимум услуг на лимит: <?=$cntServiceForLimit?>');
+            if(td.find('[limit_service]').length == <?=$settings['cntServiceForLimit']?>){
+                message(0, 'Максимум услуг на лимит: <?=$settings['cntServiceForLimit']?>');
                 return false;
             }
         <?}?>
 
-        var tpl = $('<div class="form_elem" limit_service><nobr>' +
-            '<select name="limit_service" onchange="checkServices_<?=$postfix?>()" <?=(!$editServiceSelect ? 'disabled' : '')?> /> '+
-            <?if ($canDelService){?>
-                '<button class="btn btn_small btn_red btn_card_edit_del_serviсe" onclick="cardEditDelService_<?=$postfix?>($(this))">&times;</button>'+
-            <?}?>
-            '</nobr></div>');
+        var params = {
+            cardId:     '<?=$card['CARD_ID']?>',
+            postfix:    '<?=$postfix?>'
+        };
 
-        var selectFirst = $('.form_card_edit_<?=$postfix?> [name=limit_service]:first');
-        var group = selectFirst.find('option:selected').attr('group');
-        var disabled = [
-            selectFirst.val()
-        ];
-        $('option', selectFirst).each(function () {
-            var t = $(this);
-            if (t.is(":disabled") || t.attr('group') != group) {
-                disabled.push($(this).attr('value'));
+        $.get('/clients/card-limit-service-template/', params, function(tpl){
+            tpl = $(tpl);
+            var selectFirst = $('.form_card_edit_<?=$postfix?> [name=limit_service]:first');
+            var group = selectFirst.find('option:selected').attr('group');
+            var disabled = [
+                selectFirst.val()
+            ];
+            $('option', selectFirst).each(function () {
+                var t = $(this);
+                if (t.is(":disabled") || t.attr('group') != group) {
+                    disabled.push(t.attr('value'));
+                }
+            });
+
+            if (disabled.length == services_cnt_<?=$postfix?>) {
+                message(0, 'Доступные услуги закончились');
+                return false;
             }
+
+            var flSetSelected = false;
+            for (var i in services_<?=$postfix?>) {
+                if (disabled.indexOf(i) != -1) {
+                    tpl.find('select option[value="'+ i +'"]').prop('disabled', true);
+                } else {
+                    flSetSelected = true;
+                    tpl.find('select option[value="'+ i +'"]').prop('selected', true);
+                }
+            }
+
+            if (td.find('[limit_service]').size()) {
+                tpl.insertAfter(td.find('[limit_service]:last'));
+            } else {
+                tpl.insertBefore(td.find('div'));
+            }
+
+            checkServices_<?=$postfix?>();
         });
-
-        if (disabled.length == services_cnt_<?=$postfix?>) {
-            message(0, 'Доступные услуги закончились');
-            return false;
-        }
-
-        for (var i in services_<?=$postfix?>) {
-            var service = services_<?=$postfix?>[i];
-            tpl.find('select').append('<option value="' + i + '" '+ (disabled.indexOf(i) != -1 ? 'disabled' : '') +' group="'+ service.group +'">' + service.name + '</option>');
-        }
-
-        if (td.find('[limit_service]').size()) {
-            tpl.insertAfter(td.find('[limit_service]:last'));
-        } else {
-            tpl.insertBefore(td.find('div'));
-        }
-
-        checkServices_<?=$postfix?>();
     }
 
     function cardEditDelLimit_<?=$postfix?>(t)
@@ -278,45 +148,26 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
     {
         var tbl = t.closest('table');
 
-        if ($('tr[limit_group]', table).length >= <?=$cntLimits?>) {
+        if ($('tr[limit_group]', table).length >= <?=$settings['cntLimits']?>) {
             message(0, 'Достигнуто максимальное кол-во лимитов');
             return false;
         }
 
         var table = t.closest('table');
-        var tpl = $('<tr limit_group="-1">' +
-            '<td><div><nobr>' +
-            <?if ($canAddService){?>
-                '<button class="btn btn_small btn_green btn_card_edit_add_serviсe" onclick="cardEditAddService_<?=$postfix?>($(this))">+ добавить услугу</button>' +
-            <?}?>
-            <?if ($canDelLimit){?>
-                '<button class="btn btn_small btn_red btn_card_edit_del_limit" onclick="cardEditDelLimit_<?=$postfix?>($(this))">&times; удалить лимит</button>' +
-            <?}?>
-            '</div></nobr></td>' +
-            <?if ($canUseFloat) {?>
-                '<td class="v_top"><input type="text" name="limit_value" class="input_mini" placeholder="Объем / сумма"></td>' +
-            <?}else{?>
-                '<td class="v_top"><input type="number" name="limit_value" class="input_mini" placeholder="Объем / сумма" onkeypress="$(this).val(parseInt($(this).val()))"></td>' +
-            <?}?>
-            '<td class="v_top"><select name="unit_type" /></td>'+
-            <?if ($cntTypes) {?>
-                '<td class="v_top"><input type="text" name="duration_value" placeholder="Кол-во" class="input_mini" /></td>' +
-            <?}?>
-            '<td class="v_top"><select name="duration_type" /></td>' +
-        '</tr>');
 
-        for (var i in limitParams_<?=$postfix?>) {
-            tpl.find('select[name=unit_type]').append('<option value="' + i + '">' + limitParams_<?=$postfix?>[i] + '</option>');
-        }
-        for (var j in limitTypes_<?=$postfix?>) {
-            tpl.find('select[name=duration_type]').append('<option value="' + j + '">' + limitTypes_<?=$postfix?>[j] + '</option>');
-        }
+        var params = {
+            cardId:     '<?=$card['CARD_ID']?>',
+            postfix:    '<?=$postfix?>'
+        };
 
-        if (table.find('[limit_group]').size()) {
-            tpl.insertAfter(table.find('[limit_group]:last'));
-        } else {
-            tpl.insertBefore(table.find('tr'));
-        }
+        $.get('/clients/card-limit-template/', params, function(tpl){
+            tpl = $(tpl);
+            if (table.find('[limit_group]').size()) {
+                tpl.insertAfter(table.find('[limit_group]:last'));
+            } else {
+                tpl.insertBefore(table.find('tr'));
+            }
+        });
     }
 
     function cardEditGo_<?=$postfix?>(t)

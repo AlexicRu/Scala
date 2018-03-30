@@ -77,7 +77,7 @@
                     <td>
                         <div toggle_block="toggle_contract" class="contract_service_render_value"></div>
                         <div class="dn" toggle_block="toggle_contract">
-                            <?=Common::buildFormField('service_choose_single', 'CONTRACT_SERVICES', $contractServices, [
+                            <?=Form::buildField('service_choose_single', 'CONTRACT_SERVICES', $contractServices, [
                                 'show_all' => true,
                                 'render_value_to' => '.contract_service_render_value'
                             ])?>
@@ -90,7 +90,7 @@
                     <td>
                         <div toggle_block="toggle_contract" class="contract_pos_groups_render_value"></div>
                         <div class="dn" toggle_block="toggle_contract">
-                            <?=Common::buildFormField('pos_group_choose_single', 'CONTRACT_POS_GROUPS', $contractDotsGroups, [
+                            <?=Form::buildField('pos_group_choose_single', 'CONTRACT_POS_GROUPS', $contractDotsGroups, [
                                 'show_all' => true,
                                 'render_value_to' => '.contract_pos_groups_render_value',
                                 'group_type' => Model_Dot::GROUP_TYPE_SUPPLIER

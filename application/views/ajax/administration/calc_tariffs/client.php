@@ -6,7 +6,7 @@
         <tr>
             <td rowspan="2" class="gray right">Договор:</td>
             <td rowspan="2">
-                <?=Common::buildFormField('contract_choose_single', 'contract_' . $iteration, false, [
+                <?=Form::buildField('contract_choose_single', 'contract_' . $iteration, false, [
                     'depend_on' => ['name' => 'client_' . $iteration]
                 ])?>
             </td>

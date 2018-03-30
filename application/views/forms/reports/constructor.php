@@ -5,7 +5,7 @@ if(!empty($fields[Model_Report::REPORT_CONSTRUCTOR_TYPE_PERIOD])){
         <tr>
             <td class="gray right" width="150"><?=$field['PROPERTY_NAME']?>:</td>
             <td>
-                <?=Common::buildFormField($field['PROPERTY_FORM'], $field['PARAM_NAME'], false, ['weight' => $field['PROPERTY_WEIGHT']])?>
+                <?=Form::buildField($field['PROPERTY_FORM'], $field['PARAM_NAME'], false, ['weight' => $field['PROPERTY_WEIGHT']])?>
             </td>
         </tr>
         <?}
@@ -23,7 +23,7 @@ if(!empty($fields[Model_Report::REPORT_CONSTRUCTOR_TYPE_ADDITIONAL])){
                         <tr>
                             <td class="gray right vaTop" width="150"><?=$field['PROPERTY_NAME']?>:</td>
                             <td>
-                                <?=Common::buildFormField($field['PROPERTY_FORM'], $field['PARAM_NAME'], false, ['weight' => $field['PROPERTY_WEIGHT']])?>
+                                <?=Form::buildField($field['PROPERTY_FORM'], $field['PARAM_NAME'], false, ['weight' => $field['PROPERTY_WEIGHT']])?>
                             </td>
                         </tr>
                     <?}
@@ -39,7 +39,7 @@ if(!empty($fields[Model_Report::REPORT_CONSTRUCTOR_TYPE_FORMAT])){
             <td class="gray right" width="150">Формат:</td>
             <td>
                 <?foreach($fields[Model_Report::REPORT_CONSTRUCTOR_TYPE_FORMAT] as $field){?>
-                    <?=Common::buildFormField($field['PROPERTY_FORM'], $field['PARAM_NAME'])?>
+                    <?=Form::buildField($field['PROPERTY_FORM'], $field['PARAM_NAME'])?>
                 <?}?>
             </td>
         </tr>

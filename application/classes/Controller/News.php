@@ -26,7 +26,7 @@ class Controller_News extends Controller_Common {
 			$this->jsonResult(true, ['items' => $news, 'more' => $more]);
 		}
 
-        $popupNewsAdd = Common::popupForm('Добавление новости', 'news/edit');
+        $popupNewsAdd = Form::popup('Добавление новости', 'news/edit');
 
         $this->_initWYSIWYG();
         $this->_initDropZone();
@@ -51,7 +51,7 @@ class Controller_News extends Controller_Common {
             throw new HTTP_Exception_404();
         }
 
-        $popupNewsEdit = Common::popupForm('Редактирование новости', 'news/edit', ['detail' => $newsDetail]);
+        $popupNewsEdit = Form::popup('Редактирование новости', 'news/edit', ['detail' => $newsDetail]);
         $this->_initWYSIWYG();
         $this->_initDropZone();
 

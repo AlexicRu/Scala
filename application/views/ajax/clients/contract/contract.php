@@ -105,7 +105,7 @@
                 <td>
                     <span toggle_block="block2" class="goods_reciever_span"></span>
                     <span toggle_block="block2" class="dn">
-                        <?=Common::buildFormField('client_choose_single', 'GOODS_RECIEVER', $contractSettings['GOODS_RECIEVER'], [
+                        <?=Form::buildField('client_choose_single', 'GOODS_RECIEVER', $contractSettings['GOODS_RECIEVER'], [
                             'render_value_to' => '.goods_reciever_span',
                         ])?>
                     </span>
@@ -195,7 +195,7 @@
                     <td>
                         <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_ONLINE']?></span>
                         <span toggle_block="block2" class="dn">
-                            <?=Common::buildFormField('contract_tariffs', 'TARIF_ONLINE', $contractSettings['TARIF_ONLINE'])?>
+                            <?=Form::buildField('contract_tariffs', 'TARIF_ONLINE', $contractSettings['TARIF_ONLINE'])?>
                         </span>
                     </td>
                 </tr>
@@ -204,7 +204,7 @@
                     <td>
                         <span toggle_block="block2"><?=$contractSettings['TARIF_NAME_OFFLINE']?></span>
                         <span toggle_block="block2" class="dn">
-                            <?=Common::buildFormField('contract_tariffs', 'TARIF_OFFLINE', $contractSettings['TARIF_OFFLINE'])?>
+                            <?=Form::buildField('contract_tariffs', 'TARIF_OFFLINE', $contractSettings['TARIF_OFFLINE'])?>
                         </span>
                     </td>
                 </tr>

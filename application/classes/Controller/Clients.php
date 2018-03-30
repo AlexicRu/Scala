@@ -18,7 +18,7 @@ class Controller_Clients extends Controller_Common {
 
 		$clients = Model_Client::getClientsList($search);
 
-        $popupClientAdd = Common::popupForm('Добавление нового клиента', 'client/add');
+        $popupClientAdd = Form::popup('Добавление нового клиента', 'client/add');
 
         $this->tpl
             ->bind('clients', $clients)
@@ -43,8 +43,8 @@ class Controller_Clients extends Controller_Common {
 			throw new HTTP_Exception_404();
 		}
 
-		$popupContractAdd = Common::popupForm('Добавление нового договора', 'contract/add');
-		$popupCabinetCreate = Common::popupForm('Создание личного кабинета', 'client/cabinet_create');
+		$popupContractAdd = Form::popup('Добавление нового договора', 'contract/add');
+		$popupCabinetCreate = Form::popup('Создание личного кабинета', 'client/cabinet_create');
 
 		$this->tpl
 			->bind('client', $client)
@@ -98,8 +98,8 @@ class Controller_Clients extends Controller_Common {
 				$contractSettings = Model_Contract::getContractSettings($contractId);
                 $contractTariffs = Model_Contract::getTariffs();
                 $noticeSettings = Model_Contract::getContractNoticeSettings($contractId);
-				$popupContractNoticeSettings = Common::popupForm('Настройка уведомлений', 'contract/notice_settings', ['settings' => $noticeSettings]);
-				$popupContractHistory = Common::popupForm('История по договору', 'contract/history');
+				$popupContractNoticeSettings = Form::popup('Настройка уведомлений', 'contract/notice_settings', ['settings' => $noticeSettings]);
+				$popupContractHistory = Form::popup('История по договору', 'contract/history');
 
 				$content = View::factory('ajax/clients/contract/contract')
 					->bind('contract', $contract)
@@ -110,7 +110,7 @@ class Controller_Clients extends Controller_Common {
 				;
 				break;
 			case 'cards':
-				$popupCardAdd = Common::popupForm('Добавление новой карты', 'card/add');
+				$popupCardAdd = Form::popup('Добавление новой карты', 'card/add');
 
 				$cardsCounter = Model_Contract::getCardsCounter($contractId);
 
@@ -126,12 +126,12 @@ class Controller_Clients extends Controller_Common {
                 Listing::$limit = 999;
                 $servicesList = Listing::getServices(['description' => 'LONG_DESC']);
 
-				$popupContractPaymentAdd = Common::popupForm('Добавление нового платежа', 'contract/payment_add');
-                $popupContractBillAdd = Common::popupForm('Выставление счета', 'contract/bill_add');
-                $popupContractBillPrint = Common::popupForm('Печать счетов', 'contract/bill_print');
-                $popupContractLimitIncrease = Common::popupForm('Изменение лимита', 'contract/increase_limit');
+				$popupContractPaymentAdd = Form::popup('Добавление нового платежа', 'contract/payment_add');
+                $popupContractBillAdd = Form::popup('Выставление счета', 'contract/bill_add');
+                $popupContractBillPrint = Form::popup('Печать счетов', 'contract/bill_print');
+                $popupContractLimitIncrease = Form::popup('Изменение лимита', 'contract/increase_limit');
 
-                $popupContractLimitsEdit = Common::popupForm('Редактирование лимитов договора', 'contract/limits_edit', [
+                $popupContractLimitsEdit = Form::popup('Редактирование лимитов договора', 'contract/limits_edit', [
                     'contractLimits' 	=> $contractLimits,
                     'servicesList'		=> $servicesList
                 ]);
@@ -203,18 +203,21 @@ class Controller_Clients extends Controller_Common {
         $oilRestrictions = Model_Card::getOilRestrictions($cardId);
         $lastFilling = Model_Card::getLastFilling($cardId, $contractId);
         Listing::$limit = 999;
+        $settings = Model_Card::getCardLimitSettings($cardId);
+
 		$servicesList = Listing::getServices([
 		    'SYSTEM_SERVICE_GROUP' => true,
 		    'TUBE_ID' => $card['TUBE_ID']
         ]);
 
-		$popupCardHolderEdit = Common::popupForm('Редактирование держателя карты', 'card/edit_holder', [
+		$popupCardHolderEdit = Form::popup('Редактирование держателя карты', 'card/edit_holder', [
             'card' 				=> $card,
 		], 'card_edit_holder_'.$cardId);
-        $popupCardLimitsEdit = Common::popupForm('Редактирование лимитов карты', 'card/edit_limits', [
+        $popupCardLimitsEdit = Form::popup('Редактирование лимитов карты', 'card/edit_limits', [
             'card' 				=> $card,
             'oilRestrictions' 	=> $oilRestrictions,
-            'servicesList'		=> $servicesList
+            'servicesList'		=> $servicesList,
+            'settings'		    => $settings,
         ], 'card_edit_limits_'.$cardId);
 
         $html = View::factory('ajax/clients/card')
@@ -667,6 +670,32 @@ class Controller_Clients extends Controller_Common {
         $html = View::factory('ajax/clients/add_bill/product')
             ->bind('iteration', $iteration)
         ;
+
+        $this->html($html);
+    }
+
+    /**
+     * рендер шаблона лимита
+     */
+    public function action_cardLimitTemplate()
+    {
+        $cardId     = $this->request->query('cardId');
+        $postfix    = $this->request->query('postfix');
+
+        $html = Form::buildLimit($cardId, [], $postfix);
+
+        $this->html($html);
+    }
+
+    /**
+     * рендер шаблона сервиса лимита
+     */
+    public function action_cardLimitServiceTemplate()
+    {
+        $cardId         = $this->request->query('cardId');
+        $postfix        = $this->request->query('postfix');
+
+        $html = Form::buildLimitService($cardId, [], $postfix);
 
         $this->html($html);
     }

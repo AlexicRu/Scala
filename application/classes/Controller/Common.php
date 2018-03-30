@@ -369,7 +369,7 @@ abstract class Controller_Common extends Controller_Template {
         if (!empty($globalMessages)) {
             $globalMessages = Model_Message::parseBBCodes($globalMessages, false);
 
-            $popupGlobalMessages = Common::popupForm('ВАЖНО!', 'common/global_messages', [
+            $popupGlobalMessages = Form::popup('ВАЖНО!', 'common/global_messages', [
                 'globalMessages' => $globalMessages
             ]);
 
