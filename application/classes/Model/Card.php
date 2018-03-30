@@ -28,6 +28,9 @@ class Model_Card extends Model
     const CARD_ICON_NEFTIKA     = 'Neftika';
     const CARD_ICON_BASHNEFT    = 'Petrol Bashneft';
     const CARD_ICON_SKON        = 'Petrol SKON';
+    const CARD_ICON_CPK         = 'Petrol CPK';
+    const CARD_ICON_TATNEFT     = 'Tatneft';
+    const CARD_ICON_CLEVEROIL   = 'Cleveroil';
 
     const CARD_SYSTEM_GPN = 5;
 
@@ -38,6 +41,9 @@ class Model_Card extends Model
         self::CARD_ICON_NEFTIKA     => 'card_neftika.png',
         self::CARD_ICON_BASHNEFT    => 'card_bashneft.png',
         self::CARD_ICON_SKON        => 'card_skon.png',
+        self::CARD_ICON_CPK         => 'cpk.jpg',
+        self::CARD_ICON_TATNEFT     => 'tatneft.jpg',
+        self::CARD_ICON_CLEVEROIL   => 'cleveroil.jpg',
     ];
 
 	public static $cardLimitsParams = [
