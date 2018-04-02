@@ -13,6 +13,9 @@ class Common
             case 'gpn':
                 $favicon = '<link type="image/x-icon" href="/assets/favicon/projects/dealergpncardcom/favicon.ico" rel="icon">';
                 break;
+            case 'binoil':
+                $favicon = '<link type="image/x-icon" href="/assets/favicon/projects/lkbinoilcom/favicon.ico" rel="icon">';
+                break;
             default:
                 $favicon = '
                     <link rel="apple-touch-icon" sizes="57x57" href="/assets/favicon/apple-touch-icon-57x57.png">
