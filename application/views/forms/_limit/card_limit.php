@@ -34,7 +34,7 @@
     </td>
     <?if ($settings['cntTypes']) {?>
         <td class="v_top">
-            <input type="text" name="duration_value" value="<?=(isset($limit['DURATION_VALUE']) ? $limit['DURATION_VALUE'] : '')?>" placeholder="Кол-во" class="input_mini" disabled>
+            <input type="text" name="duration_value" value="<?=(isset($limit['DURATION_VALUE']) ? $limit['DURATION_VALUE'] : '')?>" placeholder="Кол-во" class="input_mini" <?=(empty($settings['editDurationValue']) ? 'disabled' : '')?>>
         </td>
     <?}?>
     <td class="v_top">

@@ -78,6 +78,12 @@ class Form extends Kohana_Form
     {
         $settings = Model_Card::getCardLimitSettings($cardId);
 
+        //добавление нового
+        if (empty($limit)) {
+            $settings['editSelect'] = true;
+            $settings['editDurationValue'] = true;
+        }
+
         $content = View::factory('forms/_limit/card_limit')
             ->bind('limit', $limit)
             ->bind('postfix', $postfix)
@@ -102,6 +108,7 @@ class Form extends Kohana_Form
 
         $card = Model_Card::getCard($cardId);
 
+        Listing::$limit = 999;
         $servicesList = Listing::getServices([
             'SYSTEM_SERVICE_GROUP' => true,
             'TUBE_ID' => $card['TUBE_ID']

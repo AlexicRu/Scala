@@ -228,7 +228,7 @@ class Model_Card extends Model
 
             $restriction['services'] = $restrictionServices;
 
-            $result[] = $restriction;
+            $result[$restriction['LIMIT_ID']] = $restriction;
         }
 
         return $result;
@@ -463,6 +463,16 @@ class Model_Card extends Model
     public static function checkCardLimits($cardId, $contractId, $limits, $currentLimits = [])
     {
         try {
+            $settings = self::getCardLimitSettings($cardId);
+
+            if ($settings['cntLimits'] < count($limits)) {
+                throw new Exception('Превышено допустимое колво лимитов');
+            }
+
+            if ($settings['canSave'] == false) {
+                throw new Exception('Отсутствует доступ на сохранение лимитов');
+            }
+
             if (empty($currentLimits)) {
                 $currentLimits = self::getOilRestrictions($cardId);
             }
@@ -489,7 +499,7 @@ class Model_Card extends Model
                             throw new Exception('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
                         }
                         foreach ($limit['services'] as $service) {
-                            foreach ($currentLimits as $currentLimit) {
+                            foreach ($currentLimits as $currentLimitId => $currentLimit) {
                                 foreach ($currentLimit['services'] as $currentService) {
                                     if ($currentService['id'] == $service && $limit['value'] != $currentLimit['LIMIT_VALUE']) {
                                         throw new Exception('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
@@ -501,11 +511,112 @@ class Model_Card extends Model
                 }
             }
 
-            $card = self::getCard($cardId);
-            $systemId = $card['SYSTEM_ID'];
-
             //проверка в зависимости от системы карт
-            //todo
+            $firstFl = true;
+            foreach($limits as $limit){
+                $isNew = $limit['limit_id'] == -1;
+
+                if (!$isNew && empty($currentLimits[$limit['limit_id']])) {
+                    throw new Exception('Отсутствует запрашиваемый на редактировнаие лимит');
+                }
+
+                if (empty($limit['services'])) {
+                    throw new Exception('Список сервисов для лимита должен быть заполнен');
+                }
+
+                $servicesIds = $limit['services'];
+                sort($services);
+                $servicesCurrentIds = array_column($currentLimits[$limit['limit_id']]['services'], 'id');
+                sort($servicesCurrent);
+
+                //проверка доступа на добавление лимитов
+                if ($isNew && $settings['canAddLimit'] == false) {
+                    throw new Exception('Отсутствует доступ на добавление лимитов');
+                }
+
+                //проверка на добавление сервисов
+                if ($settings['canAddService'] == false) {
+                    if ($isNew) {
+                        throw new Exception('Отсутствует доступ на добавление сервисов лимита');
+                    } else {
+                        if (!empty(array_diff($servicesIds, $servicesCurrentIds))) {
+                            throw new Exception('Отсутствует доступ на добавление сервисов лимита');
+                        }
+                    }
+                }
+
+                //проверка на удаление сервисов
+                if ($settings['canDelService'] == false && !$isNew) {
+                    if (!empty(array_diff($servicesCurrentIds, $servicesIds))) {
+                        throw new Exception('Отсутствует доступ на удаление сервисов лимита');
+                    }
+                }
+
+                //проверка доступного колва сервисов
+                if ($firstFl) {
+                    $firstFl = false;
+                    if (count($limit['services']) > $settings['cntServiceForFirstLimit']) {
+                        throw new Exception('Превышено колво сервисов для первого лимита');
+                    }
+                } else {
+                    if (count($limit['services']) > $settings['cntServiceForLimit']) {
+                        throw new Exception('Превышено колво сервисов лимита');
+                    }
+                }
+
+                //проверка доступных limitParams (unit_type)
+                if (!in_array($limit['unit_type'], $settings['limitParams'])) {
+                    throw new Exception('Использован недопустимый unit_type');
+                }
+
+                //проверка доступных limitTypes (duration_type)
+                if (!in_array($limit['duration_type'], $settings['limitTypes'])) {
+                    throw new Exception('Использован недопустимый duration_type');
+                }
+
+                //проверка возможности изменения сервисов
+                if ($settings['editServiceSelect'] == false && !$isNew) {
+                    if (
+                        !empty(array_diff($servicesCurrentIds, $servicesIds))
+                        || count($servicesCurrentIds) != count($servicesIds)
+                    ) {
+                        throw new Exception('Запрещено изменение сервисов');
+                    }
+                }
+
+                //проверка возможности изменения limitParams (unit_type) и limitTypes (duration_type)
+                if ($settings['editSelect'] == false && !$isNew) {
+                    if ($limit['unit_type'] != $currentLimit[$limit['limit_id']]['UNIT_TYPE']) {
+                        throw new Exception('Запрещено изменение unit_type');
+                    }
+
+                    if ($limit['duration_type'] != $currentLimit[$limit['limit_id']]['DURATION_TYPE']) {
+                        throw new Exception('Запрещено изменение duration_type');
+                    }
+                }
+
+                //проверка возможности изменения duration_value
+                if ($settings['editDurationValue'] == false && !$isNew) {
+                    if ($limit['duration_value'] != $currentLimit[$limit['limit_id']]['DURATION_VALUE']) {
+                        throw new Exception('Запрещено изменение duration_value');
+                    }
+                }
+
+                //проверка возможности установки duration_value
+                if ($settings['cntTypes'] == false && $isNew) {
+                    if (!empty($limit['duration_value'])) {
+                        throw new Exception('Запрещена установка duration_value');
+                    }
+                }
+
+                //проверка возможности использования float
+                if ($settings['canUseFloat'] == false){
+                    $value = str_replace(',', '.', $limit['value']);
+                    if (is_float($value)) {
+                        throw new Exception('Запрещено использование дробных значений');
+                    }
+                }
+            }
 
         } catch (Exception $e) {
             return [false, $e->getMessage()];
@@ -548,7 +659,7 @@ class Model_Card extends Model
      */
             $limitsArray = [];
 
-            foreach($limits as $group => $limit){
+            foreach($limits as $limit){
 
                 if (empty($limit['duration_type']) || empty($limit['unit_type']) || (empty($limit['value']) && $card['SYSTEM_ID'] == self::CARD_SYSTEM_GPN)) {
                     throw new Exception('Недостаточно данных по лимиту');
@@ -1033,21 +1144,25 @@ class Model_Card extends Model
         $card = Model_Card::getCard($cardId);
         $systemId = $card['SYSTEM_ID'];
 
+        /*
+         * + значит, что учтено в проверке
+         */
         $settings = [
-            'canDelService'             => true,
-            'canAddService'             => true,
-            'canDelLimit'               => in_array($systemId, Model_Card::$cantDelCardLimitSystems),
-            'canAddLimit'               => true,
-            'canSave'                   => true,
-            'editSelect'                => true,
-            'editServiceSelect'         => true,
-            'cntServiceForLimit'        => 1,
-            'cntServiceForFirstLimit'   => 1,
-            'limitParams'               => self::$cardLimitsParams,
-            'limitTypes'                => self::$cardLimitsTypes,
-            'cntTypes'                  => false,
-            'canUseFloat'               => true,
-            'cntLimits'                 => 999,
+            /*+*/'canDelService'             => true,
+            /*+*/'canAddService'             => true,
+            /*+*/'canDelLimit'               => !in_array($systemId, Model_Card::$cantDelCardLimitSystems),
+            /*+*/'canAddLimit'               => true,
+            /*+*/'canSave'                   => true,
+            /*+*/'editSelect'                => true,
+            /*+*/'editServiceSelect'         => true,
+            /*+*/'cntServiceForLimit'        => 1,
+            /*+*/'cntServiceForFirstLimit'   => 1,
+            /*+*/'limitParams'               => self::$cardLimitsParams,
+            /*+*/'limitTypes'                => self::$cardLimitsTypes,
+            /*+*/'cntTypes'                  => false,
+            /*+*/'canUseFloat'               => true,
+            /*+*/'cntLimits'                 => 999,
+            /*+*/'editDurationValue'         => false,
         ];
 
         switch ($systemId) {

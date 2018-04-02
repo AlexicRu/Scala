@@ -271,8 +271,6 @@ class Controller_Api extends Controller_Template
                 $limitId        = -1;
 
             case 'PUT':
-                $this->jsonResult(false, 'Under construction');
-
                 $limitId        = !empty($limitId) ? $limitId : $this->request->param('id');
                 $cardId         = $this->_data['card_id'] ?: false;
                 $value          = $this->_data['limit_value'] ?: false;
@@ -288,13 +286,21 @@ class Controller_Api extends Controller_Template
                     $this->jsonResult(false, 'No access to service');
                 }
 
-                list($result, $data) = Model_Card::editCardLimitsSimple($cardId, -1, [[
-                    'limit_id'      => $limitId,
-                    'value'         => $value,
-                    'unit_type'     => $unitType,
-                    'duration_type' => $durationType,
-                    'services'      => $services
-                ]]);
+                $limits = [
+                    [
+                        'limit_id'      => $limitId,
+                        'value'         => $value,
+                        'unit_type'     => $unitType,
+                        'duration_type' => $durationType,
+                        'services'      => $services
+                    ]
+                ];
+
+                list($result, $data) = Model_Card::checkCardLimits($cardId, false, $limits);
+
+                if (!empty($result)) {
+                    list($result, $data) = Model_Card::editCardLimitsSimple($cardId, -1, $limits);
+                }
 
                 break;
         }
