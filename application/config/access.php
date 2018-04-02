@@ -151,6 +151,9 @@ return [
             'a_16',
             'a_18',
         ],
+        'managers_load-reports' => [
+            Access::ROLE_ROOT
+        ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,

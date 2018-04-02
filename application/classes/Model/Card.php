@@ -1031,7 +1031,7 @@ class Model_Card extends Model
     public static function getCardLimitSettings($cardId)
     {
         $card = Model_Card::getCard($cardId);
-        $systemId = 5;//$card['SYSTEM_ID'];
+        $systemId = $card['SYSTEM_ID'];
 
         $settings = [
             'canDelService'             => true,

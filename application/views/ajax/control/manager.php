@@ -2,7 +2,7 @@
 
 <div class="tabs_block tabs_switcher">
     <div class="tabs">
-        <span tab="info" class="tab active">Информация</span><span class="tab" tab="clients" onclick="showManagersClients(<?=$managerId?>)">Клиенты</span><span class="tab" tab="reports" onclick="showManagersReports(<?=$managerId?>)">Отчеты</span>
+        <span tab="info" class="tab active">Информация</span><span class="tab" tab="clients" onclick="showManagersClients(<?=$managerId?>)">Клиенты</span><?if (Access::allow('managers_load-reports')) {?><span class="tab" tab="reports" onclick="showManagersReports(<?=$managerId?>)">Отчеты</span><?}?>
     </div>
     <div class="tabs_content">
         <div tab_content="info" class="tab_content active">
@@ -34,6 +34,7 @@
             <div class="clr"></div>
             <div class="client_list"></div>
         </div>
+        <?if (Access::allow('managers_load-reports')) {?>
         <div tab_content="reports" class="tab_content" manager_id="<?=$managerId?>">
             <div class="fr clients_btn">
                 <a href="#manager_add_reports" class="fancy btn">Добавить отчеты</a>
@@ -41,6 +42,7 @@
             <div class="clr"></div>
             <div class="report_list"></div>
         </div>
+        <?}?>
     </div>
 </div>
 
