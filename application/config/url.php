@@ -24,5 +24,7 @@ return [
         '.*\.cleveroil\.ru',
         'gpn-card\.com',
         '.*\.gpn-card\.com',
+        'bin-oil\.com',
+        '.*\.bin-oil\.com',
     ],
 ];

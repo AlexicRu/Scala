@@ -10,7 +10,7 @@ class Common
     public static function getFaviconRawData($customView = '')
     {
         switch ($customView) {
-            case 'png':
+            case 'gpn':
                 $favicon = '<link type="image/x-icon" href="/assets/favicon/projects/dealergpncardcom/favicon.ico" rel="icon">';
                 break;
             default:

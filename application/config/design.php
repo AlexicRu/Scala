@@ -54,6 +54,10 @@ return array(
     ],
     'dealergpncardcom' => [
         'title' => 'ГПН-КП',
-        'class' => 'png'
+        'class' => 'gpn'
+    ],
+    'lkbinoilcom' => [
+        'title' => 'ТК БИН-ОЙЛ',
+        'class' => 'binoil'
     ],
 );
