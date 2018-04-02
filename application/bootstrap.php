@@ -129,6 +129,7 @@ Kohana::$log->attach(new Log_File(APPPATH.'logs'));
 Kohana::$config->attach(new Config_File);
 
 $config = Kohana::$config->load('config');
+$configEnvironment = Common::getEnvironmentConfig();
 
 /**
  * Enable modules. Modules are referenced by a relative or absolute path.
@@ -156,8 +157,8 @@ Kohana::modules(array(
 Cookie::$salt = $config['salt'];
 
 //логирование ошибок
-$sentryClient = new Raven_Client($config['sentry_dsn'], [
-    'release' => $config['sentry_release']
+$sentryClient = new Raven_Client($configEnvironment['sentry_dsn'], [
+    'release' => $configEnvironment['sentry_release']
 ]);
 $sentryClient->install();
 
