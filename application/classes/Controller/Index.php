@@ -164,6 +164,8 @@ class Controller_Index extends Controller_Common {
         }
 
         header("X-Accel-Redirect: " . $directory . $file);
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . basename($file));
         die;
     }
 } // End Welcome
