@@ -203,9 +203,14 @@ class Controller_Managers extends Controller_Common {
     {
         $params = $this->request->post('params');
 
-        $clients = Model_Manager::getReportsList($params);
+        $reports = Model_Manager::getReportsList($params);
 
-        $this->jsonResult(true, $clients);
+        foreach ($reports as &$report) {
+            $report['global_type_label'] = Model_Report::$reportGlobalTypesNames[$report['REPORT_TYPE_ID']]['label'];
+            $report['global_type_name'] = Model_Report::$reportGlobalTypesNames[$report['REPORT_TYPE_ID']]['name'];
+        }
+
+        $this->jsonResult(true, $reports);
     }
 
     /**

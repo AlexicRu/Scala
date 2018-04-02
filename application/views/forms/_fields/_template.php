@@ -33,7 +33,7 @@ if ($renderDepend) {?>
                        placeholder="<?=(!empty($params['placeholder']) ? $params['placeholder'] : 'Поиск...')?>"
                        <?if (isset($params['weight'])){?>weight="<?=$params['weight']?>"<?}?>
                        <?if (!empty($params['depend_to'])){?>depend_to="<?=$params['depend_to']?>"<?}?>
-                       <?if (!empty($params['depend_on'])){?>depend_on="<?=$params['depend_on']['name']?>"<?} /*for info, not used*/?>
+                       <?if (!empty($params['depend_on']['name'])){?>depend_on="<?=$params['depend_on']['name']?>"<?} /*for info, not used*/?>
                 >
             </span>
             <!-- combobox render END -->

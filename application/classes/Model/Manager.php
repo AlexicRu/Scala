@@ -418,6 +418,7 @@ class Model_Manager extends Model
 
         $sql = (new Builder())->select()
             ->from('V_WEB_REPORTS_LIST r')
+            ->orderBy('r.REPORT_TYPE_ID')
         ;
 
         if (in_array($user['ROLE_ID'], array_keys(Access::$clientRoles))) {

@@ -14,6 +14,9 @@ class Model_Report extends Model
     const REPORT_TYPE_BALANCE_SHEET = 'balance_sheet';
     const REPORT_TYPE_BILL          = 'bill';
 
+    const REPORT_GLOBAL_TYPE_CONTRACT = 1;
+    const REPORT_GLOBAL_TYPE_REPORT = 2;
+
     const REPORT_CONSTRUCTOR_TYPE_PERIOD     = 'period';
     const REPORT_CONSTRUCTOR_TYPE_ADDITIONAL = 'additional';
     const REPORT_CONSTRUCTOR_TYPE_FORMAT     = 'format';
@@ -33,6 +36,11 @@ class Model_Report extends Model
         self::REPORT_GROUP_ANALYTIC => ['name' => 'Аналитические', 'icon' => 'icon-analytics'],
         self::REPORT_GROUP_CARDS    => ['name' => 'Карты', 'icon' => 'icon-dailes'],
         self::REPORT_GROUP_OTHERS   => ['name' => 'Прочие', 'icon' => 'icon-summary'],
+    ];
+
+    public static $reportGlobalTypesNames = [
+        self::REPORT_GLOBAL_TYPE_CONTRACT   => ['name' => 'Отчетность', 'label' => 'label_info'],
+        self::REPORT_GLOBAL_TYPE_REPORT     => ['name' => 'В договоре', 'label' => 'label_success'],
     ];
 
     public static $formatHeaders = [

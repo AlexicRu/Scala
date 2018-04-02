@@ -159,8 +159,9 @@ function loadReportList(input)
         list.removeClass('block_loading');
 
         for(var i in data.data){
-            var tpl = $('<div class="item_found_row"><span><input type="checkbox" class="found_report" onchange="checkFoundItem($(this))"></span><span class="ifr_id gray" /><span class="ifr_name" /></div>');
-            tpl.find('.ifr_id').text(data.data[i].REPORT_ID);
+            var tpl = $('<div class="item_found_row"><span><input type="checkbox" class="found_report" onchange="checkFoundItem($(this))"></span><span class="ifr_label"><span class="label" /></span><span class="ifr_name" /></div>');
+
+            tpl.find('.ifr_label span').text(data.data[i].global_type_name).addClass(data.data[i].global_type_label);
             tpl.find('.ifr_name').text(data.data[i].WEB_NAME);
             tpl.attr('item_id', data.data[i].REPORT_ID);
             tpl.data('item_name', data.data[i].WEB_NAME);
