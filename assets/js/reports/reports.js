@@ -37,7 +37,7 @@ function generateReport(btn)
         var name = field.attr('name');
         var value = false;
 
-        if(field.attr('depend_on')){
+        if(field.attr('depend_to')){
             return;
         }
 

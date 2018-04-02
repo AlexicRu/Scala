@@ -300,7 +300,7 @@ class Controller_Clients extends Controller_Common {
     {
         $cardId     = $this->request->post('card_id');
         $contractId = $this->request->post('contract_id');
-        $limits     = $this->request->post('limits');
+        $limits     = $this->request->post('limits') ?: [];
 
         list($result, $error) = Model_Card::editCardLimits($cardId, $contractId, $limits);
 
