@@ -3,6 +3,7 @@
 return [
     'sort'  => 745,
     'url'   => '/card-limits/{limit_id}',
+    'deprecated' => true,
     'method' => 'put',
     'tags' => ['cards'],
     'summary' => 'Изменение лимита карты',

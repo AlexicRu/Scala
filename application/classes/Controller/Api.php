@@ -271,6 +271,8 @@ class Controller_Api extends Controller_Template
                 $limitId        = -1;
 
             case 'PUT':
+                $this->jsonResult(false, 'Under construction');
+
                 $limitId        = !empty($limitId) ? $limitId : $this->request->param('id');
                 $cardId         = $this->_data['card_id'] ?: false;
                 $value          = $this->_data['limit_value'] ?: false;

@@ -9,7 +9,7 @@
 	<link href="<?=Common::getAssetsLink()?>css/style.css" rel="stylesheet">
 </head>
 
-<body class="custom_view_<?=$customView?>">
+<body>
 	<div class="wrapper">
 		<div class="content">
 			<h1>500 - ошибка сервера</h1><br>
