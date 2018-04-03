@@ -18,7 +18,9 @@ class Controller_Administration extends Controller_Common
         $this->redirect('/administration/transactions');
     }
 
-
+    /**
+     * управление транзакциями
+     */
     public function action_transactions()
     {
 
@@ -126,8 +128,31 @@ class Controller_Administration extends Controller_Common
         $this->html($html);
     }
 
+    /**
+     * рассчет тарифов
+     */
     public function action_calcTariff()
     {
         $this->jsonResult(1, []);
+    }
+
+    /**
+     * страница пеерноса карт и транзакций
+     */
+    public function action_cardsTransfer()
+    {
+        if ($this->request->is_ajax()) {
+            $oldContractId = $this->request->post('old_contract');
+            $newContractId = $this->request->post('new_contract');
+            $cards = $this->request->post('cards');
+            $params = $this->request->post('params');
+
+            $result = Model_Card::transferCards($oldContractId, $newContractId, $cards, $params);
+
+            if (empty($result)) {
+                $this->jsonResult(false);
+            }
+            $this->jsonResult(true);
+        }
     }
 }

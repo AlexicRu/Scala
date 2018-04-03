@@ -21,7 +21,7 @@ class Form extends Kohana_Form
 
         $id = $formName ?: str_replace('/', "_", $form);
 
-        $content = View::factory('includes/popup')
+        $content = View::factory('_includes/popup')
             ->bind('popupHeader', $header)
             ->bind('popupBody', $formBody)
             ->bind('popupId', $id)

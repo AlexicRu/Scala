@@ -154,6 +154,9 @@ return [
         'managers_load-reports' => [
             Access::ROLE_ROOT
         ],
+        'administration_cardsTransfer' => [
+            Access::ROLE_ADMIN
+        ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,

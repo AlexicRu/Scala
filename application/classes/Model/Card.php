@@ -525,9 +525,11 @@ class Model_Card extends Model
                 }
 
                 $servicesIds = $limit['services'];
-                sort($services);
-                $servicesCurrentIds = array_column($currentLimits[$limit['limit_id']]['services'], 'id');
-                sort($servicesCurrent);
+                sort($servicesIds);
+                if (!$isNew) {
+                    $servicesCurrentIds = array_column($currentLimits[$limit['limit_id']]['services'], 'id');
+                    sort($servicesCurrentIds);
+                }
 
                 //проверка доступа на добавление лимитов
                 if ($isNew && $settings['canAddLimit'] == false) {
@@ -565,12 +567,12 @@ class Model_Card extends Model
                 }
 
                 //проверка доступных limitParams (unit_type)
-                if (!in_array($limit['unit_type'], $settings['limitParams'])) {
+                if (!in_array($limit['unit_type'], array_keys($settings['limitParams']))) {
                     throw new Exception('Использован недопустимый unit_type');
                 }
 
                 //проверка доступных limitTypes (duration_type)
-                if (!in_array($limit['duration_type'], $settings['limitTypes'])) {
+                if (!in_array($limit['duration_type'], array_keys($settings['limitTypes']))) {
                     throw new Exception('Использован недопустимый duration_type');
                 }
 
@@ -586,18 +588,18 @@ class Model_Card extends Model
 
                 //проверка возможности изменения limitParams (unit_type) и limitTypes (duration_type)
                 if ($settings['editSelect'] == false && !$isNew) {
-                    if ($limit['unit_type'] != $currentLimit[$limit['limit_id']]['UNIT_TYPE']) {
+                    if ($limit['unit_type'] != $currentLimits[$limit['limit_id']]['UNIT_TYPE']) {
                         throw new Exception('Запрещено изменение unit_type');
                     }
 
-                    if ($limit['duration_type'] != $currentLimit[$limit['limit_id']]['DURATION_TYPE']) {
+                    if ($limit['duration_type'] != $currentLimits[$limit['limit_id']]['DURATION_TYPE']) {
                         throw new Exception('Запрещено изменение duration_type');
                     }
                 }
 
                 //проверка возможности изменения duration_value
                 if ($settings['editDurationValue'] == false && !$isNew) {
-                    if ($limit['duration_value'] != $currentLimit[$limit['limit_id']]['DURATION_VALUE']) {
+                    if ($limit['duration_value'] != $currentLimits[$limit['limit_id']]['DURATION_VALUE']) {
                         throw new Exception('Запрещено изменение duration_value');
                     }
                 }
@@ -1217,5 +1219,47 @@ class Model_Card extends Model
         }
 
         return $settings;
+    }
+
+    /**
+     * перенос карт с одного договора на другой
+     *
+     * @param $oldContractId
+     * @param $newContractId
+     * @param $cards
+     * @param $params
+     * @return bool
+     */
+    public static function transferCards($oldContractId, $newContractId, $cards = [], $params = [])
+    {
+        if (empty($oldContractId) || empty($newContractId)) {
+            return false;
+        }
+
+        if (empty($cards)) {
+            $cards = [-1];
+        }
+
+        $user = User::current();
+
+        $data = [
+            'p_old_contract'        => $oldContractId,
+            'p_new_contract'        => $newContractId,
+            'p_cards_array'         => [(array)$cards, SQLT_CHR],
+            'p_date_change'         => !empty($params['save_holder']) ? $params['save_holder'] : date('d.m.Y'),
+            'p_date_last_trz'       => !empty($params['date_to']) ? $params['date_to'] : Model_Contract::DEFAULT_DATE_END,
+            'p_fl_transfer_cards'   => !empty($params['transfer_cards']) ? 1 : 0,
+            'p_fl_transfer_trn'     => !empty($params['transfer_transactions']) ? 1 : 0,
+            'p_fl_save_holder'      => !empty($params['save_holder']) ? 1 : 0,
+            'p_manager_id'          => $user['MANAGER_ID'],
+            'p_error_code'          => 'out',
+        ];
+
+        $res = Oracle::init()->procedure('srv_ctr_cards_trz_change', $data);
+
+        if($res == Oracle::CODE_SUCCESS){
+            return true;
+        }
+        return false;
     }
 }

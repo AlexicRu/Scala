@@ -21,8 +21,9 @@ return array(
         'dots'          => 'Точки обслуживания',
     ]],
     'administration'    => ['title' => 'Сервис', 'icon' => 'icon-service', 'children' => [
-        'transactions'  => 'Транзакции',
-        'calc-tariffs'  => 'Расчет тарифов'
+        'transactions'      => 'Транзакции',
+        'calc-tariffs'      => 'Расчет тарифов',
+        'cards-transfer'    => 'Перенос карт'
     ]],
     'news'              => ['title' => 'Новости', 'icon' => 'icon-news'],
     'support'           => ['title' => 'Поддержка', 'icon' => 'icon-question'],

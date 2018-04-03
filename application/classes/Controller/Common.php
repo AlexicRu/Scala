@@ -36,7 +36,7 @@ abstract class Controller_Common extends Controller_Template {
 
             //подключаем меню
             $menu = Kohana::$config->load('menu');
-            $content = View::factory('includes/menu')
+            $content = View::factory('_includes/menu')
                 ->bind('menu', $menu);
 
             View::set_global('menu', $content);

@@ -4,7 +4,13 @@
 <script>
     $(function () {
         $('[name=<?=$name?>]').each(function () {
-            renderDatePicker($(this));
+            var t = $(this);
+
+            renderDatePicker(t);
+
+            <?if (!empty($value)) {?>
+                t.datepicker("setDate", '<?=$value?>');
+            <?}?>
         });
     });
 </script>
