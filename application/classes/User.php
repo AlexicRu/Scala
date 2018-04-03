@@ -94,6 +94,7 @@ class User
         $sql = (new Builder())->select()
             ->from('v_web_manager_binds')
             ->where('MANAGER_FROM = ' . $managerId)
+            ->orderBy('WEB_NAME_TO')
         ;
 
         return Oracle::init()->query($sql);
