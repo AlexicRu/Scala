@@ -68,7 +68,7 @@ class Model_Card extends Model
     ];
 
 	public static $editLimitsManagerNoLimit = [
-	    1233, 1499
+	    1233, 1499, 1335, 1582, 929
     ];
 
 	private static $_selectedCards = [];
