@@ -157,6 +157,9 @@ return [
         'administration_cardsTransfer' => [
             Access::ROLE_ADMIN
         ],
+        'system_index' => [
+            Access::ROLE_ROOT,
+        ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,
@@ -266,9 +269,6 @@ return [
         ],
         'suppliers_supplier-add' => [
             'a_10',
-        ],
-        'system_index' => [
-            Access::ROLE_ROOT,
         ],
         // custom
         'clients_card_toggle_full' => [
