@@ -35,7 +35,7 @@
                 $currentManager = reset($user['managers_binds']);
                 ?>
                 <a href="#" class="clients-toggle"><span class="icon-clients"></span> <?=$currentManager['WEB_NAME_CURRENT']?></a>
-                <div class="clients-float-list clients-toggle block">
+                <div class="clients-float-list clients-toggle block customScroll">
                     <?foreach ($user['managers_binds'] as $manager) {?>
                         <div>
                             <?=$manager['WEB_NAME_TO']?> &nbsp; <a href="/force-login/<?=Common::encrypt($user['MANAGER_ID'] . ' ' . $manager['MANAGER_TO'])?>" class="btn btn_small">Переключиться</a>
@@ -54,7 +54,7 @@
 		<div class="mail">
 			<a href="/messages"><span class="icon-mail"><?if(count($notices)){?><span><?=count($notices)?></span><?}?></span></a>
 			<?if(count($notices)){?>
-				<div class="notices">
+				<div class="notices customScroll">
 					<?
 					$i = 5;
 					foreach($notices as $notice){

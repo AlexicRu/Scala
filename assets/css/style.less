@@ -121,10 +121,10 @@ header{
   width: 70px; text-align: center; font-size: 20px;
   > a{
     display: table-cell; width: 70px; height: 70px; color:#7e7e7e; text-decoration: none; vertical-align: middle; padding: 0 20px;
-    .transition();
-    &:hover, &.active{
-      background: #f6f6f6;
-    }
+  }
+  .transition();
+  &:hover, &.active{
+    background: #f6f6f6;
   }
 }
 .hamburger{
@@ -746,25 +746,13 @@ table{
   }
 }
 .notices{
-  position: absolute; font-size: 16px; background: white; top:70px; left:-30px; border: 1px solid rgba(0,0,0,0.1); display: none; text-align: left;
-  &:before{
-    content: ""; position: absolute; top:-9px; left:55px; z-index: 10;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 8px 9px 8px;
-    border-color: transparent transparent rgba(0,0,0,.1) transparent;
-  }
-  &:after{
-    content: ""; position: absolute; top:-7px; left:55px; z-index: 11;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 8px 9px 8px;
-    border-color: transparent transparent white transparent;
-  }
+  position: absolute; font-size: 16px; background: white; top:70px; left:-130px; border: 1px solid rgba(0,0,0,0.1); display: none; text-align: left;
+
+  max-height: 500px; overflow-y: auto; width: 340px;
+  box-shadow: 0 0 30px rgba(0,0,0,.1);
+
   >div{
-    width: 220px; padding: 5px 15px;
+    padding: 10px 20px;
   }
 }
 .notice{
@@ -1235,5 +1223,18 @@ div.jGrowl div.jGrowl-notification {
   }
   >div{
     border-bottom: 1px solid #eee; padding: 10px 30px;
+  }
+}
+.customScroll, .scroll{
+  &::-webkit-scrollbar
+  {
+    width: 10px;
+    background-color: #f5f5f5;
+  }
+
+  &::-webkit-scrollbar-thumb
+  {
+    border-radius: 5px;
+    background-color: #999;
   }
 }

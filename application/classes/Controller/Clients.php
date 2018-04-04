@@ -337,7 +337,7 @@ class Controller_Clients extends Controller_Common {
         $message = '';
 
 		if(!empty($multi)){
-            $payments = $this->request->post('payments');
+            $payments = (array)$this->request->post('payments');
         }
 
         foreach($payments as $payment){
