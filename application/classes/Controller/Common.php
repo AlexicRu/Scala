@@ -52,6 +52,9 @@ abstract class Controller_Common extends Controller_Template {
 
         //если не аяксовый запрос
         if(!$this->request->is_ajax() && !$this->toXls && !in_array($action, ['get-json'])) {
+            //проверяем кастомный дизайн
+            $this->_checkCustomDesign();
+
             if($allow == false){
                 throw new HTTP_Exception_403();
             }
@@ -65,8 +68,10 @@ abstract class Controller_Common extends Controller_Template {
                 }
             }
 
-            $this->_checkCustomDesign();
+            //прикрепляем файлы стилей и скриптов
             $this->_appendFilesBefore();
+
+            //выполняем различные функции, которые необходимо выполнить до загрузки страницы
             $this->_actionsBefore();
         }
 

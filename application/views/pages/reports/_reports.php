@@ -8,7 +8,7 @@
             <?foreach($reports as $reportGroupId => $reportsList){?>
                 <div class="tab_v" tab="<?=$reportGroupId?>">
                     <div>
-                        <a href="#"><span class="icon-dailes f20"></span> <?=Model_Report::$reportGroups[$reportGroupId]['name']?></a>
+                        <a href="#"><span class="<?=Model_Report::$reportGroups[$reportGroupId]['icon']?> f20"></span> <?=Model_Report::$reportGroups[$reportGroupId]['name']?></a>
                     </div>
                 </div>
             <?}?>
