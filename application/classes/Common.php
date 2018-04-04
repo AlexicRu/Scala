@@ -80,31 +80,14 @@ class Common
     }
 
     /**
-     * рассчитываем соль
-     *
-     * @param string $type
-     * @throws Kohana_Exception
+     * получаем версию продукта
+
      */
-    public static function getSalt($type = 'css')
+    public static function getVersion($asProd = false)
     {
-        $config = Kohana::$config->load('main');
+        $config = Kohana::$config->load('version');
 
-        $salt = time();
-
-        switch ($type) {
-            case 'css':
-                if (!empty($config['cssSalt']) && self::isProd()) {
-                    $salt = $config['cssSalt'];
-                }
-                break;
-            case 'js':
-                if (!empty($config['jsSalt']) && self::isProd()) {
-                    $salt = $config['jsSalt'];
-                }
-                break;
-        }
-
-        return $salt;
+        return self::isProd() || $asProd ? $config['hash'] : time();
     }
 
     /**

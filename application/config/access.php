@@ -264,6 +264,12 @@ return [
             Access::ROLE_USER_SECOND,
             Access::ROLE_CLIENT,
         ],
+        'suppliers_supplier-add' => [
+            'a_10',
+        ],
+        'system_index' => [
+            Access::ROLE_ROOT,
+        ],
         // custom
         'clients_card_toggle_full' => [
             Access::ROLE_CLIENT,

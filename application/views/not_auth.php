@@ -10,12 +10,12 @@
 
     <?if (!empty($styles)) {
     	foreach($styles as $style){?>
-		    <link href="<?=$style?>?t=<?=Common::getSalt('css')?>" rel="stylesheet">
+		    <link href="<?=$style?>?t=<?=Common::getVersion()?>" rel="stylesheet">
 	    <?}
     }?>
 	<?if (!empty($scripts)) {
         foreach($scripts as $script){?>
-            <script src="<?=$script?>?t=<?=Common::getSalt('js')?>"></script>
+            <script src="<?=$script?>?t=<?=Common::getVersion()?>"></script>
         <?}
     }?>
 </head>
