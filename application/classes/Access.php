@@ -59,8 +59,6 @@ class Access
             return true;
         }
 
-        if(!Common::isProd() && $user['MANAGER_ID'] == 7) return true;
-
         $access = Kohana::$config->load('access')->as_array();
 
         $allow = $access['allow'];
@@ -107,8 +105,6 @@ class Access
         if(in_array($user['role'], [self::ROLE_ROOT])){
             return true;
         }
-
-        if(!Common::isProd() && $user['MANAGER_ID'] == 7) return true;
 
         $access = Kohana::$config->load('access')['files'];
 

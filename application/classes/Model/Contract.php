@@ -238,7 +238,7 @@ class Model_Contract extends Model
             'p_contract_id'		        => $contractId,
             'p_tarif_online' 	        => $params['settings']['TARIF_ONLINE'],
             'p_tarif_offline' 		    => $params['settings']['TARIF_OFFLINE'],
-            'p_autoblock_limit' 		=> $params['settings']['AUTOBLOCK_LIMIT'],
+            'p_autoblock_limit' 		=> str_replace([' ', ','], ['', '.'], $params['settings']['AUTOBLOCK_LIMIT']),
             'p_autoblock_flag' 		    => $params['settings']['scheme'] == 1 ? 0 : 1,
             'p_penalties' 		        => $params['settings']['PENALTIES'],
             'p_penalties_flag' 		    => $params['settings']['PENALTIES'] ? 1 : 0,
