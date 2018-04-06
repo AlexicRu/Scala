@@ -201,7 +201,7 @@ class Controller_Clients extends Controller_Common {
         }
 
         $oilRestrictions = Model_Card::getOilRestrictions($cardId);
-        $lastFilling = Model_Card::getLastFilling($cardId, $contractId);
+        $transactions = Model_Transaction::getList($cardId, $contractId, ['limit' => 20]);
         Listing::$limit = 999;
         $settings = Model_Card::getCardLimitSettings($cardId);
 
@@ -223,7 +223,7 @@ class Controller_Clients extends Controller_Common {
         $html = View::factory('ajax/clients/card')
             ->bind('card', $card)
             ->bind('oilRestrictions', $oilRestrictions)
-            ->bind('lastFilling', $lastFilling)
+            ->bind('transactions', $transactions)
             ->bind('popupCardHolderEdit', $popupCardHolderEdit)
             ->bind('popupCardLimitsEdit', $popupCardLimitsEdit)
         ;

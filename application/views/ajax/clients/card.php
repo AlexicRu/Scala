@@ -25,10 +25,30 @@ $user = Auth::instance()->get_user();
 <b class="f18">Обороты за текущий период:</b><br>
 <?=number_format($card['REALIZ_LITRES'], 2, ',', ' ')?> л. / <?=number_format($card['REALIZ_CUR'], 2, ',', ' ')?> <?=Text::RUR?><br><br>
 
-<b class="f18">Последняя заправка:</b>
-<div class="line_inner">
-    <span class="gray"><?=$lastFilling['LAST_SERV_DATE']?></span> &nbsp;&nbsp;&nbsp; <b><?=$lastFilling['LAST_SERV_POS']?></b> <div class="fr"><?=$lastFilling['LAST_SERV_SERVICE']?> <?=number_format($lastFilling['LAST_SERV_AMOUNT'], 2, ',', ' ')?> л. / <?=number_format($lastFilling['LAST_SERV_CUR'], 2, ',', ' ')?> <?=Text::RUR?></div>
-</div>
+<?if (!empty($transactions)) {?>
+    <?if (count($transactions) > 1) {?>
+    <span class="fr btn btn_small btn_reverse" toggle="last_transactions">
+        <span toggle_block="last_transactions">+</span>
+        <span toggle_block="last_transactions" style="display: none">-</span>
+    </span>
+    <?}?>
+
+    <b class="f18">Последние заправки:</b>
+
+    <?foreach ($transactions as $index => $transaction) {?>
+        <div class="line_inner" <?=($index ? 'toggle_block="last_transactions" style="display:none"' : '')?>>
+            <span class="gray"><?=$transaction['DATE_TRN']?> <?=$transaction['TIME_TRN']?></span> &nbsp;&nbsp;&nbsp;
+            <b><?=$transaction['POS_PETROL_NAME']?></b>
+            <div class="fr">
+                <b><?=$transaction['LONG_DESC']?></b> - <?=number_format($transaction['SERVICE_AMOUNT'], 2, ',', ' ')?> л. / <?=number_format($transaction['SUMPRICE_DISCOUNT'], 2, ',', ' ')?> <?=Text::RUR?>
+            </div>
+            <br>
+            <span style="visibility: hidden"><?=$transaction['DATE_TRN']?> <?=$transaction['TIME_TRN']?></span> &nbsp;&nbsp;&nbsp;
+            <?=$transaction['POS_ADDRESS']?>
+        </div>
+    <?}?>
+<?}?>
+
 <br>
 
 <div class="fr">

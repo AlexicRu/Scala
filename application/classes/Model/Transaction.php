@@ -3,6 +3,38 @@
 class Model_Transaction extends Model
 {
     /**
+     * получаем список тарнзакций
+     *
+     * @param $cardId
+     * @param $contractId
+     * @param array $params
+     * @return array|bool
+     */
+    public static function getList($cardId, $contractId, $params = [])
+    {
+        $sql = (new Builder())->select()
+            ->from('v_rep_transaction')
+            ->where('card_id = ' . Oracle::quote($cardId))
+            ->where('contract_id = ' . (int)$contractId)
+            ->columns([
+                "to_char(date_trn, 'dd.mm.yyyy') as date_trn",
+                "time_trn",
+                "pos_petrol_name",
+                "pos_address",
+                "long_desc",
+                "service_amount",
+                "sumprice_discount",
+            ])
+        ;
+
+        if (!empty($params['limit'])) {
+            $sql->limit($params['limit']);
+        }
+
+        return Oracle::init()->query($sql);
+    }
+
+    /**
      * получаем плохие транзакции по заданным параметрам
      *
      * @param $params
