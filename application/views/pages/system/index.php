@@ -18,18 +18,8 @@
 <h2>Сборка frontend</h2>
 
 <div class="block">
-    <a href="/system/gulp/build" class="btn ajax"><b>gulp build</b> - css, js, fonts, image</a>
-
-    <div class="result"></div>
-</div>
-
-<div class="block">
-    <a href="/system/gulp/fast" class="btn ajax"><b>gulp fast</b> - css, js</a>
-
-    <div class="result"></div>
-</div>
-
-<div class="block">
+    <a href="/system/gulp/build" class="btn ajax"><b>gulp build</b> - css, js, fonts, image</a> &nbsp;&nbsp;&nbsp;
+    <a href="/system/gulp/fast" class="btn ajax"><b>gulp fast</b> - css, js</a> &nbsp;&nbsp;&nbsp;
     <a href="/system/gulp/images" class="btn ajax"><b>gulp images</b></a>
 
     <div class="result"></div>

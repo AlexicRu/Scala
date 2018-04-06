@@ -57,3 +57,4 @@ application/config/dev.php
 /assets/build/
 /assets/css/*.css
 /composer.phar
+/new

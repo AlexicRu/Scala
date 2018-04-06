@@ -26,6 +26,16 @@ $(function(){
         return false;
     });
 
+
+    var hash = document.location.hash;
+
+    if (hash) {
+        var tab = hash.replace('#', '');
+        if (tab.length){
+            $('.tab[tab="'+ tab +'"]').click();
+        }
+    }
+
     $(document).on('click', "[toggle]", function(){
         $("[toggle_block='"+ $(this).attr('toggle') +"']").toggle();
     });

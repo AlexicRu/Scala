@@ -779,7 +779,7 @@ class Controller_Control extends Controller_Common {
             $contracts = [];
 
             foreach ($get['contracts'] as $item) {
-                $contracts = array_merge($contracts, $item);
+                $contracts = array_merge($contracts, (array)$item);
             }
 
             $get['contracts'] = $contracts;
