@@ -1,4 +1,4 @@
-<aside>
+<aside class="scroll">
     <?
     foreach($menu as $link => $item){
         if(Access::allow($link.'_index', true)) {
