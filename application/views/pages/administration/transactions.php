@@ -2,7 +2,7 @@
 
 <div class="tabs_block tabs_switcher tabs_administration_transactions">
     <div class="tabs">
-        <span tab="errors" class="tab active">Отказные</span><span tab="history" class="tab">История загрузок</span>
+        <span tab="errors" class="tab active">Отказные</span><span tab="process" class="tab">В обработке</span><span tab="history" class="tab">История загрузок</span>
     </div>
     <div class="tabs_content tabs_content_no_padding">
         <div tab_content="errors" class="tab_content active">
@@ -13,6 +13,15 @@
                 <br class="clr">
             </div>
             <div class="ajax_block_administration_transactions_errors_out block_loading"></div>
+        </div>
+        <div tab_content="process" class="tab_content">
+            <div class="tab_content_header">
+                <div class="fr">
+                    <span class="btn btn_green btn_icon" onclick="transactionCancelToXls()"><i class="icon-exel1"></i> Выгрузить</span>
+                </div>
+                <br class="clr">
+            </div>
+            <div class="ajax_block_administration_transactions_process_out block_loading"></div>
         </div>
         <div tab_content="history" class="tab_content">
             <div class="ajax_block_administration_transactions_history_out block_loading"></div>
@@ -30,6 +39,7 @@
         };
 
         paginationAjax('/administration/transactions-errors', 'ajax_block_administration_transactions_errors', renderAjaxPaginationAdminTransactions, params);
+        paginationAjax('/administration/transactions-process', 'ajax_block_administration_transactions_process', renderAjaxPaginationAdminTransactions, params);
         paginationAjax('/administration/transactions-history', 'ajax_block_administration_transactions_history', renderAjaxPaginationAdminTransactions);
     });
 

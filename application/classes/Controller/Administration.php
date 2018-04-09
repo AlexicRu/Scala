@@ -65,6 +65,46 @@ class Controller_Administration extends Controller_Common
         $this->jsonResult(true, ['items' => $transactions, 'more' => $more]);
     }
 
+
+    /**
+     * грузим транзакции, которые в процессе
+     */
+    public function action_transactionsProcess()
+    {
+        $params = [
+            'offset' 		=> $this->request->post('offset'),
+            'pagination'    => $this->toXls ? false : true
+        ];
+
+        $result = Model_Transaction::getTransactionsProcess($params);
+
+        if ($this->toXls){
+            $this->showXls('transactions_process', $result, [
+                'SOURCE_NAME'       => 'SOURCE_NAME',
+                'DATETIME_TRN'      => 'DATETIME_TRN',
+                'CARD_ID'           => 'CARD_ID',
+                'OPERATION'         => 'OPERATION',
+                'SERVICE_NAME'      => 'SERVICE_NAME',
+                'SERVICE_AMOUNT'    => 'SERVICE_AMOUNT',
+                'SERVICE_PRICE'     => 'SERVICE_PRICE',
+                'SERVICE_SUMPRICE'  => 'SERVICE_SUMPRICE',
+                'SUPPLIER_EMITENT'  => 'SUPPLIER_EMITENT',
+                'SUPPLIER_TERMINAL' => 'SUPPLIER_TERMINAL',
+                'POS_ADDRESS'       => 'POS_ADDRESS',
+                'PROJECT_SERVICE'   => 'PROJECT_SERVICE',
+                'ERROR_DESCR'       => 'ERROR_DESCR'
+            ],true);
+        } else {
+            list($transactions, $more) = $result;
+        }
+
+        if(empty($transactions)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, ['items' => $transactions, 'more' => $more]);
+    }
+
     /**
      * грузим историю операций
      */

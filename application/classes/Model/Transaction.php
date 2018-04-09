@@ -58,6 +58,31 @@ class Model_Transaction extends Model
         return $db->query($sql);
     }
 
+
+    /**
+     * получаем транзакции (в процессе) по заданным параметрам
+     *
+     * @param $params
+     * @return mixed
+     */
+    public static function getTransactionsProcess($params)
+    {
+        $db = Oracle::init();
+
+        $user = User::current();
+
+        $sql = (new Builder())->select()
+            ->from('v_web_transaction_process')
+            ->where("agent_id = ".$user['AGENT_ID'])
+            ->orderBy('datetime_trn')
+        ;
+
+        if (!empty($params['pagination'])) {
+            return $db->pagination($sql, $params);
+        }
+        return $db->query($sql);
+    }
+
     /**
      * получаем историю транзакций по заданным параметрам
      *
