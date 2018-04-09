@@ -609,10 +609,10 @@ class Controller_Control extends Controller_Common {
 
             $user = User::current();
 
-            $canEdit = false;
-            if (in_array($user['role'], Access::$adminRoles)) {
+            $canEdit = true;
+            /*if (in_array($user['role'], Access::$adminRoles)) {
                 $canEdit = true;
-            }
+            }*/
 
             $html = View::factory('ajax/control/cards_in_group')
                 ->bind('groupId', $groupId)
