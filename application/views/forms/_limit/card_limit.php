@@ -19,11 +19,10 @@
         </div>
     </td>
     <td class="v_top">
-        <?if ($settings['canUseFloat']) {?>
-            <input type="text" name="limit_value" value="<?=(isset($limit['LIMIT_VALUE']) ? $limit['LIMIT_VALUE'] : '')?>" placeholder="Объем / сумма" class="input_mini">
-        <?}else{?>
-            <input type="number" name="limit_value" value="<?=(isset($limit['LIMIT_VALUE']) ? $limit['LIMIT_VALUE'] : '')?>" placeholder="Объем / сумма" class="input_mini" onkeypress="$(this).val(parseInt($(this).val()))">
-        <?}?>
+        <input type="number" name="limit_value" value="<?=(isset($limit['LIMIT_VALUE']) ? $limit['LIMIT_VALUE'] : '')?>" placeholder="Объем / сумма" class="input_mini"
+            <?if (!$settings['canUseFloat']) {?>onkeypress="$(this).val(parseInt($(this).val()))"<?}?>
+            min="<?=$settings['minValue']?>"
+        >
     </td>
     <td class="v_top">
         <select name="unit_type" <?=(empty($settings['editSelect']) ? 'disabled' : '')?>>

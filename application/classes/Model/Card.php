@@ -515,6 +515,7 @@ class Model_Card extends Model
             $firstFl = true;
             foreach($limits as $limit){
                 $isNew = $limit['limit_id'] == -1;
+                $value = str_replace(',', '.', $limit['value']);
 
                 if (!$isNew && empty($currentLimits[$limit['limit_id']])) {
                     throw new Exception('Отсутствует запрашиваемый на редактировнаие лимит');
@@ -522,6 +523,10 @@ class Model_Card extends Model
 
                 if (empty($limit['services'])) {
                     throw new Exception('Список сервисов для лимита должен быть заполнен');
+                }
+
+                if ($value < $settings['minValue']) {
+                    throw new Exception('Минимальное доступное значение: ' . $settings['minValue']);
                 }
 
                 $servicesIds = $limit['services'];
@@ -613,7 +618,6 @@ class Model_Card extends Model
 
                 //проверка возможности использования float
                 if ($settings['canUseFloat'] == false){
-                    $value = str_replace(',', '.', $limit['value']);
                     if (is_float($value)) {
                         throw new Exception('Запрещено использование дробных значений');
                     }
@@ -1165,6 +1169,7 @@ class Model_Card extends Model
             /*+*/'canUseFloat'               => true,
             /*+*/'cntLimits'                 => 999,
             /*+*/'editDurationValue'         => false,
+            /*+*/'minValue'                  => 0,
         ];
 
         switch ($systemId) {
@@ -1193,6 +1198,7 @@ class Model_Card extends Model
                 $settings['cntTypes']       = true;
                 $settings['editSelect']     = false;
                 $settings['canUseFloat']    = false;
+                $settings['minValue']       = 1;
                 break;
             case 6:
                 $settings['cntServiceForLimit'] = 999;
