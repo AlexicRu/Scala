@@ -604,7 +604,7 @@ class Model_Card extends Model
 
                 //проверка возможности изменения duration_value
                 if ($settings['editDurationValue'] == false && !$isNew) {
-                    if ($limit['duration_value'] != $currentLimits[$limit['limit_id']]['DURATION_VALUE']) {
+                    if (isset($limit['duration_value']) && $limit['duration_value'] != $currentLimits[$limit['limit_id']]['DURATION_VALUE']) {
                         throw new Exception('Запрещено изменение duration_value');
                     }
                 }
