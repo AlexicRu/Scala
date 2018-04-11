@@ -35,6 +35,7 @@
                                 <span class="check_span_hidden">
                                     <input type="checkbox" name="group_id" value="<?=$group['GROUP_ID']?>">
                                     <input type="hidden" name="group_name" value="<?=$group['GROUP_NAME']?>">
+                                    <input type="hidden" name="group_type" value="<?=$group['GROUP_TYPE']?>">
 
                                     <span class="btn btn_green btn_tiny btn_icon" onclick="showEditCardsGroupPopup(<?=$group['GROUP_ID']?>)"><i class="icon-pen"></i></span>
                                 </span>
@@ -164,6 +165,7 @@
 
         $('[name=edit_cards_group_name]', block).val($('[tab=cards_group_'+ groupId +'] [name=group_name]').val());
         $('[name=edit_cards_group_id]', block).val(groupId);
+        $('[name=edit_cards_group_type]', block).val($('[tab=cards_group_'+ groupId +'] [name=group_type]').val());
 
         $.fancybox.open(block, {
             padding: [0,0,0,0]

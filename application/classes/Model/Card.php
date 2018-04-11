@@ -22,6 +22,9 @@ class Model_Card extends Model
     const CARDS_GROUP_ACTION_EDIT = 1;
     const CARDS_GROUP_ACTION_DEL = 0;
 
+    const CARD_GROUP_TYPE_USER      = 1;
+    const CARD_GROUP_TYPE_SYSTEM    = 2;
+
     const CARD_ICON_WAY4_LUKOIL = 'Way4 Lukoil';
     const CARD_ICON_WAY4_GPN    = 'Way4 GPN';
     const CARD_ICON_PETROL_RN   = 'Petrol RN';
@@ -75,6 +78,11 @@ class Model_Card extends Model
 
 	public static $cantDelCardLimitSystems = [
 	    1, 3, 4
+    ];
+
+	public static $cardsGroupsTypes = [
+	    self::CARD_GROUP_TYPE_USER      => 'Пользовательская группа',
+	    self::CARD_GROUP_TYPE_SYSTEM    => 'Группа для служебных операций',
     ];
 
 	/**
@@ -803,7 +811,7 @@ class Model_Card extends Model
         $user = User::current();
 
         $sql = (new Builder())->select()
-            ->from('V_WEB_CARD_GROUPS t')
+            ->from('V_WEB_CARDS_GROUPS t')
             ->where("t.manager_id = ".$user['MANAGER_ID'])
         ;
 
@@ -813,6 +821,10 @@ class Model_Card extends Model
             if (!empty($filter['search'])) {
                 $sql->where("upper(t.group_name) like " . mb_strtoupper(Oracle::quote('%' . $filter['search'] . '%')));
             }
+        }
+
+        if (!in_array($user['ROLE_ID'], Access::$adminRoles)) {
+            $sql->where('t.GROUP_TYPE = ' . self::CARD_GROUP_TYPE_USER);
         }
 
         $db = Oracle::init();
@@ -840,10 +852,11 @@ class Model_Card extends Model
         $user = Auth::instance()->get_user();
 
         $data = [
-            'p_pos_group_name'    => $params['name'],
-            'p_manager_id'        => $user['MANAGER_ID'],
-            'p_group_id'          => 'out',
-            'p_error_code' 		  => 'out',
+            'p_group_name'      => $params['name'],
+            'p_manager_id'      => $user['MANAGER_ID'],
+            'p_group_type'      => !empty($params['type']) ? $params['type'] : self::CARD_GROUP_TYPE_USER,
+            'p_group_id'        => 'out',
+            'p_error_code' 	    => 'out',
         ];
 
         return $db->procedure('ctrl_card_group_add', $data);
@@ -868,6 +881,7 @@ class Model_Card extends Model
             'p_group_id'          => $params['group_id'],
             'p_action'            => $action,
             'p_group_name'        => !empty($params['name']) ? $params['name'] : '',
+            'p_group_type'        => !empty($params['type']) ? $params['type'] : self::CARD_GROUP_TYPE_USER,
             'p_manager_id'        => $user['MANAGER_ID'],
             'p_error_code' 		  => 'out',
         ];
