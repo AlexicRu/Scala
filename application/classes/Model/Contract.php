@@ -240,9 +240,9 @@ class Model_Contract extends Model
             'p_tarif_offline' 		    => $params['settings']['TARIF_OFFLINE'],
             'p_autoblock_limit' 		=> str_replace([' ', ','], ['', '.'], $params['settings']['AUTOBLOCK_LIMIT']),
             'p_autoblock_flag' 		    => $params['settings']['scheme'] == 1 ? 0 : 1,
-            'p_penalties' 		        => $params['settings']['PENALTIES'],
+            'p_penalties' 		        => abs(Num::toFloat($params['settings']['PENALTIES'])),
             'p_penalties_flag' 		    => $params['settings']['PENALTIES'] ? 1 : 0,
-            'p_overdraft' 		        => abs($params['settings']['OVERDRAFT']),
+            'p_overdraft' 		        => abs(Num::toFloat($params['settings']['OVERDRAFT'])),
             'p_invoice_currency' 		=> Common::CURRENCY_RUR,
             'p_invoice_period_type' 	=> self::INVOICE_PERIOD_TYPE_MONTH,//$params['settings']['INVOICE_PERIOD_TYPE'],
             'p_invoice_period_value' 	=> 1, //$params['settings']['INVOICE_PERIOD_VALUE'],
@@ -371,7 +371,7 @@ class Model_Contract extends Model
         }
 
         if(!empty($params['sumpay'])) {
-            $sql->where("sumpay = ".Oracle::toFloat($params['sumpay']));
+            $sql->where("sumpay = ".Num::toFloat($params['sumpay']));
         }
 
         if(!empty($params['pagination'])) {
@@ -403,7 +403,7 @@ class Model_Contract extends Model
 			'p_order_guid' 		=> $action != self::PAYMENT_ACTION_ADD ? $params['guid'] : null,
 			'p_order_num' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['num'] : null,
 			'p_order_date' 		=> $action == self::PAYMENT_ACTION_ADD ? Oracle::quote($params['date']) : null,
-			'p_value' 			=> $action != self::PAYMENT_ACTION_DELETE ? Oracle::toFloat($params['value']) : 0,
+			'p_value' 			=> $action != self::PAYMENT_ACTION_DELETE ? Num::toFloat($params['value']) : 0,
 			'p_payment_cur' 	=> $action == self::PAYMENT_ACTION_ADD ? Common::CURRENCY_RUR : null,
 			'p_comment' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['comment'] : null,
 			'p_manager_id' 		=> $user['MANAGER_ID'],

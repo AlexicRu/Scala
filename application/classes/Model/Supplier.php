@@ -24,7 +24,7 @@ class Model_Supplier extends Model
         ;
 
         if (!empty($params['supplier_id'])) {
-            $sql->where('t.id = '.Oracle::toInt($params['supplier_id']));
+            $sql->where('t.id = '.Num::toInt($params['supplier_id']));
         }
 
         if (!empty($params['pagination'])) {

@@ -266,7 +266,7 @@ class Model_Card extends Model
 		$where = ["card_id = ".Oracle::quote($cardId)];
 
 		if (!empty($contractId)) {
-            $where[] = "contract_id = ".Oracle::toInt($contractId);
+            $where[] = "contract_id = ".Num::toInt($contractId);
         } else if(!empty($card['CONTRACT_ID'])){
 			$where[] = "contract_id = ".Oracle::quote($card['CONTRACT_ID']);
 		}

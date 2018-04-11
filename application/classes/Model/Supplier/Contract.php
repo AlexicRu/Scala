@@ -37,10 +37,10 @@ class Model_Supplier_Contract extends Model_Contract
         $sql = "select * from ".Oracle::$prefix."V_WEB_SUPPLIERS_CONTRACTS t where 1=1 ";
 
         if(!empty($params['supplier_id'])){
-            $sql .= " and t.supplier_id = ".Oracle::toInt($params['supplier_id']);
+            $sql .= " and t.supplier_id = ".Num::toInt($params['supplier_id']);
         }
         if(!empty($params['contract_id'])){
-            $sql .= " and t.contract_id = ".Oracle::toInt($params['contract_id']);
+            $sql .= " and t.contract_id = ".Num::toInt($params['contract_id']);
         }
 
         return $db->query($sql);

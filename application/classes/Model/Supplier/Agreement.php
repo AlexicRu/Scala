@@ -20,10 +20,10 @@ class Model_Supplier_Agreement extends Model
         $sql = "select * from " . Oracle::$prefix . "V_WEB_SUPLS_AGREEMENTS  t where 1=1 ";
 
         if (!empty($params['contract_id'])) {
-            $sql .= " and t.contract_id = " . Oracle::toInt($params['contract_id']);
+            $sql .= " and t.contract_id = " . Num::toInt($params['contract_id']);
         }
         if (!empty($params['agreement_id'])) {
-            $sql .= " and t.agreement_id = " . Oracle::toInt($params['agreement_id']);
+            $sql .= " and t.agreement_id = " . Num::toInt($params['agreement_id']);
         }
 
         $sql .= ' order by t.DATE_BEGIN desc';

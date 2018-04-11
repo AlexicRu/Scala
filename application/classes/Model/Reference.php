@@ -19,7 +19,7 @@ class Model_Reference extends Model
         ;
 
         if (!empty($arParams['tube_id'])) {
-            $sql->where('tube_id = '.Oracle::toInt($arParams['tube_id']));
+            $sql->where('tube_id = '.Num::toInt($arParams['tube_id']));
         }
 
         return $db->query($sql);

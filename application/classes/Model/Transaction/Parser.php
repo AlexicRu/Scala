@@ -123,7 +123,7 @@ class Model_Transaction_Parser extends Model
             $row['CONTRACT_NAME']   = 'Не определен';
             $row['STATE_ID']        = 'Неизвестно';
             $row['PAYMENT_STATUS']  = self::PAYMENT_STATUS_UNKNOWN;
-            $row['SUMPAY']          = Oracle::toFloat($row['SUMPAY']);
+            $row['SUMPAY']          = Num::toFloat($row['SUMPAY']);
 
             foreach($contracts as $contract){
                 if($row['CONTRACT_ID'] == $contract['CONTRACT_ID']){
