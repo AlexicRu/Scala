@@ -174,25 +174,7 @@ class Oracle{
 	{
 		$result = $this->query($sql);
 
-		$return = [];
-
-		if(!empty($result)){
-			$check = reset($result);
-
-			if(!isset($check[$field])){
-				return $return;
-			}
-
-			foreach($result as $row){
-				if($noArray) {
-					$return[$row[$field]] = !empty($subField) ? $row[$subField] : $row;
-				}else{
-					$return[$row[$field]][] =  !empty($subField) ? $row[$subField] : $row;
-				}
-			}
-		}
-
-		return $return;
+		return Common::buildTreeFromDBResult($result, $field, $noArray, $subField);
 	}
 
 	/**

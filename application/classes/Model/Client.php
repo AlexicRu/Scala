@@ -4,6 +4,8 @@ class Model_Client extends Model
 {
 	/**
 	 * получаем список клиентов
+     *
+     * todo разделить функции клиентов и контактов, чтобы корректно делать пагинацию
 	 */
     public static function getClientsList($search = null, $params = [], $select = [])
     {
@@ -35,7 +37,7 @@ class Model_Client extends Model
             ;
 
             $sql
-                ->whereStart('and')
+                ->whereStart()
                 ->where("upper(v.client_name) like ".Oracle::quote('%'.$search.'%'))
                 ->whereOr("upper(v.long_name) like ".Oracle::quote('%'.$search.'%'))
                 ->whereOr("upper(v.contract_name) like ".Oracle::quote('%'.$search.'%'))
@@ -56,7 +58,13 @@ class Model_Client extends Model
             $sql->select($select);
         }
 
-        $result = $db->tree($sql, 'CLIENT_ID');
+        if (!empty($params['pagination'])) {
+            list($items, $more) = $db->pagination($sql, $params);
+
+            $result = Common::buildTreeFromDBResult($items, 'CLIENT_ID');
+        } else {
+            $result = $db->tree($sql, 'CLIENT_ID');
+        }
 
         $clients = [];
 
@@ -81,7 +89,7 @@ class Model_Client extends Model
             $clients[$clientId] = $client;
         }
 
-        return $clients;
+        return isset($more) ? [array_values($clients), $more] : $clients;
     }
 
 	/**

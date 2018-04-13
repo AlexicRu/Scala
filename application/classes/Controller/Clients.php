@@ -14,16 +14,39 @@ class Controller_Clients extends Controller_Common {
 	 */
 	public function action_index()
 	{
-		$search = $this->request->post('search');
+        if ($this->request->is_ajax()) {
+            $search = $this->request->query('search');
 
-		$clients = Model_Client::getClientsList($search);
+            $params = [
+                'offset' 		    => $this->request->post('offset'),
+                'pagination'        => true
+            ];
 
-        $popupClientAdd = Form::popup('Добавление нового клиента', 'client/add');
+            list($clients, $more) = Model_Client::getClientsList($search, $params);
 
-        $this->tpl
-            ->bind('clients', $clients)
-            ->bind('popupClientAdd', $popupClientAdd)
-        ;
+            if(empty($clients)){
+                $this->jsonResult(false);
+            }
+
+            foreach ($clients as &$client) {
+                if (!empty($client['contracts'])) {
+                    foreach ($client['contracts'] as &$contract) {
+                        $contract['contract_state_class']   = Model_Contract::$statusContractClasses[$contract['CONTRACT_STATE']];
+                        $contract['contract_state_name']    = Model_Contract::$statusContractNames[$contract['CONTRACT_STATE']];
+                        $contract['balance_formatted']      = number_format($contract['BALANCE'], 2, ',', ' ') . ' ' . Text::RUR;
+                    }
+                }
+            }
+
+            $this->jsonResult(true, ['items' => $clients, 'more' => $more]);
+        } else {
+
+            $popupClientAdd = Form::popup('Добавление нового клиента', 'client/add');
+
+            $this->tpl
+                ->bind('popupClientAdd', $popupClientAdd)
+            ;
+        }
 	}
 
 	/**
