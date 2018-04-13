@@ -411,7 +411,7 @@ class Controller_Api extends Controller_Template
     {
         $user = User::current();
 
-        $clients = Model_Client::getClientsList(null, [
+        $clients = Model_Manager::getClientsList([
             'manager_id' => $user['MANAGER_ID']
         ], [
             'CLIENT_ID',
@@ -420,7 +420,7 @@ class Controller_Api extends Controller_Template
             'CLIENT_STATE',
         ]);
 
-        $this->jsonResult(true, array_values($clients));
+        $this->jsonResult(true, $clients);
     }
 
     /**

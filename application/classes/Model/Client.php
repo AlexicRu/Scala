@@ -2,94 +2,23 @@
 
 class Model_Client extends Model
 {
-	/**
-	 * получаем список клиентов
+    /**
+     * получаем список клиентов
      *
-     * todo разделить функции клиентов и контактов, чтобы корректно делать пагинацию
-	 */
-    public static function getClientsList($search = null, $params = [], $select = [])
+     * @param array $params
+     * @param array $select
+     */
+    public static function getFullClientsList($params = [], $select = [])
     {
-        $db = Oracle::init();
+        $params['deep_search'] = true;
 
-        if(empty($params['manager_id'])){
-            $user = Auth::instance()->get_user();
-            $managerId = $user['MANAGER_ID'];
-        }else{
-            $managerId = $params['manager_id'];
+        list($clients, $more) = Model_Manager::getClientsList($params, $select);
+
+        foreach ($clients as &$client) {
+            $client['contracts'] = Model_Contract::getContracts($client['CLIENT_ID']);
         }
 
-        $sql = (new Builder())->select()
-            ->from('v_web_clients_title v')
-            ->where("v.manager_id = ".Oracle::quote($managerId))
-            ->orderBy([
-                'client_id desc',
-                'contract_name'
-            ])
-        ;
-
-        if(!is_null($search)){
-            $search = mb_strtoupper($search);
-
-            $subSql = (new Builder())->select('1')
-                ->from('V_WEB_CRD_LIST c')
-                ->where('c.contract_id = v.contract_id')
-                ->where('c.card_id like '.Oracle::quote('%'.$search.'%'))
-            ;
-
-            $sql
-                ->whereStart()
-                ->where("upper(v.client_name) like ".Oracle::quote('%'.$search.'%'))
-                ->whereOr("upper(v.long_name) like ".Oracle::quote('%'.$search.'%'))
-                ->whereOr("upper(v.contract_name) like ".Oracle::quote('%'.$search.'%'))
-                ->whereOr("exists (".$subSql->build().")")
-                ->whereEnd()
-            ;
-        }
-
-        if(!empty($params['ids'])){
-            $sql->where('v.client_id in ('.implode(',', $params['ids']).')');
-        }
-
-        if(!empty($params['limit'])){
-            $sql->limit($params['limit']);
-        }
-
-        if (!empty($select)) {
-            $sql->select($select);
-        }
-
-        if (!empty($params['pagination'])) {
-            list($items, $more) = $db->pagination($sql, $params);
-
-            $result = Common::buildTreeFromDBResult($items, 'CLIENT_ID');
-        } else {
-            $result = $db->tree($sql, 'CLIENT_ID');
-        }
-
-        $clients = [];
-
-        $user = User::current();
-
-        foreach($result as $clientId => $rows){
-            $client = reset($rows);
-
-            foreach($rows as $row){
-                if(!empty($row['CONTRACT_ID'])){
-
-                    if (!empty($user['contracts'][$clientId])) {
-                        if (in_array($row['CONTRACT_ID'], $user['contracts'][$clientId])) {
-                            $client['contracts'][] = $row;
-                        }
-                    } else {
-                        $client['contracts'][] = $row;
-                    }
-                }
-            }
-
-            $clients[$clientId] = $client;
-        }
-
-        return isset($more) ? [array_values($clients), $more] : $clients;
+        return [$clients, $more];
     }
 
 	/**

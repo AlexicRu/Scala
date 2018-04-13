@@ -73,7 +73,7 @@ class Controller_Managers extends Controller_Common {
 
         $search = !empty($params['search']) ? $params['search'] : null;
 
-        $clients = Model_Client::getClientsList($search, ['manager_id' => $managerId]);
+        $clients = Model_Manager::getClientsList(['search' => $search, 'manager_id' => $managerId]);
 
         $contractsTree = Model_Manager::getContractsTree($managerId);
 
@@ -190,6 +190,8 @@ class Controller_Managers extends Controller_Common {
     public function action_managersClients()
     {
         $params = $this->request->post('params');
+
+        $params['only_available_to_add'] = true;
 
         $clients = Model_Manager::getClientsList($params);
 

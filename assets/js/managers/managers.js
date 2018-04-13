@@ -246,9 +246,9 @@ function loadClientList(input)
         for(var i in data.data){
             var tpl = $('<div class="item_found_row"><span><input type="checkbox" class="found_client" onchange="checkFoundItem($(this))"></span><span class="ifr_id gray" /><span class="ifr_name" /></div>');
             tpl.find('.ifr_id').text(data.data[i].CLIENT_ID);
-            tpl.find('.ifr_name').text(data.data[i].NAME);
+            tpl.find('.ifr_name').text(data.data[i].CLIENT_NAME);
             tpl.attr('item_id', data.data[i].CLIENT_ID);
-            tpl.data('item_name', data.data[i].NAME);
+            tpl.data('item_name', data.data[i].CLIENT_NAME);
 
             var ids = collectFoundIds(block);
 

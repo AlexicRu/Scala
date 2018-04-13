@@ -152,11 +152,13 @@ class Access
 
         switch($type){
             case 'client':
-                $clients = Model_Client::getClientsList(null, [
-                    'ids' => [$id]
+                $clients = Model_Manager::getClientsList([
+                    'client_id' => $id
                 ]);
 
-                if(!empty($clients[$id])){
+                $clientsIds = array_column($clients, 'CLIENT_ID');
+
+                if(in_array($clientsIds, $id)){
                     $allow = true;
                 }
                 break;

@@ -181,7 +181,7 @@ class Controller_Help extends Controller_Common
      */
     public function action_listClient()
     {
-        $res = Model_Client::getClientsList($this->_search, ['ids' => $this->_ids, 'limit' => 10]);
+        $res = Model_Manager::getClientsList(['search' => $this->_search, 'ids' => $this->_ids, 'limit' => 10]);
 
         if(empty($res)){
             $this->jsonResult(false);

@@ -181,7 +181,7 @@ class Telegram_GloPro extends Telegram_Common
     {
         $clientNamePart = !empty($this->_params[0]) ? $this->_params[0] : null;
 
-        $clients = Model_Client::getClientsList($clientNamePart);
+        $clients = Model_Manager::getClientsList(['search' => $clientNamePart]);
 
         if (empty($clients)) {
             $this->_answer[] = '<b>Клиенты не найдены</b>';
