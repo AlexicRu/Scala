@@ -39,7 +39,7 @@ if(!empty($_REQUEST['search'])){?>
 
                 $('<div class="table_out dn" toggle_block="client' + client.CLIENT_ID + '">' +
                     '<br>' +
-                    '<table class="table" />' +
+                    '<table class="table table_small" />' +
                 '</div>').appendTo(tpl);
 
                 for (var j in client.contracts) {
