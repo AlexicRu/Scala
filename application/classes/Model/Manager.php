@@ -430,7 +430,7 @@ class Model_Manager extends Model
         }
 
         if(!empty($params['client_id'])){
-            $sql->where('v.client_id in ('.implode(',', (array)$params['client_id']).')');
+            $sql->where('t.client_id in ('.implode(',', (array)$params['client_id']).')');
         }
 
         if (!empty($params['pagination'])){

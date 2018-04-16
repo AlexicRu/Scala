@@ -156,9 +156,9 @@ class Access
                     'client_id' => $id
                 ]);
 
-                $clientsIds = array_column($clients, 'CLIENT_ID');
+                $clientsIds = !empty($clients) ? array_column($clients, 'CLIENT_ID') : [];
 
-                if(in_array($clientsIds, $id)){
+                if(in_array($id, $clientsIds)){
                     $allow = true;
                 }
                 break;
