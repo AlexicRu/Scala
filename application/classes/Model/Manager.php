@@ -382,7 +382,6 @@ class Model_Manager extends Model
         $sql = (new Builder())->select(['t.*'])->distinct()
             ->from('V_WEB_CLIENTS_LIST t')
             ->join('V_WEB_MANAGER_CONTRACTS mc', 'mc.client_id = t.client_id')
-            ->where('mc.manager_id = ' . $managerId)
             ->where('t.agent_id = ' . $agentId)
             ->orderBy('t.client_id desc')
         ;
@@ -395,6 +394,8 @@ class Model_Manager extends Model
                 ->where('vwc.manager_id = ' . $managerId)
             ;
             $sql->where('not exists ('. $subSql->build() .')');
+        } else {
+            $sql->where('mc.manager_id = ' . $managerId);
         }
 
         if(!empty($params['search'])){
