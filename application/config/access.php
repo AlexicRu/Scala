@@ -142,6 +142,10 @@ return [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
         ],
+        'control_1c-connect' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
         'control_1c-export' => [
             'a_1',
             'a_2',

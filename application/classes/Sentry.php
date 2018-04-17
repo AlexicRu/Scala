@@ -6,7 +6,7 @@ class Sentry
 
     public function __construct()
     {
-        $config = Kohana::$config->load('config');
+        $config = Common::getEnvironmentConfig();
 
         $this->_client = new Raven_Client($config['sentry_dsn']);
     }
