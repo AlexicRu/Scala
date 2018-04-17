@@ -7,9 +7,9 @@
     <span toggle_block="block2" class="dn gray">
         <input type="text" name="CONTRACT_NAME" value="<?=Text::quotesForForms($contract['CONTRACT_NAME'])?>" class="input_big input_medium">
         от
-        <input type="text" name="DATE_BEGIN" value="<?=$contract['DATE_BEGIN']?>" class="input_big input_medium datepicker" readonly>
+        <input type="text" name="DATE_BEGIN" value="<?=$contract['DATE_BEGIN']?>" class="input_big input_small datepicker" readonly>
         до
-        <input type="text" name="DATE_END" value="<?=$contract['DATE_END']?>" class="input_big input_medium datepicker" readonly>
+        <input type="text" name="DATE_END" value="<?=$contract['DATE_END']?>" class="input_big input_small datepicker" readonly>
         <select class="select_big" name="STATE_ID">
             <?
             foreach(Model_Contract::$statusContractNames as $id => $name){

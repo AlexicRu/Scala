@@ -323,6 +323,7 @@ class Model_Contract extends Model
 		$res = $db->procedure('client_contract_add', $data);
 
 		if(empty($res)){
+            Auth::instance()->regenerate_user_profile();
 			return true;
 		}
 
