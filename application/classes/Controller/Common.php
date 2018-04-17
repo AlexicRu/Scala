@@ -171,10 +171,22 @@ abstract class Controller_Common extends Controller_Template {
         if(!empty($_SERVER['SERVER_NAME'])){
             $url = str_replace(['.', '-'], '', $_SERVER['SERVER_NAME']);
 
-            if(isset($design[$url])){
-                $customView = $design[$url]['class'];
-                $this->title[] = $design[$url]['title'];
+            if(isset($design['url'][$url])){
+                $customView = $design['url'][$url]['class'];
+                $this->title[] = $design['url'][$url]['title'];
             }
+        }
+
+        $user = User::current();
+
+        if (!empty($design['user']['a_' . $user['AGENT_ID']])) {
+            $customView = $design['user']['a_' . $user['AGENT_ID']]['class'];
+            $this->title[] = $design['user']['a_' . $user['AGENT_ID']]['title'];
+        }
+
+        if (!empty($design['user']['u_' . $user['MANAGER_ID']])) {
+            $customView = $design['user']['u_' . $user['MANAGER_ID']]['class'];
+            $this->title[] = $design['user']['u_' . $user['MANAGER_ID']]['title'];
         }
 
         //если не смогли определить дизайн под конкретный урл, то грузим дефолтовый
