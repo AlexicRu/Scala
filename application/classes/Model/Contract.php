@@ -684,8 +684,9 @@ class Model_Contract extends Model
      *
      * @param $contractId
      * @param $limits
+     * @param $recalc
      */
-    public static function editLimits($contractId, $limits)
+    public static function editLimits($contractId, $limits, $recalc = true)
     {
         if(empty($contractId)){
             return false;
@@ -723,10 +724,11 @@ class Model_Contract extends Model
         }
 
         $data = [
-            'p_contract_id'		=> $contractId,
-            'p_limit_array'		=> [$limitsArray, SQLT_CHR],
-            'p_manager_id' 		=> $user['MANAGER_ID'],
-            'p_error_code' 		=> 'out',
+            'p_contract_id'		        => $contractId,
+            'p_limit_array'		        => [$limitsArray, SQLT_CHR],
+            'p_fl_recalc_rest_limit'    => (int)$recalc,
+            'p_manager_id' 		        => $user['MANAGER_ID'],
+            'p_error_code' 		        => 'out',
         ];
 
         $res = $db->procedure('client_contract_service_limit', $data);

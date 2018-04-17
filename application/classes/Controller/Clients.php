@@ -650,8 +650,9 @@ class Controller_Clients extends Controller_Common {
     {
         $limits = $this->request->post('limits');
         $contractId = $this->request->post('contract_id');
+        $recalc = $this->request->post('recalc');
 
-        $result = Model_Contract::editLimits($contractId, $limits);
+        $result = Model_Contract::editLimits($contractId, $limits, $recalc);
 
         if(empty($result)){
             $this->jsonResult(false);

@@ -55,6 +55,12 @@
     <tr>
         <td></td>
         <td>
+            <label><input type="checkbox" name="recalc" checked> Пересчет остатков по договору</label>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
             <span class="btn btn_reverse btn_contract_limits_edit_go" onclick="contractLimitsEditGo($(this))"><i class="icon-ok"></i> Сохранить</span>
             <span class="btn btn_red fancy_close">Отмена</span>
         </td>
@@ -212,7 +218,13 @@
             return;
         }
 
-        $.post('/clients/contract-limits-edit', {contract_id : $('[name=contracts_list]').val(), limits: limits}, function (data) {
+        var params = {
+            contract_id : $('[name=contracts_list]').val(),
+            limits: limits,
+            recalc: $("[name=recalc]", form).is(":checked") ? 1 : 0,
+        };
+
+        $.post('/clients/contract-limits-edit', params, function (data) {
             if (data.success) {
                 message(1, 'Ограничения по договору успешно обновлены');
                 loadContract('account');
