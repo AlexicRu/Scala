@@ -359,9 +359,10 @@ class Model_Manager extends Model
      * получаем список доступный клиентов по манагеру
      *
      * @param array $params
+     * @param array $columns
      * @return array
      */
-    public static function getClientsList($params = [], $select = [])
+    public static function getClientsList($params = [], $columns = [])
     {
         $db = Oracle::init();
 
@@ -428,8 +429,11 @@ class Model_Manager extends Model
             }
         }
 
-        if (!empty($select)) {
-            $sql->select($select);
+        if (!empty($columns)) {
+            foreach ($columns as &$column){
+                $column = 't.' . $column;
+            }
+            $sql->resetColumns()->columns($columns);
         }
 
         if(!empty($params['client_id'])){

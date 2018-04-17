@@ -300,18 +300,26 @@ class Builder
     public function resetColumns()
     {
         $this->_columns = [];
+
+        return $this;
     }
     public function resetOrderBy()
     {
         $this->_orderBy = [];
+
+        return $this;
     }
     public function resetGroupBy()
     {
         $this->_groupBy = [];
+
+        return $this;
     }
     public function resetHaving()
     {
         $this->_having= [];
+
+        return $this;
     }
 
     /**

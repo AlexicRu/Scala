@@ -224,7 +224,7 @@ return [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
             Access::ROLE_MANAGER_SALE,
-            Access::ROLE_MANAGER,
+            Access::ROLE_CLIENT
         ],
         'clients_contract-add' => [
             Access::ROLE_USER,
