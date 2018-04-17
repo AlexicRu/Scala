@@ -379,8 +379,10 @@ class Model_Manager extends Model
             $agentId = $params['agent_id'];
         }
 
-        $sql = (new Builder())->select()
+        $sql = (new Builder())->select(['t.*'])->distinct()
             ->from('V_WEB_CLIENTS_LIST t')
+            ->join('V_WEB_MANAGER_CONTRACTS mc', 'mc.client_id = t.client_id')
+            ->where('mc.manager_id = ' . $managerId)
             ->where('t.agent_id = ' . $agentId)
             ->orderBy('t.client_id desc')
         ;
@@ -568,25 +570,6 @@ class Model_Manager extends Model
     }
 
     /**
-     * получаем список контрактов менеджера
-     *
-     * @param $managerId
-     * @return array|bool
-     */
-    public static function getContractsIds($managerId)
-    {
-        if (empty($managerId)) {
-            return [];
-        }
-
-        $sql = (new Builder())->select()
-            ->from('v_web_manager_contracts')
-            ->where('MANAGER_ID = ' . (int)$managerId);
-
-        return Oracle::init()->column($sql, 'CONTRACT_ID');
-    }
-
-    /**
      * дерево доступных контрактов
      *
      * @param $managerId
@@ -600,6 +583,7 @@ class Model_Manager extends Model
         $sql = (new Builder())->select()
             ->from('v_web_manager_contracts')
             ->where('MANAGER_ID = '.(int)$managerId)
+            ->where('CONTRACT_ID is not null')
         ;
 
         return Oracle::init()->tree($sql, 'CLIENT_ID', false, 'CONTRACT_ID');
