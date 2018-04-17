@@ -155,7 +155,7 @@ return [
             Access::ROLE_ROOT
         ],
         'administration_cardsTransfer' => [
-            Access::ROLE_ADMIN
+            Access::ROLE_ROOT
         ],
         'system_index' => [
             Access::ROLE_ROOT,
