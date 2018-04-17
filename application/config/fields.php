@@ -15,6 +15,10 @@ return [
         'multi'     => true,
         'url'       => '/help/list-card-group'
     ],
+    'card_group_srv_choose_multi' => [
+        'multi'     => true,
+        'url'       => '/help/list-card-group?group_type=' . Model_Card::CARD_GROUP_TYPE_SYSTEM
+    ],
     'client_choose_single' => [
         'url'       => '/help/list-client'
     ],

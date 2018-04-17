@@ -28,6 +28,7 @@ class Controller_Help extends Controller_Common
     public function action_listCardGroup()
     {
         $params = [
+            'group_type'    => $this->request->query('group_type'),
             'search'        => $this->_search,
             'ids'           => $this->_ids,
             'limit'         => 10,

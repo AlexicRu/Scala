@@ -827,6 +827,10 @@ class Model_Card extends Model
             $sql->where('t.GROUP_TYPE = ' . self::CARD_GROUP_TYPE_USER);
         }
 
+        if (!empty($filter['group_type'])) {
+            $sql->where('t.group_type = ' . (int)$filter['group_type']);
+        }
+
         $db = Oracle::init();
 
         if(!empty($filter['limit'])){
