@@ -15,7 +15,7 @@ class Model_Client extends Model
         list($clients, $more) = Model_Manager::getClientsList($params, $select);
 
         foreach ($clients as &$client) {
-            $client['contracts'] = Model_Contract::getContracts($client['CLIENT_ID']);
+            $client['contracts'] = Model_Contract::getContracts($client['CLIENT_ID'], $params);
         }
 
         return [$clients, $more];

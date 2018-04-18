@@ -27,5 +27,8 @@ return array(
     ]],
     'news'              => ['title' => 'Новости', 'icon' => 'icon-news'],
     'support'           => ['title' => 'Поддержка', 'icon' => 'icon-question'],
-    'system'            => ['title' => 'System', 'icon' => 'icon-loader'],
+    'system'            => ['title' => 'System', 'icon' => 'icon-loader', 'children' => [
+        'deploy'        => 'Deploy',
+        'db'            => 'DB',
+    ]],
 );

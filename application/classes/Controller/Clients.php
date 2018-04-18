@@ -15,10 +15,8 @@ class Controller_Clients extends Controller_Common {
 	public function action_index()
 	{
         if ($this->request->is_ajax()) {
-            $search = $this->request->query('search');
-
             $params = [
-                'search'            => $search,
+                'search'            => $this->request->query('search'),
                 'offset' 		    => $this->request->post('offset'),
                 'pagination'        => true
             ];

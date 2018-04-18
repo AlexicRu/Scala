@@ -3,7 +3,7 @@
 class Model_Transaction extends Model
 {
     /**
-     * получаем список тарнзакций
+     * получаем список транзакций
      *
      * @param $cardId
      * @param $contractId
@@ -17,13 +17,18 @@ class Model_Transaction extends Model
             ->where('card_id = ' . Oracle::quote($cardId))
             ->where('contract_id = ' . (int)$contractId)
             ->columns([
-                "to_char(date_trn, 'dd.mm.yyyy') as date_trn",
+                "to_char(date_trn, 'dd.mm.yyyy') as date_trn_formatted",
+                "date_trn",
                 "time_trn",
                 "pos_petrol_name",
                 "pos_address",
                 "long_desc",
                 "service_amount",
                 "sumprice_discount",
+            ])
+            ->orderBy([
+                'date_trn desc',
+                'time_trn desc'
             ])
         ;
 

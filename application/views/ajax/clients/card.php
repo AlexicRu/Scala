@@ -37,13 +37,13 @@ $user = Auth::instance()->get_user();
 
     <?foreach ($transactions as $index => $transaction) {?>
         <div class="line_inner" <?=($index ? 'toggle_block="last_transactions" style="display:none"' : '')?>>
-            <span class="gray"><?=$transaction['DATE_TRN']?> <?=$transaction['TIME_TRN']?></span> &nbsp;&nbsp;&nbsp;
+            <span class="gray"><?=$transaction['DATE_TRN_FORMATTED']?> <?=$transaction['TIME_TRN']?></span> &nbsp;&nbsp;&nbsp;
             <b><?=$transaction['POS_PETROL_NAME']?></b>
             <div class="fr">
                 <b><?=$transaction['LONG_DESC']?></b> - <?=number_format($transaction['SERVICE_AMOUNT'], 2, ',', ' ')?> л. / <?=number_format($transaction['SUMPRICE_DISCOUNT'], 2, ',', ' ')?> <?=Text::RUR?>
             </div>
             <br>
-            <span style="visibility: hidden"><?=$transaction['DATE_TRN']?> <?=$transaction['TIME_TRN']?></span> &nbsp;&nbsp;&nbsp;
+            <span style="visibility: hidden"><?=$transaction['DATE_TRN_FORMATTED']?> <?=$transaction['TIME_TRN']?></span> &nbsp;&nbsp;&nbsp;
             <?=$transaction['POS_ADDRESS']?>
         </div>
     <?}?>

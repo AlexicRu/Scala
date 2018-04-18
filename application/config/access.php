@@ -164,6 +164,27 @@ return [
         'system_index' => [
             Access::ROLE_ROOT,
         ],
+        'system_deploy' => [
+            Access::ROLE_ROOT,
+        ],
+        'system_db' => [
+            Access::ROLE_ROOT,
+        ],
+        'system_query' => [
+            Access::ROLE_ROOT,
+        ],
+        'system_version-refresh' => [
+            Access::ROLE_ROOT,
+        ],
+        'system_gulp' => [
+            Access::ROLE_ROOT,
+        ],
+        'system_git' => [
+            Access::ROLE_ROOT,
+        ],
+        'system_full' => [
+            Access::ROLE_ROOT,
+        ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,
