@@ -31,7 +31,7 @@ if(!empty($_REQUEST['search'])){?>
                 $('<h3>' + client.LONG_NAME + '</h3>').insertAfter(tpl.find('h2'));
             }
 
-            if (client.contracts.length) {
+            if (client.contracts && client.contracts.length) {
                 $('<div class="fr btn" toggle="client' + client.CLIENT_ID + '">' +
                     '<span toggle_block="client' + client.CLIENT_ID + '">Договоры</span>' +
                     '<span toggle_block="client' + client.CLIENT_ID + '" class="dn">Свернуть</span>' +

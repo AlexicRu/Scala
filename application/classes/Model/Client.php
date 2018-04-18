@@ -5,20 +5,67 @@ class Model_Client extends Model
     /**
      * получаем список клиентов
      *
-     * @param array $params
-     * @param array $select
+     * @param array $search
      */
-    public static function getFullClientsList($params = [], $select = [])
+    public static function getFullClientsList($search = '')
     {
-        $params['deep_search'] = true;
+        $db = Oracle::init();
 
-        list($clients, $more) = Model_Manager::getClientsList($params, $select);
+        $user = User::current();
 
-        foreach ($clients as &$client) {
-            $client['contracts'] = Model_Contract::getContracts($client['CLIENT_ID'], $params);
+        $sql = (new Builder())->select()
+            ->from('v_web_clients_title v')
+            ->where("v.manager_id = " . (int)$user['MANAGER_ID'])
+            ->orderBy([
+                'client_id desc'
+            ])
+        ;
+
+        if(!empty($search)){
+            $search = mb_strtoupper(Oracle::quote('%'.$search.'%'));
+
+            $subSql = (new Builder())->select('1')
+                ->from('V_WEB_CRD_LIST c')
+                ->where('c.contract_id = v.contract_id')
+                ->where('c.card_id like ' . $search)
+            ;
+
+            $sql
+                ->whereStart()
+                ->where("upper(v.client_name) like " . $search)
+                ->whereOr("upper(v.long_name) like " . $search)
+                ->whereOr("upper(v.contract_name) like " . $search)
+                ->whereOr("exists (".$subSql.")")
+                ->whereEnd()
+            ;
         }
 
-        return [$clients, $more];
+        $result = $db->tree($sql, 'CLIENT_ID');
+
+        $clients = [];
+
+        $user = User::current();
+
+        foreach($result as $clientId => $rows){
+            $client = reset($rows);
+
+            foreach($rows as $row){
+                if(!empty($row['CONTRACT_ID'])){
+
+                    if (!empty($user['contracts'][$clientId])) {
+                        if (in_array($row['CONTRACT_ID'], $user['contracts'][$clientId])) {
+                            $client['contracts'][] = $row;
+                        }
+                    } else {
+                        $client['contracts'][] = $row;
+                    }
+                }
+            }
+
+            $clients[] = $client;
+        }
+
+        return $clients;
     }
 
 	/**

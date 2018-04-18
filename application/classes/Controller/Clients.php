@@ -11,17 +11,14 @@ class Controller_Clients extends Controller_Common {
 
 	/**
 	 * титульная страница со списком клиентов
+     *
+     * был запил под многостраничность, но принудительно отключили, так как не взлетело
 	 */
 	public function action_index()
 	{
         if ($this->request->is_ajax()) {
-            $params = [
-                'search'            => $this->request->query('search'),
-                'offset' 		    => $this->request->post('offset'),
-                'pagination'        => true
-            ];
 
-            list($clients, $more) = Model_Client::getFullClientsList($params);
+            $clients = Model_Client::getFullClientsList($this->request->query('search'));
 
             if(empty($clients)){
                 $this->jsonResult(false);
@@ -30,14 +27,14 @@ class Controller_Clients extends Controller_Common {
             foreach ($clients as &$client) {
                 if (!empty($client['contracts'])) {
                     foreach ($client['contracts'] as &$contract) {
-                        $contract['contract_state_class']   = Model_Contract::$statusContractClasses[$contract['STATE_ID']];
-                        $contract['contract_state_name']    = Model_Contract::$statusContractNames[$contract['STATE_ID']];
+                        $contract['contract_state_class']   = Model_Contract::$statusContractClasses[$contract['CONTRACT_STATE']];
+                        $contract['contract_state_name']    = Model_Contract::$statusContractNames[$contract['CONTRACT_STATE']];
                         $contract['balance_formatted']      = number_format($contract['BALANCE'], 2, ',', ' ') . ' ' . Text::RUR;
                     }
                 }
             }
 
-            $this->jsonResult(true, ['items' => $clients, 'more' => $more]);
+            $this->jsonResult(true, ['items' => $clients, 'more' => false]);
         } else {
 
             $popupClientAdd = Form::popup('Добавление нового клиента', 'client/add');

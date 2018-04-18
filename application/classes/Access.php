@@ -153,7 +153,7 @@ class Access
         switch($type){
             case 'client':
                 $clients = Model_Manager::getClientsList([
-                    'client_id' => $id
+                    'ids' => [$id]
                 ]);
 
                 $clientsIds = !empty($clients) ? array_column($clients, 'CLIENT_ID') : [];

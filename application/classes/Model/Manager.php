@@ -364,8 +364,6 @@ class Model_Manager extends Model
      */
     public static function getClientsList($params = [], $columns = [])
     {
-        $db = Oracle::init();
-
         $user = User::current();
 
         if (empty($params['manager_id'])) {
@@ -374,77 +372,40 @@ class Model_Manager extends Model
             $managerId = $params['manager_id'];
         }
 
-        if (empty($params['agent_id'])) {
-            $agentId = $user['AGENT_ID'];
-        } else {
-            $agentId = $params['agent_id'];
-        }
-
-        $sql = (new Builder())->select(['t.*'])->distinct()
+        $sql = (new Builder())->select()->distinct()
             ->from('V_WEB_CLIENTS_LIST t')
-            ->join('V_WEB_MANAGER_CONTRACTS mc', 'mc.client_id = t.client_id')
-            ->where('t.agent_id = ' . $agentId)
+            ->where('t.agent_id = ' . (int)$user['AGENT_ID'])
+            ->where('t.manager_id = ' . (int)$managerId)
             ->orderBy('t.client_id desc')
         ;
+
+        if (!empty($params['ids'])) {
+            $sql->where('t.client_id in ('. implode(',', (array)$params['ids']) .')');
+        }
 
         if (!empty($params['only_available_to_add'])) {
             $subSql = (new Builder())->select('1')
                 ->from('V_WEB_MANAGER_CLIENTS vwc')
                 ->where('vwc.client_id = t.client_id')
                 ->where('vwc.agent_id = t.agent_id')
-                ->where('vwc.manager_id = ' . $managerId)
+                ->where('vwc.manager_id = ' . (int)$user['MANAGER_ID'])
             ;
-            $sql->where('not exists ('. $subSql->build() .')');
-        } else {
-            $sql->where('mc.manager_id = ' . $managerId);
+            $sql->where('not exists (' . $subSql . ')');
         }
 
         if(!empty($params['search'])){
-            $search = mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
-
-            if (!empty($params['deep_search'])) {
-                $subSql = (new Builder())->select('1')
-                    ->from('V_WEB_CRD_LIST c')
-                    ->where('c.client_id = t.client_id')
-                    ->whereStart()
-                    ->whereOr('c.card_id like '. $search)
-                    ->whereOr("upper(c.contract_name) like ". $search)
-                    ->whereEnd()
-                ;
-
-                $sql
-                    ->whereStart()
-                    ->whereOr('upper(t.CLIENT_NAME) like ' . $search)
-                    ->whereOr('upper(t.LONG_NAME) like ' . $search)
-                    ->whereOr("exists (".$subSql->build().")")
-                    ->whereEnd()
-                ;
-            } else {
-                $sql
-                    ->whereStart()
-                    ->whereOr('upper(t.CLIENT_NAME) like ' . $search)
-                    ->whereOr('upper(t.LONG_NAME) like ' . $search)
-                    ->whereEnd()
-                ;
-            }
+            $sql->where("upper(t.CLIENT_NAME) like " . mb_strtoupper(Oracle::quote('%'.$params['search'].'%')));
         }
 
         if (!empty($columns)) {
-            foreach ($columns as &$column){
-                $column = 't.' . $column;
-            }
-            $sql->resetColumns()->columns($columns);
+            $sql->columns($columns);
         }
 
-        if(!empty($params['client_id'])){
-            $sql->where('t.client_id in ('.implode(',', (array)$params['client_id']).')');
+        if (!empty($params['limit'])) {
+            $sql->limit((int)$params['limit']);
         }
 
-        if (!empty($params['pagination'])){
-            return $db->pagination($sql, $params);
-        }
-
-        return $db->query($sql);
+        return Oracle::init()->query($sql);
     }
 
     /**
@@ -585,7 +546,7 @@ class Model_Manager extends Model
             return [];
         }
 
-        $sql = (new Builder())->select()
+        $sql = (new Builder())->select()->distinct()
             ->from('v_web_manager_contracts')
             ->where('MANAGER_ID = '.(int)$managerId)
             ->where('CONTRACT_ID is not null')

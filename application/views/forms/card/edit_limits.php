@@ -146,14 +146,12 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
 
     function cardEditAddLimit_<?=$postfix?>(t)
     {
-        var tbl = t.closest('table');
+        var table = t.closest('table');
 
         if ($('tr[limit_group]', table).length >= <?=$settings['cntLimits']?>) {
             message(0, 'Достигнуто максимальное кол-во лимитов');
             return false;
         }
-
-        var table = t.closest('table');
 
         var params = {
             cardId:     '<?=$card['CARD_ID']?>',
