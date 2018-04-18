@@ -42,11 +42,16 @@ class Controller_System extends Controller_Common {
     public function action_query()
     {
         $query = trim($this->request->post('query'));
+        $limit = (int)$this->request->post('limit') ?: 10;
 
         if (strpos($query, 'select') !== 0) {
             $html = 'Выполнять можно только SELECT';
         } else {
-            $data = Oracle::init()->query($query);
+            $db = Oracle::init();
+
+            $query = $db->limit($query, 0, $limit);
+
+            $data = $db->query($query);
 
             if (empty($data)) {
                 $html = 'Запрос выдал пустой рузельтат';

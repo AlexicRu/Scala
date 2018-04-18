@@ -17,7 +17,7 @@
     <div>
         <textarea name="query" placeholder="Запрос"></textarea>
     </div>
-    <span class="btn" onclick="executeQuery()">Выполнить</span>
+    <span class="btn" onclick="executeQuery()">Выполнить</span> &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Limit: <input type="number" name="limit" class="input_big input_mini" value="10">
 </div>
 
 <div class="result__block">
@@ -36,7 +36,12 @@
 
         result.empty().addClass(CLASS_LOADING);
 
-        $.post('/system/query', {query: $('[name=query]').val()}, function (data) {
+        var params = {
+            query: $('[name=query]').val(),
+            limit: $('[name=limit]').val()
+        };
+
+        $.post('/system/query', params, function (data) {
             result.removeClass(CLASS_LOADING);
             result.html(data);
         });
