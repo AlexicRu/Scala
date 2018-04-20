@@ -26,5 +26,7 @@ return [
         '.*\.gpn-card\.com',
         'bin-oil\.com',
         '.*\.bin-oil\.com',
+        'tway\.pro',
+        '.*\.tway\.pro',
     ],
 ];

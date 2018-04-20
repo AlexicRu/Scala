@@ -1270,7 +1270,7 @@ class Model_Card extends Model
             'p_old_contract'        => $oldContractId,
             'p_new_contract'        => $newContractId,
             'p_cards_array'         => [(array)$cards, SQLT_CHR],
-            'p_date_change'         => !empty($params['save_holder']) ? $params['save_holder'] : date('d.m.Y'),
+            'p_date_change'         => !empty($params['date_from']) ? $params['date_from'] : date('d.m.Y'),
             'p_date_last_trz'       => !empty($params['date_to']) ? $params['date_to'] : Model_Contract::DEFAULT_DATE_END,
             'p_fl_transfer_cards'   => !empty($params['transfer_cards']) ? 1 : 0,
             'p_fl_transfer_trn'     => !empty($params['transfer_transactions']) ? 1 : 0,

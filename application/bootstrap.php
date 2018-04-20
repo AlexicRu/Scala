@@ -88,7 +88,7 @@ if (isset($_SERVER['SERVER_PROTOCOL']))
  * saying "Couldn't find constant Kohana::<INVALID_ENV_NAME>"
  */
 
-if (strpos($_SERVER['HTTP_HOST'], 'dev.') !== 0) {
+if (strpos($_SERVER['HTTP_HOST'], 'dev.') === false) {
     // We are live!
     Kohana::$environment = Kohana::PRODUCTION;
 } elseif (isset($_SERVER['KOHANA_ENV'])) {
@@ -111,12 +111,20 @@ if (strpos($_SERVER['HTTP_HOST'], 'dev.') !== 0) {
  * - boolean  expose      set the X-Powered-By header                        FALSE
  */
 
+$initParams = [
+    'base_url'      => '/',
+    'index_file'    => false,
+];
 
-Kohana::init(array(
-	'base_url'      => '/',
-	'index_file'    => false,
-    'errors'        => false,
-));
+switch (Kohana::$environment) {
+    case Kohana::PRODUCTION:
+        $initParams['errors'] = false;
+        break;
+    default:
+        $initParams['errors'] = true;
+}
+
+Kohana::init($initParams);
 
 /**
  * Attach the file write to logging. Multiple writers are supported.

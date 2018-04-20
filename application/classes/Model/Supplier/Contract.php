@@ -133,7 +133,7 @@ class Model_Supplier_Contract extends Model_Contract
             return [false, 'Ошибка'];
         }
 
-        if(!empty($params['date_end']) && strtotime($params['date_start']) > strtotime($params['date_end'])) {
+        if(!empty($params['date_end']) && Date::dateDifference($params['date_start'], $params['date_end'])) {
             return [false, 'Дата начала не может быть позже даты окончания'];
         }
 

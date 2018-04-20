@@ -301,7 +301,7 @@ class Model_Contract extends Model
 			return false;
 		}
 
-		if(!empty($params['date_end']) && strtotime($params['date_start']) > strtotime($params['date_end'])) {
+		if(!empty($params['date_end']) && Date::dateDifference($params['date_start'], $params['date_end'])) {
 			return ['error' => 'Дата начала не может быть позже даты окончания'];
 		}
 
@@ -553,7 +553,7 @@ class Model_Contract extends Model
             'p_eml_card_block'      => !empty($params['notice_email_card']) ? 1 : 0,
             'p_eml_contract_block'  => !empty($params['notice_email_firm']) ? 1 : 0,
             'p_eml_blnc_ctrl'       => !empty($params['notice_email_barrier']) ? 1 : 0,
-            'p_eml_blnc_ctrl_value' => !empty($params['notice_email_barrier_value']) ? $params['notice_email_barrier_value'] : 0,
+            'p_eml_blnc_ctrl_value' => !empty($params['notice_email_barrier_value']) ? Num::toFloat($params['notice_email_barrier_value']) : 0,
             'p_sms_card_block'      => 0,
             'p_sms_contract_block'  => 0,
             'p_sms_blnc_ctrl'       => 0,

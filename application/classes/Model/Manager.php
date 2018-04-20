@@ -375,7 +375,6 @@ class Model_Manager extends Model
         $sql = (new Builder())->select()->distinct()
             ->from('V_WEB_CLIENTS_LIST t')
             ->where('t.agent_id = ' . (int)$user['AGENT_ID'])
-            ->where('t.manager_id = ' . (int)$managerId)
             ->orderBy('t.client_id desc')
         ;
 
@@ -388,9 +387,18 @@ class Model_Manager extends Model
                 ->from('V_WEB_MANAGER_CLIENTS vwc')
                 ->where('vwc.client_id = t.client_id')
                 ->where('vwc.agent_id = t.agent_id')
-                ->where('vwc.manager_id = ' . (int)$user['MANAGER_ID'])
+                ->where('vwc.manager_id = ' . (int)$managerId)
             ;
-            $sql->where('not exists (' . $subSql . ')');
+            $sql
+                ->where('not exists (' . $subSql . ')')
+                //небольшой костыль чтобы сработал дистинкт
+                ->columns([
+                    'CLIENT_ID', 'CLIENT_NAME', 'LONG_NAME', 'CLIENT_STATE'
+                ]);
+        } else {
+            $sql
+                ->where('t.manager_id = ' . (int)$managerId)
+            ;
         }
 
         if(!empty($params['search'])){

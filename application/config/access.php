@@ -158,8 +158,8 @@ return [
         'managers_load-reports' => [
             Access::ROLE_ROOT
         ],
-        'administration_cardsTransfer' => [
-            Access::ROLE_ROOT
+        'administration_cards-transfer' => [
+            Access::ROLE_ADMIN
         ],
         'system_index' => [
             Access::ROLE_ROOT,
