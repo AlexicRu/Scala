@@ -24,18 +24,12 @@ class Model_Client extends Model
         if(!empty($search)){
             $search = mb_strtoupper(Oracle::quote('%'.$search.'%'));
 
-            $subSql = (new Builder())->select('1')
-                ->from('V_WEB_CRD_LIST c')
-                ->where('c.contract_id = v.contract_id')
-                ->where('c.card_id like ' . $search)
-            ;
-
             $sql
                 ->whereStart()
                 ->where("upper(v.client_name) like " . $search)
                 ->whereOr("upper(v.long_name) like " . $search)
                 ->whereOr("upper(v.contract_name) like " . $search)
-                ->whereOr("exists (".$subSql.")")
+                ->whereOr("upper(v.CARD_ID) like " . $search)
                 ->whereEnd()
             ;
         }
@@ -54,13 +48,15 @@ class Model_Client extends Model
 
                     if (!empty($user['contracts'][$clientId])) {
                         if (in_array($row['CONTRACT_ID'], $user['contracts'][$clientId])) {
-                            $client['contracts'][] = $row;
+                            $client['contracts'][$row['CONTRACT_ID']] = $row;
                         }
                     } else {
-                        $client['contracts'][] = $row;
+                        $client['contracts'][$row['CONTRACT_ID']] = $row;
                     }
                 }
             }
+
+            $client['contracts'] = array_values($client['contracts']);
 
             $clients[] = $client;
         }
