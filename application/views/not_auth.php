@@ -37,11 +37,10 @@
 						<input type="text" placeholder="Логин" name="login" class="input_big">
 						<input type="password" placeholder="Пароль" name="password" class="input_big">
 
-                        <?
+                        <?/*
                         $config = Kohana::$config->load('config');
                         ?>
 
-                        <?/*?>
                         <button
                                 class="g-recaptcha btn"
                                 data-sitekey="<?=$config['recaptcha_public']?>"

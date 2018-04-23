@@ -219,7 +219,7 @@ abstract class Controller_Common extends Controller_Template {
         }else{
             $this->template->styles = [];
             $this->template->scripts = [
-                'https://www.google.com/recaptcha/api.js',
+                //'https://www.google.com/recaptcha/api.js',
                 '/assets/plugins/jquery.2.1.3.min.js',
             ];
         }
