@@ -617,6 +617,18 @@ class Model_Card extends Model
                     }
                 }
 
+                //проверка duration_value
+                if ($settings['minDurationValue'] !== false) {
+                    if (isset($limit['duration_value']) && $limit['duration_value'] < $settings['minDurationValue']) {
+                        throw new Exception('Значение duration_value меньше разрешенного');
+                    }
+                }
+                if ($settings['maxDurationValue'] !== false) {
+                    if (isset($limit['duration_value']) && $limit['duration_value'] > $settings['maxDurationValue']) {
+                        throw new Exception('Значение duration_value больше разрешенного');
+                    }
+                }
+
                 //проверка возможности установки duration_value
                 if ($settings['cntTypes'] == false && $isNew) {
                     if (!empty($limit['duration_value'])) {
@@ -1188,6 +1200,8 @@ class Model_Card extends Model
             /*+*/'cntLimits'                 => 999,
             /*+*/'editDurationValue'         => false,
             /*+*/'minValue'                  => 0,
+            /*+*/'minDurationValue'          => false,
+            /*+*/'maxDurationValue'          => false,
         ];
 
         switch ($systemId) {
@@ -1212,11 +1226,13 @@ class Model_Card extends Model
                 break;
             case self::CARD_SYSTEM_GPN:
                 $settings['cntServiceForFirstLimit'] = 999;
-                $settings['limitTypes']     = Model_Card::$cardLimitsTypesFull;
-                $settings['cntTypes']       = true;
-                $settings['editSelect']     = false;
-                $settings['canUseFloat']    = false;
-                $settings['minValue']       = 1;
+                $settings['limitTypes']         = Model_Card::$cardLimitsTypesFull;
+                $settings['cntTypes']           = true;
+                $settings['editSelect']         = false;
+                $settings['canUseFloat']        = false;
+                $settings['minValue']           = 1;
+                $settings['minDurationValue']   = 1;
+                $settings['maxDurationValue']   = 99;
                 break;
             case 6:
                 $settings['cntServiceForLimit'] = 999;

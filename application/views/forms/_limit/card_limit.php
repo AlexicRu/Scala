@@ -33,7 +33,13 @@
     </td>
     <?if ($settings['cntTypes']) {?>
         <td class="v_top">
-            <input type="text" name="duration_value" value="<?=(isset($limit['DURATION_VALUE']) ? $limit['DURATION_VALUE'] : '')?>" placeholder="Кол-во" class="input_mini" <?=(empty($settings['editDurationValue']) ? 'disabled' : '')?>>
+            <input type="text" name="duration_value"
+                   value="<?=(isset($limit['DURATION_VALUE']) ? $limit['DURATION_VALUE'] : '')?>"
+                   placeholder="Кол-во"
+                   class="input_mini" <?=(empty($settings['editDurationValue']) ? 'disabled' : '')?>
+                   <?=($settings['minDurationValue'] !== false ? 'min="'. $settings['minDurationValue'] .'"' : '')?>
+                   <?=($settings['maxDurationValue'] !== false ? 'min="'. $settings['maxDurationValue'] .'"' : '')?>
+            >
         </td>
     <?}?>
     <td class="v_top">
