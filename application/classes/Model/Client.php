@@ -56,7 +56,9 @@ class Model_Client extends Model
                 }
             }
 
-            $client['contracts'] = array_values($client['contracts']);
+            if (!empty($client['contracts'])) {
+                $client['contracts'] = array_values($client['contracts']);
+            }
 
             $clients[] = $client;
         }

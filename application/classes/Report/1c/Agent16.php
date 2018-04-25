@@ -34,7 +34,7 @@ class Report_1c_Agent16 extends Report_1c_Common
             ])
             ->from('v_rep_transaction v')
             ->join('v_rep_transaction v2', 'v2.trn_key = v.link_key')
-            ->joinLeft('v_web_pos_list pi', 'v.supplier_terminal = pi.pos_id')
+            ->joinLeft('v_web_pos_list pi', 'v.supplier_terminal = pi.pos_id and pi.agent_id = v.agent_id')
             ->where('v.date_trn >= ' . Oracle::toDateOracle($params['date_from'], 'd.m.Y'))
             ->where('v.date_trn <= ' . Oracle::toDateOracle($params['date_to'], 'd.m.Y'))
             ->where('v.agent_id = ' . self::$_agentId)

@@ -46,7 +46,7 @@ abstract class Report_1c_Common
                 'sum(v.sumprice_discount) as sale'
             ])
             ->from('v_rep_transaction v')
-            ->joinLeft('v_web_pos_list pi', 'v.supplier_terminal = pi.pos_id')
+            ->joinLeft('v_web_pos_list pi', 'v.supplier_terminal = pi.pos_id and pi.agent_id = v.agent_id')
             ->where('v.date_trn >= ' . Oracle::toDateOracle($params['date_from'], 'd.m.Y'))
             ->where('v.date_trn <= ' . Oracle::toDateOracle($params['date_to'], 'd.m.Y'))
             ->where('v.agent_id = ' . static::$_agentId)
