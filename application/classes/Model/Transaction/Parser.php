@@ -9,19 +9,47 @@ class Model_Transaction_Parser extends Model
         '1.0.1'
     ];
 
+    const ACTION_PUSH = 50;
+    const ACTION_PULL = 51;
+
     const PAYMENT_STATUS_NEW        = 'Новая';
     const PAYMENT_STATUS_VERIFIED   = 'Проведено';
     const PAYMENT_STATUS_UNKNOWN    = 'Неизвестно';
+    const PAYMENT_STATUS_ERROR      = 'Ошибка';
 
     public static $sortArray = [
+        self::PAYMENT_STATUS_ERROR,
         self::PAYMENT_STATUS_NEW,
         self::PAYMENT_STATUS_UNKNOWN,
         self::PAYMENT_STATUS_VERIFIED,
     ];
 
     protected static $_xlsHeaders = [
-        'CONTRACT_ID', 'ORDER_DATE', 'ORDER_NUM', 'COMMENT', 'SUMPAY', 'PURPOSE'
+        'ACTION', 'CONTRACT_ID', 'ORDER_DATE', 'ORDER_NUM', 'COMMENT', 'SUMPAY', 'PURPOSE'
     ];
+
+    protected $_dateFormat = false;
+    protected $_summary = [
+        'all' => 0,
+        'old' => 0,
+        'new' => 0,
+        'error' => 0,
+    ];
+
+    public function __construct()
+    {
+        $this->_dateFormat = Date::$dateFormatRu;
+    }
+
+    /**
+     * установка формата даты с которым рабоатет с парсер
+     *
+     * @param $dateFormat
+     */
+    public function setDateFormat($dateFormat)
+    {
+        $this->_dateFormat = $dateFormat;
+    }
 
     /**
      * приводим данные в порядок
@@ -36,6 +64,7 @@ class Model_Transaction_Parser extends Model
             case Upload::MIME_TYPE_OFFICE:
             case Upload::MIME_TYPE_XLS:
             case Upload::MIME_TYPE_XLSX:
+            case Upload::MIME_TYPE_TXT:
                 $data = self::_prepareXls($rows);
                 break;
             default:
@@ -90,6 +119,49 @@ class Model_Transaction_Parser extends Model
     }
 
     /**
+     * проверка корректности даты
+     *
+     * @param $date
+     */
+    protected function _checkDate($date)
+    {
+        /*
+        1) Дата платежа не может быть больше текущей даты (в поле "Статус" указать "Ошибка. Неверная дата" и запретить к добавлению)
+        2) Дата платежа не может быть меньше текущей даты минус 2 месяца (в поле "Статус" указать "Ошибка. Неверная дата" и запретить к добавлению)
+        */
+
+        $error = '';
+
+        try {
+            $now = (new DateTime())->getTimestamp();
+            $date = DateTime::createFromFormat($this->_dateFormat, $date);
+
+            if (empty($date)) {
+                throw new Exception();
+            }
+
+            if ($date->getTimestamp() > $now) {
+                $error = '<br><small class="red date_error"><b>Дата платежа не может быть больше текущей даты</b></small>';
+            }
+            if ($date->getTimestamp() < $now - 60*60*24*60) {
+                $error = '<br><small class="red date_error"><b>Дата платежа не может быть меньше текущей даты минус 2 месяца</b></small>';
+            }
+        } catch (Exception $e) {
+            return '<b class="red date_error">Ошибка чтения даты</b>';
+        }
+
+        return $date->format(Date::$dateFormatRu) . $error;
+    }
+
+    /**
+     * получаем суммарную инфу по считанным данным
+     */
+    public function getSummary()
+    {
+        return $this->_summary;
+    }
+
+    /**
      * парсим входящие строки транзакций
      *
      * @param $rows
@@ -115,37 +187,47 @@ class Model_Transaction_Parser extends Model
              * Если значение запроса не определено, тогда на место договора в таблице макета выставляем надпись "Не определен", а в значение статус - "Неизвестно".
              * Если значение определено, тогда на место договора в таблице макета выставляем найденное имя договора, запомнив его ID (нужно будет в дальнейшем)
              */
-            $row['ORDER_DATE']      = Date::guessDate($row['ORDER_DATE']);
-            $row['OPERATION']       = !empty($row['OPERATION']) ? $row['OPERATION'] : 50;
-            $row['PAYMENT_DATE']    = !empty($row['PAYMENT_DATE']) ? Date::guessDate($row['PAYMENT_DATE']) : $row['ORDER_DATE'];
-            $row['OPERATION_NAME']  = $row['OPERATION'] == 50 ? 'Пополнение счета' : 'Списание со счета';
+            $row['ORDER_DATE']      = $this->_checkDate($row['ORDER_DATE']);
+            $row['OPERATION']       = !empty($row['ACTION']) ? $row['ACTION'] : self::ACTION_PUSH;
+            $row['PAYMENT_DATE']    = !empty($row['PAYMENT_DATE']) ? $this->_checkDate($row['PAYMENT_DATE']) : $row['ORDER_DATE'];
+            $row['OPERATION_NAME']  = $row['ACTION'] == self::ACTION_PUSH ? 'Пополнение счета' : 'Списание со счета';
             $row['CAN_ADD']         = 0;
             $row['CONTRACT_NAME']   = 'Не определен';
             $row['STATE_ID']        = 'Неизвестно';
             $row['PAYMENT_STATUS']  = self::PAYMENT_STATUS_UNKNOWN;
             $row['SUMPAY']          = Num::toFloat($row['SUMPAY']);
 
-            foreach($contracts as $contract){
-                if($row['CONTRACT_ID'] == $contract['CONTRACT_ID']){
-                    $row['CONTRACT_NAME']   = $contract['CONTRACT_NAME'];
-                    $row['STATE_ID']        = $contract['STATE_ID'];
-                    $row['PAYMENT_STATUS']  = self::PAYMENT_STATUS_VERIFIED;
+            //мини проверка что даты корректно распознались
+            if (strpos($row['ORDER_DATE'], 'date_error') === false && strpos($row['PAYMENT_DATE'], 'date_error') === false ) {
+                foreach ($contracts as $contract) {
+                    if ($row['CONTRACT_ID'] == $contract['CONTRACT_ID']) {
+                        $row['CONTRACT_NAME'] = $contract['CONTRACT_NAME'];
+                        $row['STATE_ID'] = $contract['STATE_ID'];
+                        $row['PAYMENT_STATUS'] = self::PAYMENT_STATUS_VERIFIED;
 
-                    $pays = Model_Contract::getPaymentsHistory($row['CONTRACT_ID'], [
-                        'order_date'    => [$row['ORDER_DATE'], $row['PAYMENT_DATE']],
-                        'order_num'     => $row['ORDER_NUM'],
-                        'sumpay'        => $row['SUMPAY'] * ($row['OPERATION'] == 50 ? 1 : -1),
-                    ]);
+                        $pays = Model_Contract::getPaymentsHistory($row['CONTRACT_ID'], [
+                            'order_date' => [$row['ORDER_DATE'], $row['PAYMENT_DATE']],
+                            'order_num' => $row['ORDER_NUM'],
+                            'sumpay' => $row['SUMPAY'] * ($row['ACTION'] == self::ACTION_PUSH ? 1 : -1),
+                        ]);
 
-                    if(empty($pays)){
-                        $row['PAYMENT_STATUS'] = self::PAYMENT_STATUS_NEW;
-                        $row['CAN_ADD']        = 1;
+                        if (empty($pays)) {
+                            $row['PAYMENT_STATUS'] = self::PAYMENT_STATUS_NEW;
+                            $row['CAN_ADD'] = 1;
+                            $this->_summary['new']++;
+                        }
+
+                        break;
                     }
-
-                    break;
                 }
+            } else {
+                $row['PAYMENT_STATUS'] = self::PAYMENT_STATUS_ERROR;
+                $this->_summary['error']++;
             }
         }
+
+        $this->_summary['all'] = count($rows);
+        $this->_summary['old'] = $this->_summary['all'] - $this->_summary['new'] - $this->_summary['error'];
 
         return $this->_sort($rows);
     }

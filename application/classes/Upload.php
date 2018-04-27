@@ -2,10 +2,11 @@
 
 class Upload extends Kohana_Upload
 {
-    const MIME_TYPE_XLS = 'application/vnd.ms-excel';
-    const MIME_TYPE_OFFICE = 'application/vnd.ms-office';
-    const MIME_TYPE_XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    const MIME_TYPE_TXT = 'text/plain';
+    const MIME_TYPE_XLS     = 'application/vnd.ms-excel';
+    const MIME_TYPE_OFFICE  = 'application/vnd.ms-office';
+    const MIME_TYPE_XLSX    = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    const MIME_TYPE_TXT     = 'text/plain';
+    const MIME_TYPE_JSON    = 'application/json';
 
     /**
      * создаем структуру папок под файл
@@ -71,7 +72,7 @@ class Upload extends Kohana_Upload
                     break;
                 }
                 break;
-            default:
+            case self::MIME_TYPE_JSON:
                 $text = file_get_contents($file);
 
                 if (!empty($text)) {
@@ -80,8 +81,24 @@ class Upload extends Kohana_Upload
 
                     $data = !empty($data['ROWS']) ? $data['ROWS'] : [];
                 }
+                break;
+            case self::MIME_TYPE_TXT:
+                $text = file_get_contents($file);
 
+                if (!empty($text)) {
+                    $bom = pack('H*','EFBBBF');
+                    $data = explode("\n", preg_replace("/^$bom/", '', $text));
 
+                    if (!empty($data)) {
+                        $data = array_filter($data);
+
+                        foreach ($data as &$row) {
+                            $row = explode(';', trim($row));
+                        }
+                    }
+                }
+
+                break;
         }
 
         if (empty($data)) {

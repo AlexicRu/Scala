@@ -463,6 +463,8 @@ class Controller_Control extends Controller_Common {
      */
     public function action_uploadPays()
     {
+        $dateFormat = $this->request->post('date_format') ?: Date::$dateFormatRu;
+
         $file = Upload::uploadFile('pays');
 
         if(empty($file)){
@@ -475,9 +477,13 @@ class Controller_Control extends Controller_Common {
             $this->jsonResult(false);
         }
 
-        $rows = (new Model_Transaction_Parser())->parse($data, $mimeType);
+        $parser = new Model_Transaction_Parser();
+        $parser->setDateFormat($dateFormat);
 
-        $this->jsonResult(true, $rows);
+        $rows = $parser->parse($data, $mimeType);
+        $summary = $parser->getSummary();
+
+        $this->jsonResult(true, ['rows' => $rows, 'summary' => $summary]);
     }
 
     /**
