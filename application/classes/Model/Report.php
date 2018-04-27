@@ -165,14 +165,26 @@ class Model_Report extends Model
 
         $user = User::current();
 
-        if (empty($params['report_type_id'])) {
-            $params['report_type_id'] = self::REPORT_TYPE_DB_ALL;
+        if (empty($params['manager_id'])) {
+            $manager = $user;
+        } else {
+            $manager = Model_Manager::getManager($params['manager_id']);
         }
 
-        if (empty($params['manager_id'])) {
-            $managerId = $user['MANAGER_ID'];
-        } else {
-            $managerId = $params['manager_id'];
+        if (empty($params['report_type_id'])) {
+            if (in_array($manager['role'], array_keys(Access::$clientRoles))) {
+                $params['report_type_id'] = [self::REPORT_TYPE_DB_CLIENT];
+            }
+            if (in_array($manager['role'], array_keys(Access::$adminRoles))) {
+                $params['report_type_id'] = [
+                    self::REPORT_TYPE_DB_CLIENT,
+                    self::REPORT_TYPE_DB_ALL,
+                ];
+            }
+        }
+
+        if (empty($params['report_type_id'])) {
+            $params['report_type_id'] = [self::REPORT_TYPE_DB_ALL];
         }
 
         $sql = (new Builder())->select([
@@ -184,10 +196,10 @@ class Model_Report extends Model
             'REPORT_TYPE_ID',
         ])->distinct()
             ->from('V_WEB_REPORTS_AVAILABLE t')
-            ->where("t.agent_id in (0, {$user['AGENT_ID']})")
-            ->where("t.role_id in (0, {$user['role']})")
-            ->where("t.manager_id in (0, {$managerId})")
-            ->where("t.report_type_id in (0, {$params['report_type_id']})")
+            ->where("t.agent_id in (0, {$manager['AGENT_ID']})")
+            ->where("t.role_id in (0, {$manager['role']})")
+            ->where("t.manager_id in (0, {$manager['MANAGER_ID']})")
+            ->where("t.report_type_id in (0, ". implode(', ', array_map('intval', (array)$params['report_type_id'])) .")")
         ;
 
 		$reports = $db->query($sql);

@@ -95,9 +95,9 @@ class Controller_Managers extends Controller_Common {
         $managerId = $this->request->post('manager_id');
         $params = $this->request->post('params');
 
-        $search = !empty($params['search']) ? $params['search'] : null;
+        $params['manager_id'] = $managerId;
 
-        $reports = Model_Report::getAvailableReports($search, ['manager_id' => $managerId]);
+        $reports = Model_Report::getAvailableReports($params);
 
         $html = View::factory('ajax/managers/reports')
             ->bind('reports', $reports)

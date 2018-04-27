@@ -3,19 +3,24 @@
 <div class="block">
     <table>
         <tr>
-            <td><b class="f18">Карты старого договора:</b></td>
+            <td><b class="f18">Карты старого договора:<sup>*</sup></b></td>
             <td></td>
             <td><b class="f18">Новый договор:</b></td>
         </tr>
         <tr>
             <td>
                 <?=Form::buildField('card_choose_multi', 'card_choose_multi', false, [
-                        'show_all' => true
+                    'show_all'      => true,
+                    'placeholder'   => 'Выбрать карты'
                 ])?>
+
+                <br>или<br><br>
+
+                <textarea name="cards_list" placeholder="Ввести список карт" style="width: 100%"></textarea>
             </td>
             <td class="f24">&nbsp; &xrArr; &nbsp;</td>
             <td>
-                <?=Form::buildField('contract_choose_single', 'contract_old')?>
+                <?=Form::buildField('contract_choose_single', 'contract_new')?>
             </td>
         </tr>
         <tr>
@@ -38,26 +43,30 @@
         </tr>
         <tr>
             <td colspan="3">
-                <span class="btn" onclick="transferCards()">Перенести</span>
+                <span class="btn" onclick="transferCards($(this))">Перенести</span>
             </td>
         </tr>
     </table>
+
+    <small class="gray"><i>* - выбор клиента и договора обязателен</i></small>
 </div>
 
 <script>
     var isAjax = false;
 
-    function transferCards()
+    function transferCards(btn)
     {
         if (isAjax) {
             return false;
         }
         isAjax = true;
+        btn.addClass(CLASS_LOADING);
 
         var params = {
             old_contract:           getComboboxValue($('[name=contract_choose_single]'), true),
-            new_contract:           getComboboxValue($('[name=contract_old]')),
+            new_contract:           getComboboxValue($('[name=contract_new]')),
             cards:                  getComboboxMultiValue($('[name=card_choose_multi]')),
+            cards_list:             $('[name=cards_list]').val(),
             params: {
                 date_from:              $('[name=date_from]').val(),
                 date_to:                $('[name=date_to]').val(),
@@ -74,6 +83,7 @@
                 message(0, 'Ошибка переноса');
             }
             isAjax = false;
+            btn.removeClass(CLASS_LOADING);
         });
     }
 </script>

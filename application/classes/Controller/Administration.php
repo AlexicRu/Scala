@@ -184,8 +184,15 @@ class Controller_Administration extends Controller_Common
         if ($this->request->is_ajax()) {
             $oldContractId = $this->request->post('old_contract');
             $newContractId = $this->request->post('new_contract');
-            $cards = $this->request->post('cards');
+            $cards = $this->request->post('cards') ?: [];
+            $cardsList = $this->request->post('cards_list');
             $params = $this->request->post('params');
+
+            if (!empty($cardsList)) {
+                $cardsList = array_filter(explode("\n", preg_replace("/[^\d\n]/", '', $cardsList)));
+
+                $cards = array_merge($cards, $cardsList);
+            }
 
             $result = Model_Card::transferCards($oldContractId, $newContractId, $cards, $params);
 
