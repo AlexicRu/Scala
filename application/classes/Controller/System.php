@@ -43,13 +43,16 @@ class Controller_System extends Controller_Common {
     {
         $query = trim($this->request->post('query'));
         $limit = (int)$this->request->post('limit') ?: 10;
+        $raw = (bool)$this->request->post('raw') ?: false;
 
         if (strpos($query, 'select') !== 0) {
             $html = 'Выполнять можно только SELECT';
         } else {
             $db = Oracle::init();
 
-            $query = $db->limit($query, 0, $limit);
+            if (!$raw) {
+                $query = $db->limit($query, 0, $limit);
+            }
 
             $data = $db->query($query);
 

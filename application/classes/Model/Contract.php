@@ -238,7 +238,7 @@ class Model_Contract extends Model
             'p_contract_id'		        => $contractId,
             'p_tarif_online' 	        => $params['settings']['TARIF_ONLINE'],
             'p_tarif_offline' 		    => $params['settings']['TARIF_OFFLINE'],
-            'p_autoblock_limit' 		=> str_replace([' ', ','], ['', '.'], $params['settings']['AUTOBLOCK_LIMIT']),
+            'p_autoblock_limit' 		=> Num::toFloat($params['settings']['AUTOBLOCK_LIMIT']),
             'p_autoblock_flag' 		    => $params['settings']['scheme'] == 1 ? 0 : 1,
             'p_penalties' 		        => abs(Num::toFloat($params['settings']['PENALTIES'])),
             'p_penalties_flag' 		    => $params['settings']['PENALTIES'] ? 1 : 0,
@@ -514,7 +514,7 @@ class Model_Contract extends Model
 
         $data = [
             'p_contract_id' 	        => $contractId,
-            'p_invoice_sum' 	        => str_replace([',', ' '], ['.', ''], $sum),
+            'p_invoice_sum' 	        => Num::toFloat($sum),
             'p_service_array'           => [$serviceArray, SQLT_INT],
             'p_service_amount_array'    => [$serviceAmountArray, SQLT_FLT],
             'p_service_price_array'     => [$servicePriceArray, SQLT_FLT],

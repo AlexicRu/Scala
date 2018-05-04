@@ -57,7 +57,7 @@
                             <?=$contractSettings['AUTOBLOCK_LIMIT']?>
                         <?}?>
                     </span>
-                    <span toggle_block="block2" class="dn"><input type="text" name="AUTOBLOCK_LIMIT" class="input_small" value="<?=$contractSettings['AUTOBLOCK_LIMIT']?>" <?if ($contractSettings['scheme'] != Model_Contract::PAYMENT_SCHEME_LIMIT){echo 'disabled';}?>></span>
+                    <span toggle_block="block2" class="dn"><input type="number" name="AUTOBLOCK_LIMIT" class="input_small" value="<?=$contractSettings['AUTOBLOCK_LIMIT']?>" <?if ($contractSettings['scheme'] != Model_Contract::PAYMENT_SCHEME_LIMIT){echo 'disabled';}?>></span>
                     <?if($contractSettings['scheme'] != Model_Contract::PAYMENT_SCHEME_UNLIMITED){?>
                         <?=Text::RUR?>
                     <?}?>

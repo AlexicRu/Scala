@@ -10,7 +10,13 @@ class Num extends Kohana_Num
      */
     public static function toFloat($number)
     {
-        return preg_replace("/[^\d\.-]+/", "", str_replace([',', ' ', " "], ['.', '', ""], $number));
+        $number = preg_replace("/[^\d\.-]+/", "", str_replace([',', ' ', " "], ['.', '', ""], $number));
+
+        if (!is_numeric($number)) {
+            throw new HTTP_Exception_500('Wrong number');
+        }
+
+        return $number;
     }
 
     /**

@@ -8,6 +8,9 @@
     .result{
         margin: 0; width: 100%; overflow-x: auto;
     }
+    .checkbox_outer{
+        display: inline-block;
+    }
 </style>
 
 <h1>DB</h1>
@@ -17,7 +20,11 @@
     <div>
         <textarea name="query" placeholder="Запрос"></textarea>
     </div>
-    <span class="btn" onclick="executeQuery()">Выполнить</span> &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; Limit: <input type="number" name="limit" class="input_big input_mini" value="10">
+    <span class="btn" onclick="executeQuery()">Выполнить</span>
+    &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
+    Limit: <input type="number" name="limit" class="input_big input_mini" value="10">
+    &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
+    Raw: <input type="checkbox" name="raw">
 </div>
 
 <div class="result__block">
@@ -38,7 +45,8 @@
 
         var params = {
             query: $('[name=query]').val(),
-            limit: $('[name=limit]').val()
+            limit: $('[name=limit]').val(),
+            raw: $('[name=raw]').is(':checked') ? 1 : 0,
         };
 
         $.post('/system/query', params, function (data) {
