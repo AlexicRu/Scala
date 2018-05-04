@@ -11,7 +11,7 @@ class Controller_Reports extends Controller_Common {
 
 	public function action_index()
 	{
-        $reportsList = Model_Report::getAvailableReports();
+        $reportsList = Model_Report::getAvailableReports(['report_type_id' => [Model_Report::REPORT_TYPE_DB_ALL]]);
 
         $reports = Model_Report::separateBuyGroups($reportsList);
 
