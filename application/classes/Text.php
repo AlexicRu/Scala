@@ -143,4 +143,37 @@ class Text extends Kohana_Text
 
         return '';
     }
+
+    /**
+     * проверка корректности email
+     *
+     * @param $email
+     * @return string
+     * @throws HTTP_Exception_500
+     */
+    public static function checkEmailMulti($emails)
+    {
+        /*if (Valid::email($email)) {
+            return true;
+        }*/
+
+        $emailsArr = array_map('trim', explode(',', $emails));
+
+        foreach ($emailsArr as $email) {
+
+            $dogPosition = strpos($email, '@');
+
+            if ($dogPosition !== false) {
+                $dotPosition = strrpos($email, '.');
+
+                if ($dotPosition === false || $dotPosition <= $dogPosition) {
+                    throw new HTTP_Exception_500('Неверный формат электронной почты');
+                }
+            } else {
+                throw new HTTP_Exception_500('Неверный формат электронной почты');
+            }
+        }
+
+        return $emails;
+    }
 }

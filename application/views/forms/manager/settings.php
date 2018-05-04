@@ -130,7 +130,11 @@ if(empty($changeRole)){
 
                message(1, 'Данные обновлены');
            }else{
-               message(0, 'Ошибка обновления');
+               var error = 'Ошибка обновления';
+               if (data.data) {
+                   error = data.data;
+               }
+               message(0, error);
            }
         });
 

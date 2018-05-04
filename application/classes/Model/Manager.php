@@ -35,7 +35,7 @@ class Model_Manager extends Model
             'p_surname' 	    => empty($params['manager_settings_surname'])      ? '' : $params['manager_settings_surname'],
             'p_middlename' 	    => empty($params['manager_settings_middlename'])   ? '' : $params['manager_settings_middlename'],
             'p_phone' 		    => empty($params['manager_settings_phone'])        ? '' : $params['manager_settings_phone'],
-            'p_email' 		    => empty($params['manager_settings_email'])        ? '' : $params['manager_settings_email'],
+            'p_email' 		    => empty($params['manager_settings_email'])        ? '' : Text::checkEmailMulti($params['manager_settings_email']),
             'p_manager_who_id' 	=> $userWho['MANAGER_ID'],
             'p_error_code' 	    => 'out',
         ];
@@ -259,7 +259,7 @@ class Model_Manager extends Model
             'p_login' 	            => $params['login'],
             'p_password' 	        => $params['password'],
             'p_phone' 	            => empty($params['phone']) ? '' : $params['phone'],
-            'p_email' 	            => empty($params['email']) ? '' : $params['email'],
+            'p_email' 	            => empty($params['email']) ? '' : Text::checkEmailMulti($params['email']),
             'p_manager_id' 		    => $user['MANAGER_ID'],
             'p_new_manager_id' 		=> 'out',
             'p_error_code' 		    => 'out',
