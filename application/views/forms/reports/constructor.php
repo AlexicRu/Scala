@@ -23,7 +23,10 @@ if(!empty($fields[Model_Report::REPORT_CONSTRUCTOR_TYPE_ADDITIONAL])){
                         <tr>
                             <td class="gray right vaTop" width="150"><?=$field['PROPERTY_NAME']?>:</td>
                             <td>
-                                <?=Form::buildField($field['PROPERTY_FORM'], $field['PARAM_NAME'], false, ['weight' => $field['PROPERTY_WEIGHT']])?>
+                                <?=Form::buildField($field['PROPERTY_FORM'], $field['PARAM_NAME'], false, [
+                                    'weight' => $field['PROPERTY_WEIGHT'],
+                                    'show_all' => !empty($field['PROPERTY_ALL']) ? $field['PROPERTY_ALL'] : false
+                                ])?>
                             </td>
                         </tr>
                     <?}
