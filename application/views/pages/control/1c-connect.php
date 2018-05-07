@@ -14,40 +14,42 @@
         <span tab="payments" class="tab active">Загрузка платежей</span><?if (Access::allow('control_1c-export')) {?><span tab="export" class="tab">Выгрузка в 1С</span><?}?>
     </div>
     <div class="tabs_content tabs_content_no_padding">
-        <div class="tc_top_line">
-            <div class="fr">
-                Формат даты:
-                <select class="select_big" name="date_format">
-                    <option value="d.m.Y" selected>дд.мм.гггг</option>
-                    <option value="Y-m-d">гггг-мм-дд</option>
-                </select>
-            </div>
-            <span class="upload_pays_all">Всего строк: <b>0</b></span> &nbsp;&nbsp;&nbsp;
-            <span class="upload_pays_old">Из них проведенных: <b>0</b></span> &nbsp;&nbsp;&nbsp;
-            <span class="upload_pays_new">К загрузке: <b>0</b></span> &nbsp;&nbsp;&nbsp;
-            <span class="upload_pays_error">Ошибки: <b class="red">0</b></span> &nbsp;&nbsp;&nbsp;
-        </div>
-        <div class="padding__20">
-            <small>
-                <i class="gray">- Дата платежа не может быть больше текущей даты</i><br>
-                <i class="gray">- Дата платежа не может быть меньше текущей даты минус 2 месяца</i>
-            </small>
-            <br><br>
-            <div tab_content="payments" class="tab_content active">
-                <div class="tbl">
-                    <div>
-                        <div class="connect_1c_payments dropzone"></div>
-                    </div>
-                    <div>
-                        <button disabled onclick="connect1cPayments_addPayments($(this))" class="btn load_connect1c_payments_btn">Загрузить выделенные</button>
-                    </div>
+        <div tab_content="payments" class="tab_content active">
+            <div class="tc_top_line">
+                <div class="fr">
+                    Формат даты:
+                    <select class="select_big" name="date_format">
+                        <option value="d.m.Y" selected>дд.мм.гггг</option>
+                        <option value="Y-m-d">гггг-мм-дд</option>
+                    </select>
                 </div>
+                <span class="upload_pays_all">Всего строк: <b>0</b></span> &nbsp;&nbsp;&nbsp;
+                <span class="upload_pays_old">Из них проведенных: <b>0</b></span> &nbsp;&nbsp;&nbsp;
+                <span class="upload_pays_new">К загрузке: <b>0</b></span> &nbsp;&nbsp;&nbsp;
+                <span class="upload_pays_error">Ошибки: <b class="red">0</b></span> &nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="padding__20">
+                <small>
+                    <i class="gray">- Дата платежа не может быть больше текущей даты</i><br>
+                    <i class="gray">- Дата платежа не может быть меньше текущей даты минус 2 месяца</i>
+                </small>
+                <br><br>
+                <div tab_content="payments" class="tab_content active">
+                    <div class="tbl">
+                        <div>
+                            <div class="connect_1c_payments dropzone"></div>
+                        </div>
+                        <div>
+                            <button disabled onclick="connect1cPayments_addPayments($(this))" class="btn load_connect1c_payments_btn">Загрузить выделенные</button>
+                        </div>
+                    </div>
 
-                <div class="jsGrid connect_1c_payments_jsGrid"></div>
+                    <div class="jsGrid connect_1c_payments_jsGrid"></div>
+                </div>
             </div>
         </div>
         <?if (Access::allow('control_1c-export')) {?>
-        <div tab_content="export" class="tab_content">
+        <div tab_content="export" class="tab_content padding__20">
             <? include('1c_connect/1c_export.php') ?>
         </div>
         <?}?>

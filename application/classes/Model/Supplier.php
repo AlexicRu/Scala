@@ -83,7 +83,7 @@ class Model_Supplier extends Model
             'p_y_address'       => $params['Y_ADDRESS'],
             'p_f_address'       => $params['F_ADDRESS'],
             'p_p_address'       => $params['P_ADDRESS'],
-            'p_email'           => Text::checkEmailMulti($params['EMAIL']),
+            'p_email'           => !empty($params['EMAIL']) ? Text::checkEmailMulti($params['EMAIL']) : '',
             'p_phone'           => $params['PHONE'],
             'p_comments'        => $params['COMMENTS'],
             'p_okonh'           => $params['OKONH'],
