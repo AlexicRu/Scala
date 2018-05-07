@@ -24,9 +24,9 @@ class Report_1c_Agent16 extends Report_1c_Common
                 'v.contract_id as id',
                 'replace(v.client_name,\'"\', \'\') as name',
                 'pi.country_id as territory_id',
-                'v.supplier_contract as supplier_id',
+                'v2.supplier_contract as supplier_id',
                 'v.service_id as unit_type',
-                'decode(v.supplier_contract, 33, 18, decode(pi.country_id, 643, 18, 0)) as vat_rate',
+                'decode(pi.country_id, 643, 18, 0) as vat_rate',
                 '0 as recharge_vat',
                 'sum(v.service_amount) as volume',
                 'sum(v.sumprice_buy) as cost',
@@ -41,11 +41,12 @@ class Report_1c_Agent16 extends Report_1c_Common
             ->groupBy([
                 'v.contract_id',
                 'v.client_name',
-                'v.supplier_contract',
+                'v2.supplier_contract',
                 'v.service_id',
                 'pi.country_id',
+				'v.service_price',
             ])
-            ->having('sum(v.service_amount) > 0')
+            ->having('sum(v.service_amount) <> 0')
             ->orderBy('v.client_name')
         ;
 
