@@ -64,9 +64,13 @@
             var t = $(this);
             var field = $('[name^=client_contract]', t);
 
-            var value = getComboboxValue(field);
+            var values = getComboboxMultiValue(field);
 
-            params.contracts.push(value);
+            if (values.length) {
+                for (var i in values) {
+                    params.contracts.push(values[i]);
+                }
+            }
         });
 
         window.open('/control/1c-export?' + $.param(params));

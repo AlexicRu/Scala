@@ -72,28 +72,30 @@ class Upload extends Kohana_Upload
                     break;
                 }
                 break;
-            case self::MIME_TYPE_JSON:
-                $text = file_get_contents($file);
-
-                if (!empty($text)) {
-                    $bom = pack('H*','EFBBBF');
-                    $data = json_decode(preg_replace("/^$bom/", '', $text), true);
-
-                    $data = !empty($data['ROWS']) ? $data['ROWS'] : [];
-                }
-                break;
             case self::MIME_TYPE_TXT:
                 $text = file_get_contents($file);
 
                 if (!empty($text)) {
                     $bom = pack('H*','EFBBBF');
-                    $data = explode("\n", preg_replace("/^$bom/", '', $text));
+                    $data = preg_replace("/^$bom/", '', $text);
 
-                    if (!empty($data)) {
-                        $data = array_filter($data);
+                    if (Text::isJson($data)) {
+                        //json
+                        $data = json_decode($data, true);
 
-                        foreach ($data as &$row) {
-                            $row = explode(';', trim($row));
+                        $data = !empty($data['ROWS']) ? $data['ROWS'] : [];
+                        
+                        $mimeType = self::MIME_TYPE_JSON; //немного костыль
+                    } else {
+                        //csv
+                        $data = explode("\n", $data);
+
+                        if (!empty($data)) {
+                            $data = array_filter($data);
+
+                            foreach ($data as &$row) {
+                                $row = explode(';', trim($row));
+                            }
                         }
                     }
                 }

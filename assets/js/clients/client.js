@@ -20,9 +20,7 @@ $(function(){
         if(
             params.NAME == '' ||
             params.Y_ADDRESS == '' ||
-            params.PHONE == '' ||
-            params.EMAIL == '' ||
-            params.INN == ''
+            params.PHONE == ''
         ){
             message(0, 'Заполните обязательные поля');
             return false;

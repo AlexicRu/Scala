@@ -9,8 +9,8 @@ class Model_Transaction_Parser extends Model
         '1.0.1'
     ];
 
-    const ACTION_PUSH = 50;
-    const ACTION_PULL = 51;
+    const OPERATION_PUSH = 50;
+    const OPERATION_PULL = 51;
 
     const PAYMENT_STATUS_NEW        = 'Новая';
     const PAYMENT_STATUS_VERIFIED   = 'Проведено';
@@ -25,7 +25,7 @@ class Model_Transaction_Parser extends Model
     ];
 
     protected static $_xlsHeaders = [
-        'ACTION', 'CONTRACT_ID', 'ORDER_DATE', 'ORDER_NUM', 'COMMENT', 'SUMPAY', 'PURPOSE'
+        'OPERATION', 'CONTRACT_ID', 'ORDER_DATE', 'ORDER_NUM', 'COMMENT', 'SUMPAY', 'PURPOSE'
     ];
 
     protected $_dateFormat = false;
@@ -130,6 +130,9 @@ class Model_Transaction_Parser extends Model
         2) Дата платежа не может быть меньше текущей даты минус 2 месяца (в поле "Статус" указать "Ошибка. Неверная дата" и запретить к добавлению)
         */
 
+        $date = explode(' ', trim($date));
+        $date = reset($date);
+
         $error = '';
 
         try {
@@ -188,9 +191,9 @@ class Model_Transaction_Parser extends Model
              * Если значение определено, тогда на место договора в таблице макета выставляем найденное имя договора, запомнив его ID (нужно будет в дальнейшем)
              */
             $row['ORDER_DATE']      = $this->_checkDate($row['ORDER_DATE']);
-            $row['OPERATION']       = !empty($row['ACTION']) ? $row['ACTION'] : self::ACTION_PUSH;
+            $row['OPERATION']       = !empty($row['OPERATION']) ? $row['OPERATION'] : self::OPERATION_PUSH;
             $row['PAYMENT_DATE']    = !empty($row['PAYMENT_DATE']) ? $this->_checkDate($row['PAYMENT_DATE']) : $row['ORDER_DATE'];
-            $row['OPERATION_NAME']  = $row['ACTION'] == self::ACTION_PUSH ? 'Пополнение счета' : 'Списание со счета';
+            $row['OPERATION_NAME']  = $row['OPERATION'] == self::OPERATION_PUSH ? 'Пополнение счета' : 'Списание со счета';
             $row['CAN_ADD']         = 0;
             $row['CONTRACT_NAME']   = 'Не определен';
             $row['STATE_ID']        = 'Неизвестно';
@@ -208,7 +211,7 @@ class Model_Transaction_Parser extends Model
                         $pays = Model_Contract::getPaymentsHistory($row['CONTRACT_ID'], [
                             'order_date' => [$row['ORDER_DATE'], $row['PAYMENT_DATE']],
                             'order_num' => $row['ORDER_NUM'],
-                            'sumpay' => $row['SUMPAY'] * ($row['ACTION'] == self::ACTION_PUSH ? 1 : -1),
+                            'sumpay' => $row['SUMPAY'] * ($row['OPERATION'] == self::OPERATION_PUSH ? 1 : -1),
                         ]);
 
                         if (empty($pays)) {
