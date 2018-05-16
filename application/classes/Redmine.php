@@ -57,6 +57,6 @@ class Redmine
             }
         }
 
-        return !empty($issue->id) ? $issue->id : false;
+        return !empty($issue->id) ? (string)$issue->id : (!empty($issue->error) ? (string)$issue->error : false);
     }
 }

@@ -37,13 +37,13 @@ class Controller_Support extends Controller_Common {
 
         $issueId = (new Redmine())->createIssue($subject, $description, (array)$files);
 
-        if (!empty($issueId)) {
+        if (!empty($issueId) && is_numeric($issueId)) {
             $subject = 'Заявка №'. $issueId .' ' . $subject;
             $message = 'Ваша заявка успешно принята в работу!<br><br>' . $text;
 
             Email::send($email, Email::FROM, $subject, $message);
         }
 
-        $this->jsonResult((bool)$issueId);
+        $this->jsonResult(is_numeric($issueId), $issueId);
     }
 }

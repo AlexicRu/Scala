@@ -100,7 +100,7 @@
             if(data.success){
                 message(1, 'Сообщение успешно добавлено');
             }else{
-                message(0, 'Ошибка отправки сообщения');
+                message(0, data.data ? data.data : 'Ошибка отправки сообщения');
             }
 
             dropzone.removeAllFiles();
