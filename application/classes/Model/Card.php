@@ -1224,8 +1224,14 @@ class Model_Card extends Model
                 $settings['canAddLimit']    = false;
                 $settings['canSave']        = false;
                 break;
-            case self::CARD_SYSTEM_GPN:
             case 9:
+                $settings['cntServiceForFirstLimit'] = 999;
+                $settings['limitTypes']         = Model_Card::$cardLimitsTypesFull;
+                $settings['editSelect']         = false;
+                $settings['canUseFloat']        = false;
+                $settings['minValue']           = 1;
+                break;
+            case self::CARD_SYSTEM_GPN:
                 $settings['cntServiceForFirstLimit'] = 999;
                 $settings['limitTypes']         = Model_Card::$cardLimitsTypesFull;
                 $settings['cntTypes']           = true;
@@ -1237,6 +1243,7 @@ class Model_Card extends Model
                 break;
             case 6:
                 $settings['cntServiceForLimit'] = 999;
+                $settings['cntServiceForFirstLimit'] = 999;
                 //можно все
                 break;
             case 7:
