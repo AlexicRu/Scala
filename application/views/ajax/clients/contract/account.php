@@ -91,7 +91,7 @@
                         '<b>' +
                     '</div>');
                     <?if(Access::allow('clients_payment-del')){?>
-                        tpl.append('<div class="fr"><a href="#" class="red del link_del_contract_payment">Удалить <i class="icon-cancel"></i></a></div>');
+                        tpl.prepend('<div class="fr"><a href="#" class="red del link_del_contract_payment">Удалить <i class="icon-cancel"></i></a></div>');
                     <?}?>
 
                     tpl.attr('guid', data[i].ORDER_GUID);

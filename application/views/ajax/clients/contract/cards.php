@@ -88,7 +88,7 @@
     function renderAjaxPaginationOperationsHistory(data, block)
     {
         for(var i = 0 in data){
-            var tpl = $('<div class="line_inner"><span class="gray" /> &nbsp;&nbsp;&nbsp; <span /><div class="fr" /></div>');
+            var tpl = $('<div class="line_inner"><div class="fr" /><span class="gray" /> &nbsp;&nbsp;&nbsp; <span /></div>');
             tpl.find('span.gray').text(data[i].H_DATE);
             tpl.find('span:last').text(data[i].M_FIO);
             tpl.find('div.fr').html(data[i].SHORT_DESCRIPTION);
