@@ -78,7 +78,7 @@
                 tpl.find('[holder]').text(data[i].HOLDER)
 
                 if (data[i].CARD_STATE == <?=Model_Card::CARD_STATE_BLOCKED?>) {
-                    tpl.find('> div').append('<span class="label label_error label_small">Заблокирована</span>');
+                    tpl.find('> div').append('<span class="label label_error"><i class="icon-block"></i></span>');
                 }
 
                 tpl.appendTo(block);

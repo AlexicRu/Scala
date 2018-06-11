@@ -63,7 +63,7 @@
                         var cnt_blocked = $('.cards_cnt_blocked');
 
                         if(t.hasClass('btn_green')){
-                            tab.append('<span class="label label_error label_small">Заблокирована</span>');
+                            tab.append('<span class="label label_error"><i class="icon-block"></i></span>');
                             cnt_in_work.text(parseInt(cnt_in_work.text()) - 1);
                             cnt_blocked.text(parseInt(cnt_blocked.text()) + 1);
 

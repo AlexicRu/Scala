@@ -425,10 +425,7 @@ input[type=text], input[type=password], input[type=number], select, textarea{
   border:  1px solid rgba(0,0,0,.1);
 }
 .tabs_v{
-  width: 365px; display: table-cell; vertical-align: top;
-  &.tabs_v_dots{
-    width: 300px;
-  }
+  width: 300px; display: table-cell; vertical-align: top;
 }
 .tabs_reports{
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -479,8 +476,17 @@ input[type=text], input[type=password], input[type=number], select, textarea{
   &.preload{
     border-bottom: none; cursor: default;
   }
-  [class^="icon-"]{
-    position: absolute; top:25px; left:25px;
+  [class^="icon-"] {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+  }
+  .label {
+    [class^="icon-"] {
+      position: relative;
+      top: initial;
+      left: initial;
+    }
   }
   .label{
     position: absolute; right: 20px; top:23px;
