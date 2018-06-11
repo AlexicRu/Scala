@@ -452,10 +452,11 @@ class Controller_Clients extends Controller_Common {
 		$contractId = $this->request->param('id');
 		$params = [
 			'offset' 		=> $this->request->post('offset'),
-			'pagination'	=> true
+			'pagination'	=> true,
+			'contract_id'	=> $contractId,
 		];
 
-		list($paymentsHistory, $more) = Model_Contract::getPaymentsHistory($contractId, $params);
+		list($paymentsHistory, $more) = Model_Contract::getPaymentsHistory($params);
 
 		if(empty($paymentsHistory)){
 			$this->jsonResult(false);

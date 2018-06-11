@@ -208,7 +208,8 @@ class Model_Transaction_Parser extends Model
                         $row['STATE_ID'] = $contract['STATE_ID'];
                         $row['PAYMENT_STATUS'] = self::PAYMENT_STATUS_VERIFIED;
 
-                        $pays = Model_Contract::getPaymentsHistory($row['CONTRACT_ID'], [
+                        $pays = Model_Contract::getPaymentsHistory([
+                            'contract_id' => $row['CONTRACT_ID'],
                             'order_date' => [$row['ORDER_DATE'], $row['PAYMENT_DATE']],
                             'order_num' => $row['ORDER_NUM'],
                             'sumpay' => $row['SUMPAY'] * ($row['OPERATION'] == self::OPERATION_PUSH ? 1 : -1),

@@ -429,9 +429,9 @@ class Model_Manager extends Model
         $user = User::current();
 
         if (empty($params['manager_id'])) {
-            $managerId = $user['MANAGER_ID'];
+            $manager = Model_Manager::getManager($user['MANAGER_ID']);
         } else {
-            $managerId = $params['manager_id'];
+            $manager = Model_Manager::getManager($params['manager_id']);
         }
 
         $sql = (new Builder())->select()
@@ -439,18 +439,18 @@ class Model_Manager extends Model
             ->orderBy('r.REPORT_TYPE_ID')
         ;
 
-        if (in_array($user['ROLE_ID'], array_keys(Access::$clientRoles))) {
+        if (in_array($manager['ROLE_ID'], array_keys(Access::$clientRoles))) {
 
             $subSql = (new Builder())->select(1)
                 ->from('V_WEB_REPORTS_AVAILABLE t')
                 ->whereIn('t.agent_id', [0, $user['AGENT_ID']])
-                ->whereIn('t.manager_id', [0, $managerId])
+                ->whereIn('t.manager_id', [0, $manager['MANAGER_ID']])
                 ->where('t.report_id = r.report_id')
             ;
 
             $sql
                 ->where('r.REPORT_TYPE_ID = ' . Model_Report::REPORT_GROUP_CLIENT)
-                ->where('not exists ('. $subSql->build() .')')
+                ->where('exists ('. $subSql->build() .')')
             ;
         } else {
             $subSql = (new Builder())->select(1)
@@ -460,7 +460,7 @@ class Model_Manager extends Model
             ;
 
             $sql
-                ->where('not exists ('. $subSql->build() .')')
+                ->where('exists ('. $subSql->build() .')')
             ;
         }
 

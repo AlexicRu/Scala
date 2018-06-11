@@ -336,9 +336,9 @@ class Model_Contract extends Model
 	 * @param $cardId
 	 * @param $limit
 	 */
-	public static function getPaymentsHistory($contractId, $params = [])
+	public static function getPaymentsHistory($params = [])
 	{
-		if(empty($contractId)){
+		if(empty($params)){
 			return [];
 		}
 
@@ -346,11 +346,16 @@ class Model_Contract extends Model
 
 		$sql = (new Builder())->select()
             ->from('V_WEB_CL_CONTRACTS_PAYS')
-            ->orderBy('O_DATE desc')
         ;
 
-		if(!empty($contractId)){
-			$sql->where("contract_id = ".Oracle::quote($contractId));
+		if (!empty($params['order'])) {
+            $sql->orderBy($params['order']);
+        } else {
+		    $sql->orderBy('O_DATE desc');
+        }
+
+		if(!empty($params['contract_id'])){
+			$sql->whereIn("contract_id", (array)$params['contract_id']);
 		}
 
         if (!empty($params['order_date'])) {

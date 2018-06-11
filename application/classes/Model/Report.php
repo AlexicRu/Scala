@@ -175,7 +175,7 @@ class Model_Report extends Model
             if (in_array($manager['role'], array_keys(Access::$clientRoles))) {
                 $params['report_type_id'] = [self::REPORT_TYPE_DB_CLIENT];
             }
-            if (in_array($manager['role'], array_keys(Access::$adminRoles))) {
+            if (in_array($manager['role'], array_keys(Access::$managerRoles))) {
                 $params['report_type_id'] = [
                     self::REPORT_TYPE_DB_CLIENT,
                     self::REPORT_TYPE_DB_ALL,

@@ -39,6 +39,17 @@ class Access
         self::ROLE_SUPERVISOR,
     ];
 
+    public static $managerRoles = [
+        self::ROLE_GOD,
+        self::ROLE_ROOT,
+        self::ROLE_ADMIN,
+        self::ROLE_SUPERVISOR,
+        self::ROLE_MANAGER,
+        self::ROLE_MANAGER_SALE,
+        self::ROLE_MANAGER_SALE_SUPPORT,
+        self::ROLE_ADMIN_READONLY,
+    ];
+
     public static $readonlyRoles = [
         self::ROLE_CLIENT,
         self::ROLE_ADMIN_READONLY,

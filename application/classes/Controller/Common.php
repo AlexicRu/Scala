@@ -30,10 +30,6 @@ abstract class Controller_Common extends Controller_Template {
             }
             $this->template = 'not_auth';
         }else{
-            if($controller == 'index' && $action == 'index') {
-                $this->redirect('/clients');
-            }
-
             //подключаем меню
             $menu = Kohana::$config->load('menu');
             $content = View::factory('_includes/menu')
@@ -60,12 +56,10 @@ abstract class Controller_Common extends Controller_Template {
             }
 
             //рендерим шаблон страницы
-            if (!in_array($controller, ['index'])) {
-                try {
-                    $this->tpl = View::factory('pages/' . $controller . '/' . $action);
-                } catch (Exception $e) {
-                    throw new HTTP_Exception_404();
-                }
+            try {
+                $this->tpl = View::factory('pages/' . $controller . '/' . $action);
+            } catch (Exception $e) {
+                throw new HTTP_Exception_404();
             }
 
             //прикрепляем файлы стилей и скриптов
@@ -301,6 +295,14 @@ abstract class Controller_Common extends Controller_Template {
     protected function _initVueJs()
     {
         $this->template->scripts[] = 'https://cdn.jsdelivr.net/npm/vue';
+    }
+
+    /**
+     * подключаем ChartJs
+     */
+    protected function _initChartJs()
+    {
+        $this->template->scripts[] = '/assets/plugins/Chart.js/Chart.bundle.min.js';
     }
 
     /**

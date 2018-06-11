@@ -2,10 +2,6 @@
 
 class Controller_Index extends Controller_Common {
 
-	public function action_index()
-	{
-	}
-
 	/**
 	 * функция авторизации
 	 */
@@ -45,9 +41,7 @@ class Controller_Index extends Controller_Common {
 			$this->redirect('/');
 		}
 
-		if(Auth::instance()->login($post['login'], $post['password'])){
-			$this->redirect('/clients');
-		}
+		Auth::instance()->login($post['login'], $post['password']);
 
         $this->redirect('/');
 	}
@@ -85,7 +79,7 @@ class Controller_Index extends Controller_Common {
             $manager = Model_Manager::getManager(['MANAGER_ID' => (int)$userTo]);
 
             if(Auth::instance()->login($manager['LOGIN'], ['hash' => $manager['PASSWORD']])){
-                $this->redirect('/clients');
+                $this->redirect('/');
             }
         }
 
@@ -167,5 +161,59 @@ class Controller_Index extends Controller_Common {
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename=' . basename($file));
         die;
+    }
+
+    /**
+     * dashboard
+     */
+    public function action_index()
+    {
+        if (User::loggedIn()) {
+            $this->redirect('/clients');
+            //$this->_dashboard();
+        }
+    }
+
+    function _dashboard()
+    {
+        $this->_initChartJs();
+
+        $user = User::current();
+
+        $contractIds = Model_Contract::getContracts(false, [
+            'agent_id' => $user['AGENT_ID']
+        ]);
+
+        $contractIds = array_column($contractIds, 'CONTRACT_ID');
+
+        $params = [
+            'order_date' => [
+                '23.01.2018',
+                '22.01.2018',
+                '21.01.2018',
+                '20.01.2018',
+                '19.01.2018',
+                '18.01.2018',
+                '17.01.2018',
+                '16.01.2018',
+            ],
+            'contract_id' => $contractIds,
+            'order' => 'O_DATE asc',
+        ];
+
+        $payments = Model_Contract::getPaymentsHistory($params);
+
+        $data = [];
+
+        foreach ($payments as $payment) {
+            if (empty($data[$payment['ORDER_DATE']])) {
+                $data[$payment['ORDER_DATE']] = 0;
+            }
+            $data[$payment['ORDER_DATE']] += $payment['SUMPAY'];
+        }
+
+        $this->tpl
+            ->bind('data', $data)
+        ;
     }
 } // End Welcome

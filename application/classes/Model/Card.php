@@ -1225,6 +1225,7 @@ class Model_Card extends Model
                 $settings['canSave']        = false;
                 break;
             case self::CARD_SYSTEM_GPN:
+            case 9:
                 $settings['cntServiceForFirstLimit'] = 999;
                 $settings['limitTypes']         = Model_Card::$cardLimitsTypesFull;
                 $settings['cntTypes']           = true;

@@ -69,7 +69,7 @@
                 if ($('.jsgrid-table', grid).length) {
                     grid.jsGrid("destroy");
                 }
-                grid.addClass(CLASS_LOADING);
+                grid.empty().addClass(CLASS_LOADING);
             },
             success: function(file, response)
             {
@@ -77,6 +77,10 @@
                     connect1cPayments_drawTable(response.data.rows);
 
                     $('.load_connect1c_payments_btn').prop('disabled', false);
+                } else {
+                    var grid = $(".connect_1c_payments_jsGrid");
+                    grid.removeClass(CLASS_LOADING);
+                    grid.html('<div class="center"><i class="gray">Данные отсутствуют</i></div>');
                 }
 
                 if(response.data && response.data.summary){

@@ -205,9 +205,16 @@ class Controller_Managers extends Controller_Common {
     {
         $params = $this->request->post('params');
 
+        $reportsExist = Model_Report::getAvailableReports($params);
+        $reportsExistIds = array_column($reportsExist, 'REPORT_ID');
+
         $reports = Model_Manager::getReportsList($params);
 
-        foreach ($reports as &$report) {
+        foreach ($reports as $key => &$report) {
+            if (in_array($report['REPORT_ID'], $reportsExistIds)) {
+                unset($reports[$key]);
+                continue;
+            }
             $report['global_type_label'] = Model_Report::$reportGlobalTypesNames[$report['REPORT_TYPE_ID']]['label'];
             $report['global_type_name'] = Model_Report::$reportGlobalTypesNames[$report['REPORT_TYPE_ID']]['name'];
         }
