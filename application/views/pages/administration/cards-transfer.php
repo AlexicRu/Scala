@@ -37,7 +37,7 @@
         <tr>
             <td colspan="3">
                 <label><input type="checkbox" checked name="transfer_cards"> Перенос карт</label><br>
-                <label><input type="checkbox" checked name="transfer_trn"> Перенос транзакций</label><br>
+                <label><input type="checkbox" checked name="transfer_trn"> Перенос транзакций<sup>**</sup></label><br>
                 <label><input type="checkbox" checked name="save_holder"> С сохранением держателей</label>
             </td>
         </tr>
@@ -48,7 +48,8 @@
         </tr>
     </table>
 
-    <small class="gray"><i>* - выбор клиента и договора обязателен</i></small>
+    <small class="gray"><i>* - Выбор клиента и договора обязателен.</i></small><br>
+    <small class="gray"><i>** - Транзакции будут перенесены только за текущий период. Если требуется перенести транзакции за прошлые периоды, обратитесь в Техническую поддержку!</i></small>
 </div>
 
 <script>
