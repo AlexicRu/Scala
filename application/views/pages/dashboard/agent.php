@@ -1,4 +1,4 @@
-<h1>Реализация по агентам</h1>
+<h1>Реализация по дистрибьюторам</h1>
 
 <div class="as_table as_table__dashboard">
     <div class="col" style="width: 500px">
@@ -34,7 +34,7 @@
         </div>
 
         <div class="block">
-            <h2>Средняя скидка по агентам</h2>
+            <h2>Средняя скидка по дистрибьюторам</h2>
             <div id="realization_by_agents_avg_discount_graph" class="graph"></div>
         </div>
     </div>
@@ -139,9 +139,14 @@
                 "theme": "light",
                 "autoMarginOffset": 20,
                 "dataProvider": response.data.data,
+                "numberFormatter": {
+                    "precision": -1,
+                    "decimalSeparator": ".",
+                    "thousandsSeparator": " "
+                },
                 "valueAxes": [{
                     "axisAlpha": 0,
-                    "position": "left",
+                    "position": "left"
                 }],
                 "legend": {
                     "align": "center",
@@ -161,14 +166,14 @@
                     "scrollbarHeight":10
                 },
                 "chartCursor": {
-                    "categoryBalloonDateFormat": "YYYY-MM-DD",
+                    "categoryBalloonDateFormat": "MM.YYYY",
                     "cursorAlpha": 0,
                     "valueLineEnabled":true,
                     "valueLineBalloonEnabled":true,
                     "valueLineAlpha":0.5,
                     "fullWidth":true
                 },
-                "dataDateFormat": "YYYY-MM-DD",
+                "dataDateFormat": "MM.YYYY",
                 "categoryField": "date"
             });
         })
@@ -211,6 +216,11 @@
                 "theme": "light",
                 "autoMarginOffset": 20,
                 "dataProvider": response.data.data,
+                "numberFormatter": {
+                    "precision": -1,
+                    "decimalSeparator": ".",
+                    "thousandsSeparator": " "
+                },
                 "valueAxes": [{
                     "axisAlpha": 0,
                     "position": "left"
@@ -233,14 +243,14 @@
                     "scrollbarHeight":10
                 },
                 "chartCursor": {
-                    "categoryBalloonDateFormat": "YYYY-MM-DD",
+                    "categoryBalloonDateFormat": "MM.YYYY",
                     "cursorAlpha": 0,
                     "valueLineEnabled":true,
                     "valueLineBalloonEnabled":true,
                     "valueLineAlpha":0.5,
                     "fullWidth":true
                 },
-                "dataDateFormat": "YYYY-MM-DD",
+                "dataDateFormat": "MM.YYYY",
                 "categoryField": "date"
             });
         })

@@ -42,15 +42,15 @@
                     <div class="realization_by_clients_payments"></div>
                 </div>
             </div>
+            <?if (Access::allow('dashboard_get-realization-by-clients-summary')) {?>
             <div class="col">
-                <?if (Access::allow('dashboard_get-realization-by-clients-summary')) {?>
                 <div class="block">
                     <h2>Сводная таблица</h2>
 
                     <div class="realization_by_clients_summary"></div>
                 </div>
-                <?}?>
             </div>
+            <?}?>
         </div>
     </div>
 </div>
@@ -194,6 +194,11 @@
                 "autoMarginOffset": 20,
                 "dataProvider": response.data,
                 "valueAxes": valueAxes,
+                "numberFormatter": {
+                    "precision": -1,
+                    "decimalSeparator": ".",
+                    "thousandsSeparator": " "
+                },
                 "legend": {
                     "align": "center",
                     "equalWidths": true,
@@ -212,14 +217,14 @@
                     "scrollbarHeight":10
                 },
                 "chartCursor": {
-                    "categoryBalloonDateFormat": "YYYY-MM-DD",
+                    "categoryBalloonDateFormat": "MM.YYYY",
                     "cursorAlpha": 0,
                     "valueLineEnabled":true,
                     "valueLineBalloonEnabled":true,
                     "valueLineAlpha":0.5,
                     "fullWidth":true
                 },
-                "dataDateFormat": "YYYY-MM-DD",
+                "dataDateFormat": "MM.YYYY",
                 "categoryField": "date"
             });
         })

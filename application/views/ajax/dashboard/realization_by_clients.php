@@ -1,7 +1,7 @@
 <table>
     <tr>
         <td class="gray right">Количество клиентов:</td>
-        <td><?=$data['CNT_CONTRACTS']?></td>
+        <td><?=$data['CNT_CLIENTS']?></td>
     </tr>
     <tr>
         <td class="gray right">Количество договоров:</td>

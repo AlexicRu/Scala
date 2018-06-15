@@ -3,7 +3,7 @@
 return array(
     'dashboard'         => ['title' => 'Dashboard', 'icon' => 'icon-calendar', 'children' => [
         'index'         => 'Клиенты',
-        'agent'         => 'Агенты',
+        'agent'         => 'Дистрибьюторы',
     ]],
     'clients'           => ['title' => 'Фирмы', 'icon' => 'icon-clients'],
     'suppliers'         => ['title' => 'Поставщики', 'icon' => 'icon-drop'],

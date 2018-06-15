@@ -43,7 +43,7 @@ class Controller_Dashboard extends Controller_Common {
         $agents = [];
 
         foreach ($graph as $item) {
-            $dt = $item['DATE_YEAR'] . '-' . $item['DATE_MONTH'] . '-01';
+            $dt = $item['DATE_MONTH'].'.'.$item['DATE_YEAR'];
 
             if(empty($data[$dt])) {
                 $data[$dt] = [
@@ -89,7 +89,7 @@ class Controller_Dashboard extends Controller_Common {
         $graph = Dashboard::realizationByClientsGraph();
 
         foreach ($graph as &$item) {
-            $item['date'] = $item['DATE_YEAR'] . '-' . $item['DATE_MONTH'] . '-01';
+            $item['date'] = $item['DATE_MONTH'].'.'.$item['DATE_YEAR'];
         }
 
         $this->jsonResult(true, $graph);
@@ -124,7 +124,7 @@ class Controller_Dashboard extends Controller_Common {
         $agents = [];
 
         foreach ($graph as $item) {
-            $dt = $item['DATE_YEAR'] . '-' . $item['DATE_MONTH'] . '-01';
+            $dt = $item['DATE_MONTH'].'.'.$item['DATE_YEAR'];
 
             if(empty($data[$dt])) {
                 $data[$dt] = [

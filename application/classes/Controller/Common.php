@@ -305,6 +305,7 @@ abstract class Controller_Common extends Controller_Template {
         $this->template->scripts[] = '/assets/plugins/palette.js';
         $this->template->scripts[] = '//www.amcharts.com/lib/3/amcharts.js';
         $this->template->scripts[] = '//www.amcharts.com/lib/3/serial.js';
+        $this->template->scripts[] = '//www.amcharts.com/lib/3/pie.js';
         $this->template->scripts[] = '//www.amcharts.com/lib/3/themes/light.js';
     }
 
