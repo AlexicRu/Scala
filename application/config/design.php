@@ -49,10 +49,6 @@ return array(
             'title' => 'ГПН-КП',
             'class' => 'gpn'
         ],
-        'pnggloproru' => [
-            'title' => 'Презентация ГПН-КП',
-            'class' => 'png'
-        ],
         'dealergpncardcom' => [
             'title' => 'ГПН-КП',
             'class' => 'gpn'

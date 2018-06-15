@@ -306,6 +306,9 @@ a.btn, a.btn:hover{
       border-top: none;
     }
   }
+  &__auto{
+    width: auto;
+  }
 }
 .gray{
   color: #999999;
@@ -336,6 +339,9 @@ a.btn, a.btn:hover{
   +.fr{
     margin-right: 20px;
   }
+}
+.graph{
+  height: 500px;
 }
 .back_link{
   margin-bottom: 15px; display: inline-block; color: #0e86ad;
@@ -605,7 +611,18 @@ table{
 .as_table{
   display: table; width: 100%;
   .col{
-    display: table-cell; padding: 20px
+    display: table-cell; padding: 20px;
+  }
+  &__dashboard{
+    >.col{
+      padding: 0 0 0 20px;
+      &:first-child{
+        padding-left: 0;
+      }
+    }
+    .block{
+      margin-top:0;
+    }
   }
 }
 .dn{

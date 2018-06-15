@@ -1,6 +1,10 @@
 <?php defined('SYSPATH') or die('No direct script access');
 
 return array(
+    'dashboard'         => ['title' => 'Dashboard', 'icon' => 'icon-calendar', 'children' => [
+        'index'         => 'Клиенты',
+        'agent'         => 'Агенты',
+    ]],
     'clients'           => ['title' => 'Фирмы', 'icon' => 'icon-clients'],
     'suppliers'         => ['title' => 'Поставщики', 'icon' => 'icon-drop'],
     'reports'           => ['title' => 'Отчетность', 'icon' => 'icon-reports'],

@@ -58,7 +58,7 @@ class Access
     /**
      * функция проверки доступа
      */
-    public static function allow($action, $readOnly = false)
+    public static function allow($action, $allowToReadOnly = false)
     {
         if(empty($action)){
             return true;
@@ -94,7 +94,7 @@ class Access
 
         //если нет явного запрета или наоборот, доступа только конкретной роли
 
-        if(!$readOnly && in_array($user['role'], self::$readonlyRoles)){
+        if(!$allowToReadOnly && in_array($user['role'], self::$readonlyRoles)){
             return false;
         }
 
@@ -137,11 +137,12 @@ class Access
      * проверка запрета доступа
      *
      * @param $action
+     * @param $readOnly
      * @return bool
      */
-    public static function deny($action)
+    public static function deny($action, $readOnly = false)
     {
-        return !self::allow($action);
+        return !self::allow($action, $readOnly);
     }
 
     /**

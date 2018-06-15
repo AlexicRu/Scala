@@ -5,6 +5,14 @@
 
             $isActiveController = Text::camelCaseToDashed(Request::current()->controller()) == $link ;
 
+            if (!empty($item['children'])) {
+                foreach($item['children'] as $child => $name){
+                    if(Access::deny($link.'_'.$child, true)) {
+                        unset($item['children'][$child]);
+                    }
+                }
+            }
+
             if(empty($item['children'])){
                 echo "<a href='/{$link}' class='" . ($isActiveController ? 'act' : '') . "'><span class='{$item['icon']}'></span> {$item['title']}</a>";
                 continue;
@@ -19,7 +27,7 @@
                     $isActiveAction = Text::camelCaseToDashed(Request::current()->action()) == $child ;
 
                     if(Access::allow($link.'_'.$child, true)) {
-                        $menuItem .= '<div><a href="/'.$link.'/'.$child.'" class="'.($isActiveAction ? 'act' : '').'">'.$name.'</a></div>';
+                        $menuItem .= '<div><a href="/'.$link.($child == 'index' ? '' : '/'.$child).'" class="'.($isActiveAction ? 'act' : '').'">'.$name.'</a></div>';
                     }
                 }
                 $menuItem .= '</div>';

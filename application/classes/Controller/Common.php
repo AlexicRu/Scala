@@ -300,9 +300,12 @@ abstract class Controller_Common extends Controller_Template {
     /**
      * подключаем ChartJs
      */
-    protected function _initChartJs()
+    protected function _initChart()
     {
-        $this->template->scripts[] = '/assets/plugins/Chart.js/Chart.bundle.min.js';
+        $this->template->scripts[] = '/assets/plugins/palette.js';
+        $this->template->scripts[] = '//www.amcharts.com/lib/3/amcharts.js';
+        $this->template->scripts[] = '//www.amcharts.com/lib/3/serial.js';
+        $this->template->scripts[] = '//www.amcharts.com/lib/3/themes/light.js';
     }
 
     /**

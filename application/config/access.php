@@ -188,6 +188,9 @@ return [
         'system_full' => [
             Access::ROLE_ROOT,
         ],
+        'dashboard_agent' => [
+            Access::ROLE_ADMIN_READONLY
+        ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,
@@ -233,7 +236,12 @@ return [
         ],
         'root' => [
             Access::ROLE_ROOT
-        ]
+        ],
+        'view_full_dashboard_clients_summary' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_ADMIN_READONLY,
+        ],
     ],
     'deny' => [ //для всех остальных ролей будет разрешено
         // functions
@@ -298,6 +306,11 @@ return [
         'suppliers_supplier-add' => [
             'a_10',
         ],
+        'dashboard_get-realization-by-clients-summary' => [
+            Access::ROLE_USER,
+            Access::ROLE_USER_SECOND,
+            Access::ROLE_CLIENT
+        ],
         // custom
         'clients_card_toggle_full' => [
             Access::ROLE_CLIENT,
@@ -316,7 +329,7 @@ return [
         ],
         'view_payment_block' => [
             Access::ROLE_CLIENT
-        ]
+        ],
     ],
     /*
      * функции без авторизации

@@ -194,7 +194,7 @@ class Model_Manager extends Model
 
         $res = $db->procedure('ctrl_manager_change_status', $data);
 
-        if(empty($res)){
+        if($res == Oracle::CODE_SUCCESS){
             return true;
         }
 

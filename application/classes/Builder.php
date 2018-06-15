@@ -199,9 +199,16 @@ class Builder
             return $this;
         }
 
+        //builder
+        if (is_a($array, 'Builder')) {
+            $string = $array->build();
+        } else {
+            $string = implode(', ', (array)$array);
+        }
+
         $this->_where[] = [
             'connector' => 'and',
-            'where'     => $param . ' in (' . implode(', ', (array)$array) . ')',
+            'where'     => $param . ' in (' . $string . ')',
         ];
 
         return $this;
@@ -378,14 +385,14 @@ class Builder
             $sql .= " group by ".implode(" , ", $this->_groupBy)." ";
         }
 
-        //having
-        if (!empty($this->_having)) {
-            $sql .= " having ".implode(" , ", $this->_having)." ";
-        }
-
         //order by
         if (!empty($this->_orderBy)) {
             $sql .= " order by ".implode(" , ", $this->_orderBy)." ";
+        }
+
+        //having
+        if (!empty($this->_having)) {
+            $sql .= " having ".implode(" , ", $this->_having)." ";
         }
 
         if (!empty($this->_limit) || !empty($this->_offset)) {

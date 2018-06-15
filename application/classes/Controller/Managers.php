@@ -56,7 +56,7 @@ class Controller_Managers extends Controller_Common {
 
         $result = Model_Manager::toggleStatus($params);
 
-        if(!empty($result)){
+        if(empty($result)){
             $this->jsonResult(false);
         }
 
