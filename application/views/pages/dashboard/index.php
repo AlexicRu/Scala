@@ -21,9 +21,10 @@
         </div>
 
         <div class="block">
-            <h2>В разрезе номенклатур</h2>
+            <h2>В разрезе номенклатур (литры)</h2>
 
-            <div class="realization_by_clients_nomenclature"></div>
+            <div id="realization_by_clients_nomenclature_graph" class="graph"></div>
+<!--            <div class="realization_by_clients_nomenclature"></div>-->
         </div>
 
     </div>
@@ -56,7 +57,6 @@
 </div>
 
 <script>
-    var chart;
     $(function () {
         buildRealizationsByClient();
         buildRealizationByClientsGraph();
@@ -64,19 +64,25 @@
         AmCharts.addInitHandler( function ( chart ) {
             // set base values
             var categoryWidth = 30;
+            var chartHeight;
 
             // calculate bottom margin based on number of data points
-            var chartHeight = categoryWidth * chart.graphs.length / 3;
+            if (chart.type == 'serial') {
+                chartHeight = categoryWidth * chart.graphs.length / 3;
+            } else {
+                chartHeight = categoryWidth * chart.dataProvider.length / 2;
+            }
 
             // set the value
             chart.div.style.height = parseInt(chartHeight + 500) + 'px';
 
-        }, ['serial'] );
+        }, ['serial', 'pie'] );
     });
 
     function buildRealizationsByClient() {
         buildRealizationByClients();
-        buildRealizationByClientsNomenclature();
+        //buildRealizationByClientsNomenclature();
+        buildRealizationByClientsNomenclatureGraph();
         buildRealizationByClientsPayments();
         <?if (Access::allow('dashboard_get-realization-by-clients-summary')) {?>
         buildRealizationByClientsSummary();
@@ -149,6 +155,8 @@
             if (response.data.length == 0) {
                 graphBlock.removeClass('graph').html('<div class="center"><i class="gray">Нет данных</i></div>');
                 return;
+            } else {
+                graphBlock.addClass('graph');
             }
 
             var graphs = [];
@@ -187,7 +195,7 @@
                 })
             }
 
-            chart = AmCharts.makeChart("realization_by_clients_graph", {
+            var chart = AmCharts.makeChart("realization_by_clients_graph", {
                 "hideCredits":true,
                 "type": "serial",
                 "theme": "light",
@@ -228,5 +236,46 @@
                 "categoryField": "date"
             });
         })
+    }
+
+    function buildRealizationByClientsNomenclatureGraph()
+    {
+        var graphBlock = $('#realization_by_clients_nomenclature_graph');
+        graphBlock.empty().addClass(CLASS_LOADING);
+
+        $.post('/dashboard/get-realization-by-clients-nomenclature-graph', {date: getDate()}, function (response) {
+            graphBlock.removeClass(CLASS_LOADING);
+
+            if (response.data.length == 0) {
+                graphBlock.removeClass('graph').html('<div class="center"><i class="gray">Нет данных</i></div>');
+                return;
+            } else {
+                graphBlock.addClass('graph');
+            }
+
+            var chart = AmCharts.makeChart( "realization_by_clients_nomenclature_graph", {
+                "hideCredits":true,
+                "type": "pie",
+                "theme": "light",
+                "dataProvider": response.data,
+                "valueField": "SERVICE_AMOUNT",
+                "titleField": "LONG_DESC",
+                "balloonText": "[[title]]<br><span style='font-size:14px'>литры: <b>[[value]]</b></span>",
+                "innerRadius": "30%",
+                "labelText": "",
+                "legend":{
+                    "align": 'center',
+                    "valueWidth": 100
+                },
+                "numberFormatter": {
+                    "precision": -1,
+                    "decimalSeparator": ".",
+                    "thousandsSeparator": " "
+                },
+                "marginBottom": 10,
+                "marginTop": 5,
+                "pullOutRadius": 0
+            } );
+        });
     }
 </script>

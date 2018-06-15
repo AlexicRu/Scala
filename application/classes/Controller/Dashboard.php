@@ -114,6 +114,20 @@ class Controller_Dashboard extends Controller_Common {
     }
 
     /**
+     * Реализация по агентам в разрезе номенклатур (график)
+     */
+    public function action_getRealizationByAgentsNomenclatureGraph()
+    {
+        $date = $this->request->post('date');
+
+        $date = DateTime::createFromFormat('d.m.Y', $date);
+
+        $data = Dashboard::realizationByAgentsNomenclature($date->format('01.m.Y'));
+
+        $this->jsonResult(true, $data);
+    }
+
+    /**
      * Реализация по агентам средняя скидка (график)
      */
     public function action_getRealizationByAgentsAvgDiscountGraph()
@@ -142,6 +156,20 @@ class Controller_Dashboard extends Controller_Common {
             'agents' => array_values($agents),
             'data'   => array_values($data)
         ]);
+    }
+
+    /**
+     * Реализация по клиентам в разрезе номенклатур (график)
+     */
+    public function action_getRealizationByClientsNomenclatureGraph()
+    {
+        $date = $this->request->post('date');
+
+        $date = DateTime::createFromFormat('d.m.Y', $date);
+
+        $data = Dashboard::realizationByClientsNomenclature($date->format('01.m.Y'));
+
+        $this->jsonResult(true, $data);
     }
 
     /**
