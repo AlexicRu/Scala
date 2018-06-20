@@ -385,14 +385,14 @@ class Builder
             $sql .= " group by ".implode(" , ", $this->_groupBy)." ";
         }
 
-        //order by
-        if (!empty($this->_orderBy)) {
-            $sql .= " order by ".implode(" , ", $this->_orderBy)." ";
-        }
-
         //having
         if (!empty($this->_having)) {
             $sql .= " having ".implode(" , ", $this->_having)." ";
+        }
+
+        //order by
+        if (!empty($this->_orderBy)) {
+            $sql .= " order by ".implode(" , ", $this->_orderBy)." ";
         }
 
         if (!empty($this->_limit) || !empty($this->_offset)) {

@@ -74,7 +74,7 @@
                 }
 
                 params.products.push(product);
-                params.sum += $('[name^=add_bill_product_summ_]', t).val();
+                params.sum += parseFloat($('[name^=add_bill_product_summ_]', t).val());
             });
         }
 

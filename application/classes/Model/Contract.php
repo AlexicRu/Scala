@@ -512,8 +512,8 @@ class Model_Contract extends Model
 
             foreach ($products as $product) {
                 $serviceArray[]         = $product['service'];
-                $serviceAmountArray[]   = $product['cnt'];
-                $servicePriceArray[]    = $product['price'];
+                $serviceAmountArray[]   = Num::toFloat($product['cnt']);
+                $servicePriceArray[]    = Num::toFloat($product['price']);
             }
         }
 
