@@ -159,7 +159,8 @@ return [
             'a_24',
         ],
         'managers_load-reports' => [
-            Access::ROLE_ROOT
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
         ],
         'administration_cards-transfer' => [
             Access::ROLE_ADMIN
