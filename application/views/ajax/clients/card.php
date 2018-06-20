@@ -96,7 +96,10 @@ $user = Auth::instance()->get_user();
                         <?=$limitTypes[$restriction['DURATION_TYPE']]?>
                     <?}?>
                 </td>
-                <td class="line_inner"><?=$restriction['REST_LIMIT']?></td>
+                <td class="line_inner">
+                    <?=$restriction['REST_LIMIT']?>
+                    <?=Model_Card::$cardLimitsParams[$restriction['UNIT_TYPE']]?>
+                </td>
             </tr>
         <?}?>
     </table>
