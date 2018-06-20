@@ -266,7 +266,7 @@
                     }
                 };
 
-                if (!confirm('Вы уверены, что хотите удалить договор?')) {
+                if (params.contract.STATE_ID == <?=Model_Contract::STATE_CONTRACT_DELETED?> && !confirm('Вы уверены, что хотите удалить договор?')) {
                     return false;
                 }
 
