@@ -90,7 +90,7 @@ function clientDelete(btn) {
             if (data.success) {
                 window.location.href = '/clients';
             } else {
-                message(false, 'Удаление не удалось.' + (data.messages.length ? '<br>' + data.messages.join('<br>') : ''))
+                message(0, 'Удаление не удалось.' + (data.messages.length ? '<br>' + data.messages.join('<br>') : ''))
             }
         });
     }
