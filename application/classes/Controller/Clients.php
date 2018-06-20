@@ -722,4 +722,20 @@ class Controller_Clients extends Controller_Common {
 
         $this->html($html);
     }
+
+    /**
+     * удаление клиента
+     */
+    public function action_clientDelete()
+    {
+        $clientId = $this->request->post('client_id');
+
+        $result = Model_Client::changeState($clientId, Model_Client::STATE_CLIENT_DELETED);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
 }

@@ -123,8 +123,12 @@
 <div class="more_info dn" toggle_block="block1">
     <a href="#" class="btn btn_gray btn_min_width" toggle="block1">Скрыть информацию о компании</a> &nbsp;
 
-    <?if(Access::allow('clients-client-edit')){?>
+    <?if(Access::allow('clients_client-edit')){?>
         <button class="btn" toggle="edit_client" toggle_block="edit_client"><i class="icon-pen"></i> Редактировать</button> &nbsp;
+    <?}?>
+
+    <?if(Access::allow('clients_client-delete')){?>
+        <button class="btn btn_red" onclick="clientDelete($(this))"><i class="icon-cancel"></i> Удалить</button> &nbsp;
     <?}?>
 
     <?if(Access::allow('client_cabinet-create') && empty($client['EXISTS_OFFICE'])){?>

@@ -2,6 +2,8 @@
 
 class Model_Client extends Model
 {
+    const STATE_CLIENT_DELETED = 7;
+
     /**
      * получаем список клиентов
      *
@@ -216,4 +218,38 @@ class Model_Client extends Model
 				return Oracle::CODE_SUCCESS;
 		}
 	}
+
+    /**
+     * Изменение статуса клиента
+     *
+     * @param $clientId
+     * @param $stateId
+     * @return bool
+     */
+	public static function changeState($clientId, $stateId)
+    {
+        if (empty($clientId) || empty($stateId)) {
+            return false;
+        }
+
+        $user = User::current();
+
+        $data = [
+            'p_client_id' 	=> $clientId,
+            'p_new_state' 	=> $stateId,
+            'p_manager_id' 	=> $user['MANAGER_ID'],
+            'p_error_code' 	=> 'out',
+        ];
+
+        $res = Oracle::init()->procedure('client_change_state', $data);
+
+        switch($res){
+            case Oracle::CODE_SUCCESS:
+                return true;
+            case 3:
+                Messages::put('Закреплен договор');
+        }
+
+        return false;
+    }
 }

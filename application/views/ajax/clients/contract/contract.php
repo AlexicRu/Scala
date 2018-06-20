@@ -266,6 +266,9 @@
                     }
                 };
 
+                if (!confirm('Вы уверены, что хотите удалить договор?')) {
+                    return false;
+                }
 
                 if(params.settings.TARIF_ONLINE == '' || params.settings.TARIF_OFFLINE == ''){
                     message(0, 'Заполните тарификацию');

@@ -192,6 +192,10 @@ return [
         'dashboard_agent' => [
             Access::ROLE_ADMIN_READONLY
         ],
+        'clients_client-delete' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+        ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,

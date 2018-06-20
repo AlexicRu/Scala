@@ -78,3 +78,20 @@ function loadContract(tab, query, params)
         });
     });
 }
+
+/**
+ * Удаление клиента
+ *
+ * @param btn
+ */
+function clientDelete(btn) {
+    if (confirm('Вы уверены, что хотите удалить клиента?')) {
+        $.post('/clients/client-delete', {client_id: clientId}, function (data) {
+            if (data.success) {
+                window.location.href = '/clients';
+            } else {
+                message(false, 'Удаление не удалось.' + (data.messages.length ? '<br>' + data.messages.join('<br>') : ''))
+            }
+        });
+    }
+}
