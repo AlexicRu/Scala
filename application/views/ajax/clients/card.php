@@ -73,6 +73,11 @@ $user = Auth::instance()->get_user();
 
     ?>
     <table class="tbl_spacing">
+        <tr>
+            <td></td>
+            <td>Лимит</td>
+            <td>Остаток</td>
+        </tr>
         <?foreach($oilRestrictions as $restriction){?>
             <tr>
                 <td class="gray right">
@@ -91,6 +96,7 @@ $user = Auth::instance()->get_user();
                         <?=$limitTypes[$restriction['DURATION_TYPE']]?>
                     <?}?>
                 </td>
+                <td class="line_inner"><?=$restriction['REST_LIMIT']?></td>
             </tr>
         <?}?>
     </table>
