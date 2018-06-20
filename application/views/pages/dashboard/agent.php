@@ -41,7 +41,7 @@
         </div>
 
         <div class="block">
-            <h2>Средняя скидка по дистрибьюторам</h2>
+            <h2>Средняя скидка по конечному клиенту</h2>
             <div id="realization_by_agents_avg_discount_graph" class="graph"></div>
         </div>
     </div>
