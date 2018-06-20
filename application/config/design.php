@@ -63,5 +63,10 @@ return array(
             'title' => 'ETS Trading',
             'class' => 'ets'
         ],
+        'u_2126' => [
+            'title' => 'GloPro',
+            'class' => 'europlan',
+            'url'   => 'demolkgloproru'
+        ],
     ]
 );
