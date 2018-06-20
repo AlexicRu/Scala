@@ -202,7 +202,9 @@ class Controller_Clients extends Controller_Common {
 		if(empty($result)){
 			$this->jsonResult(false);
 		}
-		$this->jsonResult(true, $result);
+		$this->jsonResult(true, [
+		    'full_reload' => !empty($params['contract']['STATE_ID']) && $params['contract']['STATE_ID'] == Model_Contract::STATE_CONTRACT_DELETED ? true : false
+        ]);
 	}
 
     /**

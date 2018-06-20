@@ -6,19 +6,28 @@ class Model_Contract extends Model
     const STATE_CONTRACT_BLOCKED 		= 9;
     const STATE_CONTRACT_EXPIRED 		= 5;
     const STATE_CONTRACT_NOT_IN_WORK 	= 6;
+    const STATE_CONTRACT_DELETED     	= 7;
 
     public static $statusContractNames = [
         self::STATE_CONTRACT_WORK 			=> 'В работе',
         self::STATE_CONTRACT_NOT_IN_WORK 	=> 'Не в работе',
         self::STATE_CONTRACT_BLOCKED 		=> 'Заблокирован',
         self::STATE_CONTRACT_EXPIRED 		=> 'Завершен',
+        self::STATE_CONTRACT_DELETED 		=> 'Удален',
     ];
 
     public static $statusContractClasses = [
         self::STATE_CONTRACT_WORK 			=> 'label_success',
         self::STATE_CONTRACT_NOT_IN_WORK 	=> 'label_info',
         self::STATE_CONTRACT_BLOCKED 		=> 'label_error',
+        self::STATE_CONTRACT_DELETED 		=> 'label_error',
         self::STATE_CONTRACT_EXPIRED 		=> 'label_warning',
+    ];
+
+    public static $stateContractDeletedRolesAccess = [
+        Access::ROLE_ROOT,
+        Access::ROLE_ADMIN,
+        Access::ROLE_SUPERVISOR,
     ];
 
 	const DEFAULT_DATE_END				= '31.12.2099';
@@ -67,6 +76,7 @@ class Model_Contract extends Model
 
         $sql = (new Builder())->select()
             ->from('V_WEB_CL_CONTRACTS')
+            ->where('state_id != ' . self::STATE_CONTRACT_DELETED)
             ->orderBy(['ct_date desc', 'state_id', 'contract_name'])
         ;
 
@@ -253,9 +263,26 @@ class Model_Contract extends Model
         ];
 
 		$res = $db->procedure('client_contract_edit', $data);
+
+		switch($res) {
+            case Oracle::CODE_SUCCESS:
+                break;
+            case 3:
+                Messages::put('Есть закрепленные карты');
+                return false;
+            case 4:
+                Messages::put('Есть действующие платежи');
+                return false;
+            case 5:
+                Messages::put('Есть транзакции');
+                return false;
+            default:
+                return false;
+        }
+
 		$res1 = $db->procedure('client_contract_settings_edit', $data1);
 
-		if($res == Oracle::CODE_SUCCESS && $res1 == Oracle::CODE_SUCCESS){
+		if($res1 == Oracle::CODE_SUCCESS){
 			return true;
 		}
 

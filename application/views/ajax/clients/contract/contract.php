@@ -12,7 +12,11 @@
         <input type="text" name="DATE_END" value="<?=$contract['DATE_END']?>" class="input_big input_small datepicker" readonly>
         <select class="select_big" name="STATE_ID">
             <?
+            $user = User::current();
             foreach(Model_Contract::$statusContractNames as $id => $name){
+                if ($id == Model_Contract::STATE_CONTRACT_DELETED && !in_array($user['ROLE_ID'], Model_Contract::$stateContractDeletedRolesAccess)) {
+                    continue;
+                }
                 ?><option value="<?=$id?>" <?if($id == $contract['STATE_ID']){echo 'selected';}?>><?=$name?></option><?
             }
             ?>
@@ -29,7 +33,7 @@
 </div>
 <div class="as_table">
     <div class="col">
-        <?if(1||Access::allow('view_payment_block')){?>
+        <?if(Access::allow('view_payment_block')){?>
         <b class="f18">Оплата:</b>
         <table>
             <tr>
@@ -277,13 +281,19 @@
                     if(data.success){
                         message(1, 'Контракт обновлен');
 
-                        var contractFullName = "Договор: [<?=$contractSettings['CONTRACT_ID']?>] " + params.contract.CONTRACT_NAME + " от " + params.contract.DATE_BEGIN + (params.contract.DATE_END != '31.12.2099' ? " до " + params.contract.DATE_END : '');
+                        if (data.data.full_reload) {
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 500);
+                        } else {
+                            var contractFullName = "Договор: [<?=$contractSettings['CONTRACT_ID']?>] " + params.contract.CONTRACT_NAME + " от " + params.contract.DATE_BEGIN + (params.contract.DATE_END != '31.12.2099' ? " до " + params.contract.DATE_END : '');
 
-                        $("[name=contracts_list] option:selected").text(contractFullName);
+                            $("[name=contracts_list] option:selected").text(contractFullName);
 
-                        loadContract('contract');
+                            loadContract('contract');
+                        }
                     }else{
-                        message(0, 'Сохранение не удалось');
+                        message(0, 'Сохранение не удалось.' + (data.messages.length ? '<br>'+data.messages.join('<br>') : ''));
                     }
                 });
             });
