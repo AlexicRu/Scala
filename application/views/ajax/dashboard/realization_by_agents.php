@@ -16,6 +16,11 @@
             <td class="right"><?=number_format($row['COUNT_TRZ'], 0, '.', '&nbsp;')?></td>
         </tr>
     <?}?>
+    <tr>
+        <td><b>Итого:</b></td>
+        <td class="right"><b><?=number_format(array_sum(array_column($data, 'SERVICE_AMOUNT')), 2, '.', '&nbsp;')?></b></td>
+        <td class="right"><b><?=number_format(array_sum(array_column($data, 'COUNT_TRZ')), 0, '.', '&nbsp;')?></b></td>
+    </tr>
 </table>
 <?} else {?>
     <div class="center">
