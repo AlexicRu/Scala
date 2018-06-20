@@ -26,8 +26,9 @@ class Controller_Control extends Controller_Common {
         $user = Auth::instance()->get_user();
 
         $params = [
-            'agent_id' => $user['AGENT_ID'],
-            'not_admin' => true
+            'agent_id'      => $user['AGENT_ID'],
+            'not_admin'     => true,
+            'roles_exclude' => Access::ROLE_ADMIN_READONLY
         ];
 
         $params = array_merge($params, $filter);
@@ -116,7 +117,7 @@ class Controller_Control extends Controller_Common {
         $user = User::current();
 
         $canEdit = true;
-        if($group['GROUP_TYPE'] == Model_Dot::GROUP_TYPE_SUPPLIER && !in_array($user['role'], Access::$adminRoles)){
+        if($group['GROUP_TYPE'] == Model_Dot::GROUP_TYPE_SUPPLIER && !in_array($user['ROLE_ID'], Access::$adminRoles)){
             $canEdit = false;
         }
 
@@ -179,7 +180,7 @@ class Controller_Control extends Controller_Common {
 
                 $canEdit = true;
                 foreach($groups as $group){
-                    if($group['GROUP_ID'] == $groupId && $group['GROUP_TYPE'] == Model_Dot::GROUP_TYPE_SUPPLIER && !in_array($user['role'], Access::$adminRoles)){
+                    if($group['GROUP_ID'] == $groupId && $group['GROUP_TYPE'] == Model_Dot::GROUP_TYPE_SUPPLIER && !in_array($user['ROLE_ID'], Access::$adminRoles)){
                         $canEdit = false;
                         break;
                     }
@@ -565,7 +566,7 @@ class Controller_Control extends Controller_Common {
             $user = User::current();
 
             $canEdit = true;
-            if (!in_array($user['role'], Access::$adminRoles)) {
+            if (!in_array($user['ROLE_ID'], Access::$adminRoles)) {
                 $canEdit = false;
             }
 
@@ -616,7 +617,7 @@ class Controller_Control extends Controller_Common {
             $user = User::current();
 
             $canEdit = true;
-            /*if (in_array($user['role'], Access::$adminRoles)) {
+            /*if (in_array($user['ROLE_ID'], Access::$adminRoles)) {
                 $canEdit = true;
             }*/
 

@@ -19,7 +19,7 @@ class Model_Manager extends Model
 
         if(
             empty($user['MANAGER_ID']) ||
-            empty($user['role'])
+            empty($user['ROLE_ID'])
         ){
             return false;
         }
@@ -30,7 +30,7 @@ class Model_Manager extends Model
 
         $data = [
             'p_manager_for_id' 	=> $user['MANAGER_ID'],
-            'p_role_id' 	    => $user['role'],
+            'p_role_id' 	    => $user['ROLE_ID'],
             'p_name' 	        => empty($params['manager_settings_name'])         ? '' : $params['manager_settings_name'],
             'p_surname' 	    => empty($params['manager_settings_surname'])      ? '' : $params['manager_settings_surname'],
             'p_middlename' 	    => empty($params['manager_settings_middlename'])   ? '' : $params['manager_settings_middlename'],
@@ -82,55 +82,54 @@ class Model_Manager extends Model
     {
         $db = Oracle::init();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_MANAGERS where 1=1 ";
+        $sql = (new Builder())->select()
+            ->from('V_WEB_MANAGERS')
+            ->orderBy('M_NAME')
+        ;
 
         if(!empty($params['search'])){
-            $params['search'] = mb_strtoupper($params['search']);
-            $sql .= " and (
-                upper(LOGIN) like ". Oracle::quote('%'.$params['search'].'%')." or 
-                upper(MANAGER_NAME) like ". Oracle::quote('%'.$params['search'].'%')." or 
-                upper(MANAGER_SURNAME) like ". Oracle::quote('%'.$params['search'].'%')." or 
-                upper(MANAGER_MIDDLENAME) like ". Oracle::quote('%'.$params['search'].'%')." or
-                upper(M_NAME) like ". Oracle::quote('%'.$params['search'].'%')."
-            )";
+            $params['search'] = Oracle::quote('%'.mb_strtoupper($params['search'].'%'));
+
+            $sql
+                ->whereStart()
+                ->where("upper(LOGIN) like " . $params['search'])
+                ->where("upper(MANAGER_NAME) like " . $params['search'])
+                ->where("upper(MANAGER_SURNAME) like " . $params['search'])
+                ->where("upper(MANAGER_MIDDLENAME) like " . $params['search'])
+                ->where("upper(M_NAME) like " . $params['search'])
+                ->whereEnd()
+            ;
         }
         unset($params['search']);
 
         if(!empty($params['only_managers'])){
-            $sql .= " and ROLE_ID not in (".implode(', ', array_keys(Access::$clientRoles)).")";
+            $sql->where("ROLE_ID not in (".implode(', ', array_keys(Access::$clientRoles)).")");
         }
         unset($params['only_managers']);
 
         if(!empty($params['not_admin'])){
-            $sql .= " and ROLE_ID not in (".implode(', ', array_keys(Access::$adminRoles)).")";
+            $sql->where("ROLE_ID not in (".implode(', ', array_keys(Access::$adminRoles)).")");
         }
         unset($params['not_admin']);
 
+        if(!empty($params['roles_exclude'])){
+            $sql->where("ROLE_ID not in (".implode(', ', (array)$params['roles_exclude']).")");
+        }
+        unset($params['roles_exclude']);
+
         foreach($params as $key => $value){
             if(is_array($value)){
-                $sql .= " and " . strtoupper($key) . " = '" . implode(',', $value) . "' ";
+                $sql->whereIn(strtoupper($key), $value);
             }else {
-                $sql .= " and " . strtoupper($key) . " = " . Oracle::quote($value);
+                $sql->where(strtoupper($key) . ' = ' . Oracle::quote($value));
             }
         }
 
-        $sql .= ' order by M_NAME';
-
-        if(!empty($params['limit'])){
-            $users = $db->query($db->limit($sql, 0, $params['limit']));
-        }else {
-            $users = $db->query($sql);
+        if(!empty($params['limit'])) {
+            $sql->limit($params['limit']);
         }
 
-        if(empty($users)){
-            return false;
-        }
-
-        foreach($users as &$user){
-            $user['role'] = $user['ROLE_ID'];
-        }
-
-        return $users;
+        return $db->query($sql);
     }
 
     /**

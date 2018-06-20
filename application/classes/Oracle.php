@@ -233,7 +233,7 @@ class Oracle{
 
         $user = User::current();
 
-		if (Access::checkReadOnly($procedure, $user['role'])) {
+		if (Access::checkReadOnly($procedure, $user['ROLE_ID'])) {
             Messages::put('Данной роли разрешен только просмотр', 'info');
             return self::CODE_ERROR;
         }

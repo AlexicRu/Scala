@@ -31,7 +31,7 @@
                 <?}else{?>
                     <?foreach($firmsGroups as $key => $group){?>
                         <div class="tab_v tab_v_small" tab="firms_group_<?=$group['GROUP_ID']?>"><div>
-                            <?/*if(in_array($user['role'], Access::$adminRoles)){*/?>
+                            <?/*if(in_array($user['ROLE_ID'], Access::$adminRoles)){*/?>
                                 <span class="check_span_hidden">
                                     <input type="checkbox" name="group_id" value="<?=$group['GROUP_ID']?>">
                                     <input type="hidden" name="group_name" value="<?=$group['GROUP_NAME']?>">

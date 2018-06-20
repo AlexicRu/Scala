@@ -54,7 +54,7 @@
                 <?}else{?>
                     <?foreach($dotsGroups as $key => $group){?>
                         <div class="tab_v tab_v_small" tab="group_dot<?=$group['GROUP_ID']?>"><div>
-                            <?if($group['GROUP_TYPE'] != Model_Dot::GROUP_TYPE_SUPPLIER || in_array($user['role'], Access::$adminRoles)){?>
+                            <?if($group['GROUP_TYPE'] != Model_Dot::GROUP_TYPE_SUPPLIER || in_array($user['ROLE_ID'], Access::$adminRoles)){?>
                                 <span class="check_span_hidden">
                                     <input type="checkbox" name="group_id" value="<?=$group['GROUP_ID']?>">
                                     <input type="hidden" name="group_name" value="<?=$group['GROUP_NAME']?>">

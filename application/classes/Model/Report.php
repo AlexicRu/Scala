@@ -172,10 +172,10 @@ class Model_Report extends Model
         }
 
         if (empty($params['report_type_id'])) {
-            if (in_array($manager['role'], array_keys(Access::$clientRoles))) {
+            if (in_array($manager['ROLE_ID'], array_keys(Access::$clientRoles))) {
                 $params['report_type_id'] = [self::REPORT_TYPE_DB_CLIENT];
             }
-            if (in_array($manager['role'], array_keys(Access::$managerRoles))) {
+            if (in_array($manager['ROLE_ID'], array_keys(Access::$managerRoles))) {
                 $params['report_type_id'] = [
                     self::REPORT_TYPE_DB_CLIENT,
                     self::REPORT_TYPE_DB_ALL,
@@ -197,7 +197,7 @@ class Model_Report extends Model
         ])->distinct()
             ->from('V_WEB_REPORTS_AVAILABLE t')
             ->where("t.agent_id in (0, {$manager['AGENT_ID']})")
-            ->where("t.role_id in (0, {$manager['role']})")
+            ->where("t.role_id in (0, {$manager['ROLE_ID']})")
             ->where("t.manager_id in (0, {$manager['MANAGER_ID']})")
             ->where("t.report_type_id in (0, ". implode(', ', array_map('intval', (array)$params['report_type_id'])) .")")
         ;

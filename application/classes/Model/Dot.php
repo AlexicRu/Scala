@@ -185,7 +185,7 @@ class Model_Dot extends Model
     {
         $user = Auth::instance()->get_user();
 
-        if(!in_array($user['role'], Access::$adminRoles)){
+        if(!in_array($user['ROLE_ID'], Access::$adminRoles)){
             unset(self::$groupsTypesNames[self::GROUP_TYPE_SUPPLIER]);
         }
 

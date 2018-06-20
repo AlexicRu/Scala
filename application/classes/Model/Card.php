@@ -495,7 +495,7 @@ class Model_Card extends Model
             }
 
             if (
-                in_array($user['role'], array_keys(Access::$clientRoles)) &&
+                in_array($user['ROLE_ID'], array_keys(Access::$clientRoles)) &&
                 !in_array($user['MANAGER_ID'], self::$editLimitsManagerNoLimit)
             ) {
                 foreach ($limits as $limit) {

@@ -129,7 +129,7 @@ class Auth_Oracle extends Auth {
             if ( ! $role)
                 return TRUE;
 
-            return isset($user['role']) && $user['role'] == (int)$role;
+            return isset($user['ROLE_ID']) && $user['ROLE_ID'] == (int)$role;
         }
     }
 
@@ -173,7 +173,6 @@ class Auth_Oracle extends Auth {
         $db = Oracle::init();
 
 		$user = $db->row("select * from ".Oracle::$prefix."V_WEB_MANAGERS where MANAGER_ID = ".$user['MANAGER_ID']);
-        $user['role'] = $user['ROLE_ID'];
 
         self::complete_login($user);
 	}

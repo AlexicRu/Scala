@@ -31,7 +31,7 @@
                 <?}else{?>
                     <?foreach($cardsGroups as $key => $group){?>
                         <div class="tab_v tab_v_small" tab="cards_group_<?=$group['GROUP_ID']?>"><div>
-                            <?/*if(in_array($user['role'], Access::$rolesForCardGroups)){*/?>
+                            <?/*if(in_array($user['ROLE_ID'], Access::$rolesForCardGroups)){*/?>
                                 <span class="check_span_hidden">
                                     <input type="checkbox" name="group_id" value="<?=$group['GROUP_ID']?>">
                                     <input type="hidden" name="group_name" value="<?=$group['GROUP_NAME']?>">

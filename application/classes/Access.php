@@ -66,7 +66,7 @@ class Access
 
         $user = Auth_Oracle::instance()->get_user();
 
-        if(in_array($user['role'], [self::ROLE_ROOT])){
+        if(in_array($user['ROLE_ID'], [self::ROLE_ROOT])){
             return true;
         }
 
@@ -78,13 +78,13 @@ class Access
         if(
             // если задано разрешение и нет роли/агента/юзера, то нельзя
             (isset($allow[$action]) && (
-                !in_array($user['role'], $allow[$action]) &&
+                !in_array($user['ROLE_ID'], $allow[$action]) &&
                 !in_array('u_'.$user['MANAGER_ID'], $allow[$action]) &&
                 !in_array('a_'.$user['AGENT_ID'], $allow[$action])
             )) ||
             // если задан запрет на действие и хоть где-то роль/агент/юзер, то нельзя
             (isset($deny[$action]) && (
-                in_array($user['role'], $deny[$action]) ||
+                in_array($user['ROLE_ID'], $deny[$action]) ||
                 in_array('u_'.$user['MANAGER_ID'], $deny[$action]) ||
                 in_array('a_'.$user['AGENT_ID'], $deny[$action])
             ))
@@ -94,7 +94,7 @@ class Access
 
         //если нет явного запрета или наоборот, доступа только конкретной роли
 
-        if(!$allowToReadOnly && in_array($user['role'], self::$readonlyRoles)){
+        if(!$allowToReadOnly && in_array($user['ROLE_ID'], self::$readonlyRoles)){
             return false;
         }
 
@@ -113,7 +113,7 @@ class Access
 
         $user = User::current();
 
-        if(in_array($user['role'], [self::ROLE_ROOT])){
+        if(in_array($user['ROLE_ID'], [self::ROLE_ROOT])){
             return true;
         }
 
@@ -122,7 +122,7 @@ class Access
         if(
             // если задано разрешение и есть роль/агент/юзер, то можно
             isset($access[$file]) && (
-                    in_array($user['role'], $access[$file]) ||
+                    in_array($user['ROLE_ID'], $access[$file]) ||
                     in_array('u_'.$user['MANAGER_ID'], $access[$file]) ||
                     in_array('a_'.$user['AGENT_ID'], $access[$file])
                 )
