@@ -296,7 +296,7 @@
                             loadContract('contract');
                         }
                     }else{
-                        message(0, 'Сохранение не удалось.' + (data.messages.length ? '<br>'+data.messages.join('<br>') : ''));
+                        message(0, 'Сохранение не удалось');
                     }
                 });
             });

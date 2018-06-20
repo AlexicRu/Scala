@@ -246,7 +246,7 @@ class Model_Client extends Model
         switch($res){
             case Oracle::CODE_SUCCESS:
                 return true;
-            case 3:
+            case 2:
                 Messages::put('Закреплен договор');
         }
 
