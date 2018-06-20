@@ -21,6 +21,12 @@
         </div>
 
         <div class="block">
+            <h2>Карты</h2>
+
+            <div class="realization_by_agents_cards_count"></div>
+        </div>
+
+        <div class="block">
             <h2>В разрезе номенклатур (литры)</h2>
 
             <div id="realization_by_agents_nomenclature_graph" class="graph"></div>
@@ -50,6 +56,7 @@
         buildRealizationsByAgents();
         buildRealizationByAgentsGraph();
         buildRealizationByAgentsAvgDiscountGraph();
+        buildRealizationByAgentsCardsCount();
 
         AmCharts.addInitHandler( function ( chart ) {
             // set base values
@@ -94,6 +101,16 @@
         block.empty().addClass(CLASS_LOADING);
 
         $.post('/dashboard/get-realization-by-agents', {date: getDate()}, function (data) {
+            block.removeClass(CLASS_LOADING).html(data)
+        })
+    }
+
+    function buildRealizationByAgentsCardsCount()
+    {
+        var block = $('.realization_by_agents_cards_count');
+        block.empty().addClass(CLASS_LOADING);
+
+        $.post('/dashboard/get-realization-by-agents-cards-count', {}, function (data) {
             block.removeClass(CLASS_LOADING).html(data)
         })
     }
@@ -200,10 +217,8 @@
                 "legend": {
                     "align": "center",
                     "equalWidths": true,
-                    "periodValueText": "[[value]]",
-                    "valueAlign": "left",
-                    "valueText": "[[value]]",
-                    "valueWidth": 100
+                    "marginLeft" : 0,
+                    "marginRight" : 0,
                 },
                 "graphs": graphs,
                 "valueScrollbar":{
@@ -279,10 +294,8 @@
                 "legend": {
                     "align": "center",
                     "equalWidths": true,
-                    "periodValueText": "[[value]]",
-                    "valueAlign": "left",
-                    "valueText": "[[value]]",
-                    "valueWidth": 100
+                    "marginLeft" : 0,
+                    "marginRight" : 0,
                 },
                 "graphs": graphs,
                 "valueScrollbar":{

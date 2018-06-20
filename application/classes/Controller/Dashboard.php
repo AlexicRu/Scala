@@ -33,6 +33,20 @@ class Controller_Dashboard extends Controller_Common {
     }
 
     /**
+     * Реализация по агентам (Количество карт)
+     */
+    public function action_getRealizationByAgentsCardsCount()
+    {
+        $data = Dashboard::realizationByAgentsCardsCount();
+
+        $html = View::factory('ajax/dashboard/realization_by_agents_cards_count')
+            ->bind('data', $data)
+        ;
+
+        $this->html($html);
+    }
+
+    /**
      * Реализация по агентам (график)
      */
     public function action_getRealizationByAgentsGraph()

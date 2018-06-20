@@ -21,6 +21,7 @@ class Dashboard
             ->from('V_WEB_DASH_AGENTS t')
             ->where('t.month_of_date = ' . Oracle::toDateOracle($date, Date::$dateFormatRu))
             ->whereIn('t.agent_id', $sqlSub)
+            ->orderBy('upper(t.web_name)')
         ;
 
         return Oracle::init()->query($sql);
@@ -267,5 +268,29 @@ class Dashboard
         ;
 
         return Oracle::init()->row($sql);
+    }
+
+    /**
+     * Реализация по агентам (Количество карт)
+     */
+    public static function realizationByAgentsCardsCount()
+    {
+        $user = User::current();
+
+        $sqlSub = (new Builder())->select([
+            'v.agent_id'
+        ])
+            ->from('V_WEB_MANAGER_BINDS v')
+            ->where('v.manager_to = ' . (int)$user['MANAGER_ID'])
+            ->whereOr('v.manager_from = ' . (int)$user['MANAGER_ID'])
+        ;
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_DASH_CARDS_COUNT t')
+            ->whereIn('t.agent_id', $sqlSub)
+            ->orderBy('upper(t.web_name)')
+        ;
+
+        return Oracle::init()->query($sql);
     }
 }
