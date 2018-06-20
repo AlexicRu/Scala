@@ -147,7 +147,7 @@ class Dashboard
         ])
             ->from('V_WEB_DASH_REALIZ t')
             ->where('t.month_of_date = ' . Oracle::toDateOracle($date, Date::$dateFormatRu))
-            ->whereIn('t.contract_id ', $sqlSub)
+            ->whereIn('t.agent_id ', $sqlSub)
             ->groupBy('t.long_desc')
         ;
 
