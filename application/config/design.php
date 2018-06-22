@@ -68,5 +68,25 @@ return array(
             'class' => 'europlan',
             'url'   => 'demolkgloproru'
         ],
+        'u_2129' => [
+            'title' => 'GloPro',
+            'class' => 'pochta',
+            'url'   => 'demolkgloproru'
+        ],
+        'u_2128' => [
+            'title' => 'GloPro',
+            'class' => 'pochta',
+            'url'   => 'demolkgloproru'
+        ],
+        'u_2130' => [
+            'title' => 'GloPro',
+            'class' => 'pochta',
+            'url'   => 'demolkgloproru'
+        ],
+        'u_2131' => [
+            'title' => 'GloPro',
+            'class' => 'pochta',
+            'url'   => 'demolkgloproru'
+        ],
     ]
 );
