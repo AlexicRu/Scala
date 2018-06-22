@@ -239,4 +239,22 @@ class Controller_Dashboard extends Controller_Common {
 
         $this->html($html);
     }
+
+    /**
+     * Реализация по агентам (полные данные)
+     */
+    public function action_getRealizationByAgentsFull()
+    {
+        $date = $this->request->post('date');
+
+        $date = DateTime::createFromFormat('d.m.Y', $date);
+
+        $data = Dashboard::realizationByAgentsFull($date->format('01.m.Y'));
+
+        $html = View::factory('ajax/dashboard/realization_by_agents_full')
+            ->bind('data', $data)
+        ;
+
+        $this->html($html);
+    }
 }

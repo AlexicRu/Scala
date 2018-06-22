@@ -69,18 +69,27 @@ class Builder
     /**
      * @param $table
      * @param $str
+     * @param $join
      * @return $this
      */
-    public function join($table, $str)
+    public function join($table, $str, $join = 'join')
     {
         if (empty($str) || empty($table)) {
             return $this;
         }
 
+        $alias = '';
+
+        if (is_array($table)) {
+            $alias = key($table);
+            $table = reset($table);
+        }
+
         $this->_joins[] = [
-            'join'  => 'join',
+            'join'  => $join,
             'table' => $table,
-            'str'   => $str
+            'str'   => $str,
+            'alias' => $alias
         ];
 
         return $this;
@@ -93,17 +102,7 @@ class Builder
      */
     public function joinLeft($table, $str)
     {
-        if (empty($str) || empty($table)) {
-            return $this;
-        }
-
-        $this->_joins[] = [
-            'join'  => 'left join',
-            'table' => $table,
-            'str'   => $str
-        ];
-
-        return $this;
+        return $this->join($table, $str, 'left join');
     }
 
     /**
@@ -355,7 +354,12 @@ class Builder
         //joins
         if (!empty($this->_joins)) {
             foreach ($this->_joins as $join) {
-                $sql .= " {$join['join']} {$prefix}{$join['table']} on {$join['str']} ";
+                if (is_a($join['table'], 'Builder')) {
+                    $table = '(' . $join['table']->build() . ')';
+                } else {
+                    $table = $prefix . $join['table'];
+                }
+                $sql .= " {$join['join']} {$table} {$join['alias']} on {$join['str']} ";
             }
         }
 

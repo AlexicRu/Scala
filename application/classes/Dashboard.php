@@ -293,4 +293,47 @@ class Dashboard
 
         return Oracle::init()->query($sql);
     }
+
+    /**
+     * Реализация по агентам (полные данные)
+     */
+    public static function realizationByAgentsFull($date)
+    {
+        $user = User::current();
+
+        $sqlSub = (new Builder())->select([
+            'v.agent_id'
+        ])
+            ->from('V_WEB_MANAGER_BINDS v')
+            ->where('v.manager_to = ' . (int)$user['MANAGER_ID'])
+            ->whereOr('v.manager_from = ' . (int)$user['MANAGER_ID'])
+        ;
+
+        $sqlJoin = (new Builder())->select([
+            'c.agent_id',
+            'count(1) as cl_count'
+        ])
+            ->from('V_WEB_CLIENTS_LIST c')
+            ->groupBy('c.agent_id')
+        ;
+
+        $sql = (new Builder())->select([
+            'a.agent_id',
+            'a.web_name',
+            'nvl(t.service_amount,0) as service_amount',
+            'nvl(t.count_trz,0) as count_trz',
+            'nvl(crc.all_cards,0) as all_cards',
+            'nvl(crc.cards_in_work,0) as cards_in_work',
+            'nvl(cl.cl_count,0) as cl_count',
+        ])
+            ->from('v_web_agents_list a')
+            ->joinLeft(['cl' => $sqlJoin], 'a.agent_id = cl.agent_id')
+            ->joinLeft('V_WEB_DASH_CARDS_COUNT crc', 'a.agent_id = crc.agent_id')
+            ->joinLeft('V_WEB_DASH_AGENTS t', 'a.agent_id = t.agent_id and t.month_of_date = ' . Oracle::toDateOracle($date, Date::$dateFormatRu))
+            ->whereIn('a.agent_id', $sqlSub)
+            ->orderBy('upper(a.web_name)')
+        ;
+
+        return Oracle::init()->query($sql);
+    }
 }
