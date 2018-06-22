@@ -88,15 +88,15 @@ class Model_Manager extends Model
         ;
 
         if(!empty($params['search'])){
-            $params['search'] = Oracle::quote('%'.mb_strtoupper($params['search'].'%'));
+            $params['search'] = Oracle::quote('%'.mb_strtoupper($params['search']).'%');
 
             $sql
                 ->whereStart()
-                ->where("upper(LOGIN) like " . $params['search'])
-                ->where("upper(MANAGER_NAME) like " . $params['search'])
-                ->where("upper(MANAGER_SURNAME) like " . $params['search'])
-                ->where("upper(MANAGER_MIDDLENAME) like " . $params['search'])
-                ->where("upper(M_NAME) like " . $params['search'])
+                ->whereOr("upper(LOGIN) like " . $params['search'])
+                ->whereOr("upper(MANAGER_NAME) like " . $params['search'])
+                ->whereOr("upper(MANAGER_SURNAME) like " . $params['search'])
+                ->whereOr("upper(MANAGER_MIDDLENAME) like " . $params['search'])
+                ->whereOr("upper(M_NAME) like " . $params['search'])
                 ->whereEnd()
             ;
         }
