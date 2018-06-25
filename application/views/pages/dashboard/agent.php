@@ -1,32 +1,39 @@
 <h1>Реализация по дистрибьюторам</h1>
 
 <div class="as_table as_table__dashboard">
-    <div class="block" style="width: 500px">
-        <b class="f18">Выберите период:</b><br>
-        <select name="date_agent_month">
-            <?for ($i = 1; $i <= 12; $i++) {?>
-                <option value="<?=$i?>" <?=($i == date('n') ? 'selected' : '')?>><?=Date::monthRu($i)?></option>
-            <?}?>
-        </select>
-        <input type="number" class="input_mini" name="date_agent_year" value="<?=date('Y')?>">
-
-        <span class="btn btn_green btn_small btn_reverse" onclick="buildRealizationsByAgents()">Обновить</span>
-    </div>
-
-    <div class="block">
-        <div class="realization_by_agents_full"></div>
-    </div>
-</div>
-
-<div class="as_table as_table__dashboard">
     <div class="col" style="width: 500px">
+        <div class="block">
+            <b class="f18">Выберите период:</b><br>
+            <select name="date_agent_month">
+                <?for ($i = 1; $i <= 12; $i++) {?>
+                    <option value="<?=$i?>" <?=($i == date('n') ? 'selected' : '')?>><?=Date::monthRu($i)?></option>
+                <?}?>
+            </select>
+            <input type="number" class="input_mini" name="date_agent_year" value="<?=date('Y')?>">
+
+            <span class="btn btn_green btn_small btn_reverse" onclick="buildRealizationsByAgents()">Обновить</span>
+        </div>
+
+        <div class="tabs_block tabs_switcher">
+            <div class="tabs">
+                <span tab="realization" class="tab active">Реализация</span><span tab="cards" class="tab">Карты</span>
+            </div>
+            <div class="tabs_content">
+                <div class="tab_content active" tab_content="realization">
+                    <div class="realization_by_agents"></div>
+                </div>
+                <div class="tab_content" tab_content="cards">
+                    <div class="realization_by_agents_cards_count"></div>
+                </div>
+            </div>
+        </div>
 
         <div class="block">
             <h2>В разрезе номенклатур (литры)</h2>
 
             <div id="realization_by_agents_nomenclature_graph" class="graph"></div>
+<!--            <div class="realization_by_agents_nomenclature"></div>-->
         </div>
-
     </div>
     <div class="col">
         <div class="block">
@@ -51,7 +58,7 @@
         buildRealizationsByAgents();
         buildRealizationByAgentsGraph();
         buildRealizationByAgentsAvgDiscountGraph();
-        //buildRealizationByAgentsCardsCount();
+        buildRealizationByAgentsCardsCount();
 
         AmCharts.addInitHandler( function ( chart ) {
             // set base values
@@ -85,20 +92,9 @@
     }
 
     function buildRealizationsByAgents() {
-        //buildRealizationByAgents();
-        buildRealizationByAgentsFull();
+        buildRealizationByAgents();
         // buildRealizationByAgentsNomenclature();
         buildRealizationByAgentsNomenclatureGraph();
-    }
-
-    function buildRealizationByAgentsFull()
-    {
-        var block = $('.realization_by_agents_full');
-        block.empty().addClass(CLASS_LOADING);
-
-        $.post('/dashboard/get-realization-by-agents-full', {date: getDate()}, function (data) {
-            block.removeClass(CLASS_LOADING).html(data)
-        })
     }
 
     function buildRealizationByAgents()

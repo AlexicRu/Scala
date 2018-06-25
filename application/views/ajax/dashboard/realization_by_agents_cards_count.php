@@ -2,8 +2,8 @@
 <table class="table table_small">
     <tr>
         <th>Дистрибьютор</th>
-        <th>Всего карт</th>
-        <th>Из них активных</th>
+        <th class="right">Всего карт</th>
+        <th class="right">Из них активных</th>
     </tr>
     <?foreach ($data as $row) {?>
         <tr>

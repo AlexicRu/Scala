@@ -23,7 +23,7 @@ class Controller_Dashboard extends Controller_Common {
 
         $date = DateTime::createFromFormat('d.m.Y', $date);
 
-        $data = Dashboard::realizationByAgents($date->format('01.m.Y'));
+        $data = Dashboard::realizationByAgentsFull($date->format('01.m.Y'));
 
         $html = View::factory('ajax/dashboard/realization_by_agents')
             ->bind('data', $data)
@@ -234,24 +234,6 @@ class Controller_Dashboard extends Controller_Common {
         $data = Dashboard::realizationByClientsSummary($date->format('01.m.Y'));
 
         $html = View::factory('ajax/dashboard/realization_by_clients_summary')
-            ->bind('data', $data)
-        ;
-
-        $this->html($html);
-    }
-
-    /**
-     * Реализация по агентам (полные данные)
-     */
-    public function action_getRealizationByAgentsFull()
-    {
-        $date = $this->request->post('date');
-
-        $date = DateTime::createFromFormat('d.m.Y', $date);
-
-        $data = Dashboard::realizationByAgentsFull($date->format('01.m.Y'));
-
-        $html = View::factory('ajax/dashboard/realization_by_agents_full')
             ->bind('data', $data)
         ;
 

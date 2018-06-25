@@ -2,9 +2,9 @@
 <table class="table table_small">
     <tr>
         <th>Наименование</th>
-        <th><nobr>Кол-во, л.</nobr></th>
-        <th>Сумма<br><nobr>на АЗС</nobr></th>
-        <th>Сумма<br>продажи</th>
+        <th class="right"><nobr>Кол-во, л.</nobr></th>
+        <th class="right">Сумма<br><nobr>на АЗС</nobr></th>
+        <th class="right">Сумма<br>продажи</th>
     </tr>
     <?foreach ($data as $row) {?>
         <tr>
