@@ -214,4 +214,22 @@ class Access
         return false;
     }
 
+    /**
+     * получаем список доступных ролей
+     *
+     * @return array
+     */
+    public static function getAvailableRoles()
+    {
+        $roles = self::$roles;
+
+        $user = User::current();
+
+        if ($user['ROLE_ID'] == self::ROLE_ROOT) {
+            $roles[] = [self::ROLE_ADMIN => 'Администратор'];
+            $roles[] = [self::ROLE_ADMIN_READONLY => 'Супервайзер группы агентов'];
+        }
+
+        return $roles;
+    }
 }

@@ -3,7 +3,7 @@
         <td class="gray right" width="170">Роль<sup class="required">*</sup>:</td>
         <td>
             <select name="manager_add_role" class="select_big">
-                <?foreach(Access::$roles as $role => $name){?>
+                <?foreach(Access::getAvailableRoles() as $role => $name){?>
                     <option value="<?=$role?>"><?=$name?></option>
                 <?}?>
             </select>
