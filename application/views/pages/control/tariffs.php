@@ -23,7 +23,7 @@
             <?foreach($tariffs as $tariff){?>
                 <div class="tab_v tab_v_small" tab="<?=$tariff['TARIF_ID']?>" version="<?=$tariff['LAST_VERSION']?>">
                     <div>
-                        <a href="#"><?=$tariff['TARIF_NAME']?></a>
+                        <a href="#">[<?=$tariff['TARIF_ID']?>] <?=$tariff['TARIF_NAME']?></a>
                     </div>
                 </div>
             <?}?>

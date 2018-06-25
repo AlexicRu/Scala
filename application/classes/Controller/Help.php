@@ -369,7 +369,7 @@ class Controller_Help extends Controller_Common
 
         foreach($contractTariffs as $item){
             $return[] = [
-                'name' => $item['TARIF_NAME'],
+                'name' => '['. $item['ID'] .'] ' . $item['TARIF_NAME'],
                 'value' => $item['ID'],
             ];
         }

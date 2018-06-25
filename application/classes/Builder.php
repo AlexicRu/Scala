@@ -192,6 +192,32 @@ class Builder
      * @param $array
      * @return $this
      */
+    public function whereNotIn($param, $array)
+    {
+        if (empty($param) || empty($array)) {
+            return $this;
+        }
+
+        //builder
+        if (is_a($array, 'Builder')) {
+            $string = $array->build();
+        } else {
+            $string = implode(', ', (array)$array);
+        }
+
+        $this->_where[] = [
+            'connector' => 'and',
+            'where'     => $param . ' not in (' . $string . ')',
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param $param
+     * @param $array
+     * @return $this
+     */
     public function whereIn($param, $array)
     {
         if (empty($param) || empty($array)) {

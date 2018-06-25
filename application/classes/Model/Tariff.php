@@ -44,25 +44,34 @@ class Model_Tariff extends Model
             $params['agent_id'] = $user['AGENT_ID'];
         }
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_LIST t where t.tarif_id not in (0,-1)";
+        $sql = (new Builder())->select()
+            ->from('V_WEB_TARIF_LIST t')
+            ->whereNotIn('t.tarif_id', [0, -1])
+            ->orderBy('t.TARIF_NAME')
+        ;
 
         if(!empty($params['agent_id'])){
-            $sql .= " and t.agent_id = ".$params['agent_id'];
-        }
-
-        if(!empty($params['tariff_id'])){
-            $sql .= " and t.tarif_id = ".$params['tariff_id'];
+            $sql->where("t.agent_id = ".$params['agent_id']);
         }
 
         if(!empty($params['search'])){
-            $sql .= " and upper(t.TARIF_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
+            if (is_numeric($params['search'])) {
+                $sql
+                    ->whereStart()
+                    ->where('t.tarif_id = ' . (int)$params['search'])
+                    ->whereOr("upper(t.TARIF_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['search'].'%')))
+                    ->whereEnd()
+                ;
+            } else {
+                $sql->where("upper(t.TARIF_NAME) like " . mb_strtoupper(Oracle::quote('%' . $params['search'] . '%')));
+            }
         }
 
-        $sql .= ' order by t.TARIF_NAME asc';
+        if(!empty($params['tariff_id'])){
+            $sql->where('t.tarif_id = ' . (int)$params['tariff_id']);
+        }
 
-        $tariffs = $db->query($sql);
-
-        return $tariffs;
+        return $db->query($sql);
     }
 
     /**
