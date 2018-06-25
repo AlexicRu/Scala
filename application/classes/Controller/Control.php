@@ -27,8 +27,6 @@ class Controller_Control extends Controller_Common {
 
         $params = [
             'agent_id'      => $user['AGENT_ID'],
-            'not_admin'     => true,
-            'roles_exclude' => Access::ROLE_ADMIN_READONLY
         ];
 
         $params = array_merge($params, $filter);
@@ -345,7 +343,7 @@ class Controller_Control extends Controller_Common {
         $this->scripts[] = Common::getAssetsLink() . 'js/control/tariffs.js';
         $this->scripts[] = '/assets/plugins/jquery.mask.js';
 
-        $filter = $this->request->query('filter') ?: ['only_managers' => 1];
+        $filter = $this->request->query('filter');
 
         $tariffs = Model_Tariff::getAvailableTariffs($filter);
 
