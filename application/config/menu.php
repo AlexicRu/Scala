@@ -4,6 +4,7 @@ return array(
     'dashboard'         => ['title' => 'Dashboard', 'icon' => 'icon-calendar', 'children' => [
         'index'         => 'Клиенты',
         'agent'         => 'Дистрибьюторы',
+        'info'          => 'Инфо-портал',
     ]],
     'clients'           => ['title' => 'Фирмы', 'icon' => 'icon-clients'],
     'suppliers'         => ['title' => 'Поставщики', 'icon' => 'icon-drop'],

@@ -123,6 +123,21 @@ abstract class Controller_Common extends Controller_Template {
         exit;
     }
 
+    public function showFile($file)
+    {
+        $path = $_SERVER['DOCUMENT_ROOT'];
+        $directory = DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
+
+        if (!file_exists($path . $directory . $file)) {
+            throw new HTTP_Exception_404();
+        }
+
+        header("X-Accel-Redirect: " . $directory . $file);
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . basename($file));
+        die;
+    }
+
     /**
      * show xml
      * @param $xml

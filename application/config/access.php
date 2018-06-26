@@ -190,6 +190,9 @@ return [
         'system_full' => [
             Access::ROLE_ROOT,
         ],
+        'system_shell' => [
+            Access::ROLE_ROOT,
+        ],
         'dashboard_agent' => [
             Access::ROLE_ADMIN_READONLY
         ],

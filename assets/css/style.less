@@ -1288,3 +1288,38 @@ div.jGrowl div.jGrowl-notification {
 .date_error{
   display: inline-block; line-height: 14px;
 }
+.info{
+  &__list{
+    margin: 0 -30px;
+  }
+  &__item{
+    padding: 20px 30px; border-bottom: 1px solid #e4e4e5; display: flex; align-items: center; justify-content: space-between;
+    &-name{
+      padding: 0 25px;
+    }
+    &-btn{
+      opacity: 0;
+      .transition();
+    }
+    &:hover{
+      .info__item-btn{
+        opacity: 1;
+      }
+    }
+    >div{
+      display: flex; align-items: center;
+    }
+  }
+  &__icon{
+    display: inline-block; background: transparent no-repeat center; background-size: contain; width: 23px; height: 30px;
+    &-ppt{
+      background-image: url(../img/icon_ppt.png);
+    }
+    &-pdf{
+      background-image: url(../img/icon_pdf.png);
+    }
+    &-doc{
+      background-image: url(../img/icon_doc.png);
+    }
+  }
+}

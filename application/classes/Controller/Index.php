@@ -146,21 +146,14 @@ class Controller_Index extends Controller_Common {
     {
         $file = $this->request->param('file');
 
-        if (!Access::file($file)) {
-            throw new HTTP_Exception_403();
+        //у инфопортала не проверяем доступы
+        if (strpos($file, '/info') !== 0){
+            if (!Access::file($file)) {
+                throw new HTTP_Exception_403();
+            }
         }
 
-        $path = $_SERVER['DOCUMENT_ROOT'];
-        $directory = DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
-
-        if (!file_exists($path . $directory . $file)) {
-            throw new HTTP_Exception_404();
-        }
-
-        header("X-Accel-Redirect: " . $directory . $file);
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename=' . basename($file));
-        die;
+        $this->showFile($file);
     }
 
     /**
