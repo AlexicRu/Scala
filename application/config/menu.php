@@ -4,7 +4,10 @@ return array(
     'dashboard'         => ['title' => 'Dashboard', 'icon' => 'icon-calendar', 'children' => [
         'index'         => 'Клиенты',
         'agent'         => 'Дистрибьюторы',
-        'info'          => 'Инфо-портал',
+    ]],
+    'info'              => ['title' => 'Инфо-портал', 'icon' => 'icon-news', 'children' => [
+        'index'         => 'Инфо-портал',
+        'brandbook'     => 'Брендбук',
     ]],
     'clients'           => ['title' => 'Фирмы', 'icon' => 'icon-clients'],
     'suppliers'         => ['title' => 'Поставщики', 'icon' => 'icon-drop'],

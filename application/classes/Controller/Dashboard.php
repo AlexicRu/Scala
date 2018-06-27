@@ -239,10 +239,4 @@ class Controller_Dashboard extends Controller_Common {
 
         $this->html($html);
     }
-
-    /**
-     * инфо-портал
-     */
-    public function action_info()
-    {}
 }
