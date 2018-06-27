@@ -888,7 +888,7 @@ class Model_Card extends Model
     public static function editCardsGroup($params, $action = self::CARDS_GROUP_ACTION_EDIT)
     {
         if(empty($params['group_id'])){
-            return Oracle::CODE_ERROR;
+            return false;
         }
 
         $db = Oracle::init();
@@ -904,7 +904,12 @@ class Model_Card extends Model
             'p_error_code' 		  => 'out',
         ];
 
-        return $db->procedure('ctrl_card_group_edit', $data);
+        $res = $db->procedure('ctrl_card_group_edit', $data);
+
+        if ($res == Oracle::CODE_SUCCESS) {
+            return true;
+        }
+        return false;
     }
 
     /**

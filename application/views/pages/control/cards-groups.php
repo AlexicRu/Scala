@@ -132,11 +132,13 @@
                     if (data.data[i].deleted) {
                         group.remove();
                     } else {
-                        message(0, 'Ошибка удаления. Группа <b>'+ group.find('.group_name').text() +'</b> содержит карты');
+                        message(0, 'Группа <b>'+ group.find('.group_name').text() +'</b> содержит карты');
                     }
                 }
 
-                $('.tabs_cards_groups .tabs_v .scroll > [tab]:first').click();
+                if ($('.tabs_cards_groups .tabs_v .scroll > [tab].active').length == 0) {
+                    $('.tabs_cards_groups .tabs_v .scroll > [tab]:first').click();
+                }
 
             });
         });

@@ -662,11 +662,7 @@ class Controller_Control extends Controller_Common {
 
         $result = Model_Card::editCardsGroup($params);
 
-        if(!empty($result)){
-            $this->jsonResult(false);
-        }
-
-        $this->jsonResult(true);
+        $this->jsonResult($result);
     }
 
     /**
@@ -743,7 +739,7 @@ class Controller_Control extends Controller_Common {
             ];
         }
 
-        $this->jsonResult($result);
+        $this->jsonResult(true, $result);
     }
 
     /**
