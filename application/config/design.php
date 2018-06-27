@@ -88,5 +88,25 @@ return array(
             'class' => 'pochta',
             'url'   => 'demolkgloproru'
         ],
+        'u_2133' => [
+            'title' => 'GloPro',
+            'class' => 'ctpz',
+            'url'   => 'demolkgloproru'
+        ],
+        'u_2134' => [
+            'title' => 'GloPro',
+            'class' => 'ctpz',
+            'url'   => 'demolkgloproru'
+        ],
+        'u_2135' => [
+            'title' => 'GloPro',
+            'class' => 'ctpz',
+            'url'   => 'demolkgloproru'
+        ],
+        'u_2136' => [
+            'title' => 'GloPro',
+            'class' => 'ctpz',
+            'url'   => 'demolkgloproru'
+        ],
     ]
 );
