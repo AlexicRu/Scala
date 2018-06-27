@@ -1,9 +1,9 @@
-<h1>Брендбук</h1>
+<h1>Рекламно-информационные материалы</h1>
 
 <div class="as_table as_table__dashboard">
     <div class="col" style="width: 33%">
         <div class="block">
-            <h2>Список</h2>
+            <h2>Бренд-бук</h2>
 
             <div class="info__list">
                 <a href="/file/info/Бренд-бук_ОПТИ24_06.12.17.pdf" class="info__item" target="_blank">

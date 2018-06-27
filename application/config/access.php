@@ -201,6 +201,15 @@ return [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,
         ],
+        'info_index' => [
+            'g_1'
+        ],
+        'info_marketing' => [
+            'g_1'
+        ],
+        'info_passports' => [
+            'g_1'
+        ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,

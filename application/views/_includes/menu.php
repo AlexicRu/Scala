@@ -24,7 +24,7 @@
                 $menuItem .= '<div class="sub_menu_items" '.($isActiveController ? 'style="display:block"' : '').'>';
 
                 foreach($item['children'] as $child => $name){
-                    $isActiveAction = Text::camelCaseToDashed(Request::current()->action()) == $child ;
+                    $isActiveAction = Text::camelCaseToDashed(Request::current()->action()) == $child  && $isActiveController;
 
                     if(Access::allow($link.'_'.$child, true)) {
                         $menuItem .= '<div><a href="/'.$link.($child == 'index' ? '' : '/'.$child).'" class="'.($isActiveAction ? 'act' : '').'">'.$name.'</a></div>';

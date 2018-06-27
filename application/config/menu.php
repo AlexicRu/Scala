@@ -7,7 +7,8 @@ return array(
     ]],
     'info'              => ['title' => 'Инфо-портал', 'icon' => 'icon-news', 'children' => [
         'index'         => 'Инфо-портал',
-        'brandbook'     => 'Брендбук',
+        'marketing'     => 'РИМ',
+        'passports'     => 'Паспорта качества',
     ]],
     'clients'           => ['title' => 'Фирмы', 'icon' => 'icon-clients'],
     'suppliers'         => ['title' => 'Поставщики', 'icon' => 'icon-drop'],

@@ -10,9 +10,16 @@ class Controller_Info extends Controller_Common
 	}
 
     /**
-     * бренд-буки
+     * рекламно-информационные материалы
      */
-    public function action_brandbook()
+    public function action_marketing()
+    {
+    }
+
+    /**
+     * паспорта качества
+     */
+    public function action_passports()
     {
     }
 }

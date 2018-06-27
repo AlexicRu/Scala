@@ -3,7 +3,7 @@
 <div class="as_table as_table__dashboard">
     <div class="col" style="width: 33%">
         <div class="block">
-            <h2>Материалы АиК</h2>
+            <h2>Материалы для работы через аукционы и конкурсы</h2>
 
             <div class="info__list">
                 <a href="/file/info/Материалы_АиК/Алгоритм_действий_заказчика_при_принятии_решения_об_одностороннем_отказе.pptx" class="info__item" target="_blank">

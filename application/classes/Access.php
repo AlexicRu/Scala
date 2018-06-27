@@ -80,12 +80,14 @@ class Access
             (isset($allow[$action]) && (
                 !in_array($user['ROLE_ID'], $allow[$action]) &&
                 !in_array('u_'.$user['MANAGER_ID'], $allow[$action]) &&
+                !in_array('g_'.$user['AGENT_GROUP_ID'], $allow[$action]) &&
                 !in_array('a_'.$user['AGENT_ID'], $allow[$action])
             )) ||
             // если задан запрет на действие и хоть где-то роль/агент/юзер, то нельзя
             (isset($deny[$action]) && (
                 in_array($user['ROLE_ID'], $deny[$action]) ||
                 in_array('u_'.$user['MANAGER_ID'], $deny[$action]) ||
+                in_array('g_'.$user['AGENT_GROUP_ID'], $deny[$action]) ||
                 in_array('a_'.$user['AGENT_ID'], $deny[$action])
             ))
         ){
@@ -124,6 +126,7 @@ class Access
             isset($access[$file]) && (
                     in_array($user['ROLE_ID'], $access[$file]) ||
                     in_array('u_'.$user['MANAGER_ID'], $access[$file]) ||
+                    in_array('g_'.$user['AGENT_GROUP_ID'], $access[$file]) ||
                     in_array('a_'.$user['AGENT_ID'], $access[$file])
                 )
         ){
