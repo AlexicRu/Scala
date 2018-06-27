@@ -157,6 +157,7 @@ return [
             'a_14',
             'a_16',
             'a_18',
+            'a_19',
             'a_24',
         ],
         'managers_load-reports' => [
