@@ -229,8 +229,8 @@ class Access
         $user = User::current();
 
         if ($user['ROLE_ID'] == self::ROLE_ROOT) {
-            $roles[] = [self::ROLE_ADMIN => 'Администратор'];
-            $roles[] = [self::ROLE_ADMIN_READONLY => 'Супервайзер группы агентов'];
+            $roles[self::ROLE_ADMIN] = 'Администратор';
+            $roles[self::ROLE_ADMIN_READONLY] = 'Супервайзер группы агентов';
         }
 
         return $roles;
