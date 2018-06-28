@@ -147,7 +147,7 @@ class Controller_Index extends Controller_Common {
         $file = $this->request->param('file');
 
         //у инфопортала не проверяем доступы
-        if (strpos($file, '/info') !== 0){
+        if (strpos($file, 'info') !== 0){
             if (!Access::file($file)) {
                 throw new HTTP_Exception_403();
             }

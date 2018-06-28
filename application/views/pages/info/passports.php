@@ -8,7 +8,7 @@
             <div class="info__list">
                 <a href="/file/info/Паспорта_качества/92.pdf" class="info__item" target="_blank">
                     <div>
-                        <div><span class="info__icon info__icon-file"></span></div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
                         <div class="info__item-name">92</div>
                     </div>
                     <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
@@ -36,7 +36,7 @@
                 </a>
                 <a href="/file/info/Паспорта_качества/ДТФ.pdf" class="info__item" target="_blank">
                     <div>
-                        <div><span class="info__icon info__icon-file"></span></div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
                         <div class="info__item-name">ДТФ</div>
                     </div>
                     <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
