@@ -202,13 +202,13 @@ return [
             Access::ROLE_SUPERVISOR,
         ],
         'info_index' => [
-            'g_1'
+            'g_1',
         ],
         'info_marketing' => [
-            'g_1'
+            'g_1',
         ],
         'info_passports' => [
-            'g_1'
+            'g_1',
         ],
         // custom
         'view_contract_balances' => [
@@ -329,6 +329,33 @@ return [
             Access::ROLE_USER,
             Access::ROLE_USER_SECOND,
             Access::ROLE_CLIENT
+        ],
+        'info_index' => [
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_MANAGER,
+            Access::ROLE_MANAGER_SALE,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
+            Access::ROLE_CLIENT,
+            Access::ROLE_USER_SECOND,
+            Access::ROLE_USER,
+        ],
+        'info_marketing' => [
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_MANAGER,
+            Access::ROLE_MANAGER_SALE,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
+            Access::ROLE_CLIENT,
+            Access::ROLE_USER_SECOND,
+            Access::ROLE_USER,
+        ],
+        'info_passports' => [
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_MANAGER,
+            Access::ROLE_MANAGER_SALE,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
+            Access::ROLE_CLIENT,
+            Access::ROLE_USER_SECOND,
+            Access::ROLE_USER,
         ],
         // custom
         'clients_card_toggle_full' => [
