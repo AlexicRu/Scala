@@ -9,10 +9,10 @@
     </tr>
     <tr>
         <td class="gray right">Объем выборки за период:</td>
-        <td><?=number_format($data['SERVICE_AMOUNT'], 2, '.', '&nbsp;')?></td>
+        <td><?=number_format($data['SERVICE_AMOUNT'], 2, '.', '&nbsp;')?> л.</td>
     </tr>
     <tr>
         <td class="gray right">Продажа за период:</td>
-        <td><?=number_format($data['SUMPRICE_DISCOUNT'], 2, '.', '&nbsp;')?></td>
+        <td><?=number_format($data['SUMPRICE_DISCOUNT'], 2, '.', '&nbsp;')?> <?=Text::RUR?></td>
     </tr>
 </table>
