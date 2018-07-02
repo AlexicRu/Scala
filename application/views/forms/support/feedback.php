@@ -29,7 +29,7 @@
             <tr>
                 <td></td>
                 <td>
-                    <button class="btn btn_green btn_reverse btn_feedback" onclick="preFeedback($(this))"><i class="icon-ok"></i> Сохранить</button>
+                    <button class="btn btn_green btn_reverse btn_feedback" onclick="preFeedback($(this))"><i class="icon-ok"></i> Отправить</button>
                 </td>
             </tr>
         </table>
