@@ -37,6 +37,7 @@ class Model_Card extends Model
     const CARD_ICON_GPC         = 'GPC PPR';
 
     const CARD_SYSTEM_GPN = 5;
+    const CARD_SYSTEM_NINE = 9;
 
     public static $cardIcons = [
         self::CARD_ICON_WAY4_LUKOIL => 'card_lukoil.png',
@@ -689,7 +690,7 @@ class Model_Card extends Model
 
             foreach($limits as $limit){
 
-                if (empty($limit['duration_type']) || empty($limit['unit_type']) || (empty($limit['value']) && $card['SYSTEM_ID'] == self::CARD_SYSTEM_GPN)) {
+                if (empty($limit['duration_type']) || empty($limit['unit_type']) || (empty($limit['value']) && in_array($card['SYSTEM_ID'], [self::CARD_SYSTEM_GPN, self::CARD_SYSTEM_NINE]))) {
                     throw new Exception('Недостаточно данных по лимиту');
                 }
 
@@ -1231,9 +1232,9 @@ class Model_Card extends Model
                 $settings['canAddLimit']    = false;
                 $settings['canSave']        = false;
                 break;
-            case 9:
+            case self::CARD_SYSTEM_NINE:
                 $settings['cntServiceForFirstLimit'] = 999;
-                $settings['limitTypes']         = Model_Card::$cardLimitsTypesFull;
+                $settings['limitTypes']         = Model_Card::$cardLimitsTypes;
                 $settings['editSelect']         = false;
                 $settings['canUseFloat']        = false;
                 $settings['minValue']           = 1;

@@ -64,7 +64,7 @@ $user = Auth::instance()->get_user();
     $systemId = $card['SYSTEM_ID'];
 
     switch ($systemId){
-        case 5:
+        case Model_Card::CARD_SYSTEM_GPN:
             $limitTypes = Model_Card::$cardLimitsTypesFull;
             break;
         default:
