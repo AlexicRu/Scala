@@ -104,10 +104,10 @@
             <h2>API</h2>
 
             <div class="info__list">
-                <a href="/file/info/API/Specification_VIP_API_v.1.1.5.docx" class="info__item" target="_blank">
+                <a href="/file/info/API/Specification_VIP_API_v.1.1.7.docx" class="info__item" target="_blank">
                     <div>
                         <div><span class="info__icon info__icon-doc"></span></div>
-                        <div class="info__item-name">Specification_VIP_API_v.1.1.5</div>
+                        <div class="info__item-name">Specification_VIP_API_v.1.1.7</div>
                     </div>
                     <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
                 </a>
