@@ -98,6 +98,13 @@
                     </div>
                     <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
                 </a>
+                <a href="/file/info/Мониторинг_цен/Price_Monitoring_05_07.pdf" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
+                        <div class="info__item-name">Price Monitoring 05.07</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
             </div>
         </div>
         <div class="block">
