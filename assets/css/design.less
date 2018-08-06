@@ -286,12 +286,14 @@
 @colorGreen: #4fd166;
 @colorRed: #f13930;
 
-@import url('https://fonts.googleapis.com/css?family=Roboto&subset=cyrillic');
-@Roboto: 'Roboto', sans-serif;
+@import url(../fonts/DINPro/fonts.css);
+@import url(../fonts/DINPro-Cond/fonts.css);
+@DINPro: 'Conv_DINPro', sans-serif;
+@DINProCond: 'Conv_DINPro-Cond', sans-serif;
 
 .custom_view_gpn{
   background: @colorWhiteDark url(../img/gpn/isometric.png);
-  font-family: @Roboto;
+  font-family: @DINPro;
   color:@colorBlack1;
 
   a{
@@ -340,13 +342,13 @@
 
   .logo{
     a{
-      background-image: url(../img/gpn/gpn-logo.png); width: 140px; height: 50px;
+      background-image: url(../img/projects/gpn.png); width: 170px; height: 50px;
     }
   }
   aside{
     background: @colorBlack1;
     >a, .sub_menu_title{
-      color: white; font-family: @Roboto; font-weight: bold; padding-top: 12px;
+      color: white; font-family: @DINPro; font-weight: bold; padding-top: 12px;
       &:hover, &.act{
         background: @colorBlue; color: white;
         span{
@@ -395,7 +397,7 @@
 
 
   .btn{
-    color: @colorWhite; border-color:@colorBlueDark; background: @colorBlueDark; font-family: @Roboto; box-shadow: 0 3px 10px rgba(0,0,0,0.2); padding-top: 11px; padding-bottom: 12px; font-weight: normal;
+    color: @colorWhite; border-color:@colorBlueDark; background: @colorBlueDark; font-family: @DINProCond; box-shadow: 0 3px 10px rgba(0,0,0,0.2); padding-top: 11px; padding-bottom: 12px; font-weight: normal; text-transform: uppercase;
 
     &:hover, &.btn_reverse, &.active{
       background: @colorBlue; border-color:@colorBlue; color:@colorWhite; 
@@ -407,9 +409,11 @@
       }
     }
     &.btn_gray{
-      color:@colorWhite; border-color:@colorGray; background: @colorGray;
+      //color:@colorWhite; border-color:@colorGray; background: @colorGray;
+      color:@colorBlack; border-color:@colorWhite; background: @colorWhite;
       &:hover, &.btn_reverse, &.active{
-        background: @colorGray; border-color:@colorGray;
+        //background: @colorGray; border-color:@colorGray;
+        background: @colorWhite; border-color:@colorWhite;
       }
     }
 
@@ -420,15 +424,19 @@
       }
     }
     &.btn_green{
-      color: @colorWhite; border-color: @colorGreen; background: @colorGreen;
+      //color: @colorWhite; border-color: @colorGreen; background: @colorGreen;
+      color: @colorWhite; border-color: @colorBlueDark; background: @colorBlueDark;
       &:hover, &.btn_reverse, &.active{
-        background: @colorGreen; border-color:@colorGreen;
+        //background: @colorGreen; border-color:@colorGreen;
+        background: @colorBlueDark; border-color:@colorBlueDark;
       }
     }
     &.btn_orange{
-      color: @colorWhite; border-color: @colorOrange; background: @colorOrange;
+      //color: @colorWhite; border-color: @colorOrange; background: @colorOrange;
+      color: @colorWhite; border-color: @colorBlueDark; background: @colorBlueDark;
       &:hover, &.btn_reverse, &.active{
-        background:@colorOrange; border-color:@colorOrange;
+        //background:@colorOrange; border-color:@colorOrange;
+        background:@colorBlueDark; border-color:@colorBlueDark;
       }
     }
     &.btn_small{
