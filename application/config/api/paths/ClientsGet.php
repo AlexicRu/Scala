@@ -6,13 +6,15 @@ return [
     'method' => 'get',
     'tags' => ['clients'],
     'summary' => 'Получение списка клиентов',
+	'description' => 'Данный метод позволяет получить полный список клиентов, закрепленных за данной учетной записью',
     'operationId' => 'clients',
     'parameters' => [
         [
             'name' => 'token',
             'in' => 'header',
             'type' => 'string',
-            'required' => true
+            'required' => true,
+			'description' => 'Полученный при авторизации token',
         ]
     ],
     'responses' => [

@@ -6,19 +6,22 @@ return [
     'method' => 'get',
     'tags' => ['cards'],
     'summary' => 'Получение списка сервисов по карте',
+	'description' => 'Данный метод позволяет получить список сервисов, разрешенных по карте',
     'operationId' => 'transactions',
     'parameters' => [
         [
             'name' => 'token',
             'in' => 'header',
             'type' => 'string',
-            'required' => true
+            'required' => true,
+			'description' => 'Полученный при авторизации token',
         ],
         [
             'name' => 'card_id',
             'in' => 'query',
             'type' => 'integer',
-            'required' => true
+            'required' => true,
+			'description' => 'Номер карты',
         ]
     ],
     'responses' => [

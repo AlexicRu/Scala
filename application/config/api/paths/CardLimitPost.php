@@ -6,6 +6,7 @@ return [
     'method' => 'post',
     'tags' => ['cards'],
     'summary' => 'Добавление лимита карты',
+	'description' => 'Данный метод позволяет добавить на карту требуемый лимит',
     'operationId' => 'card_limit_post',
     'parameters' => [
         [

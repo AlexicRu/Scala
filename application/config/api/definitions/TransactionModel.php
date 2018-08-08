@@ -4,56 +4,73 @@ return [
     'type' => 'object',
     'properties' => [
         'datetime_trn' => [
-            'type' => 'string'
+            'type' => 'string',
+			'description' => 'Дата и время транзакции в формате DD.MM.YYYY HH24:MI:SS'
         ],
         'card_id' => [
-            'type' => 'string'
+            'type' => 'string',
+			'description' => 'Номер карты',
         ],
         'client_id' => [
-            'type' => 'integer'
+            'type' => 'integer',
+			'description' => 'Идентификатор клиента',
         ],
         'contract_id' => [
-            'type' => 'integer'
+            'type' => 'integer',
+			'description' => 'Идентификатор договора',
         ],
         'operation_id' => [
-            'type' => 'integer'
+            'type' => 'integer',
+			'description' => 'Идентификатор операции',
         ],
         'supplier_terminal' => [
-            'type' => 'integer'
+            'type' => 'integer',
+			'description' => 'Идентификатор номера терминала поставщика',
         ],
         'service_id' => [
-            'type' => 'integer'
+            'type' => 'integer',
+			'description' => 'Идентификатор услуги',
         ],
         'description' => [
-            'type' => 'string'
+            'type' => 'string',
+			'description' => 'Наименование услуги',
         ],
         'service_amount' => [
-            'type' => 'number'
+            'type' => 'number',
+			'description' => 'Количество услуги',
         ],
         'service_price' => [
-            'type' => 'number'
+            'type' => 'number',
+			'description' => 'Цена услуги на АЗС без учета скидки',
         ],
         'service_sumprice' => [
-            'type' => 'number'
+            'type' => 'number',
+			'description' => 'Стоимость услуги на АЗС без учета скидки',
         ],
         'trn_currency' => [
             'type' => 'integer',
-            'default' => Common::CURRENCY_RUR
+            'default' => Common::CURRENCY_RUR,
+			'description' => 'Код палюты транзакции ISO 4217',
         ],
         'price_discount' => [
-            'type' => 'number'
+            'type' => 'number',
+			'description' => 'Цена услуги на АЗС с учетом скидки',
         ],
         'sumprice_discount' => [
-            'type' => 'number'
+            'type' => 'number',
+			'description' => 'Стоимость услуги на АЗС с учетом скидки',
         ],
         'pos_address' => [
-            'type' => 'string'
+            'type' => 'string',
+			'description' => 'Адрес АЗС',
         ],
         'trn_key' => [
-            'type' => 'string'
+            'type' => 'string',
+			'description' => 'Уникальный идентификатор транзакции',
         ],
         'trn_comment' => [
-            'type' => 'string'
+            'type' => 'string',
+			'description' => 'Комментарии к транзакции',
         ]
     ]
 ];

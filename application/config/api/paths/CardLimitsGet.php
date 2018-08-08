@@ -7,6 +7,7 @@ return  [
     'tags' => [
         'cards'
     ],
+	'description' => 'Данный метод позволяет получить список лимитов, установленных на карте',
     'summary' => 'Получение лимитов карты',
     'operationId' => 'card_limits',
     'parameters' => [
@@ -14,19 +15,22 @@ return  [
             'name' => 'token',
             'in' => 'header',
             'type' => 'string',
-            'required' => true
+            'required' => true,
+			'description' => 'Полученный при авторизации token',
         ],
         [
             'name' => 'card_id',
             'in' => 'query',
             'type' => 'string',
-            'required' => true
+            'required' => true,
+			'description' => 'Номер карты',
         ],
         [
             'name' => 'contract_id',
             'in' => 'query',
             'type' => 'integer',
-            'required' => true
+            'required' => true,
+			'description' => 'Идентификатор договора'
         ]
     ],
     'responses' => [

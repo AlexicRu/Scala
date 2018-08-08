@@ -5,20 +5,23 @@ return [
     'url'   => '/contracts',
     'method' => 'get',
     'tags' => ['contracts'],
-    'summary' => 'Получение списка контрактов',
+    'summary' => 'Получение списка контрактов клиента',
+	'description' => 'Данный метод позволяет получить полный список контрактов, закрепленных за клиентом',
     'operationId' => 'contracts',
     'parameters' => [
         [
             'name' => 'token',
             'in' => 'header',
             'type' => 'string',
-            'required' => true
+            'required' => true,
+			'description' => 'Полученный при авторизации token',
         ],
         [
             'name' => 'client_id',
             'in' => 'query',
             'type' => 'integer',
-            'required' => true
+            'required' => true,
+			'description' => 'Идентификатор клиента, для которого необходимо получить список контрактов',
         ]
     ],
     'responses' => [

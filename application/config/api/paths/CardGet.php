@@ -8,25 +8,29 @@ return [
         'cards'
     ],
     'summary' => 'Получение карты',
+	'description' => 'Данный метод позволяет получить данные конкретной карты, закрепленной за договором клиента',
     'operationId' => 'card',
     'parameters' => [
         [
             'name' => 'token',
             'in' => 'header',
             'type' => 'string',
-            'required' => true
+            'required' => true,
+			'description' => 'Полученный при авторизации token',
         ],
         [
             'name' => 'card_id',
             'in' => 'path',
             'type' => 'string',
-            'required' => true
+            'required' => true,
+			'description' => 'Номер карты',
         ],
         [
             'name' => 'contract_id',
             'in' => 'query',
             'type' => 'integer',
-            'required' => true
+            'required' => true,
+			'description' => 'Идентификатор договора',
         ]
     ],
     'responses' => [

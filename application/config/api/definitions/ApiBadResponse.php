@@ -15,7 +15,7 @@ return [
             'type' => 'array',
             'items' => [
                 'type' => 'string',
-                'description' => 'errors'
+                'description' => 'Текстовое описание ошибки'
             ]
         ]
     ]

@@ -7,18 +7,21 @@ return [
     'tags' => ['cards'],
     'summary' => 'Получение списка карт',
     'operationId' => 'cards',
+	'description' => 'Данный метод позволяет получить список карт, закрепленных за договором клиента',
     'parameters' => [
         [
             'name' => 'token',
             'in' => 'header',
             'type' => 'string',
-            'required' => true
+            'required' => true,
+			'description' => 'Полученный при авторизации token',
         ],
         [
             'name' => 'contract_id',
             'in' => 'query',
             'type' => 'integer',
-            'required' => true
+            'required' => true,
+			'description' => 'Идентификатор договора',
         ]
     ],
     'responses' => [

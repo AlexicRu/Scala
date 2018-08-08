@@ -6,6 +6,7 @@ return [
     'method' => 'delete',
     'tags' => ['cards'],
     'summary' => 'Удаление лимита карты',
+	'description' => 'Данный метод позволяет удалить на карте предустановленный лимит',
     'operationId' => 'card_limit_delete',
     'consumes' => [
         'application/x-www-form-urlencoded'
@@ -15,13 +16,15 @@ return [
             'name' => 'token',
             'in' => 'header',
             'type' => 'string',
-            'required' => true
+            'required' => true,
+			'description' => 'Полученный при авторизации token',
         ],
         [
             'name' => 'limit_id',
             'in' => 'path',
             'type' => 'integer',
-            'required' => true
+            'required' => true,
+			'description' => 'Идентификатор предустановленного лимита',
         ],
     ],
     'responses' => [

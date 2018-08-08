@@ -6,19 +6,22 @@ return [
     'method' => 'put',
     'tags' => ['cards'],
     'summary' => 'Изменение лимита карты',
+	'description' => 'Данный метод позволяет изменить на карте ранее предустановленный лимит',
     'operationId' => 'card_limit_put',
     'parameters' => [
         [
             'name' => 'token',
             'in' => 'header',
             'type' => 'string',
-            'required' => true
+            'required' => true,
+			'description' => 'Полученный при авторизации token',
         ],
         [
             'name' => 'limit_id',
             'in' => 'path',
             'type' => 'integer',
-            'required' => true
+            'required' => true,
+			'description' => 'Идентификатор предустановленного лимита',
         ],
         [
             'name' => 'body',
