@@ -5,7 +5,7 @@ return [
     'properties' => [
         'datetime_trn' => [
             'type' => 'string',
-			'description' => 'Дата и время транзакции в формате DD.MM.YYYY HH24:MI:SS'
+			'description' => 'Дата и время транзакции в формате d.m.Y H:i:s'
         ],
         'card_id' => [
             'type' => 'string',
