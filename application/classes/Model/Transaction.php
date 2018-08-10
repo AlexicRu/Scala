@@ -127,20 +127,30 @@ class Model_Transaction extends Model
     /**
      * получение списка транзакций
      *
-     * @param $contractId
      * @param array $select
      * @return array|bool
      */
-    public static function getTransactions($contractId, $params = [], $select = [])
+    public static function getTransactionsForApi($params = [], $select = [])
     {
-        if (empty($contractId)) {
+        if (empty($params)) {
             return false;
         }
 
         $sql = (new Builder())->select()
             ->from('V_API_TRANSACTION')
-            ->where('contract_id = ' . (int)$contractId)
         ;
+
+        if (!empty($params['client_id'])) {
+            $sql->where('client_id = ' . (int)$params['client_id']);
+        }
+
+        if (!empty($params['card_id'])) {
+            $sql->where('card_id = ' . (int)$params['card_id']);
+        }
+
+        if (!empty($params['contract_id'])) {
+            $sql->where('contract_id = ' . (int)$params['contract_id']);
+        }
 
         if (!empty($params['date_from'])) {
             $sql->where('DATE_TRN >= '. Oracle::toDateOracle($params['date_from'], 'd.m.Y'));

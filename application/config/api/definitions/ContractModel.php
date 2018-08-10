@@ -27,6 +27,30 @@ return [
         'contract_status' => [
             'type' => 'integer',
 			'description' => 'Идентификатор статуса договора договора'
-        ]
+        ],
+        'balance' => [
+            'type' => 'object',
+            'description' => 'Баланс по договору',
+            'properties' => [
+                'balance' => [
+                    'type' => 'integer',
+                ],
+                'month_realiz' => [
+                    'type' => 'integer',
+                ],
+                'month_realiz_cur' => [
+                    'type' => 'integer',
+                ],
+                'last_month_realiz' => [
+                    'type' => 'integer',
+                ],
+                'last_month_realiz_cur' => [
+                    'type' => 'integer',
+                ],
+                'date_last_change' => [
+                    'type' => 'string',
+                ],
+            ]
+        ],
     ]
 ];

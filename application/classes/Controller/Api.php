@@ -156,23 +156,46 @@ class Controller_Api extends Controller_Template
      */
     public function action_transactions()
     {
+        $clientId = $this->request->query('client_id');
         $contractId = $this->request->query('contract_id');
+        $cardId = $this->request->query('card_id');
         $dateFrom = $this->request->query('date_from') ?: date('01.m.Y');
         $dateTo = $this->request->query('date_to') ?: date('d.m.Y');
 
-        if (empty($contractId)) {
+        if (empty($contractId) && empty($clientId)) {
             $this->jsonResult(false, 'Not enough data');
         }
 
-        try {
-            Access::check('contract', $contractId);
-        } catch (HTTP_Exception_404 $e) {
-            $this->jsonResult(false, 'No access to contract');
+        if (!empty($clientId)) {
+            try {
+                Access::check('client', $clientId);
+            } catch (HTTP_Exception_404 $e) {
+                $this->jsonResult(false, 'No access to client');
+            }
         }
 
-        $transactions = Model_Transaction::getTransactions($contractId, [
-            'date_from' => $dateFrom,
-            'date_to'   => $dateTo,
+        if (!empty($cardId)) {
+            try {
+                Access::check('card', $cardId, $contractId);
+            } catch (HTTP_Exception_404 $e) {
+                $this->jsonResult(false, 'No access to card');
+            }
+        } else {
+            if (!empty($contractId)) {
+                try {
+                    Access::check('contract', $contractId);
+                } catch (HTTP_Exception_404 $e) {
+                    $this->jsonResult(false, 'No access to contract');
+                }
+            }
+        }
+
+        $transactions = Model_Transaction::getTransactionsForApi([
+            'contract_id'   => $contractId,
+            'client_id'     => $clientId,
+            'card_id'       => $cardId,
+            'date_from'     => $dateFrom,
+            'date_to'       => $dateTo,
         ], [
             "DATETIME_TRN",
             "CARD_ID",

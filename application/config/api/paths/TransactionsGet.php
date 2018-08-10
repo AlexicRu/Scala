@@ -1,10 +1,10 @@
 <?php defined('SYSPATH') or die('No direct script access');
 
 return [
-    'sort'  => 400,
+    'sort'  => 900,
     'url'   => '/transactions',
     'method' => 'get',
-    'tags' => ['contracts'],
+    'tags' => ['transactions'],
     'summary' => 'Получение списка транзакций',
 	'description' => 'Данный метод позволяет получить список транзакций по договору за определенный период',
     'operationId' => 'transactions',
@@ -17,11 +17,22 @@ return [
 			'description' => 'Полученный при авторизации token',
         ],
         [
+            'name' => 'client_id',
+            'in' => 'query',
+            'type' => 'integer',
+            'description' => 'Уникальный идентификатор клиента'
+        ],
+        [
             'name' => 'contract_id',
             'in' => 'query',
             'type' => 'integer',
-            'required' => true,
 			'description' => 'Уникальный идентификатор договора'
+        ],
+        [
+            'name' => 'card_id',
+            'in' => 'query',
+            'type' => 'integer',
+            'description' => 'Уникальный идентификатор карты. При укзаании карты обязательно указывать contract_id'
         ],
         [
             'name' => 'date_from',

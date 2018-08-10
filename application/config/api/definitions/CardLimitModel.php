@@ -17,7 +17,6 @@ return [
             'items' => [
                 'type' => 'integer'
             ]
-			
         ],
         'limit_value' => [
             'type' => 'integer',

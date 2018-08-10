@@ -60,6 +60,10 @@ return [
             'type' => 'number',
 			'description' => 'Стоимость услуги на АЗС с учетом скидки',
         ],
+        'pos_name' => [
+            'type' => 'string',
+            'description' => 'Название АЗС',
+        ],
         'pos_address' => [
             'type' => 'string',
 			'description' => 'Адрес АЗС',
