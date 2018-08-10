@@ -32,7 +32,7 @@ return [
             'name' => 'card_id',
             'in' => 'query',
             'type' => 'integer',
-            'description' => 'Уникальный идентификатор карты. При укзаании карты обязательно указывать contract_id'
+            'description' => 'Уникальный идентификатор карты. При указании карты обязательно указывать contract_id'
         ],
         [
             'name' => 'date_from',
