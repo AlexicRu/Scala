@@ -63,6 +63,10 @@ class Model_Reference extends Model
                 $error = 'Услуга уже закреплена за источником';
                 $result = 0;
                 break;
+            case 3:
+                $error = 'Невозможно добавить конвертацию в цепочке договоров';
+                $result = 0;
+                break;
         }
 
         return [$result, $error];
