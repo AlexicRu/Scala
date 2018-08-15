@@ -356,6 +356,27 @@ function toggleBtnLoading(btn)
     }
 }
 
+/**
+ * money format
+ *
+ * @param elem
+ */
+function money(elem)
+{
+    elem.maskMoney({thousands:' ', decimal:'.', allowZero:true});
+}
+
+/**
+ * get unformatted value
+ *
+ * @param elem
+ * @returns {*}
+ */
+function getMoney(elem)
+{
+    return elem.maskMoney('unmasked')[0];
+}
+
 function number_format( number, decimals, dec_point, thousands_sep ) {	// Format a number with grouped thousands
     //
     // +   original by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)

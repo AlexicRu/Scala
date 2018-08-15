@@ -33,13 +33,17 @@
 </table>
 
 <script>
+    $(function () {
+        money($('[name=add_contract_payment_value]'))
+    });
+
     function addContractPaymentGo(btn)
     {
         var params = {
             contract_id:    $('[name=contracts_list]').val(),
             num:            $('[name=add_contract_payment_num]').val(),
             date:           $('[name=add_contract_payment_date]').val(),
-            value:          $('[name=add_contract_payment_value]').val(),
+            value:          getMoney($('[name=add_contract_payment_value]')),
             comment:        $('[name=add_contract_payment_comment]').val()
         };
 

@@ -232,6 +232,7 @@ abstract class Controller_Common extends Controller_Template {
                 '/assets/plugins/jquery-ui.1.11.2.min.js',
                 '/assets/plugins/jGrowl/jGrowl.js',
                 '/assets/plugins/fancy/jquery.fancybox.js',
+                '/assets/plugins/jquery.maskMoney.min.js',
             ];
         }else{
             $this->template->styles = [];
