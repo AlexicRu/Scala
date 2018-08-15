@@ -48,7 +48,7 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
         <?foreach($servicesList as $service){?>
             "<?=$service['SERVICE_ID']?>": {
                 name: "<?=$service['FOREIGN_DESC']?>",
-                group: "<?=$service['SYSTEM_SERVICE_GROUP']?>"
+                group: "<?=$service['SYSTEM_SERVICE_CATEGORY']?>"
             },
         <?}?>
     };

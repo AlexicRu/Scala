@@ -78,9 +78,9 @@ class Listing
                 $sql->where("t.TUBE_ID = " . intval($params['TUBE_ID']));
             }
 
-            if (!empty($params['SYSTEM_SERVICE_GROUP'])) {
+            if (!empty($params['SYSTEM_SERVICE_CATEGORY'])) {
                 $sql->columns([
-                    't.SYSTEM_SERVICE_GROUP'
+                    't.SYSTEM_SERVICE_CATEGORY'
                 ]);
             }
         }

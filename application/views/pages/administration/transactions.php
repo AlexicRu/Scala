@@ -2,7 +2,7 @@
 
 <div class="tabs_block tabs_switcher tabs_administration_transactions">
     <div class="tabs">
-        <span tab="errors" class="tab active">Отказные</span><span tab="process" class="tab">В обработке</span><span tab="history" class="tab">История загрузок</span>
+        <span tab="errors" class="tab active">Отказные</span><span tab="process" class="tab">В обработке</span><span tab="history" class="tab">История загрузок</span><span tab="journal" class="tab">Загрузка ведомостей</span>
     </div>
     <div class="tabs_content tabs_content_no_padding">
         <div tab_content="errors" class="tab_content active">
@@ -26,6 +26,15 @@
         <div tab_content="history" class="tab_content">
             <div class="ajax_block_administration_transactions_history_out block_loading"></div>
         </div>
+        <div tab_content="journal" class="tab_content">
+            <div tab_content="payments" class="tab_content active">
+                <div class="padding__20">
+                    <div class="administration_transactions_journal dropzone"></div>
+                </div>
+
+                <div class="jsGrid administration_transactions_journal_jsGrid"></div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -41,7 +50,72 @@
         paginationAjax('/administration/transactions-errors', 'ajax_block_administration_transactions_errors', renderAjaxPaginationAdminTransactions, params);
         paginationAjax('/administration/transactions-process', 'ajax_block_administration_transactions_process', renderAjaxPaginationAdminTransactions, params);
         paginationAjax('/administration/transactions-history', 'ajax_block_administration_transactions_history', renderAjaxPaginationAdminTransactions);
+
+        dropzone = new Dropzone('.administration_transactions_journal', {
+            url: "/control/upload-journal",
+            acceptedFiles: '.txt, .json, .xls, .xlsx, .csv',
+            addedfile: function () {
+                var grid = $(".administration_transactions_journal_jsGrid");
+
+                if ($('.jsgrid-table', grid).length) {
+                    grid.jsGrid("destroy");
+                }
+                grid.empty().addClass(CLASS_LOADING);
+            },
+            success: function(file, response)
+            {
+                if(response.data && response.data.rows){
+                    administrationTransactionsJournal_drawTable(response.data.rows);
+                } else {
+                    var grid = $(".administration_transactions_journal_jsGrid");
+                    grid.removeClass(CLASS_LOADING);
+                    grid.html('<div class="center"><i class="gray">Данные отсутствуют</i><br><br></div>');
+                }
+            },
+            error : function(file, response) {
+                var grid = $(".administration_transactions_journal_jsGrid");
+
+                grid.removeClass(CLASS_LOADING);
+
+                message(0, response);
+            }
+        });
     });
+
+    function administrationTransactionsJournal_drawTable(rows)
+    {
+        var grid = $(".administration_transactions_journal_jsGrid");
+        grid.removeClass(CLASS_LOADING);
+        grid.jsGrid({
+            width: '100%',
+            sorting: true,
+
+            onRefreshed: function () {
+                $('[type=checkbox]').each(function () {
+                    renderCheckbox($(this));
+                });
+            },
+
+            data: rows,
+
+            fields: [
+                { name: "Дата", type: "text", title: 'Дата', width:100},
+                { name: "Время", type: "text", title: 'Время', width:100},
+                { name: "Номер карты", type: "text", title: 'Номер карты', width:200},
+                { name: "Операция", type: "text", title: 'Операция', width:100},
+                { name: "Услуга", type: "text", title: 'Услуга', width:100},
+                { name: "Количество", type: "text", title: 'Количество', width:100},
+                { name: "Цена АЗС", type: "text", title: 'Цена АЗС', width:100},
+                { name: "Сумма по цене АЗС", type: "text", title: 'Сумма по цене АЗС', width:100},
+                { name: "Цена со скидкой", type: "text", title: 'Цена со скидкой', width:100},
+                { name: "Сумма по цене со скидкой", type: "text", title: 'Сумма по цене со скидкой', width:100},
+                { name: "Название АЗС", type: "text", title: 'Название АЗС', width:200},
+                { name: "Адрес АЗС", type: "text", title: 'Адрес АЗС', width:300},
+                { name: "RRN", type: "text", title: 'RRN', width:150},
+                { name: "Del", type: "text", title: 'Статус', width:100},
+            ]
+        });
+    }
 
     function renderAjaxPaginationAdminTransactionsFilter(data, block, params)
     {

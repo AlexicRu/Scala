@@ -166,4 +166,24 @@ class Model_Transaction extends Model
 
         return Oracle::init()->query($sql);
     }
+
+    /**
+     * проверяем транзакцию
+     *
+     * @param $transactionId
+     */
+    public static function checkTransaction($transactionId)
+    {
+        if (empty($transactionId)) {
+            return false;
+        }
+
+        $data = [
+            'p_trans_id' 		=> $transactionId,
+        ];
+
+        $db = Oracle::init();
+
+        return $db->func('trn_check_exists', $data);
+    }
 }

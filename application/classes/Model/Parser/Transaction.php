@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Model_Transaction_Parser extends Model
+class Model_Parser_Transaction extends Model
 {
     const DEFAULT_VERSION = '1.0.0';
 
@@ -58,7 +58,7 @@ class Model_Transaction_Parser extends Model
      * @param $mimeType
      * @return array|mixed
      */
-    private function _prepareRows($rows, $mimeType)
+    protected function _prepareRows($rows, $mimeType)
     {
         switch ($mimeType) {
             case Upload::MIME_TYPE_OFFICE:
@@ -90,19 +90,19 @@ class Model_Transaction_Parser extends Model
             return [];
         }
 
-        $headers = array_shift($data);
+        $headers = array_filter(array_shift($data));
         $return = [];
 
         if (
-            empty(array_diff($headers, self::$_xlsHeaders)) &&
-            count(array_intersect($headers, self::$_xlsHeaders)) == count(self::$_xlsHeaders)
+            empty(array_diff($headers, static::$_xlsHeaders)) &&
+            count(array_intersect($headers, static::$_xlsHeaders)) == count(static::$_xlsHeaders)
         ) {
             foreach ($data as $row) {
                 $array = [];
 
                 foreach ($row as $colId => $colValue) {
-                    foreach (self::$_xlsHeaders as $header) {
-                        if ($header == $headers[$colId]) {
+                    foreach (static::$_xlsHeaders as $header) {
+                        if (isset($headers[$colId]) && $header == $headers[$colId]) {
                             $array[$header] = $colValue;
                             break;
                         }
@@ -133,27 +133,40 @@ class Model_Transaction_Parser extends Model
         $date = explode(' ', trim($date));
         $date = reset($date);
 
-        $error = '';
-
         try {
-            $now = (new DateTime())->getTimestamp();
-            $date = DateTime::createFromFormat($this->_dateFormat, $date);
+            $date = DateTime::createFromFormat($this->_dateFormat, str_replace(['/'], '.', $date));
 
             if (empty($date)) {
                 throw new Exception();
             }
 
-            if ($date->getTimestamp() > $now) {
-                $error = '<br><small class="red date_error"><b>Дата платежа не может быть больше текущей даты</b></small>';
-            }
-            if ($date->getTimestamp() < $now - 60*60*24*60) {
-                $error = '<br><small class="red date_error"><b>Дата платежа не может быть меньше текущей даты минус 2 месяца</b></small>';
-            }
+            $error = $this->_checkDateAdditional($date);
         } catch (Exception $e) {
             return '<b class="red date_error">Ошибка чтения даты</b>';
         }
 
         return $date->format(Date::$dateFormatRu) . $error;
+    }
+
+    /**
+     * допольнительные проверки для текущего класса
+     *
+     * @param $date
+     * @return string
+     */
+    protected function _checkDateAdditional($date)
+    {
+        $error = '';
+        $now = (new DateTime())->getTimestamp();
+
+        if ($date->getTimestamp() > $now) {
+            $error = '<br><small class="red date_error"><b>Дата платежа не может быть больше текущей даты</b></small>';
+        }
+        if ($date->getTimestamp() < $now - 60*60*24*60) {
+            $error = '<br><small class="red date_error"><b>Дата платежа не может быть меньше текущей даты минус 2 месяца</b></small>';
+        }
+
+        return $error;
     }
 
     /**
@@ -242,7 +255,7 @@ class Model_Transaction_Parser extends Model
      * @param $rows
      * @return mixed
      */
-    private function _sort($rows)
+    protected function _sort($rows)
     {
         /*
 1) Вначале отображать новые платежи
@@ -255,7 +268,7 @@ class Model_Transaction_Parser extends Model
                 return 0;
             }
 
-            $sortArray = Model_Transaction_Parser::$sortArray;
+            $sortArray = Model_Parser_Transaction::$sortArray;
 
             $sortIndexA = array_search($a['PAYMENT_STATUS'], $sortArray);
             $sortIndexB = array_search($b['PAYMENT_STATUS'], $sortArray);
@@ -272,7 +285,7 @@ class Model_Transaction_Parser extends Model
      * @param $row
      * @return string
      */
-    private function _getVersion($row)
+    protected function _getVersion($row)
     {
         return !empty($row['VERSION']) && in_array($row['VERSION'], $this->_versions) ? $row['VERSION'] : self::DEFAULT_VERSION;
     }
@@ -283,7 +296,7 @@ class Model_Transaction_Parser extends Model
      * @param $row
      * @return bool
      */
-    private function _getContractId($row)
+    protected function _getContractId($row)
     {
         $version = $this->_getVersion($row);
 

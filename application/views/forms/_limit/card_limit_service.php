@@ -3,7 +3,7 @@
             <select name="limit_service" onchange="checkServices_<?=$postfix?>()" <?=(empty($settings['editServiceSelect']) ? 'disabled' : '')?>>
             <?foreach($servicesList as $service){?>
                 <option
-                        group="<?=$service['SYSTEM_SERVICE_GROUP']?>"
+                        group="<?=$service['SYSTEM_SERVICE_CATEGORY']?>"
                         value="<?=$service['SERVICE_ID']?>"
                         <?if(isset($limitService['id']) && $service['SERVICE_ID'] == $limitService['id']){?>selected<?}?>
                 ><?=$service['FOREIGN_DESC']?></option>

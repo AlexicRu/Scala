@@ -227,7 +227,7 @@ class Controller_Clients extends Controller_Common {
         $settings = Model_Card::getCardLimitSettings($cardId);
 
 		$servicesList = Listing::getServices([
-		    'SYSTEM_SERVICE_GROUP' => true,
+		    'SYSTEM_SERVICE_CATEGORY' => true,
 		    'TUBE_ID' => $card['TUBE_ID']
         ]);
 

@@ -476,7 +476,7 @@ class Controller_Control extends Controller_Common {
             $this->jsonResult(false);
         }
 
-        $parser = new Model_Transaction_Parser();
+        $parser = new Model_Parser_Transaction();
         $parser->setDateFormat($dateFormat);
 
         $rows = $parser->parse($data, $mimeType);
@@ -793,5 +793,29 @@ class Controller_Control extends Controller_Common {
         $data = $report->getDataForExport($get);
 
         $this->showXml($report->generateXmlForExport($data));
+    }
+
+    /**
+     * считываем файл с платежами
+     */
+    public function action_uploadJournal()
+    {
+        $file = Upload::uploadFile('journal');
+
+        if(empty($file)){
+            $this->jsonResult(false);
+        }
+
+        list($data, $mimeType) = Upload::readFile($_SERVER["DOCUMENT_ROOT"].$file['file']);
+
+        if(empty($data)){
+            $this->jsonResult(false);
+        }
+
+        $parser = new Model_Parser_Journal();
+
+        $rows = $parser->parse($data, $mimeType);
+
+        $this->jsonResult(true, ['rows' => $rows]);
     }
 }

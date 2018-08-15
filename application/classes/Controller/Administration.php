@@ -23,7 +23,8 @@ class Controller_Administration extends Controller_Common
      */
     public function action_transactions()
     {
-
+        $this->_initDropZone();
+        $this->_initJsGrid();
     }
 
     /**

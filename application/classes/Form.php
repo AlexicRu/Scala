@@ -110,7 +110,7 @@ class Form extends Kohana_Form
 
         Listing::$limit = 999;
         $servicesList = Listing::getServices([
-            'SYSTEM_SERVICE_GROUP' => true,
+            'SYSTEM_SERVICE_CATEGORY' => true,
             'TUBE_ID' => $card['TUBE_ID']
         ]);
 
