@@ -22,7 +22,7 @@
     </tr>
     <tr>
         <td class="gray right">Средняя скидка клиенту:</td>
-        <td class="right"><?=number_format($data['AVG_DISCOUNT'], 5, '.', '&nbsp;')?> <?=Text::RUR?></td>
+        <td class="right"><?=number_format($data['AVG_DISCOUNT'], 5, '.', '&nbsp;')?> %</td>
     </tr>
     <?}?>
 </table>
