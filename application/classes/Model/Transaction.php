@@ -136,8 +136,18 @@ class Model_Transaction extends Model
             return false;
         }
 
+        $user = User::current();
+
+        $subSql = (new Builder())->select([
+            'mc.contract_id'
+        ])
+            ->from('v_web_manager_contracts mc')
+            ->where('mc.manager_id = ' . $user['MANAGER_ID'])
+        ;
+
         $sql = (new Builder())->select()
             ->from('V_API_TRANSACTION')
+            ->whereIn('t.contract_id', $subSql)
         ;
 
         if (!empty($params['client_id'])) {
