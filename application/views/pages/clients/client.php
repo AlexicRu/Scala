@@ -54,12 +54,9 @@
                     <span toggle_block="edit_client" uid="client_comments" class="dn"><textarea name="COMMENTS"><?=$client['COMMENTS']?></textarea></span>
                 </td>
             </tr>
-        </table>
-    </div><div class="col">
-        <table>
             <tr>
-                <td class="gray right" width="170">Телефон:</td>
-                <td width="200">
+                <td class="gray right">Телефон:</td>
+                <td>
                     <span toggle_block="edit_client" uid="client_phone"><?=($client['PHONE'] ?: '<span class="gray">Не заполнено</span>')?></span>
                     <span toggle_block="edit_client" uid="client_phone" class="dn"><nobr><input type="text" name="PHONE" value="<?=$client['PHONE']?>">*</nobr></span>
                 </td>
@@ -113,6 +110,72 @@
                 <td>
                     <span toggle_block="edit_client" uid="client_okpo"><?=($client['OKPO'] ?: '<span class="gray">Не заполнено</span>')?></span>
                     <span toggle_block="edit_client" uid="client_okpo" class="dn"><input type="text" name="OKPO" value="<?=$client['OKPO']?>"></span>
+                </td>
+            </tr>
+        </table>
+    </div><div class="col">
+        <table>
+            <tr>
+                <td class="gray right" width="170">Наименование банка:</td>
+                <td width="200">
+                    <span toggle_block="edit_client" uid="p_bank"><?=($client['P_BANK'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="p_bank" class="dn"><input type="text" name="p_bank" value="<?=$client['P_BANK']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">БИК Банка:</td>
+                <td>
+                    <span toggle_block="edit_client" uid="p_bank_bik"><?=($client['P_BANK_BIK'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="p_bank_bik" class="dn"><input type="text" name="p_bank_bik" value="<?=$client['P_BANK_BIK']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Корреспондентский счет:</td>
+                <td>
+                    <span toggle_block="edit_client" uid="p_bank_corr_account"><?=($client['P_BANK_CORR_ACCOUNT'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="p_bank_corr_account" class="dn"><input type="text" name="p_bank_corr_account" value="<?=$client['P_BANK_CORR_ACCOUNT']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Расчетный счет:</td>
+                <td>
+                    <span toggle_block="edit_client" uid="p_bank_account"><?=($client['P_BANK_ACCOUNT'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="p_bank_account" class="dn"><input type="text" name="p_bank_account" value="<?=$client['P_BANK_ACCOUNT']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Адрес банка:</td>
+                <td>
+                    <span toggle_block="edit_client" uid="p_bank_address"><?=($client['P_BANK_ADDRESS'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="p_bank_address" class="dn"><input type="text" name="p_bank_address" value="<?=$client['P_BANK_ADDRESS']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Генеральный директор:</td>
+                <td>
+                    <span toggle_block="edit_client" uid="p_ceo"><?=($client['P_CEO'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="p_ceo" class="dn"><input type="text" name="p_ceo" value="<?=$client['P_CEO']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Генеральный директор (кратко):</td>
+                <td>
+                    <span toggle_block="edit_client" uid="p_ceo_short"><?=($client['P_CEO_SHORT'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="p_ceo_short" class="dn"><input type="text" name="p_ceo_short" value="<?=$client['P_CEO_SHORT']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Главный бухгалтер:</td>
+                <td>
+                    <span toggle_block="edit_client" uid="p_accountant"><?=($client['P_ACCOUNTANT'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="p_accountant" class="dn"><input type="text" name="p_accountant" value="<?=$client['P_ACCOUNTANT']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Главный бухгалтер (кратко):</td>
+                <td>
+                    <span toggle_block="edit_client" uid="p_accountant_short"><?=($client['P_ACCOUNTANT_SHORT'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="p_accountant_short" class="dn"><input type="text" name="p_accountant_short" value="<?=$client['P_ACCOUNTANT_SHORT']?>"></span>
                 </td>
             </tr>
         </table>
