@@ -64,6 +64,16 @@ if(empty($changeRole)){
                         </td>
                     </tr>
                 <?}?>
+                <?if (in_array($manager['ROLE_ID'], array_keys(Access::$clientRoles))) {?>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="manager_settings_limit" <?if ($manager['LIMIT_RESTRICTION'] == 1) {?>checked<?}?>> Ограничение в 1000 литров и 30000 рублей на лимит
+                            </label>
+                        </td>
+                    </tr>
+                <?}?>
                 <tr>
                     <td></td>
                     <td>
@@ -112,6 +122,10 @@ if(empty($changeRole)){
 </form>
 
 <script>
+    $(function () {
+        renderCheckbox($('[name=manager_settings_limit]'));
+    });
+
     function checkFormManagerSettings(form)
     {
         var pass = $('[name=manager_settings_password]', form).val();

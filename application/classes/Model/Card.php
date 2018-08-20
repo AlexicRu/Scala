@@ -73,10 +73,6 @@ class Model_Card extends Model
         self::CARD_LIMIT_TYPE_TRANSACTION   => 'транзакций'
     ];
 
-	public static $editLimitsManagerNoLimit = [
-	    1233, 1499, 1335, 1582, 929, 1954, 56
-    ];
-
 	private static $_selectedCards = [];
 
 	public static $cantDelCardLimitSystems = [
@@ -499,7 +495,7 @@ class Model_Card extends Model
 
             if (
                 in_array($user['ROLE_ID'], array_keys(Access::$clientRoles)) &&
-                !in_array($user['MANAGER_ID'], self::$editLimitsManagerNoLimit)
+                $user['LIMIT_RESTRICTION'] == 1
             ) {
                 foreach ($limits as $limit) {
                     if (

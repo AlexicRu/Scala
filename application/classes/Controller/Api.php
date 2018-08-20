@@ -162,10 +162,6 @@ class Controller_Api extends Controller_Template
         $dateFrom = $this->request->query('date_from') ?: date('01.m.Y');
         $dateTo = $this->request->query('date_to') ?: date('d.m.Y');
 
-        if (empty($contractId) && empty($clientId)) {
-            $this->jsonResult(false, 'Not enough data');
-        }
-
         if (!empty($clientId)) {
             try {
                 Access::check('client', $clientId);
@@ -418,8 +414,7 @@ class Controller_Api extends Controller_Template
                 "MONTH_REALIZ",
                 "MONTH_REALIZ_CUR",
                 "LAST_MONTH_REALIZ",
-                "LAST_MONTH_REALIZ_CUR",
-                "DATE_LAST_CHANGE"
+                "LAST_MONTH_REALIZ_CUR"
             ]);
         }
 

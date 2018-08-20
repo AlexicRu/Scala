@@ -31,6 +31,12 @@ class Controller_Managers extends Controller_Common {
                     'ROLE_ID' => $params['manager_settings_role'],
                 ];
             }
+
+            //форма сабмититься обычным способом, и чек бокс приходит вот так
+            if (isset($params['manager_settings_limit_restriction'])) {
+                $params['manager_settings_limit_restriction'] = $params['manager_settings_limit_restriction'] == 'on' ? 1 : 0;
+            }
+
 			$result = Model_Manager::edit($params, $user);
 
             $this->jsonResult($result);

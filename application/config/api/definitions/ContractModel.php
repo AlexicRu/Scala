@@ -34,21 +34,23 @@ return [
             'properties' => [
                 'balance' => [
                     'type' => 'integer',
+					'description' => 'Текущий баланс договора'
                 ],
                 'month_realiz' => [
                     'type' => 'integer',
+					'description' => 'Реализация по договору за текущий месяц (в литрах)'
                 ],
                 'month_realiz_cur' => [
                     'type' => 'integer',
+					'description' => 'Реализация по договору за текущий месяц (в валюте договора)'
                 ],
                 'last_month_realiz' => [
                     'type' => 'integer',
+					'description' => 'Реализация по договору за предыдущий месяц (в литрах)'
                 ],
                 'last_month_realiz_cur' => [
                     'type' => 'integer',
-                ],
-                'date_last_change' => [
-                    'type' => 'string',
+					'description' => 'Реализация по договору за предыдущий месяц (в валюте договора)'
                 ],
             ]
         ],
