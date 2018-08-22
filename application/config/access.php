@@ -418,5 +418,57 @@ return [
         'Инструкция_по_работе_с_ЛК_системы_Администратор.docx' => [
             Access::ROLE_ADMIN
         ]
+    ],
+    /*
+     * webtours
+     */
+    'webtours' => [
+        'dashboard' => [
+            'roles' => Access::$clientRoles,
+            'scenario' => [
+                ['next .settings' => 'Настройки пользователя'],
+                ['click .menu_item_clients' => 'Посмотреть список закрепленных фирм']
+            ]
+        ],
+        'clients' => [
+            'roles' => Access::$clientRoles,
+            'scenario' => [
+                ['click .client:first>.fr.btn' => 'Посмотреть список закрепленных фирм'],
+                [
+                    'selector' => '.client:first tr:first a',
+                    'event' => 'click',
+                    'description' => 'Открыть реквизиты договора'
+                ]
+            ]
+        ],
+        'contract' => [
+            'roles' => Access::$clientRoles,
+            'scenario' => [
+                ['next [ajax_tab="contract"]' => 'Настроки договора'],
+                ['click [ajax_tab="cards"]' => 'Список карт, закрепленных за договором']
+            ]
+        ],
+        'cards' => [
+            'roles' => Access::$clientRoles,
+            'scenario' => [
+                ['next .tabs_cards>.tabs_v' => 'Полный список карт'],
+                ['click [ajax_tab="account"]' => 'Данные по лицевому счету договора']
+            ]
+        ],
+        'account' => [
+            'roles' => Access::$clientRoles,
+            'scenario' => [
+                ['next .webtour-account' => 'Баланс по договору, платежи и обороты'],
+                ['click [ajax_tab="reports"]' => 'Построить отчеты']
+            ]
+        ],
+        'reports' => [
+            'roles' => Access::$clientRoles,
+            'scenario' => [
+                'click .webtour-reports' => 'Выбрать шаблон, дату, формат и сформировать',
+                'showNext' => false,
+                'skipButton' => ['text' => "End"]
+            ]
+        ],
     ]
 ];

@@ -110,6 +110,14 @@
         </script>
     <?}?>
 
+    <?if (!empty($scriptsRaw)) {?>
+        <script>
+            <?foreach ($scriptsRaw as $script) {?>
+                <?=$script?>
+            <?}?>
+        </script>
+    <?}?>
+
 	<!--[if (lt IE 9)]>
 	<div class="bad_browser">
 		<h1>Ваш браузер устарел</h1>

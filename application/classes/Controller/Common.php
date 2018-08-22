@@ -6,6 +6,7 @@ abstract class Controller_Common extends Controller_Template {
     public $title = [];
     public $errors = [];
     public $scripts = [];
+    public $scriptsRaw = [];
     public $styles = [];
 
     /**
@@ -241,6 +242,7 @@ abstract class Controller_Common extends Controller_Template {
                 '/assets/plugins/jquery.2.1.3.min.js',
             ];
         }
+        $this->template->scriptsRaw = [];
     }
 
     private function _appendFiles()
@@ -260,6 +262,9 @@ abstract class Controller_Common extends Controller_Template {
         }
         foreach($scripts as $script){
             $this->template->scripts[] =  $script;
+        }
+        foreach($this->scriptsRaw as $script){
+            $this->template->scriptsRaw[] =  $script;
         }
     }
 
@@ -322,7 +327,19 @@ abstract class Controller_Common extends Controller_Template {
         $this->template->scripts[] = '/assets/plugins/enjoyhint/enjoyhint.min.js';
         $this->template->scripts[] = '/assets/js/scenarios.js';
 
+        $webtours = Kohana::$config->load('access')['webtours'];
+
         $user = User::current();
+
+        $script = [];
+
+        foreach ($webtours as $key => $webtour) {
+            if (in_array($user['ROLE_ID'], $webtour['roles'])) {
+                $script[$key] = $webtour['scenario'];
+            }
+        }
+
+        $this->template->scriptsRaw[] = 'var scenarios = ' . json_encode($script) . ' ;';
 
         if (!isset($user['tours'])) {
             $user['tours'] = User::getWebTours();
