@@ -85,6 +85,16 @@ function loadContract(tab, query, params)
         $('.ajax_contract_block .datepicker').each(function () {
             renderDatePicker($(this));
         });
+
+        if (tab == 'contract') {
+            EnjoyHintRun('client');
+        } else if (tab == 'cards') {
+            EnjoyHintRun('cards');
+        } else if (tab == 'account') {
+            EnjoyHintRun('account');
+        } else if (tab == 'reports') {
+            EnjoyHintRun('reports');
+        }
     });
 }
 

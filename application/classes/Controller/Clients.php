@@ -36,6 +36,7 @@ class Controller_Clients extends Controller_Common {
 
             $this->jsonResult(true, ['items' => $clients, 'more' => false]);
         } else {
+            $this->_initEnjoyHint();
 
             $popupClientAdd = Form::popup('Добавление нового клиента', 'client/add');
 
@@ -61,6 +62,8 @@ class Controller_Clients extends Controller_Common {
 		if(empty($client)){
 			throw new HTTP_Exception_404();
 		}
+
+        $this->_initEnjoyHint();
 
 		$popupContractAdd = Form::popup('Добавление нового договора', 'contract/add');
 		$popupCabinetCreate = Form::popup('Создание личного кабинета', 'client/cabinet_create');

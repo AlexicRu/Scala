@@ -1,3 +1,4 @@
+<div class="webtour-account">
 <div class="tc_top_line">
     <span class="gray">Баланс по договору:</span> <?=number_format($balance['BALANCE'], 2, ',', ' ')?> <?=Text::RUR?>
     <div class="fr">
@@ -119,6 +120,7 @@
             }
         </script>
     </div>
+</div>
 </div>
 
 <?if(Access::allow('clients_payment-add')){?>

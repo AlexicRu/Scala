@@ -314,6 +314,24 @@ abstract class Controller_Common extends Controller_Template {
     }
 
     /**
+     * подключаем скрипты и стили EnjoyHint
+     */
+    protected function _initEnjoyHint()
+    {
+        $this->template->styles[] = '/assets/plugins/enjoyhint/enjoyhint.css';
+        $this->template->scripts[] = '/assets/plugins/enjoyhint/enjoyhint.min.js';
+        $this->template->scripts[] = '/assets/js/scenarios.js';
+
+        $user = User::current();
+
+        if (!isset($user['tours'])) {
+            $user['tours'] = User::getWebTours();
+
+            Auth::instance()->saveSession($user);
+        }
+    }
+
+    /**
      * подключаем VueJs
      */
     protected function _initVueJs()

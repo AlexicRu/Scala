@@ -176,4 +176,14 @@ class Auth_Oracle extends Auth {
 
         self::complete_login($user);
 	}
+
+    /**
+     * если надо в сессии пользователя сохранить доп данные
+     *
+     * @param $user
+     */
+	public function saveSession($user)
+    {
+        parent::complete_login($user);
+    }
 }

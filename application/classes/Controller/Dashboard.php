@@ -6,6 +6,8 @@ class Controller_Dashboard extends Controller_Common {
 	{
 	    //график
         $this->_initChart();
+
+        $this->_initEnjoyHint();
 	}
 
     public function action_agent()

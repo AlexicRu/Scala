@@ -13,7 +13,7 @@
                 </div>
             <?}?>
         </div>
-        <div class="tabs_v_content">
+        <div class="tabs_v_content webtour-reports">
             <?foreach($reports as $reportGroupId => $reportsList){?>
                 <div class="tab_v_content" tab_content="<?=$reportGroupId?>">
                     <table>

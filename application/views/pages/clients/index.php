@@ -55,5 +55,7 @@ if(!empty($_REQUEST['search'])){?>
 
             block.append(tpl);
         }
+
+        EnjoyHintRun('clients');
     }
 </script>

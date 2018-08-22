@@ -168,4 +168,24 @@ class Controller_Index extends Controller_Common {
             $this->redirect('/clients');
         }
     }
+
+    /**
+     * получаем список посещенных туров
+     */
+    public function action_checkWebtours()
+    {
+        $this->jsonResult(true, User::current()['tours']);
+    }
+
+    /**
+     * пользователь посмотрел веб тур
+     */
+    public function action_seeWebtour()
+    {
+        $scenario = $this->request->post('scenario');
+
+        User::seeWebTour($scenario);
+
+        $this->jsonResult(true);
+    }
 } // End Welcome

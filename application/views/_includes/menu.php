@@ -14,11 +14,11 @@
             }
 
             if(empty($item['children'])){
-                echo "<a href='/{$link}' class='" . ($isActiveController ? 'act' : '') . "'><span class='{$item['icon']}'></span> {$item['title']}</a>";
+                echo "<a href='/{$link}' class='" . ($isActiveController ? 'act' : '') . " menu_item_{$link}'><span class='{$item['icon']}'></span> {$item['title']}</a>";
                 continue;
             }
 
-            $menuItem = "<div class='sub_menu'><div class='sub_menu_title " . ($isActiveController == $link ? 'act' : '') . "'><span class='{$item['icon']}'></span> {$item['title']}</div>";
+            $menuItem = "<div class='sub_menu'><div class='menu_item_{$link} sub_menu_title " . ($isActiveController == $link ? 'act' : '') . "'><span class='{$item['icon']}'></span> {$item['title']}</div>";
 
             if(!empty($item['children'])){
                 $menuItem .= '<div class="sub_menu_items" '.($isActiveController ? 'style="display:block"' : '').'>';
@@ -27,7 +27,7 @@
                     $isActiveAction = Text::camelCaseToDashed(Request::current()->action()) == $child  && $isActiveController;
 
                     if(Access::allow($link.'_'.$child, true)) {
-                        $menuItem .= '<div><a href="/'.$link.($child == 'index' ? '' : '/'.$child).'" class="'.($isActiveAction ? 'act' : '').'">'.$name.'</a></div>';
+                        $menuItem .= '<div><a href="/'.$link.($child == 'index' ? '' : '/'.$child).'" class="menu_item_'.$link.'_'.$child.' '.($isActiveAction ? 'act' : '').'">'.$name.'</a></div>';
                     }
                 }
                 $menuItem .= '</div>';

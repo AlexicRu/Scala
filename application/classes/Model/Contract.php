@@ -433,7 +433,7 @@ class Model_Contract extends Model
 		$value = Num::toFloat($params['value']);
 
 		if (!empty($params['minus'])) {
-		    $value *= -1;
+		    $value = '-' . $value;
         }
 
 		$data = [

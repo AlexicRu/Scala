@@ -77,6 +77,8 @@
             chart.div.style.height = parseInt(chartHeight + 500) + 'px';
 
         }, ['serial', 'pie'] );
+
+        EnjoyHintRun('dashboard');
     });
 
     function buildRealizationsByClient() {

@@ -90,7 +90,6 @@ class User
      */
     public static function getManagersBinds($managerId)
     {
-
         $sql = (new Builder())->select()
             ->from('v_web_manager_binds')
             ->where('MANAGER_FROM = ' . $managerId)
@@ -98,5 +97,39 @@ class User
         ;
 
         return Oracle::init()->query($sql);
+    }
+
+    /**
+     * получаем список посещенных пользователем туров
+     */
+    public static function getWebTours()
+    {
+        $user = User::current();
+
+        $sql = (new Builder())->select(['scenario_id'])
+            ->from('v_web_webtour')
+            ->where('MANAGER_ID = ' . $user['MANAGER_ID'])
+        ;
+
+        return Oracle::init()->column($sql, 'scenario_id');
+    }
+
+    /**
+     * пользователь просмотрел сценарий вебтура
+     */
+    public static function seeWebTour($scenario)
+    {
+        $user = User::current();
+
+        Oracle::init()->procedure('web_manager_site_tour', [
+            'p_manager_id'    => $user['MANAGER_ID'],
+            'p_scenario_id'   => $scenario,
+        ]);
+
+        $user['tours'][] = $scenario;
+
+        Auth::instance()->saveSession($user);
+
+        return true;
     }
 }

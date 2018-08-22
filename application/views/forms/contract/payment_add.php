@@ -42,7 +42,9 @@
 
 <script>
     $(function () {
-        money($('[name=add_contract_payment_value]'))
+        money($('[name=add_contract_payment_value]'));
+
+        renderCheckbox($('[name=add_contract_payment_minus]'));
     });
 
     function addContractPaymentGo(btn)
