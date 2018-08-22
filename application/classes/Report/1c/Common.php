@@ -87,6 +87,10 @@ abstract class Report_1c_Common
                 $client = $xml->addChild('client');
                 $client->addAttribute('id', $item['ID']);
                 $client->addAttribute('name', $item['NAME']);
+
+                if (!empty($item['CONTRACT_COMMENT'])) {
+                    $client->addAttribute('contract_comment', $item['CONTRACT_COMMENT']);
+                }
             }
 
             $delivery = $client->addChild('delivery');

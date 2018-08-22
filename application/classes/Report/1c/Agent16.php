@@ -22,6 +22,7 @@ class Report_1c_Agent16 extends Report_1c_Common
         $sql = (new Builder())
             ->select([
                 'v.contract_id as id',
+                'ccs.contract_comment',
                 'replace(v.client_name,\'"\', \'\') as name',
                 'pi.country_id as territory_id',
                 'v2.supplier_contract as supplier_id',
@@ -34,6 +35,7 @@ class Report_1c_Agent16 extends Report_1c_Common
             ])
             ->from('v_rep_transaction v')
             ->join('v_rep_transaction v2', 'v2.trn_key = v.link_key')
+            ->join('v_web_cl_contracts_set ccs', 'v.contract_id = ccs.contract_id')
             ->joinLeft('v_web_pos_list pi', 'v.supplier_terminal = pi.pos_id and pi.agent_id = v.agent_id')
             ->where('v.date_trn >= ' . Oracle::toDateOracle($params['date_from'], 'd.m.Y'))
             ->where('v.date_trn <= ' . Oracle::toDateOracle($params['date_to'], 'd.m.Y'))
