@@ -208,6 +208,7 @@ class Controller_Api extends Controller_Template
             "PRICE_DISCOUNT",
             "SUMPRICE_DISCOUNT",
             "POS_ADDRESS",
+            "POS_NAME",
             "TRN_KEY",
             "TRZ_COMMENT"
         ]);

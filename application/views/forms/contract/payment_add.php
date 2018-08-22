@@ -6,19 +6,27 @@
         </td>
     </tr>
     <tr>
-        <td class="gray right" width="170">Дата платежного поручения:</td>
+        <td class="gray right">Дата платежного поручения:</td>
         <td>
             <input type="text" name="add_contract_payment_date" class="input_big datepicker" readonly maxDate="1" value="<?=date('d.m.Y')?>">
         </td>
     </tr>
     <tr>
-        <td class="gray right" width="170">Сумма (<?=Text::RUR?>):</td>
+        <td class="gray right">Сумма (<?=Text::RUR?>):</td>
         <td>
             <input type="text" name="add_contract_payment_value" class="input_big">
         </td>
     </tr>
     <tr>
-        <td class="gray right" width="170">Комментарий:</td>
+        <td></td>
+        <td>
+            <label>
+                <input type="checkbox" name="add_contract_payment_minus"> Списание
+            </label>
+        </td>
+    </tr>
+    <tr>
+        <td class="gray right">Комментарий:</td>
         <td>
             <textarea name="add_contract_payment_comment"></textarea>
         </td>
@@ -44,7 +52,8 @@
             num:            $('[name=add_contract_payment_num]').val(),
             date:           $('[name=add_contract_payment_date]').val(),
             value:          getMoney($('[name=add_contract_payment_value]')),
-            comment:        $('[name=add_contract_payment_comment]').val()
+            comment:        $('[name=add_contract_payment_comment]').val(),
+            minus:          $('[name=add_contract_payment_minus]').is(':checked') ? 1 : 0
         };
 
         if(params.num == ''){

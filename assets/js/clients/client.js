@@ -3,8 +3,8 @@ $(function(){
         var block = $(".edit_client_block");
 
         var params = {
-            NAME:                   $('[name=NAME]', block).val(),
-            LONG_NAME:              $('[name=LONG_NAME]', block).val(),
+            NAME:                   $('[name=NAME]').val(),
+            LONG_NAME:              $('[name=LONG_NAME]').val(),
             Y_ADDRESS:              $('[name=Y_ADDRESS]', block).val(),
             F_ADDRESS:              $('[name=F_ADDRESS]', block).val(),
             P_ADDRESS:              $('[name=P_ADDRESS]', block).val(),
@@ -15,15 +15,15 @@ $(function(){
             KPP:                    $('[name=KPP]', block).val(),
             OGRN:                   $('[name=OGRN]', block).val(),
             OKPO:                   $('[name=OKPO]', block).val(),
-            P_BANK:                 $('[name=P_BANK]', block).val(),
-            P_BANK_BIK:             $('[name=P_BANK_BIK]', block).val(),
-            P_BANK_CORR_ACCOUNT:    $('[name=P_BANK_CORR_ACCOUNT]', block).val(),
-            P_BANK_ACCOUNT:         $('[name=P_BANK_ACCOUNT]', block).val(),
-            P_BANK_ADDRESS:         $('[name=P_BANK_ADDRESS]', block).val(),
-            P_CEO:                  $('[name=P_CEO]', block).val(),
-            P_CEO_SHORT:            $('[name=P_CEO_SHORT]', block).val(),
-            P_ACCOUNTANT:           $('[name=P_ACCOUNTANT]', block).val(),
-            P_ACCOUNTANT_SHORT:     $('[name=P_ACCOUNTANT_SHORT]', block).val(),
+            BANK:                   $('[name=BANK]', block).val(),
+            BANK_BIK:               $('[name=BANK_BIK]', block).val(),
+            BANK_CORR_ACCOUNT:      $('[name=BANK_CORR_ACCOUNT]', block).val(),
+            BANK_ACCOUNT:           $('[name=BANK_ACCOUNT]', block).val(),
+            BANK_ADDRESS:           $('[name=BANK_ADDRESS]', block).val(),
+            CEO:                    $('[name=CEO]', block).val(),
+            CEO_SHORT:              '', //$('[name=CEO_SHORT]', block).val(),
+            ACCOUNTANT:             $('[name=ACCOUNTANT]', block).val(),
+            ACCOUNTANT_SHORT:       '', //$('[name=ACCOUNTANT_SHORT]', block).val(),
         };
 
         if(

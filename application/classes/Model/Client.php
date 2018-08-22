@@ -88,18 +88,6 @@ class Model_Client extends Model
 
 		$client = $db->row($sql);
 
-		$client = array_merge($client, [
-            'P_BANK'                => '',
-            'P_BANK_BIK'            => '',
-            'P_BANK_CORR_ACCOUNT'   => '',
-            'P_BANK_ACCOUNT'        => '',
-            'P_BANK_ADDRESS'        => '',
-            'P_CEO'                 => '',
-            'P_CEO_SHORT'           => '',
-            'P_ACCOUNTANT'          => '',
-            'P_ACCOUNTANT_SHORT'    => '',
-        ]);
-
 		return $client;
 	}
 
@@ -141,15 +129,15 @@ class Model_Client extends Model
 			'p_email' 		        => !empty($params['EMAIL']) ? Text::checkEmailMulti($params['EMAIL']) : '',
 			'p_phone' 		        => $params['PHONE'],
 			'p_comments' 	        => $params['COMMENTS'],
-            'p_bank'                => $params['P_BANK'],
-            'p_bank_bik'            => $params['P_BANK_BIK'],
-            'p_bank_corr_account'   => $params['P_BANK_CORR_ACCOUNT'],
-            'p_bank_account'        => $params['P_BANK_ACCOUNT'],
-            'p_bank_address'        => $params['P_BANK_ADDRESS'],
-            'p_ceo'                 => $params['P_CEO'],
-            'p_ceo_short'           => $params['P_CEO_SHORT'],
-            'p_accountant'          => $params['P_ACCOUNTANT'],
-            'p_accountant_short'    => $params['P_ACCOUNTANT_SHORT'],
+            'p_bank'                => $params['BANK'],
+            'p_bank_bik'            => $params['BANK_BIK'],
+            'p_bank_corr_account'   => $params['BANK_CORR_ACCOUNT'],
+            'p_bank_account'        => $params['BANK_ACCOUNT'],
+            'p_bank_address'        => $params['BANK_ADDRESS'],
+            'p_ceo'                 => $params['CEO'],
+            'p_ceo_short'           => $params['CEO_SHORT'],
+            'p_accountant'          => $params['ACCOUNTANT'],
+            'p_accountant_short'    => $params['ACCOUNTANT_SHORT'],
 			'p_manager_id' 	        => $user['MANAGER_ID'],
 			'p_error_code' 	        => 'out',
 		];

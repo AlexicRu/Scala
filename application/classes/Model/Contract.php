@@ -430,13 +430,19 @@ class Model_Contract extends Model
 
 		$user = Auth::instance()->get_user();
 
+		$value = Num::toFloat($params['value']);
+
+		if (!empty($params['minus'])) {
+		    $value *= -1;
+        }
+
 		$data = [
 			'p_contract_id' 	=> $params['contract_id'],
 			'p_action' 			=> $action,
 			'p_order_guid' 		=> $action != self::PAYMENT_ACTION_ADD ? $params['guid'] : null,
 			'p_order_num' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['num'] : null,
 			'p_order_date' 		=> $action == self::PAYMENT_ACTION_ADD ? Oracle::quote($params['date']) : null,
-			'p_value' 			=> $action != self::PAYMENT_ACTION_DELETE ? Num::toFloat($params['value']) : 0,
+			'p_value' 			=> $action != self::PAYMENT_ACTION_DELETE ? $value : 0,
 			'p_payment_cur' 	=> $action == self::PAYMENT_ACTION_ADD ? Common::CURRENCY_RUR : null,
 			'p_comment' 		=> $action == self::PAYMENT_ACTION_ADD ? $params['comment'] : null,
 			'p_manager_id' 		=> $user['MANAGER_ID'],

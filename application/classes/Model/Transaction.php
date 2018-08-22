@@ -147,7 +147,7 @@ class Model_Transaction extends Model
 
         $sql = (new Builder())->select()
             ->from('V_API_TRANSACTION')
-            ->whereIn('t.contract_id', $subSql)
+            ->whereIn('contract_id', $subSql)
         ;
 
         if (!empty($params['client_id'])) {
