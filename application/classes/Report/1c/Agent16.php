@@ -47,6 +47,7 @@ class Report_1c_Agent16 extends Report_1c_Common
                 'v.service_id',
                 'pi.country_id',
 				'v.service_price',
+                'ccs.contract_comment',
             ])
             ->having('sum(v.service_amount) <> 0')
             ->orderBy('v.client_name')
