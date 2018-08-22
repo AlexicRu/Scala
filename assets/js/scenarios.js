@@ -13,7 +13,7 @@ var scenarios = {
             description:'Открыть реквизиты договора'
         }
     ],
-    client: [
+    contract: [
         {'next [ajax_tab="contract"]': 'Настроки договора'},
         {'click [ajax_tab="cards"]': 'Список карт, закрепленных за договором'}
     ],

@@ -87,7 +87,7 @@ function loadContract(tab, query, params)
         });
 
         if (tab == 'contract') {
-            EnjoyHintRun('client');
+            EnjoyHintRun('contract');
         } else if (tab == 'cards') {
             EnjoyHintRun('cards');
         } else if (tab == 'account') {

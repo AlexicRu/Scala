@@ -430,10 +430,12 @@ class Model_Contract extends Model
 
 		$user = Auth::instance()->get_user();
 
-		$value = Num::toFloat($params['value']);
+		if (isset($params['value'])) {
+            $value = Num::toFloat($params['value']);
 
-		if (!empty($params['minus'])) {
-		    $value = '-' . $value;
+            if (!empty($params['minus'])) {
+                $value = '-' . $value;
+            }
         }
 
 		$data = [
