@@ -424,14 +424,14 @@ return [
      */
     'webtours' => [
         'dashboard' => [
-            'roles' => Access::$clientRoles,
+            'roles' => array_keys(Access::$clientRoles),
             'scenario' => [
                 ['next .settings' => 'Настройки пользователя'],
                 ['click .menu_item_clients' => 'Посмотреть список закрепленных фирм']
             ]
         ],
         'clients' => [
-            'roles' => Access::$clientRoles,
+            'roles' => array_keys(Access::$clientRoles),
             'scenario' => [
                 ['click .client:first>.fr.btn' => 'Посмотреть список закрепленных фирм'],
                 [
@@ -442,28 +442,28 @@ return [
             ]
         ],
         'contract' => [
-            'roles' => Access::$clientRoles,
+            'roles' => array_keys(Access::$clientRoles),
             'scenario' => [
                 ['next [ajax_tab="contract"]' => 'Настроки договора'],
                 ['click [ajax_tab="cards"]' => 'Список карт, закрепленных за договором']
             ]
         ],
         'cards' => [
-            'roles' => Access::$clientRoles,
+            'roles' => array_keys(Access::$clientRoles),
             'scenario' => [
                 ['next .tabs_cards>.tabs_v' => 'Полный список карт'],
                 ['click [ajax_tab="account"]' => 'Данные по лицевому счету договора']
             ]
         ],
         'account' => [
-            'roles' => Access::$clientRoles,
+            'roles' => array_keys(Access::$clientRoles),
             'scenario' => [
                 ['next .webtour-account' => 'Баланс по договору, платежи и обороты'],
                 ['click [ajax_tab="reports"]' => 'Построить отчеты']
             ]
         ],
         'reports' => [
-            'roles' => Access::$clientRoles,
+            'roles' => array_keys(Access::$clientRoles),
             'scenario' => [
                 'click .webtour-reports' => 'Выбрать шаблон, дату, формат и сформировать',
                 'showNext' => false,

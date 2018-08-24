@@ -54,6 +54,8 @@ abstract class Telegram_Common
      */
     public function parse()
     {
+        $skipExecute = false;
+
         //разбираем пришедшие запросы
         if (!empty($this->_postData['message']['text'])) {
 
@@ -78,9 +80,13 @@ abstract class Telegram_Common
             } else {
                 $this->_answer[] = 'Ошибка получения доступа';
             }
+
+            $skipExecute = true;
         }
 
-        $this->execute();
+        if (empty($skipExecute)) {
+            $this->execute();
+        }
     }
 
     /**
