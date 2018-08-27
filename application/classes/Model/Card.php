@@ -35,6 +35,8 @@ class Model_Card extends Model
     const CARD_ICON_TATNEFT     = 'Tatneft';
     const CARD_ICON_CLEVEROIL   = 'Cleveroil';
     const CARD_ICON_GPC         = 'GPC PPR';
+    const CARD_ICON_SCANOIL     = 'ScanOil';
+    const CARD_ICON_E100        = 'E100PRO';
 
     const CARD_SYSTEM_GPN = 5;
     const CARD_SYSTEM_NINE = 9;
@@ -50,6 +52,8 @@ class Model_Card extends Model
         self::CARD_ICON_TATNEFT     => 'tatneft.jpg',
         self::CARD_ICON_CLEVEROIL   => 'cleveroil.jpg',
         self::CARD_ICON_GPC         => 'gpc.jpg',
+        self::CARD_ICON_SCANOIL     => 'scanoil.jpg',
+        self::CARD_ICON_E100        => 'e100.jpg',
     ];
 
 	public static $cardLimitsParams = [
