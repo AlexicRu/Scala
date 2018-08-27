@@ -104,8 +104,6 @@ class Model_Client extends Model
 			empty($clientId) ||
 			empty($params['NAME']) ||
 			empty($params['Y_ADDRESS']) ||
-			empty($params['PHONE']) ||
-			empty($params['EMAIL']) ||
 			empty($params['INN'])
 		){
 			return false;
