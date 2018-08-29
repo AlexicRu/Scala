@@ -4,7 +4,8 @@ var EnjoyHint = function (_options) {
     var that = this;
 
     var defaults = {
-
+        skipText: 'Skip',
+        nextText: 'Next',
         onStart: function () {
 
         },
@@ -75,9 +76,9 @@ var EnjoyHint = function (_options) {
         var $skipBtn = $('.enjoyhint_skip_btn');
 
         $nextBtn.removeClass(that.nextUserClass);
-        $nextBtn.text("Next");
+        $nextBtn.text(options.nextText);
         $skipBtn.removeClass(that.skipUserClass);
-        $skipBtn.text("Skip");
+        $skipBtn.text(options.skipText);
     };
 
     var stepAction = function () {
@@ -183,7 +184,7 @@ var EnjoyHint = function (_options) {
                     var $nextBtn = $('.enjoyhint_next_btn');
 
                     $nextBtn.addClass(step_data.nextButton.className || "");
-                    $nextBtn.text(step_data.nextButton.text || "Next");
+                    $nextBtn.text(step_data.nextButton.text || options.nextText);
                     that.nextUserClass = step_data.nextButton.className;
                 }
 
@@ -192,7 +193,7 @@ var EnjoyHint = function (_options) {
                     var $skipBtn = $('.enjoyhint_skip_btn');
 
                     $skipBtn.addClass(step_data.skipButton.className || "");
-                    $skipBtn.text(step_data.skipButton.text || "Skip");
+                    $skipBtn.text(step_data.skipButton.text || options.skipText);
                     that.skipUserClass = step_data.skipButton.className;
                 }
 
@@ -569,12 +570,12 @@ var EnjoyHint = function (_options) {
                 $right_dis_events.click(stopPropagation);
 
 
-                that.$skip_btn = $('<div>', {'class': that.cl.skip_btn}).appendTo(that.enjoyhint).html('Skip').click(function (e) {
+                that.$skip_btn = $('<div>', {'class': that.cl.skip_btn}).appendTo(that.enjoyhint).html(that.options.skipText).click(function (e) {
 
                     that.hide();
                     that.options.onSkipClick();
                 });
-                that.$next_btn = $('<div>', {'class': that.cl.next_btn}).appendTo(that.enjoyhint).html('Next').click(function (e) {
+                that.$next_btn = $('<div>', {'class': that.cl.next_btn}).appendTo(that.enjoyhint).html(that.options.nextText).click(function (e) {
 
                     that.options.onNextClick();
                 });

@@ -429,7 +429,6 @@ return [
         'dashboard' => [
             'roles' => array_keys(Access::$clientRoles),
             'scenario' => [
-                ['next .settings' => 'Настройки пользователя'],
                 ['click .menu_item_clients' => 'Посмотреть список закрепленных фирм']
             ]
         ],
@@ -468,9 +467,12 @@ return [
         'reports' => [
             'roles' => array_keys(Access::$clientRoles),
             'scenario' => [
-                'click .webtour-reports' => 'Выбрать шаблон, дату, формат и сформировать',
-                'showNext' => false,
-                'skipButton' => ['text' => "End"]
+                ['next .webtour-reports' => 'Выбрать шаблон, дату, формат и сформировать',],
+                [
+                    'click .settings' => 'Настройки пользователя',
+                    'showNext' => false,
+                    'skipButton' => ['text' => "End"]
+                ],
             ]
         ],
     ]

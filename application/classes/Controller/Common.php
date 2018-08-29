@@ -324,7 +324,7 @@ abstract class Controller_Common extends Controller_Template {
     protected function _initEnjoyHint()
     {
         $this->template->styles[] = '/assets/plugins/enjoyhint/enjoyhint.css';
-        $this->template->scripts[] = '/assets/plugins/enjoyhint/enjoyhint.min.js';
+        $this->template->scripts[] = '/assets/plugins/enjoyhint/enjoyhint.js';
         $this->template->scripts[] = '/assets/js/scenarios.js';
 
         $webtours = Kohana::$config->load('access')['webtours'];
