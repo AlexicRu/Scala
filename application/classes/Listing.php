@@ -236,4 +236,20 @@ class Listing
 
         return $db->query($db->limit($sql, 0, self::$limit));
     }
+
+    /**
+     * получаем список агентов
+     *
+     * @return array|bool
+     */
+    public static function getAgents()
+    {
+        $db = Oracle::init();
+
+        $sql = (new Builder())->select(['group_id', 'group_name'])->distinct()
+            ->from('V_WEB_AGENTS_LIST')
+        ;
+
+        return $db->query($sql);
+    }
 }

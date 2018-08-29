@@ -1,9 +1,10 @@
 <div class="global_messages">
     <?foreach ($globalMessages as $message){?>
         <div class="news_elem">
-            <div class="n_title"><?=$message['SUBJECT']?></div>
+            <div class="n_title"><?=$message['NOTE_TITLE']?></div>
             <div class="n_date gray"><?=$message['NOTE_DATE']?></div>
-            <?=$message['NOTIFICATION_BODY']?>
+            <?=$message['NOTE_ID']?>
+            <?=$message['NOTE_BODY']?>
         </div>
     <?}?>
 </div>
@@ -14,7 +15,7 @@
 
 <script>
     function globalMessagesMarkAsRead() {
-        //$.post('/messages/make-read', {type: <?=Model_Message::MESSAGE_TYPE_GLOBAL?>}, function () {
+        //$.post('/messages/make-read', {type: <?=Model_Note::NOTE_TYPE_POPUP?>}, function () {
             $.fancybox.close();
         //})
     }

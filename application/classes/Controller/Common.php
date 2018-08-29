@@ -103,9 +103,12 @@ abstract class Controller_Common extends Controller_Template {
         View::set_global('errors', $this->errors);
 
         if(Auth::instance()->logged_in()) {
-            $notices = Model_Message::getList(['status' => Model_Message::MESSAGE_STATUS_NOTREAD]);
+            $notices = Model_Note::getList([
+                'status' => Model_Note::NOTE_STATUS_NOTREAD,
+                'note_type' => Model_Note::NOTE_TYPE_MESSAGE
+            ]);
 
-            $notices = Model_Message::clearBBCodes($notices);
+            $notices = Model_Note::clearBBCodes($notices);
 
             View::set_global('notices', $notices);
 
@@ -452,13 +455,13 @@ abstract class Controller_Common extends Controller_Template {
      */
     private function _checkGlobalMessages()
     {
-        $globalMessages = Model_Message::getList([
-            'note_type' => Model_Message::MESSAGE_TYPE_GLOBAL,
-            'status' => Model_Message::MESSAGE_STATUS_NOTREAD
+        $globalMessages = Model_Note::getList([
+            'note_type' => Model_Note::NOTE_TYPE_POPUP,
+            'status' => Model_Note::NOTE_STATUS_NOTREAD
         ]);
 
         if (!empty($globalMessages)) {
-            $globalMessages = Model_Message::parseBBCodes($globalMessages, false);
+            $globalMessages = Model_Note::parseBBCodes($globalMessages, false);
 
             $popupGlobalMessages = Form::popup('ВАЖНО!', 'common/global_messages', [
                 'globalMessages' => $globalMessages
@@ -466,7 +469,7 @@ abstract class Controller_Common extends Controller_Template {
 
             View::set_global('popupGlobalMessages', $popupGlobalMessages);
 
-            Model_Message::makeRead(['note_type' => Model_Message::MESSAGE_TYPE_GLOBAL]);
+            Model_Note::makeRead(['note_type' => Model_Note::NOTE_TYPE_POPUP]);
         }
     }
 
@@ -476,12 +479,12 @@ abstract class Controller_Common extends Controller_Template {
     private function _actionsBefore()
     {
         //проверка флага установки прочитанности сообщения
-        $noteGuid = $this->request->query('read');
+        $noteId = $this->request->query('read');
 
-        if (!empty($noteGuid)) {
-            Model_Message::makeRead([
-                'note_guid' => $noteGuid,
-                'note_type' => Model_Message::MESSAGE_TYPE_COMMON
+        if (!empty($noteId)) {
+            Model_Note::makeRead([
+                'note_id'   => $noteId,
+                'note_type' => Model_Note::NOTE_TYPE_MESSAGE
             ]);
         }
     }

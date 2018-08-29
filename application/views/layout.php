@@ -63,8 +63,8 @@
 						}
 						?>
 						<div class="notice">
-							<div class="n_title"><?=$notice['SUBJECT']?></div>
-							<?=$notice['NOTIFICATION_BODY']?>
+							<div class="n_title"><?=$notice['NOTE_TITLE']?></div>
+							<?=$notice['NOTE_BODY']?>
 						</div>
 					<?}?>
 					<div>

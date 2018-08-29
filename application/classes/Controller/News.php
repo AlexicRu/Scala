@@ -13,11 +13,12 @@ class Controller_News extends Controller_Common {
 	{
 		if($this->isPost()) {
 			$params = [
-				'offset' => $this->request->post('offset'),
-				'pagination' => true
+			    'note_type'     => Model_Note::NOTE_TYPE_NEWS,
+				'offset'        => $this->request->post('offset'),
+				'pagination'    => true
 			];
 
-			list($news, $more) = Model_News::getList($params);
+			list($news, $more) = Model_Note::getList($params);
 
 			if(empty($news)){
 				$this->jsonResult(false);
@@ -26,7 +27,9 @@ class Controller_News extends Controller_Common {
 			$this->jsonResult(true, ['items' => $news, 'more' => $more]);
 		}
 
-        $popupNewsAdd = Form::popup('Добавление новости', 'news/edit');
+        $popupNewsAdd = Form::popup('Добавление новости', 'news/edit', [
+            'user' => User::current()
+        ]);
 
         $this->_initWYSIWYG();
         $this->_initDropZone();
@@ -45,7 +48,7 @@ class Controller_News extends Controller_Common {
     {
         $newsId = $this->request->param('id');
 
-        $newsDetail = Model_News::getNewsById($newsId);
+        $newsDetail = Model_Note::getNoteById($newsId);
 
         if(empty($newsDetail)){
             throw new HTTP_Exception_404();
@@ -62,13 +65,13 @@ class Controller_News extends Controller_Common {
     }
 
     /**
-     * добавление новости
+     * добавление / редактирование новости
      */
-    public function action_newsEdit()
+    public function action_noteEdit()
     {
         $params = $this->request->post('params');
 
-        $result = Model_News::editNews($params);
+        $result = Model_Note::editNote($params);
 
         if(empty($result)){
             $this->jsonResult(false);
