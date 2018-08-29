@@ -9,35 +9,43 @@ class Model_Manager extends Model
      * радактируем данные юзверя
      *
      * @param $params
+     * @param $manager
      * @param bool|false $userId
      */
-    public static function edit($params, $user = false)
+    public static function edit($params, $manager = false)
     {
-        if(empty($user)){
-            $user = Auth::instance()->get_user();
+        if(empty($manager)){
+            $manager = User::current();
         }
 
         if(
-            empty($user['MANAGER_ID']) ||
-            empty($user['ROLE_ID'])
+            empty($manager['MANAGER_ID']) ||
+            empty($manager['ROLE_ID'])
         ){
             return false;
         }
 
-        $userWho = Auth::instance()->get_user();
+        $user = User::current();
 
         $db = Oracle::init();
 
+        if (Access::deny('change_phone_note')) {
+            $managerCheck = Model_Manager::getManager($manager['MANAGER_ID']);
+
+            $params['manager_settings_phone_note'] = $managerCheck['PHONE_FOR_SMS'];
+        }
+
         $data = [
-            'p_manager_for_id' 	    => $user['MANAGER_ID'],
-            'p_role_id' 	        => $user['ROLE_ID'],
+            'p_manager_for_id' 	    => $manager['MANAGER_ID'],
+            'p_role_id' 	        => $manager['ROLE_ID'],
             'p_name' 	            => empty($params['manager_settings_name'])              ? '' : $params['manager_settings_name'],
             'p_surname' 	        => empty($params['manager_settings_surname'])           ? '' : $params['manager_settings_surname'],
             'p_middlename' 	        => empty($params['manager_settings_middlename'])        ? '' : $params['manager_settings_middlename'],
             'p_phone' 		        => empty($params['manager_settings_phone'])             ? '' : $params['manager_settings_phone'],
+            'p_phone_note' 		    => empty($params['manager_settings_phone_note'])        ? '' : $params['manager_settings_phone_note'],
             'p_email' 		        => empty($params['manager_settings_email'])             ? '' : Text::checkEmailMulti($params['manager_settings_email']),
             'p_limit_restriction' 	=> empty($params['manager_settings_limit_restriction']) ? 0 : $params['manager_settings_limit_restriction'],
-            'p_manager_who_id' 	    => $userWho['MANAGER_ID'],
+            'p_manager_who_id' 	    => $user['MANAGER_ID'],
             'p_error_code' 	        => 'out',
         ];
 
@@ -50,14 +58,14 @@ class Model_Manager extends Model
         if(
             !empty($params['manager_settings_password']) && !empty($params['manager_settings_password_again']) &&
             $params['manager_settings_password'] == $params['manager_settings_password_again'] &&
-            $user['MANAGER_ID'] != Access::USER_TEST
+            $manager['MANAGER_ID'] != Access::USER_TEST
         ){
             //обновление паролей
 
             $data = [
-                'p_manager_id' 	    => $user['MANAGER_ID'],
+                'p_manager_id' 	    => $manager['MANAGER_ID'],
                 'p_new_password'    => empty($params['manager_settings_password'])      ? '' : $params['manager_settings_password'],
-                'p_manager_who_id'  => $userWho['MANAGER_ID'],
+                'p_manager_who_id'  => $user['MANAGER_ID'],
                 'p_error_code' 	    => 'out',
             ];
 

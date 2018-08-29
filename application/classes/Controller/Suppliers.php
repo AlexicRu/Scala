@@ -51,6 +51,7 @@ class Controller_Suppliers extends Controller_Common {
         }
 
         $this->_initVueJs();
+        $this->_initPhoneInputWithFlags();
 
         $supplierContracts = Model_Supplier_Contract::getList(['supplier_id' => $supplierId]);
 

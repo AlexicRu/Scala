@@ -52,6 +52,14 @@ if(empty($changeRole)){
                         <input type="text" name="manager_settings_phone" class="input_big" value="<?=$manager['CELLPHONE']?>">
                     </td>
                 </tr>
+                <?if (Access::allow('change_phone_note')) {?>
+                <tr>
+                    <td class="gray right">Телефон для оповещений:</td>
+                    <td>
+                        <input type="text" name="manager_settings_phone_note" class="input_big"  value="<?=$manager['PHONE_FOR_SMS']?>">
+                    </td>
+                </tr>
+                <?}?>
                 <?if($changeRole){?>
                     <tr>
                         <td class="gray right">Роль:</td>
@@ -123,6 +131,9 @@ if(empty($changeRole)){
 
 <script>
     $(function () {
+        $("[name=manager_settings_phone], [name=manager_settings_phone_note]").each(function () {
+            renderPhoneInput($(this));
+        });
         renderCheckbox($('[name=manager_settings_limit]'));
     });
 
@@ -133,6 +144,25 @@ if(empty($changeRole)){
 
         if(pass != passAgain){
             message(0, 'Пароли не совпадают');
+            return false;
+        }
+
+        var phone = $("[name=manager_settings_phone]");
+        var phoneNote = $("[name=manager_settings_phone_note]");
+
+        if (
+            phone.intlTelInput('isValidNumber') == false &&
+            ('+' + phone.intlTelInput("getSelectedCountryData").dialCode) != phone.intlTelInput('getNumber')
+        ) {
+            message(0, 'Некорректный номер телефона');
+            return false;
+        }
+
+        if (
+            phoneNote.intlTelInput('isValidNumber') == false &&
+            ('+' + phoneNote.intlTelInput("getSelectedCountryData").dialCode) != phoneNote.intlTelInput('getNumber')
+        ) {
+            message(0, 'Некорректный номер телефона для оповещений');
             return false;
         }
 

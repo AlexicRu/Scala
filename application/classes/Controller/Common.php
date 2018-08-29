@@ -379,6 +379,15 @@ abstract class Controller_Common extends Controller_Template {
     }
 
     /**
+     * подключаем флаги
+     */
+    protected function _initPhoneInputWithFlags()
+    {
+        $this->template->styles[] = '/assets/plugins/intl-tel-input/css/intlTelInput.min.css';
+        $this->template->scripts[] = '/assets/plugins/intl-tel-input/js/intlTelInput.min.js';
+    }
+
+    /**
      * через js можно собрать данные с разных форм, и если так, то их надо раскидать по нормальным полям
      */
     private function _collectAdditionalDataForForms()

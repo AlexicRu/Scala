@@ -64,6 +64,7 @@ class Controller_Clients extends Controller_Common {
 		}
 
         $this->_initEnjoyHint();
+        $this->_initPhoneInputWithFlags();
 
 		$popupContractAdd = Form::popup('Добавление нового договора', 'contract/add');
 		$popupCabinetCreate = Form::popup('Создание личного кабинета', 'client/cabinet_create');

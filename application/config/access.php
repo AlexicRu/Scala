@@ -265,6 +265,9 @@ return [
             Access::ROLE_SUPERVISOR,
             Access::ROLE_ADMIN_READONLY,
         ],
+        'change_phone_note' => [
+            Access::ROLE_ROOT
+        ]
     ],
     'deny' => [ //для всех остальных ролей будет разрешено
         // functions

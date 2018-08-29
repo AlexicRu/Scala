@@ -1,4 +1,6 @@
 $(function(){
+    renderPhoneInput($('[name=PHONE]'));
+
     $(".client_edit_btn").on('click', function(){
         var block = $(".edit_client_block");
 

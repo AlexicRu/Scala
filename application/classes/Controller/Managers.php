@@ -21,6 +21,8 @@ class Controller_Managers extends Controller_Common {
 	{
 		$this->title[] = 'Настройки';
 
+        $this->_initPhoneInputWithFlags();
+
 		$params = $this->request->post();
 		if(!empty($params) && $params['form_type'] == 'settings'){
 		    $user = false;

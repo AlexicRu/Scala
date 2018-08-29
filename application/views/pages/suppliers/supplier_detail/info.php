@@ -63,7 +63,7 @@
                     <td class="gray right" width="170">Телефон:</td>
                     <td width="200">
                         <span toggle_block="edit_supplier" v-html="checkEmpty(supplier.PHONE)"></span>
-                        <span toggle_block="edit_supplier" class="dn"><nobr><input type="text" v-model="supplier.PHONE"></nobr></span>
+                        <span toggle_block="edit_supplier" class="dn"><nobr><input type="text" name="phone" v-model="supplier.PHONE"></nobr></span>
                     </td>
                 </tr>
                 <tr>
@@ -180,6 +180,7 @@
         },
         mounted: function () {
             this.cacheForm();
+            renderPhoneInput($('[name=phone]'));
         }
     })
 </script>

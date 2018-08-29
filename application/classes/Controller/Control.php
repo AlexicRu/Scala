@@ -21,6 +21,8 @@ class Controller_Control extends Controller_Common {
     {
         $this->title[] = 'Менеджеры';
 
+        $this->_initPhoneInputWithFlags();
+
         $filter = $this->request->query('filter') ?: ['only_managers' => 1];
 
         $user = Auth::instance()->get_user();
