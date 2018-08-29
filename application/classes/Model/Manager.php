@@ -12,16 +12,9 @@ class Model_Manager extends Model
      * @param $manager
      * @param bool|false $userId
      */
-    public static function edit($params, $manager = false)
+    public static function edit($managerId, $params)
     {
-        if(empty($manager)){
-            $manager = User::current();
-        }
-
-        if(
-            empty($manager['MANAGER_ID']) ||
-            empty($manager['ROLE_ID'])
-        ){
+        if(empty($managerId)){
             return false;
         }
 
@@ -29,15 +22,19 @@ class Model_Manager extends Model
 
         $db = Oracle::init();
 
-        if (Access::deny('change_phone_note')) {
-            $managerCheck = Model_Manager::getManager($manager['MANAGER_ID']);
+        $managerCheck = Model_Manager::getManager($managerId);
 
+        if (Access::deny('change_phone_note')) {
             $params['manager_settings_phone_note'] = $managerCheck['PHONE_FOR_SMS'];
         }
 
+        if (empty($params['manager_settings_role'])) {
+            $params['manager_settings_role'] = $managerCheck['ROLE_ID'];
+        }
+
         $data = [
-            'p_manager_for_id' 	    => $manager['MANAGER_ID'],
-            'p_role_id' 	        => $manager['ROLE_ID'],
+            'p_manager_for_id' 	    => $managerId,
+            'p_role_id' 	        => $params['manager_settings_role'],
             'p_name' 	            => empty($params['manager_settings_name'])              ? '' : $params['manager_settings_name'],
             'p_surname' 	        => empty($params['manager_settings_surname'])           ? '' : $params['manager_settings_surname'],
             'p_middlename' 	        => empty($params['manager_settings_middlename'])        ? '' : $params['manager_settings_middlename'],
@@ -58,12 +55,12 @@ class Model_Manager extends Model
         if(
             !empty($params['manager_settings_password']) && !empty($params['manager_settings_password_again']) &&
             $params['manager_settings_password'] == $params['manager_settings_password_again'] &&
-            $manager['MANAGER_ID'] != Access::USER_TEST
+            $managerId != Access::USER_TEST
         ){
             //обновление паролей
 
             $data = [
-                'p_manager_id' 	    => $manager['MANAGER_ID'],
+                'p_manager_id' 	    => $managerId,
                 'p_new_password'    => empty($params['manager_settings_password'])      ? '' : $params['manager_settings_password'],
                 'p_manager_who_id'  => $user['MANAGER_ID'],
                 'p_error_code' 	    => 'out',

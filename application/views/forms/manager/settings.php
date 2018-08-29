@@ -4,18 +4,11 @@ if(empty($manager)){
     $manager = $user;
     $isEdit = false;
 }
-if(empty($width)){
-    $width = 170;
-}
 if(!isset($reload)){
     $reload = true;
 }
-if(empty($changeRole)){
-    $changeRole = false;
-}
 ?>
 <form method="post" onsubmit="return checkFormManagerSettings($(this));">
-    <input type="hidden" name="form_type" value="settings">
     <?if($isEdit){?>
         <input type="hidden" name="manager_settings_id" value="<?=$manager['MANAGER_ID']?>">
     <?}?>
@@ -23,7 +16,7 @@ if(empty($changeRole)){
         <div class="col">
             <table class="table_form">
                 <tr>
-                    <td class="gray right" width="<?=$width?>">Имя:</td>
+                    <td class="gray right" width="170">Имя:</td>
                     <td>
                         <input type="text" name="manager_settings_name" class="input_big" value="<?=$manager['MANAGER_NAME']?>">
                     </td>
@@ -60,7 +53,7 @@ if(empty($changeRole)){
                     </td>
                 </tr>
                 <?}?>
-                <?if($changeRole){?>
+                <?if(!empty($changeRole)){?>
                     <tr>
                         <td class="gray right">Роль:</td>
                         <td>
@@ -94,7 +87,7 @@ if(empty($changeRole)){
             <b class="f18">Смена пароля</b>
             <table class="table_form">
                 <tr class="form_attention">
-                    <td class="gray right" width="<?=$width?>">Логин:</td>
+                    <td class="gray right" width="170">Логин:</td>
                     <td>
                         <?if (Access::allow('clients_edit-login')) {?>
                             <div toggle_block="edit_login">

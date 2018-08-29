@@ -1,6 +1,4 @@
 <form method="post" onsubmit="return checkFormContractNoticeSettings($(this));">
-    <input type="hidden" name="form_type" value="settings_notices">
-
     <?/*?>
     <div class="switch_block">
         <div class="sb_title">

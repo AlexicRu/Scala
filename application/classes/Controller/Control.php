@@ -59,11 +59,16 @@ class Controller_Control extends Controller_Common {
 
         $managerSettingsForm = View::factory('forms/manager/settings');
 
+        $changeRole = true;
+
+        if (User::id() == $managerId) {
+            $changeRole = false;
+        }
+
         $managerSettingsForm
             ->set('manager', $manager)
-            ->set('width', 100)
             ->set('reload', 0)
-            ->set('changeRole', 1)
+            ->set('changeRole', $changeRole)
         ;
 
         $popupManagerAddClients = Form::popup('Добавление клиентов', 'manager/add_clients');

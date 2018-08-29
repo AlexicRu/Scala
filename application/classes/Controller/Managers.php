@@ -24,28 +24,16 @@ class Controller_Managers extends Controller_Common {
         $this->_initPhoneInputWithFlags();
 
 		$params = $this->request->post();
-		if(!empty($params) && $params['form_type'] == 'settings'){
-		    $user = false;
 
-            if(!empty($params['manager_settings_id'])){
-                $user = [
-                    'MANAGER_ID' => $params['manager_settings_id'],
-                    'ROLE_ID' => $params['manager_settings_role'],
-                ];
-            }
-
+		if(!empty($params)){
             //форма сабмититься обычным способом, и чек бокс приходит вот так
             if (isset($params['manager_settings_limit_restriction'])) {
                 $params['manager_settings_limit_restriction'] = $params['manager_settings_limit_restriction'] == 'on' ? 1 : 0;
             }
 
-			$result = Model_Manager::edit($params, $user);
+			$result = Model_Manager::edit($params['manager_settings_id'], $params);
 
             $this->jsonResult($result);
-		}
-
-		if(!empty($params) && $params['form_type'] == 'settings_notices'){
-
 		}
 
 		$managerSettingsForm = View::factory('forms/manager/settings');

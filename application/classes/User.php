@@ -132,4 +132,14 @@ class User
 
         return true;
     }
+
+    /**
+     * id текущего пользователя
+     *
+     * @return mixed
+     */
+    public static function id()
+    {
+        return self::current()['MANAGER_ID'];
+    }
 }
