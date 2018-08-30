@@ -1,7 +1,7 @@
 <h1>
     Новости
 
-    <?if(Access::allow('news_news-edit')){?>
+    <?if(Access::allow('news_news-edit', true)){?>
         <a href="#news_edit" class="btn fancy">Добавить новость</a>
     <?}?>
 </h1>
@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<?if(Access::allow('news_news-edit')){?>
+<?if(Access::allow('news_news-edit', true)){?>
     <?=$popupNewsAdd?>
 <?}?>
 

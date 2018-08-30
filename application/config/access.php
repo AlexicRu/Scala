@@ -54,6 +54,7 @@ return [
         ],
         'news_news-edit' => [
             Access::ROLE_ADMIN,
+            Access::ROLE_ADMIN_READONLY,
         ],
         'clients_bill-print' => [
             'a_1',
@@ -406,12 +407,16 @@ return [
             'client_contract_notify_config',
             'ctrl_manager_change_password',
             'ctrl_manager_edit',
+            'note_status_change',
+            'web_manager_site_tour',
         ],
         Access::ROLE_ADMIN_READONLY => [
             'auth_user',
             'notification_change_status',
             'ctrl_manager_change_password',
             'ctrl_manager_edit',
+            'note_status_change',
+            'web_manager_site_tour',
         ]
     ],
     /*

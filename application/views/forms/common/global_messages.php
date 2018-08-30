@@ -3,7 +3,6 @@
         <div class="news_elem">
             <div class="n_title"><?=$message['NOTE_TITLE']?></div>
             <div class="n_date gray"><?=$message['NOTE_DATE']?></div>
-            <?=$message['NOTE_ID']?>
             <?=$message['NOTE_BODY']?>
         </div>
     <?}?>
