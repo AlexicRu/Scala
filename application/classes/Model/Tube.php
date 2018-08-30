@@ -16,6 +16,7 @@ class Model_Tube extends Model
         $sql = (new Builder())->select()
             ->from('V_WEB_TUBES_LIST')
             ->where('agent_id = '.$user['AGENT_ID'])
+            ->where('is_owner = 1')
         ;
 
         return $db->query($sql);
