@@ -28,12 +28,18 @@ $(function(){
             ACCOUNTANT_SHORT:       '', //$('[name=ACCOUNTANT_SHORT]', block).val(),
         };
 
-        if(
-            params.NAME == '' ||
-            params.Y_ADDRESS == '' ||
-            params.INN == ''
-        ){
-            message(0, 'Заполните обязательные поля');
+        if(params.NAME == ''){
+            message(0, 'Заполните название фирмы');
+            return false;
+        }
+
+        if(params.Y_ADDRESS == ''){
+            message(0, 'Заполните юридический адрес');
+            return false;
+        }
+
+        if(params.INN == ''){
+            message(0, 'Заполните ИНН');
             return false;
         }
 

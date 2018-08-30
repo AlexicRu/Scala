@@ -40,17 +40,6 @@ function _saveSupplierInfo()
 
     var params = vueRawData(vueSupplierInfo.supplier);
 
-    /*if(
-        params.NAME == '' ||
-        params.Y_ADDRESS == '' ||
-        params.PHONE == '' ||
-        params.EMAIL == '' ||
-        params.INN == ''
-    ){
-        message(0, 'Заполните обязательные поля');
-        return false;
-    }*/
-
     $.post('/suppliers/supplier-edit/' + supplierId, { params:params }, function(data){
         if(data.success){
             message(1, 'Поставщик обновлен');
