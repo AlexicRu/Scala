@@ -215,23 +215,27 @@ class Listing
      * список труб
      *
      * @param $search
-     * @param ids
+     * @param $ids
      * @return array|bool|int
      */
     public static function getTubes($search = '', $ids = [])
     {
         $db = Oracle::init();
 
-        $user = Auth::instance()->get_user();
+        $user = User::current();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_TUBES_LIST t where t.agent_id=".$user['AGENT_ID'];
+        $sql = (new Builder())->select()
+            ->from('V_WEB_TUBES_LIST')
+            ->where('agent_id = '.$user['AGENT_ID'])
+            ->where('is_owner = 1')
+        ;
 
         if(!empty($search)){
-            $sql .= " and upper(t.TUBE_NAME) like ".mb_strtoupper(Oracle::quote('%'.$search.'%'));
+            $sql->where("upper(TUBE_NAME) like " . mb_strtoupper(Oracle::quote('%'.$search.'%')));
         }
 
         if(!empty($ids)){
-            $sql .= " and t.TUBE_ID in (".implode(',', $ids).")";
+            $sql->whereIn('TUBE_ID', $ids);
         }
 
         return $db->query($db->limit($sql, 0, self::$limit));

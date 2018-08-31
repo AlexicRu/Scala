@@ -7,7 +7,7 @@
             <b class="f18">Выбрать источник:</b><br>
             <select class="sources_list">
                 <?foreach ($tubesList as $tube) {?>
-                    <option value="<?=$tube['TUBE_ID']?>"><?=$tube['TUBE_NAME']?></option>
+                    <option value="<?=$tube['TUBE_ID']?>" <?=($tube['CARD_LIMIT_CHANGE_ID'] == 1 ? 'disabled' : '')?>><?=$tube['TUBE_NAME']?></option>
                 <?}?>
             </select>
             <br><br>
