@@ -51,6 +51,7 @@ return [
 			'a_22',
 			'a_31',
             'a_19',
+            'a_32',
         ],
         'news_news-edit' => [
             Access::ROLE_ADMIN,
@@ -66,6 +67,7 @@ return [
             'a_22',
             'a_31',
             'a_19',
+            'a_32',
         ],
         'control_tariffs' => [
             Access::ROLE_ADMIN,
