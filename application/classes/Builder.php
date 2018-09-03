@@ -194,31 +194,16 @@ class Builder
      */
     public function whereNotIn($param, $array)
     {
-        if (empty($param) || empty($array)) {
-            return $this;
-        }
-
-        //builder
-        if (is_a($array, 'Builder')) {
-            $string = $array->build();
-        } else {
-            $string = implode(', ', (array)$array);
-        }
-
-        $this->_where[] = [
-            'connector' => 'and',
-            'where'     => $param . ' not in (' . $string . ')',
-        ];
-
-        return $this;
+        return $this->whereIn($param, $array, true);
     }
 
     /**
      * @param $param
      * @param $array
+     * @param $notIn
      * @return $this
      */
-    public function whereIn($param, $array)
+    public function whereIn($param, $array, $notIn = false)
     {
         if (empty($param) || empty($array)) {
             return $this;
@@ -228,12 +213,18 @@ class Builder
         if (is_a($array, 'Builder')) {
             $string = $array->build();
         } else {
+            $array = (array)$array;
+
+            foreach ($array as &$elem) {
+                $elem = Oracle::quote($elem);
+            }
+
             $string = implode(', ', (array)$array);
         }
 
         $this->_where[] = [
             'connector' => 'and',
-            'where'     => $param . ' in (' . $string . ')',
+            'where'     => $param . ($notIn ? ' not ' : '') . ' in (' . $string . ')',
         ];
 
         return $this;

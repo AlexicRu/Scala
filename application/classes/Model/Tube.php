@@ -7,7 +7,7 @@ class Model_Tube extends Model
      *
      * @return array|bool
      */
-    public static function getTubes()
+    public static function getTubes($params = [])
     {
         $db = Oracle::init();
 
@@ -16,8 +16,11 @@ class Model_Tube extends Model
         $sql = (new Builder())->select()
             ->from('V_WEB_TUBES_LIST')
             ->where('agent_id = '.$user['AGENT_ID'])
-            ->where('is_owner = 1')
         ;
+
+        if (isset($params['is_owner'])) {
+            $sql->where('is_owner = ' . $params['is_owner']);
+        }
 
         return $db->query($sql);
     }

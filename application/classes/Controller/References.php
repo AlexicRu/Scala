@@ -55,7 +55,7 @@ class Controller_References extends Controller_Common {
 
         $this->_initJsGrid();
 
-        $tubesList = Model_Tube::getTubes();
+        $tubesList = Model_Tube::getTubes(['is_owner' => 1]);
         $servicesList = Listing::getServices();
 
         $this->tpl

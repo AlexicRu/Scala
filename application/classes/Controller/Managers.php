@@ -19,22 +19,24 @@ class Controller_Managers extends Controller_Common {
      */
 	public function action_settings()
 	{
-		$this->title[] = 'Настройки';
+        if ($this->request->is_ajax()) {
+            $params = $this->request->post();
 
-        $this->_initPhoneInputWithFlags();
+            if(!empty($params)){
+                //форма сабмититься обычным способом, и чек бокс приходит вот так
+                if (isset($params['manager_settings_limit_restriction'])) {
+                    $params['manager_settings_limit_restriction'] = $params['manager_settings_limit_restriction'] == 'on' ? 1 : 0;
+                }
 
-		$params = $this->request->post();
+                $result = Model_Manager::edit($params['manager_settings_id'], $params);
 
-		if(!empty($params)){
-            //форма сабмититься обычным способом, и чек бокс приходит вот так
-            if (isset($params['manager_settings_limit_restriction'])) {
-                $params['manager_settings_limit_restriction'] = $params['manager_settings_limit_restriction'] == 'on' ? 1 : 0;
+                $this->jsonResult($result);
             }
+        } else {
+            $this->title[] = 'Настройки';
 
-			$result = Model_Manager::edit($params['manager_settings_id'], $params);
-
-            $this->jsonResult($result);
-		}
+            $this->_initPhoneInputWithFlags();
+        }
 
 		$managerSettingsForm = View::factory('forms/manager/settings');
 
