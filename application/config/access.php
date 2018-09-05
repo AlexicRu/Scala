@@ -270,7 +270,13 @@ return [
         ],
         'change_phone_note' => [
             Access::ROLE_ROOT
-        ]
+        ],
+        'change_manager_settings_limit' => [
+            Access::ROLE_ADMIN,
+            Access::ROLE_SUPERVISOR,
+            Access::ROLE_MANAGER,
+            Access::ROLE_MANAGER_SALE_SUPPORT,
+        ],
     ],
     'deny' => [ //для всех остальных ролей будет разрешено
         // functions

@@ -77,10 +77,10 @@
             <h2>Мониторинг цен</h2>
 
             <div class="info__list">
-                <a href="/file/info/Мониторинг_цен/Price_Monitoring_апрель2018.pdf" class="info__item" target="_blank">
+                <a href="/file/info/Мониторинг_цен/Price_Monitoring_июль2018.pdf" class="info__item" target="_blank">
                     <div>
                         <div><span class="info__icon info__icon-pdf"></span></div>
-                        <div class="info__item-name">Price Monitoring апрель 2018</div>
+                        <div class="info__item-name">Price Monitoring июль 2018</div>
                     </div>
                     <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
                 </a>
@@ -91,17 +91,24 @@
                     </div>
                     <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
                 </a>
-                <a href="/file/info/Мониторинг_цен/Price_Monitoring_март2018.pdf" class="info__item" target="_blank">
-                    <div>
-                        <div><span class="info__icon info__icon-pdf"></span></div>
-                        <div class="info__item-name">Price Monitoring март 2018</div>
-                    </div>
-                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
-                </a>
                 <a href="/file/info/Мониторинг_цен/Price_Monitoring_05_07.pdf" class="info__item" target="_blank">
                     <div>
                         <div><span class="info__icon info__icon-pdf"></span></div>
                         <div class="info__item-name">Price Monitoring 05.07</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
+                <a href="/file/info/Мониторинг_цен/Price_Monitoring_апрель2018.pdf" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
+                        <div class="info__item-name">Price Monitoring апрель 2018</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
+                <a href="/file/info/Мониторинг_цен/Price_Monitoring_март2018.pdf" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
+                        <div class="info__item-name">Price Monitoring март 2018</div>
                     </div>
                     <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
                 </a>

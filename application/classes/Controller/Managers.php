@@ -28,7 +28,7 @@ class Controller_Managers extends Controller_Common {
                     $params['manager_settings_limit_restriction'] = $params['manager_settings_limit_restriction'] == 'on' ? 1 : 0;
                 }
 
-                $result = Model_Manager::edit($params['manager_settings_id'], $params);
+                $result = Model_Manager::edit(!empty($params['manager_settings_id']) ? $params['manager_settings_id'] : User::id(), $params);
 
                 $this->jsonResult($result);
             }
