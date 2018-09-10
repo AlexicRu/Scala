@@ -8,6 +8,9 @@ return [
     'recaptcha_public'  => '__REPLACE__',
     'recaptcha_secret'  => '__REPLACE__',
     'opengraph'         => '__REPLACE__',
+    'sms'               => [
+        '__PROVIDER__'  => ['__PARAMS__'],
+    ],
     'telegram'          => [
         '__REPLACE__'   => [ //bot name
             'name'      => '__REPLACE__',

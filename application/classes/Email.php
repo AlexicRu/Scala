@@ -149,7 +149,7 @@ class Email {
      */
     public static function appendFooter($message)
     {
-        $url = $actual_link = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . '/';
+        $url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . '/';
 
         $message .= '<br><br><br><img src="'. $url . Common::getAssetsLink() .'img/GloPro-logo-pack/GloPro-main-logo-small.png">';
 

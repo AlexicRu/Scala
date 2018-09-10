@@ -205,7 +205,7 @@ abstract class Telegram_Common
             }
         }
 
-        TelegramRequest::sendMessage($data);
+        return TelegramRequest::sendMessage($data);
     }
 
     /**

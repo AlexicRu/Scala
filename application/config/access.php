@@ -426,6 +426,8 @@ return [
             'ctrl_manager_edit',
             'note_status_change',
             'web_manager_site_tour',
+            'note_add',
+            'note_edit',
         ]
     ],
     /*

@@ -32,25 +32,22 @@ class Telegram_GloProInfo extends Telegram_Common
     /**
      * отправляем сообщение в привязанный чат
      *
+     * @param $chatId
      * @param $message
      */
-    public function sendInfo($message)
+    public function sendInfo($chatId, $message)
     {
-        $user = User::current();
-
-        if (empty($user['TELEGRAM_CHAT_ID'])) {
+        if (empty($chatId)) {
             return false;
         }
 
         $this->start();
 
-        $this->_chatId   = $user['TELEGRAM_CHAT_ID'];
+        $this->_chatId   = $chatId;
 
         $this->_answer[] = $message;
 
-        $this->answer();
-
-        return true;
+        return $this->answer();
     }
 
     /**
