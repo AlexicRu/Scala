@@ -166,6 +166,7 @@ return [
             'a_18',
             'a_19',
             'a_24',
+            'a_32',
         ],
         'managers_load-reports' => [
             Access::ROLE_ADMIN,

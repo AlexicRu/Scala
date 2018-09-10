@@ -172,7 +172,7 @@
                 <a href="/file/info/Паспорта_качества/Урал/АИ-100.pdf" class="info__item" target="_blank">
                     <div>
                         <div><span class="info__icon info__icon-pdf"></span></div>
-                        <div class="info__item-name">ААИ-100</div>
+                        <div class="info__item-name">АИ-100</div>
                     </div>
                     <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
                 </a>
