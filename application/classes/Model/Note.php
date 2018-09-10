@@ -27,6 +27,12 @@ class Model_Note extends Model
 
         $image = (!empty($params['image']) && is_file($path.$params['image'])) ? $params['image'] : '';
 
+        //todo костыль убрать
+        if (!empty($params['date'])) {
+            $params['date'] = explode(' ', $params['date']);
+            $params['date'] = $params['date'][0];
+        }
+
         if(!empty($params['id'])) {
             $data = [
                 'p_note_id' 		    => $params['id'],
@@ -100,26 +106,23 @@ class Model_Note extends Model
 
         if(!empty($params['pagination'])) {
             list($news, $more) = $db->pagination($sql, $params);
-
-            foreach($news as &$newsDetail){
-                $newsDetail['announce'] = strip_tags($newsDetail['NOTE_BODY']);
-
-                if(strlen($newsDetail['announce']) > 500){
-                    $newsDetail['announce'] = mb_strcut($newsDetail['announce'], 0, 500);
-                }
-            }
-
-            return [$news, $more];
+        } else {
+            $news = $db->tree($sql, 'NOTE_ID', true);
         }
 
-        $news = $db->tree($sql, 'NOTE_ID', true);
-
         foreach($news as &$newsDetail){
+            if (strpos($newsDetail['NOTE_DATE'], '00:00:00') !== false) {
+                $newsDetail['NOTE_DATE'] = str_replace(' 00:00:00', '', $newsDetail['NOTE_DATE']);
+            }
             $newsDetail['announce'] = strip_tags($newsDetail['NOTE_BODY']);
 
             if(strlen($newsDetail['announce']) > 500){
                 $newsDetail['announce'] = mb_strcut($newsDetail['announce'], 0, 500);
             }
+        }
+
+        if(!empty($params['pagination'])) {
+            return [$news, $more];
         }
 
         return $news;
