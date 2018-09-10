@@ -2,6 +2,9 @@
 
 class Model_Tube extends Model
 {
+    const STATE_ACTIVE = 'В работе';
+    const STATE_INACTIVE = 'Не в работе';
+
     /**
      * получаем список труб
      *

@@ -392,7 +392,7 @@ class Controller_Help extends Controller_Common
 
         foreach($res as $item){
             $return[] = [
-                'name' => $item['TUBE_NAME'],
+                'name' => ($item['CURRENT_STATE'] == Model_Tube::STATE_INACTIVE ? '[Не в работе] ' : '') . $item['TUBE_NAME'],
                 'value' => $item['TUBE_ID'],
             ];
         }
