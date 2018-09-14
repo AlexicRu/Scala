@@ -2,7 +2,7 @@
     <tr>
         <td class="gray right" width="170">Телефон для оповещений:</td>
         <td>
-            <input type="text" name="manager_settings_phone_note" class="input_big" value="<?=$manager['PHONE_FOR_SMS']?>">
+            <input type="text" name="manager_settings_phone_note" class="input_big" value="<?=$manager['PHONE_FOR_INFORM']?>">
         </td>
     </tr>
     <tr>

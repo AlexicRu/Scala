@@ -12,11 +12,31 @@ class Sender_Sms extends Sender
 
     public function __construct()
     {
-        $config = Kohana::$config->load('config');
+        $config = Kohana::$config->load('config')['sms'];
 
         $provider = 'Sender_Provider_SMSC';
 
         $this->_provider = new $provider($config['SMSC']);
+    }
+
+    /**
+     * принудительная отправка смс
+     *
+     * @param $phone
+     * @param $message
+     * @return bool
+     */
+    public function forceSend($phone, $message)
+    {
+        if (empty($phone) || empty($message)) {
+            return false;
+        }
+
+        $message = iconv('UTF-8', 'windows-1251', $message);
+
+        $this->_provider->sendSms($phone, $message);
+
+        return true;
     }
 
     /**
@@ -32,14 +52,16 @@ class Sender_Sms extends Sender
         }
 
         //не привязан телеграм
-        if (empty($this->_manager['PHONE_FOR_SMS'])) {
+        if (empty($this->_manager['PHONE_FOR_INFORM'])) {
             return false;
         }
 
-        $this->_operatorTo = $this->_manager['PHONE_FOR_SMS'];
+        $message = iconv('UTF-8', 'windows-1251', $message);
+
+        $this->_operatorTo = $this->_manager['PHONE_FOR_INFORM'];
 
         if (Common::isProd() || $this->_sendFromDev) {
-            $phone = $this->_manager['PHONE_FOR_SMS'];
+            $phone = $this->_manager['PHONE_FOR_INFORM'];
             $result = $this->_provider->sendSms($phone, $message);
         } else {
             $result = [0, 0];
@@ -143,5 +165,56 @@ class Sender_Sms extends Sender
         ]);
 
         return true;
+    }
+
+    /**
+     * проверяем телефон на корректность, генерируем код и отправляем
+     *
+     * @param $phone
+     */
+    public function sendConfirmCode($phone)
+    {
+        if (empty($phone)) {
+            return false;
+        }
+
+        $cache = Cache::instance();
+        $key = 'sms_confirm_phone_timer_' . $phone;
+        $key2 = 'sms_confirm_phone_code_' . $phone;
+
+        if ($cache->get($key) !== null) {
+            return false;
+        }
+
+        $code = rand(1000, 9999);
+
+        $message = 'Код для включения СМС информирования: ' . $code;
+
+        $this->forceSend($phone, $message);
+
+        $cache->set($key, true, 60);
+        $cache->set($key2, $code, 60*10);
+
+        return ['renew' => 60, 'lifetime' => 60*10];
+    }
+
+    /**
+     * проверка кода подтверждения
+     *
+     * @param $phone
+     * @param $code
+     */
+    public function checkConfirmCode($phone, $code)
+    {
+        if (empty($phone) || empty($code)) {
+            return false;
+        }
+
+        $cache = Cache::instance();
+        $key = 'sms_confirm_phone_code_' . $phone;
+
+        $codeInCache = $cache->get($key);
+
+        return $codeInCache == $code;
     }
 }

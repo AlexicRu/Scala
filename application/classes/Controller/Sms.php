@@ -40,7 +40,7 @@ class Controller_Sms extends Controller_Common
             $this->jsonResult(false, "Неверный код");
         }
 
-        $manager = Model_Manager::getManager(['PHONE_FOR_SMS' => $phone]);
+        $manager = Model_Manager::getManager(['PHONE_FOR_INFORM' => $phone]);
 
         //$result = Model_Manager::disableSmsInform($manager['MANAGER_ID']); //todo
 

@@ -161,7 +161,7 @@ header{
 aside{
   vertical-align: top; position: fixed; width: 210px; overflow: hidden; z-index: 2; height: 100%; padding-top: 85px;
   .transition();
-  >a, .sub_menu_title{
+  >div >a, .sub_menu_title{
     display: block; vertical-align: middle; font-size: 18px; text-decoration: none; font-family: @SegoeUISemiBold; padding: 9px 0 13px 55px; width: 210px;
     .transition();
     &:hover, &.act{
@@ -171,6 +171,11 @@ aside{
       font-size:20px; width: 35px; display: inline-block; padding-top: 3px; float: left; margin-left: -37px;
     }
   }
+
+  display: flex; flex-direction: column; justify-content: space-between; color: @color2;
+}
+.copyright{
+  text-align: center; padding: 10px; font-size: 12px; opacity: 0.6;
 }
 .wrapper{
   &.menu_collapsed{
@@ -179,6 +184,9 @@ aside{
     }
     .content{
       padding-left: 85px;
+    }
+    .copyright{
+      display: none;
     }
   }
 }
@@ -618,6 +626,9 @@ table{
   display: table; width: 100%;
   .col{
     display: table-cell; padding: 20px;
+    &.line_inner{
+      white-space: normal;
+    }
   }
   &__dashboard{
     >.col{

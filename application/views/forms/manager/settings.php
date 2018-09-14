@@ -1,15 +1,5 @@
-<?
-$isEdit = true;
-if(empty($manager)){
-    $manager = $user;
-    $isEdit = false;
-}
-if(!isset($reload)){
-    $reload = true;
-}
-?>
-<form method="post" onsubmit="return checkFormManagerSettings($(this));">
-    <?if($isEdit){?>
+<form method="post" onsubmit="return checkFormManagerSettings($(this));" class="manager_settings_form">
+    <?if(empty($selfEdit)){?>
         <input type="hidden" name="manager_settings_id" value="<?=$manager['MANAGER_ID']?>">
     <?}?>
     <div class="as_table">
@@ -45,14 +35,6 @@ if(!isset($reload)){
                         <input type="text" name="manager_settings_phone" class="input_big" value="<?=$manager['CELLPHONE']?>">
                     </td>
                 </tr>
-                <?if (Access::allow('change_phone_note')) {?>
-                <tr>
-                    <td class="gray right">Телефон для оповещений:</td>
-                    <td>
-                        <input type="text" name="manager_settings_phone_note" class="input_big"  value="<?=$manager['PHONE_FOR_SMS']?>">
-                    </td>
-                </tr>
-                <?}?>
                 <?if(!empty($changeRole)){?>
                     <tr>
                         <td class="gray right">Роль:</td>
@@ -117,18 +99,58 @@ if(!isset($reload)){
                     </td>
                 </tr>
             </table>
+
+            <br>
+            <b class="f18">Информирование</b>
+            <br><br>
+
+            <div class="manager_settings_sms_inform">
+                <div <?=($manager['SMS_IS_ON'] ? '' : 'style="display:none"')?>>
+                    СМС информирование <b>подключено</b>
+
+                    <?if(!empty($selfEdit)){?>
+                        &nbsp;&nbsp;&nbsp; <span class="btn btn_small btn_red btn_reverse" onclick="disableSmsInform($(this))">Отключить</span>
+                    <?}?>
+                </div>
+                <div <?=(!$manager['SMS_IS_ON'] ? '' : 'style="display:none"')?>>
+                    СМС информирование <b>не подключено</b>
+
+                    <?if(!empty($selfEdit)){?>
+                        &nbsp;&nbsp;&nbsp;
+                        <a href="#manager_sms" class="fancy btn btn_small btn_green btn_reverse">Подключить</a>
+                    <?}?>
+                </div>
+            </div>
         </div>
     </div>
-
 </form>
+
+<?if (!empty($selfEdit) && !empty($popupManagerSms)) {
+    echo $popupManagerSms;
+}?>
 
 <script>
     $(function () {
-        $("[name=manager_settings_phone], [name=manager_settings_phone_note]").each(function () {
+        $("[name=manager_settings_phone]").each(function () {
             renderPhoneInput($(this));
         });
         renderCheckbox($('[name=manager_settings_limit]'));
     });
+
+    <?if (!empty($selfEdit)) {?>
+    function disableSmsInform(btn)
+    {
+        $.post('/sms/disabled-sms-inform', {}, function (data) {
+            if (data.success) {
+                message(1, 'СМС информирование успешно отключено');
+
+                $('.manager_settings_sms_inform > div', btn.closest('.manager_settings_form')).toggle();
+            } else {
+                message(1, 'Ошибка отключение СМС информирования');
+            }
+        });
+    }
+    <?}?>
 
     function checkFormManagerSettings(form)
     {
@@ -141,7 +163,6 @@ if(!isset($reload)){
         }
 
         var phone = $("[name=manager_settings_phone]");
-        var phoneNote = $("[name=manager_settings_phone_note]");
 
         if (
             phone.intlTelInput('isValidNumber') == false &&
@@ -152,20 +173,11 @@ if(!isset($reload)){
             return false;
         }
 
-        if (
-            phoneNote.intlTelInput('isValidNumber') == false &&
-            ('+' + phoneNote.intlTelInput("getSelectedCountryData").dialCode) != phoneNote.intlTelInput('getNumber') &&
-            phoneNote.intlTelInput('getNumber') != ''
-        ) {
-            message(0, 'Некорректный номер телефона для оповещений');
-            return false;
-        }
-
         $.post('/managers/settings', form.find(':input[name!="edit_login"]').serialize(), function (data) {
            if(data.success){
                message(1, 'Данные обновлены');
 
-               <?if($reload){?>
+               <?if(!empty($noReload)){?>
                setTimeout(function () {
                    window.location.reload();
                }, 1000);

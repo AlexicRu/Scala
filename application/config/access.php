@@ -269,9 +269,6 @@ return [
             Access::ROLE_SUPERVISOR,
             Access::ROLE_ADMIN_READONLY,
         ],
-        'change_phone_note' => [
-            Access::ROLE_ROOT
-        ],
         'change_manager_settings_limit' => [
             Access::ROLE_ADMIN,
             Access::ROLE_SUPERVISOR,

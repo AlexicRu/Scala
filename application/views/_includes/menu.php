@@ -1,4 +1,5 @@
 <aside class="scroll">
+    <div>
     <?
     foreach($menu as $link => $item){
         if(Access::allow($link.'_index', true)) {
@@ -37,6 +38,10 @@
         }
     }
     ?>
+    </div>
+    <div class="copyright">
+        &copy; GloPro 2015-<?=date('Y')?>
+    </div>
 </aside>
 
 <script>

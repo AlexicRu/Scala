@@ -22,6 +22,8 @@ class Controller_Managers extends Controller_Common {
         if ($this->request->is_ajax()) {
             $params = $this->request->post();
 
+            $result = false;
+
             if(!empty($params)){
                 //форма сабмититься обычным способом, и чек бокс приходит вот так
                 if (isset($params['manager_settings_limit_restriction'])) {
@@ -29,16 +31,27 @@ class Controller_Managers extends Controller_Common {
                 }
 
                 $result = Model_Manager::edit(!empty($params['manager_settings_id']) ? $params['manager_settings_id'] : User::id(), $params);
-
-                $this->jsonResult($result);
             }
+
+            $this->jsonResult($result);
         } else {
             $this->title[] = 'Настройки';
 
             $this->_initPhoneInputWithFlags();
         }
 
+        $user = User::current();
+
 		$managerSettingsForm = View::factory('forms/manager/settings');
+        $popupManagerSms = Form::popup('Подключение смс информирования', 'manager/sms', [
+            'manager' => $user
+        ]);
+
+        $managerSettingsForm
+            ->set('manager', $user)
+            ->set('selfEdit', true)
+            ->set('popupManagerSms', $popupManagerSms)
+        ;
 
 		$this->tpl
 			->bind('managerSettingsForm', $managerSettingsForm)
