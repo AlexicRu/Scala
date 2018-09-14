@@ -75,6 +75,12 @@ abstract class Telegram_Common
             //связываем аккаунт
             $res = User::connectToTelegram($phone, $this->_chatId);
 
+            $manager = Model_Manager::getManager(['PHONE_FOR_INFORM' => $phone]);
+
+            Model_Manager::edit($manager['MANAGER_ID'], [
+                'manager_telegram_is_on' => 1
+            ]);
+
             if (!empty($res)) {
                 $this->_answer[] = 'Доступ получен';
             } else {

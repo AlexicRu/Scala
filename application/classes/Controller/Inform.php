@@ -1,11 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Controller_Sms extends Controller_Common
+class Controller_Inform extends Controller_Common
 {
     /**
      * аяксово грузим поставщиков
      */
-    public function action_sendConfirmCode()
+    public function action_sendSmsConfirmCode()
     {
         $phone = $this->request->post('phone');
 
@@ -24,9 +24,9 @@ class Controller_Sms extends Controller_Common
     }
 
     /**
-     * подключаем смс информирование
+     * подключаем информирование
      */
-    public function action_enableSmsInform()
+    public function action_enableInform()
     {
         $phone = $this->request->post('phone');
         $code = $this->request->post('code');
@@ -36,13 +36,13 @@ class Controller_Sms extends Controller_Common
          */
         $sender = Sender::factory('sms');
 
-        if (!$sender->checkConfirmCode($phone, $code)) {
+        $managerId = $sender->checkConfirmCode($phone, $code);
+
+        if (empty($managerId)) {
             $this->jsonResult(false, "Неверный код");
         }
 
-        $manager = Model_Manager::getManager(['PHONE_FOR_INFORM' => $phone]);
-
-        //$result = Model_Manager::disableSmsInform($manager['MANAGER_ID']); //todo
+        $result = Model_Manager::enableInform($managerId, $phone);
 
         if (!empty($result)) {
             $this->jsonResult(true);
@@ -53,11 +53,11 @@ class Controller_Sms extends Controller_Common
     /**
      * отключаем смс информирование
      */
-    public function action_disableSmsInform()
+    public function action_disableInform()
     {
         $user = User::current();
 
-        //$result = Model_Manager::disableSmsInform($user['MANAGER_ID']); //todo
+        $result = Model_Manager::disableInform($user['MANAGER_ID']);
 
         if (!empty($result)) {
             $this->jsonResult(true);

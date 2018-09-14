@@ -11,6 +11,10 @@ class Sender_Telegram extends Sender
      */
     public function send($message)
     {
+        if (empty($this->_manager['TELEGRAM_IS_ON'])) {
+            return false;
+        }
+
         if (empty($message)) {
             return false;
         }

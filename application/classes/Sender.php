@@ -54,6 +54,13 @@ class Sender
 
         $types = !empty($forceType) ? [$forceType] : ['push', 'telegram', 'sms'];
 
+        if (empty($manager['SMS_IS_ON'])) {
+            unset($types['sms']);
+        }
+        if (empty($manager['TELEGRAM_IS_ON'])) {
+            unset($types['telegram']);
+        }
+
         foreach ($types as $type) {
             $sender = self::factory($type);
             $sender->_messageId = $messageId;

@@ -104,29 +104,45 @@
             <b class="f18">Информирование</b>
             <br><br>
 
-            <div class="manager_settings_sms_inform">
-                <div <?=($manager['SMS_IS_ON'] ? '' : 'style="display:none"')?>>
-                    СМС информирование <b>подключено</b>
+            <div class="manager_settings_inform">
+                <div <?=($manager['PHONE_FOR_INFORM'] ? '' : 'style="display:none"')?>>
+                    <b>Подключено</b>
 
                     <?if(!empty($selfEdit)){?>
-                        &nbsp;&nbsp;&nbsp; <span class="btn btn_small btn_red btn_reverse" onclick="disableSmsInform($(this))">Отключить</span>
+                        &nbsp;&nbsp;&nbsp; <span class="btn btn_small btn_red btn_reverse" onclick="disableInform($(this))">Отключить</span>
                     <?}?>
                 </div>
-                <div <?=(!$manager['SMS_IS_ON'] ? '' : 'style="display:none"')?>>
-                    СМС информирование <b>не подключено</b>
+                <div <?=(!$manager['PHONE_FOR_INFORM'] ? '' : 'style="display:none"')?>>
+                    <b>Не подключено</b>
 
                     <?if(!empty($selfEdit)){?>
                         &nbsp;&nbsp;&nbsp;
-                        <a href="#manager_sms" class="fancy btn btn_small btn_green btn_reverse">Подключить</a>
+                        <a href="#manager_inform" class="fancy btn btn_small btn_green btn_reverse">Подключить</a>
                     <?}?>
                 </div>
+            </div>
+
+            <div class="padding__20">
+                <label>
+                    <input type="checkbox" name="manager_sms_is_on" <?=($manager['SMS_IS_ON'] ? 'checked' : '')?> <?=($manager['PHONE_FOR_INFORM'] ? '' : 'disabled')?>>
+                    СМС информирование
+                </label>
+                <br>
+                <label>
+                    <input type="checkbox" name="manager_telegram_is_on" <?=($manager['TELEGRAM_IS_ON'] ? 'checked' : '')?> <?=($manager['PHONE_FOR_INFORM'] ? '' : 'disabled')?>>
+                    Telegram информирование. <span class="gray">Необходима авторизация через Telegram бота</span>
+                </label>
+                <br><br>
+                <a href="https://t.me/GloProInfo_bot" target="_blank">@GloProInfo_bot</a> - наш телеграм бот.<br>
+                <i class="gray">Перейдите по ссылке или найдите его через поиск в Telegram.</i><br>
+                <i class="gray">Авторизация в телеграм боте автоматически установит галочку Telegram информирования.</i>
             </div>
         </div>
     </div>
 </form>
 
-<?if (!empty($selfEdit) && !empty($popupManagerSms)) {
-    echo $popupManagerSms;
+<?if (!empty($selfEdit) && !empty($popupManagerInform)) {
+    echo $popupManagerInform;
 }?>
 
 <script>
@@ -138,15 +154,15 @@
     });
 
     <?if (!empty($selfEdit)) {?>
-    function disableSmsInform(btn)
+    function disableInform(btn)
     {
-        $.post('/sms/disabled-sms-inform', {}, function (data) {
+        $.post('/inform/disabled-inform', {}, function (data) {
             if (data.success) {
-                message(1, 'СМС информирование успешно отключено');
+                message(1, 'Информирование успешно отключено');
 
-                $('.manager_settings_sms_inform > div', btn.closest('.manager_settings_form')).toggle();
+                $('.manager_settings_inform > div', btn.closest('.manager_settings_form')).toggle();
             } else {
-                message(1, 'Ошибка отключение СМС информирования');
+                message(1, 'Ошибка отключение информирования');
             }
         });
     }

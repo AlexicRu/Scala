@@ -47,6 +47,10 @@ class Sender_Sms extends Sender
      */
     public function send($message)
     {
+        if (empty($this->_manager['SMS_IS_ON'])) {
+            return false;
+        }
+
         if (empty($message)) {
             return false;
         }
@@ -171,16 +175,20 @@ class Sender_Sms extends Sender
      * проверяем телефон на корректность, генерируем код и отправляем
      *
      * @param $phone
+     * @param $managerId
      */
-    public function sendConfirmCode($phone)
+    public function sendConfirmCode($phone, $managerId = false)
     {
         if (empty($phone)) {
             return false;
         }
 
+        if (empty($managerId)) {
+            $managerId = User::id();
+        }
+
         $cache = Cache::instance();
         $key = 'sms_confirm_phone_timer_' . $phone;
-        $key2 = 'sms_confirm_phone_code_' . $phone;
 
         if ($cache->get($key) !== null) {
             return false;
@@ -188,12 +196,12 @@ class Sender_Sms extends Sender
 
         $code = rand(1000, 9999);
 
-        $message = 'Код для включения СМС информирования: ' . $code;
+        $message = 'Код для включения информирования: ' . $code;
 
         $this->forceSend($phone, $message);
 
         $cache->set($key, true, 60);
-        $cache->set($key2, $code, 60*10);
+        $cache->set('sms_confirm_phone_code_' . $phone . '_' . $code, $managerId, 60*10);
 
         return ['renew' => 60, 'lifetime' => 60*10];
     }
@@ -211,10 +219,10 @@ class Sender_Sms extends Sender
         }
 
         $cache = Cache::instance();
-        $key = 'sms_confirm_phone_code_' . $phone;
+        $key = 'sms_confirm_phone_code_' . $phone . '_' . $code;
 
-        $codeInCache = $cache->get($key);
+        $managerId = $cache->get($key);
 
-        return $codeInCache == $code;
+        return $managerId;
     }
 }

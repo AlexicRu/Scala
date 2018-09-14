@@ -18,7 +18,7 @@
     <tr>
         <td></td>
         <td>
-            <span class="btn" onclick="doAddSmsInform($(this))">
+            <span class="btn" onclick="doAddInform($(this))">
                 Подключить
             </span>
         </td>
@@ -39,7 +39,7 @@
         });
     });
 
-    function doAddSmsInform(btn)
+    function doAddInform(btn)
     {
         var phoneNote = $("[name=manager_settings_phone_note]");
         var confirmCode = $("[name=manager_settings_confirm_code]").val();
@@ -55,18 +55,18 @@
         }
 
         var params = {
-            phone: phoneNote,
+            phone: phoneNote.intlTelInput('getNumber'),
             code: confirmCode,
         };
 
-        $.post('/sms/enable-sms-inform', params, function (data) {
+        $.post('/inform/enable-inform', params, function (data) {
             if (data.success) {
-                message(1, 'СМС информирование успешно подключено');
+                message(1, 'Информирование успешно подключено');
                 $.fancybox.close();
 
                 var form = $('.manager_settings_form:visible');
 
-                $('.manager_settings_sms_inform > div', form).toggle();
+                $('.manager_settings_inform > div', form).toggle();
             } else {
                 var error = '';
 
@@ -74,7 +74,7 @@
                     error = data.data;
                 }
 
-                message(0, 'Ошибка подключение СМС информирования. ' + error);
+                message(0, 'Ошибка подключение информирования. ' + error);
             }
         });
     }
@@ -95,7 +95,7 @@
             return false;
         }
 
-        $.post('/sms/send-confirm-code', {phone: phoneNote.intlTelInput('getNumber')}, function (data) {
+        $.post('/inform/send-sms-confirm-code', {phone: phoneNote.intlTelInput('getNumber')}, function (data) {
             if (data.success) {
                 message(1, 'СМС с кодом отправлено');
 
