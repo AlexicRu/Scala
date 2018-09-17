@@ -1,70 +1,54 @@
-<form method="post" onsubmit="return checkFormContractNoticeSettings($(this));">
-    <?/*?>
-    <div class="switch_block">
-        <div class="sb_title">
-            <span class="sb_block"><input type="checkbox" class="switch" checked></span>
-            <b>Периодичность отправки отчетов</b>
-        </div>
-        <div class="sb_content">
-            <span class="sb_block"></span>
-            <select>
-                <option>Раз в неделю</option>
-            </select>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <small class="gray">День:</small>
-            <select>
-                <option>Вторник</option>
-            </select>
-        </div>
-    </div>
-<?*/?>
-
-    <div class="switch_block">
-        <div class="sb_title">
-            <!--span class="sb_block"><input type="checkbox" class="switch" checked name="notice_email_fl"></span-->
-            <b>Уведомления по e-mail</b>
-        </div>
-        <div class="sb_content">
-            <label class="sb_block"><input type="checkbox" name="notice_email_card" <?=($settings['EML_CARD_BLOCK'] ? 'checked' : '')?>></label>
-            При блокировке карт
-        </div>
-        <div class="sb_content">
-            <label class="sb_block"><input type="checkbox" name="notice_email_firm"  <?=($settings['EML_CONTRACT_BLOCK'] ? 'checked' : '')?>></label>
-            При блокировке фирмы
-        </div>
-        <div class="sb_content">
-            <label class="sb_block"><input type="checkbox" name="notice_email_barrier"  <?=($settings['EML_BLNC_CTRL'] ? 'checked' : '')?>></label>
-            При приближению к критическому порогу<br>
-            <small class="gray">Порог:</small> <input type="text" name="notice_email_barrier_value" value="<?=$settings['EML_BLNC_CTRL_VALUE']?>">
-        </div>
-    </div>
-    <?/*?>
-    <div class="switch_block">
-        <div class="sb_title">
-            <span class="sb_block"><input type="checkbox" class="switch"></span>
-            <b>Оповещения по SMS</b> <a href="#">Цены на SMS оповещения</a>
-        </div>
-        <div class="sb_content sb_disabled"><span class="sb_block"><input type="checkbox" disabled></span> При блокировке карт</div>
-        <div class="sb_content sb_disabled"><span class="sb_block"><input type="checkbox" disabled checked></span> При блокировке фирмы</div>
-        <div class="sb_content sb_disabled">
-            <span class="sb_block"><input type="checkbox" disabled></span>
-            При приближению к критическому порогу<br>
-            <small class="gray">Порог:</small> <input type="text" placeholder="1500" disabled>
-        </div>
-        <div class="sb_content sb_disabled"><span class="sb_block"><input type="checkbox" disabled></span> Пополнение счета</div>
-        <div class="sb_content sb_disabled"><span class="sb_block"><input type="checkbox" disabled></span> Транзакции по карте</div>
-    </div>
-<?*/?>
-    <div class="switch_block">
-        <span class="sb_block"></span>
-        <button class="btn btn_green btn_reverse btn_manager_settings_go"><i class="icon-ok"></i> Сохранить</button>
-    </div>
-</form>
+<table class="table_form form_settings">
+    <tr>
+        <td class="gray right" width="170">При блокировке карт:</td>
+        <td>
+            <label><input type="checkbox" name="notice_email_card" <?=($settings['EML_CARD_BLOCK'] ? 'checked' : '')?>> E-mail</label>
+            <?if ($manager['PHONE_FOR_INFORM']) {?>
+            <br><label><input type="checkbox" name="notice_sms_card" <?=($settings['SMS_CARD_BLOCK'] ? 'checked' : '')?>> СМС / Telegram</label>
+            <?}?>
+        </td>
+    </tr>
+    <tr>
+        <td class="gray right">При блокировке фирмы:</td>
+        <td>
+            <label><input type="checkbox" name="notice_email_firm" <?=($settings['EML_CONTRACT_BLOCK'] ? 'checked' : '')?>> E-mail</label>
+            <?if ($manager['PHONE_FOR_INFORM']) {?>
+            <br><label><input type="checkbox" name="notice_sms_firm" <?=($settings['SMS_CONTRACT_BLOCK'] ? 'checked' : '')?>> СМС / Telegram</label>
+            <?}?>
+        </td>
+    </tr>
+    <tr>
+        <td class="gray right">При приближению к критическому порогу:</td>
+        <td>
+            <label><input type="checkbox" name="notice_email_barrier" <?=($settings['EML_BLNC_CTRL'] ? 'checked' : '')?>> E-mail</label>
+            <?if ($manager['PHONE_FOR_INFORM']) {?>
+            <br><label><input type="checkbox" name="notice_sms_barrier" <?=($settings['SMS_BLNC_CTRL'] ? 'checked' : '')?>> СМС / Telegram</label>
+            <?}?>
+        </td>
+    </tr>
+    <tr>
+        <td class="gray right">Порог:</td>
+        <td>
+            <input type="text" name="notice_email_barrier_value" value="<?=$settings['EML_BLNC_CTRL_VALUE']?>">
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <span class="btn btn_reverse" onclick="submitForm($(this), checkFormContractNoticeSettings)"><i class="icon-ok"></i> Сохранить</span>
+            <span class="btn btn_red fancy_close">Отмена</span>
+        </td>
+    </tr>
+</table>
 
 <script>
-    function checkFormContractNoticeSettings(form)
+    function checkFormContractNoticeSettings(btn)
     {
+        var form = btn.closest('.form_settings');
         var params = {
+            notice_sms_card:            $('[name=notice_sms_card]', form).is(":checked") ? 1 : 0,
+            notice_sms_firm:            $('[name=notice_sms_firm]', form).is(":checked") ? 1 : 0,
+            notice_sms_barrier:         $('[name=notice_sms_barrier]', form).is(":checked") ? 1 : 0,
             notice_email_card:          $('[name=notice_email_card]', form).is(":checked") ? 1 : 0,
             notice_email_firm:          $('[name=notice_email_firm]', form).is(":checked") ? 1 : 0,
             notice_email_barrier:       $('[name=notice_email_barrier]', form).is(":checked") ? 1 : 0,
