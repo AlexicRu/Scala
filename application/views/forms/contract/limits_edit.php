@@ -6,7 +6,7 @@
                 <?foreach($contractLimits as $limits){
                     $limitFirst = reset($limits);
                     ?>
-                    <tr limit_group="<?$limitFirst['LIMIT_ID']?>">
+                    <tr limit_group="<?=$limitFirst['LIMIT_ID']?>">
                         <td>
                             <?foreach($limits as $limit){?>
                                 <div class="form_elem" limit_service><nobr>

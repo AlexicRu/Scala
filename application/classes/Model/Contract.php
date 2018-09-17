@@ -779,7 +779,7 @@ class Model_Contract extends Model
             foreach ($currentLimits as $restrictions) {
                 $limit = reset($restrictions);
 
-                if ($delAll || in_array($limit['LIMIT_ID'], $limitsIds)) {
+                if ($delAll || !in_array($limit['LIMIT_ID'], $limitsIds)) {
                     //удаляем лишние лимиты
                     self::deleteLimit($limit['LIMIT_ID']);
                 }

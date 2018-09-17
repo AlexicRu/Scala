@@ -156,13 +156,17 @@
     <?if (!empty($selfEdit)) {?>
     function disableInform(btn)
     {
+        if (!confirm('Отключаем информирование?')) {
+            return false;
+        }
+
         $.post('/inform/disable-inform', {}, function (data) {
             if (data.success) {
                 message(1, 'Информирование успешно отключено');
 
                 $('.manager_settings_inform > div', btn.closest('.manager_settings_form')).toggle();
             } else {
-                message(1, 'Ошибка отключение информирования');
+                message(0, 'Ошибка отключение информирования');
             }
         });
     }

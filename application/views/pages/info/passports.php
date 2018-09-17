@@ -63,6 +63,27 @@
             <h2>Центральный регион</h2>
 
             <div class="info__list">
+                <a href="/file/info/Паспорта_качества/Центральный_регион/3536_ДТ-Л-К5от05.09.2018.pdf" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
+                        <div class="info__item-name">№3536 ДТ-Л-К5 от 05.09.2018</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
+                <a href="/file/info/Паспорта_качества/Центральный_регион/2520_Аи-92-К5_от_05.09.2018.pdf" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
+                        <div class="info__item-name">№2520 Аи-92-К5 от 05.09.2018</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
+                <a href="/file/info/Паспорта_качества/Центральный_регион/2507_Аи-95-К5_от_03.09.2018.pdf" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
+                        <div class="info__item-name">№2507 Аи-95-К5 от 03.09.2018</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
                 <a href="/file/info/Паспорта_качества/Центральный_регион/Паспорт_качества_2018.07.15_19-01_Р-р_6.pdf" class="info__item" target="_blank">
                     <div>
                         <div><span class="info__icon info__icon-pdf"></span></div>
@@ -91,6 +112,20 @@
             <h2>Сибирь</h2>
 
             <div class="info__list">
+                <a href="/file/info/Паспорта_качества/Сибирь/1504_G-Drive_100_от_03.08.2018.pdf" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
+                        <div class="info__item-name">№1504 G-Drive 100 от 03.08.2018</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
+                <a href="/file/info/Паспорта_качества/Сибирь/2496_G-Drive_100_от_02.09.2018.pdf" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
+                        <div class="info__item-name">№2496 G-Drive 100 от 02.09.2018</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
                 <a href="/file/info/Паспорта_качества/Сибирь/Сибирь.pdf" class="info__item" target="_blank">
                     <div>
                         <div><span class="info__icon info__icon-pdf"></span></div>
