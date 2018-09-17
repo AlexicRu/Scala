@@ -156,7 +156,7 @@
     <?if (!empty($selfEdit)) {?>
     function disableInform(btn)
     {
-        $.post('/inform/disabled-inform', {}, function (data) {
+        $.post('/inform/disable-inform', {}, function (data) {
             if (data.success) {
                 message(1, 'Информирование успешно отключено');
 
