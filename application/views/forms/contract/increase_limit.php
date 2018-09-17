@@ -20,8 +20,7 @@
     function contractIncreaseLimit()
     {
         var params = {
-            contract_id:    increaseLimitContractId,
-            group_id:       increaseLimitGroupId,
+            limit_id:       increaseLimitId,
             amount:         $('[name=contract_increase_limit_name]').val()
         };
 

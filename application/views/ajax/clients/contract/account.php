@@ -46,7 +46,7 @@
                             <?if(Access::allow('clients_contract_increase_limit')){?>
                             <td>
                                 <?if(!$restrict['INFINITELY']){?>
-                                    <span class="btn btn_small" onclick="openIncreaseLimitPopup(<?=$restrict['CONTRACT_ID']?>, <?=$restrict['LIMIT_GROUP']?>)">+</span>
+                                    <span class="btn btn_small" onclick="openIncreaseLimitPopup(<?=$restrict['LIMIT_ID']?>)">+</span>
                                 <?}?>
                             </td>
                             <?}?>
@@ -170,12 +170,10 @@
     });
 
     <?if(Access::allow('clients_contract_increase_limit')){?>
-    var increaseLimitContractId = 0;
-    var increaseLimitGroupId = 0;
-    function openIncreaseLimitPopup(contractId, groupId)
+    var increaseLimitId = 0;
+    function openIncreaseLimitPopup(limitId)
     {
-        increaseLimitContractId = contractId;
-        increaseLimitGroupId = groupId;
+        increaseLimitId = limitId;
 
         $.fancybox('#contract_increase_limit', {
             padding: [0,0,0,0]

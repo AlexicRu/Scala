@@ -675,10 +675,9 @@ class Controller_Clients extends Controller_Common {
     public function action_contractIncreaseLimit()
     {
         $amount = $this->request->post('amount');
-        $groupId = $this->request->post('group_id');
-        $contractId = $this->request->post('contract_id');
+        $limitId = $this->request->post('limit_id');
 
-        $result = Model_Contract::editLimit($contractId, $groupId, $amount);
+        $result = Model_Contract::editLimit($limitId, $amount);
 
         if(empty($result)){
             $this->jsonResult(false);

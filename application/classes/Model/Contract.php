@@ -737,30 +737,53 @@ class Model_Contract extends Model
         $db = Oracle::init();
 
         /*
-        S1,S2,S3:P1:T1:V1:PCS1;
+        S1,S2,S3:P1:T1:V1:PCS1:LiD1
         где
         S1,...,Sn - ID услуг в группе
         P1 - параметр лимита (1 - в литрах, 2 в валюте)
         T1 - тип лимита 4 - установлен лимит, 5 - в случае, если стоит галочка "Неограниченно"
         V1 - размер лимита (если стоит галочка "Неограниченно" передавать 0)
-        PCS - лимит на количество транзакций, пока всегда 0
+        PCS1 - лимит на количество транзакций, пока всегда 0
+        LiD1 - означает ID управляемого лимита. Для нового лимита (в случае его добавления) требуется передавать "-1"
          */
         $limitsArray = [];
+        $limitsIds = [];
 
         if (!empty($limits)) {
-            foreach ($limits as $group => $limit) {
-
+            foreach ($limits as $limit) {
                 $limitsArray[] =
                     implode(',', $limit['services']) . ':' .
                     $limit['param'] . ':' .
                     ($limit['unlim'] ? 5 : 4) . ':' .
                     str_replace(",", ".", (int)$limit['value']) . ':' .
-                    0 . ';';
+                    0 . ':' .
+                    (!empty($limit['id']) ? $limit['id'] : -1) .
+                ';';
+
+                if (!empty($limit['id'])) {
+                    $limitsIds[] = $limit['id'];
+                }
             }
         }
 
+        $delAll = false;
+
         if (empty($limitsArray)) {
             $limitsArray = [-1];
+            $delAll = true;
+        }
+
+        $currentLimits = self::getLimits($contractId);
+
+        if (!empty($currentLimits)) {
+            foreach ($currentLimits as $restrictions) {
+                $limit = reset($restrictions);
+
+                if ($delAll || in_array($limit['LIMIT_ID'], $limitsIds)) {
+                    //удаляем лишние лимиты
+                    self::deleteLimit($limit['LIMIT_ID']);
+                }
+            }
         }
 
         $data = [
@@ -772,6 +795,32 @@ class Model_Contract extends Model
         ];
 
         $res = $db->procedure('client_contract_service_limit', $data);
+
+        if(!empty($res)){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * удаление лимита
+     *
+     * @param $limitId
+     * @return bool
+     */
+    public static function deleteLimit($limitId)
+    {
+        if (empty($limitId)) {
+            return false;
+        }
+
+        $data = [
+            'p_limit_id'		        => $limitId,
+            'p_error_code' 		        => 'out',
+        ];
+
+        $res = Oracle::init()->procedure('client_contract_srv_limit_del', $data);
 
         if(!empty($res)){
             return false;
@@ -794,29 +843,28 @@ class Model_Contract extends Model
         $sql = (new Builder())->select()
             ->from('V_WEB_CL_CTR_SERV_RESTRIC t')
             ->where('t.contract_id = ' . (int)$contractId)
+            ->where('t.is_deleted = 0')
         ;
 
-        return Oracle::init()->tree($sql, 'LIMIT_GROUP');
+        return Oracle::init()->tree($sql, 'LIMIT_ID');
     }
 
     /**
      * редактируем конкретный лимит
      *
-     * @param $contractId
-     * @param $groupId
+     * @param $limitId
      * @param $amount
      */
-    public static function editLimit($contractId, $groupId, $amount)
+    public static function editLimit($limitId, $amount)
     {
-        if (empty($contractId) || empty($groupId)) {
+        if (empty($limitId)) {
             return false;
         }
 
         $user = User::current();
 
         $data = [
-            'p_contract_id'		=> $contractId,
-            'p_group_id'		=> $groupId,
+            'p_limit_id'		=> $limitId,
             'p_value'		    => $amount,
             'p_manager_id' 		=> $user['MANAGER_ID'],
             'p_error_code' 		=> 'out',

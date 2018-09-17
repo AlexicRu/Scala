@@ -6,7 +6,7 @@
                 <?foreach($contractLimits as $limits){
                     $limitFirst = reset($limits);
                     ?>
-                    <tr limit_group>
+                    <tr limit_group="<?$limitFirst['LIMIT_ID']?>">
                         <td>
                             <?foreach($limits as $limit){?>
                                 <div class="form_elem" limit_service><nobr>
@@ -196,6 +196,7 @@
         $('[limit_group]', form).each(function(){
             var group_block = $(this);
             var group = {
+                id:         group_block.attr('limit_group'),
                 value:      $('[name=limit_value]', group_block).val(),
                 param:      $('[name=limit_param]', group_block).val(),
                 unlim:      $('[name=limit_unlim]', group_block).is(':checked') ? 1 : 0,
