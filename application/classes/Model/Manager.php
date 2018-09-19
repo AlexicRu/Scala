@@ -24,7 +24,7 @@ class Model_Manager extends Model
 
         $manager = Model_Manager::getManager($managerId);
 
-        if (empty($manager['SENDER_SMS'])) {
+        if (!($manager['SENDER_SMS'] || Access::allow('root'))) {
             $params['manager_sms_is_on'] = 0;
         }
 

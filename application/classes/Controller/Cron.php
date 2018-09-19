@@ -73,7 +73,7 @@ class Controller_Cron extends Controller_Template
             'locked'    => 10
         ]);
 
-        if (empty($queue)) {
+        if (empty($toUnlock)) {
             echo 'empty queue';
             die;
         }

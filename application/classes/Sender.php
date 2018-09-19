@@ -3,8 +3,8 @@
 class Sender
 {
     const STATUS_NEW        = 0;
-    const STATUS_PENDING    = 1;
-    const STATUS_SENT       = 2;
+    const STATUS_SENT       = 1;
+    const STATUS_PENDING    = 2;
     const STATUS_CANCEL     = 3;
 
     const TYPE_PUSH         = 1;
@@ -32,7 +32,7 @@ class Sender
         $className = 'Sender_' . ucfirst($driver);
 
         if (!class_exists($className)) {
-            throw new HTTP_Exception_500('Wrong driver');
+            throw new HTTP_Exception_500('Wrong driver: ' . $driver);
         }
 
         $class = new $className();
@@ -52,7 +52,7 @@ class Sender
 
         $manager = Model_Manager::getManager($managerId);
 
-        $types = !empty($forceType) ? [$forceType] : ['push', 'telegram', 'sms'];
+        $types = !empty($forceType) ? [self::_getForceTypeName($forceType)] : ['push', 'telegram', 'sms'];
 
         if (empty($manager['SMS_IS_ON'])) {
             unset($types['sms']);
@@ -74,6 +74,13 @@ class Sender
         }
 
         return false;
+    }
+
+    protected static function _getForceTypeName($forceType)
+    {
+        return $forceType == self::TYPE_PUSH ? 'push' :
+            ($forceType == self::TYPE_TELEGRAM ? 'telegram' : 'sms')
+        ;
     }
 
     /**
@@ -106,7 +113,7 @@ class Sender
             $sql->where('attempt < ' . (int)$params['<attempts']);
         }
 
-        //заброкированные более 5 минут назад
+        //заброкированные более 10 минут назад
         if (!empty($params['locked'])) {
             $sql->where('(sysdate - DATE_UPDATE_OUR) * 24 * 60 > ' . (int)$params['locked']);
         }

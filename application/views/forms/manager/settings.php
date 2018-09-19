@@ -124,13 +124,16 @@
 
             <div class="padding__20 manager_settings_inform_checkboxes">
                 <label>
-                    <input type="checkbox" name="manager_sms_is_on" <?=($manager['SMS_IS_ON'] ? 'checked' : '')?> <?=($manager['PHONE_FOR_INFORM'] && $manager['SENDER_SMS'] ? '' : 'disabled')?>>
-                    SMS информирование
+                    <input type="checkbox" name="manager_sms_is_on"
+                        <?=($manager['SMS_IS_ON'] ? 'checked' : '')?>
+                        <?=(($manager['PHONE_FOR_INFORM'] && $manager['SENDER_SMS']) || Access::allow('root') ? '' : 'disabled')?>
+                    >
+                    SMS
                 </label>
                 <br>
                 <label>
                     <input type="checkbox" name="manager_telegram_is_on" <?=($manager['TELEGRAM_IS_ON'] ? 'checked' : '')?> <?=($manager['PHONE_FOR_INFORM'] ? '' : 'disabled')?>>
-                    Telegram информирование. <span class="gray">Необходима авторизация через Telegram бота</span>
+                    Telegram <span class="gray">Необходима авторизация через Telegram бота</span>
                 </label>
                 <br><br>
                 <a href="https://t.me/GloProInfo_bot" target="_blank">@GloProInfo_bot</a> - наш телеграм бот.<br>
