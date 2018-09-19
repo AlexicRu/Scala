@@ -6,7 +6,7 @@ return array(
         'agent'         => 'Дистрибьюторы',
     ]],
     'info'              => ['title' => 'Инфо-портал', 'icon' => 'icon-news', 'children' => [
-        'index'         => 'Инфо-портал',
+        'index'         => 'Информация',
         'marketing'     => 'РИМ',
         'passports'     => 'Паспорта качества',
     ]],
