@@ -106,7 +106,7 @@
 
             <div class="manager_settings_inform">
                 <div <?=($manager['PHONE_FOR_INFORM'] ? '' : 'style="display:none"')?>>
-                    <b>Подключено</b>
+                    <b>Подключено на номер <span class="manager_settings_inform_phone"><?=$manager['PHONE_FOR_INFORM']?></span></b>
 
                     <?if(!empty($selfEdit)){?>
                         &nbsp;&nbsp;&nbsp; <span class="btn btn_small btn_red btn_reverse" onclick="disableInform($(this))">Отключить</span>

@@ -67,6 +67,7 @@
                 var form = $('.manager_settings_form:visible');
 
                 $('.manager_settings_inform > div', form).toggle();
+                $('.manager_settings_inform_phone', form).text(params.phone);
             } else {
                 var error = '';
 
