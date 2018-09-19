@@ -98,7 +98,7 @@ class Controller_Cron extends Controller_Template
         }
 
         foreach ($queue as $message) {
-            (new Sender_Sms())->checkStatus($message['MESSAGE_ID'], $message);
+            (new Sender_Sms())->setMessageId($message['MESSAGE_ID'])->checkStatus($message['SEND_OPERATOR_ID'], $message);
         }
     }
 }

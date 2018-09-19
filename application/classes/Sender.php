@@ -101,12 +101,16 @@ class Sender
             $sql->where('send_status = ' . $params['status']);
         }
 
+        if (isset($params['type'])) {
+            $sql->where('send_type = ' . $params['type']);
+        }
+
         if (isset($params['operator_status'])) {
             $sql->where('operator_status = ' . $params['operator_status']);
         }
 
         if (isset($params['!operator_status'])) {
-            $sql->where('operator_status != ' . $params['!operator_status']);
+            $sql->where('coalesce(operator_status, 0) != ' . $params['!operator_status']);
         }
 
         if (isset($params['<attempts'])) {
@@ -243,5 +247,18 @@ class Sender
         }
 
         return false;
+    }
+
+    /**
+     * установка id сообщения с которым идет работа
+     *
+     * @param $messageId
+     * @return $this
+     */
+    public function setMessageId($messageId)
+    {
+        $this->_messageId = $messageId;
+
+        return $this;
     }
 }

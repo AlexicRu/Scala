@@ -116,9 +116,9 @@ class Sender_Sms extends Sender
     /**
      * Проверка статуса
      */
-    public function checkStatus($messageId, $data)
+    public function checkStatus($operatorMessageId, $data)
     {
-        $result = $this->_provider->getStatus($messageId, $data['SENT_TO']);
+        $result = $this->_provider->getStatus($operatorMessageId, $data['SENT_TO']);
 
         if (isset($result[1]) && $result[1] < 0) {
             /*
