@@ -24,6 +24,10 @@ class Model_Manager extends Model
 
         $manager = Model_Manager::getManager($managerId);
 
+        if (empty($manager['SENDER_SMS'])) {
+            $params['manager_sms_is_on'] = 0;
+        }
+
         $data = [
             'p_manager_for_id' 	    => $managerId,
             'p_role_id' 	        => !isset($params['manager_settings_role'])              ? $manager['ROLE_ID'] : $params['manager_settings_name'],

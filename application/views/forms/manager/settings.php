@@ -124,7 +124,7 @@
 
             <div class="padding__20 manager_settings_inform_checkboxes">
                 <label>
-                    <input type="checkbox" name="manager_sms_is_on" <?=($manager['SMS_IS_ON'] ? 'checked' : '')?> <?=($manager['PHONE_FOR_INFORM'] ? '' : 'disabled')?>>
+                    <input type="checkbox" name="manager_sms_is_on" <?=($manager['SMS_IS_ON'] ? 'checked' : '')?> <?=($manager['PHONE_FOR_INFORM'] && $manager['SENDER_SMS'] ? '' : 'disabled')?>>
                     SMS информирование
                 </label>
                 <br>
