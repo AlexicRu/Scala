@@ -604,10 +604,6 @@ class Model_Manager extends Model
      */
     public static function enableInform($managerId, $phone = '')
     {
-        if (empty($phone)) {
-            return false;
-        }
-
         $data = [
             'p_manager_id' 	    => $managerId,
             'p_manager_phone' 	=> $phone,

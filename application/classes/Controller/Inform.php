@@ -51,7 +51,7 @@ class Controller_Inform extends Controller_Common
     }
 
     /**
-     * отключаем смс информирование
+     * отключаем sms информирование
      */
     public function action_disableInform()
     {

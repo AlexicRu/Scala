@@ -122,10 +122,10 @@
                 </div>
             </div>
 
-            <div class="padding__20">
+            <div class="padding__20 manager_settings_inform_checkboxes">
                 <label>
                     <input type="checkbox" name="manager_sms_is_on" <?=($manager['SMS_IS_ON'] ? 'checked' : '')?> <?=($manager['PHONE_FOR_INFORM'] ? '' : 'disabled')?>>
-                    СМС информирование
+                    SMS информирование
                 </label>
                 <br>
                 <label>
@@ -165,6 +165,7 @@
                 message(1, 'Информирование успешно отключено');
 
                 $('.manager_settings_inform > div', btn.closest('.manager_settings_form')).toggle();
+                $('.manager_settings_inform_checkboxes [type=checkbox]', btn.closest('.manager_settings_form')).prop('disabled', true).trigger('change');
             } else {
                 message(0, 'Ошибка отключение информирования');
             }

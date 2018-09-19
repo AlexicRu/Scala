@@ -20,7 +20,7 @@ class Sender_Sms extends Sender
     }
 
     /**
-     * принудительная отправка смс
+     * принудительная отправка sms
      *
      * @param $phone
      * @param $message

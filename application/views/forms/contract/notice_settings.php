@@ -4,7 +4,7 @@
         <td>
             <label><input type="checkbox" name="notice_email_card" <?=($settings['EML_CARD_BLOCK'] ? 'checked' : '')?>> E-mail</label>
             <?if ($manager['PHONE_FOR_INFORM']) {?>
-            <br><label><input type="checkbox" name="notice_sms_card" <?=($settings['SMS_CARD_BLOCK'] ? 'checked' : '')?>> СМС / Telegram</label>
+            <br><label><input type="checkbox" name="notice_sms_card" <?=($settings['SMS_CARD_BLOCK'] ? 'checked' : '')?>> SMS / Telegram</label>
             <?}?>
         </td>
     </tr>
@@ -13,7 +13,16 @@
         <td>
             <label><input type="checkbox" name="notice_email_firm" <?=($settings['EML_CONTRACT_BLOCK'] ? 'checked' : '')?>> E-mail</label>
             <?if ($manager['PHONE_FOR_INFORM']) {?>
-            <br><label><input type="checkbox" name="notice_sms_firm" <?=($settings['SMS_CONTRACT_BLOCK'] ? 'checked' : '')?>> СМС / Telegram</label>
+            <br><label><input type="checkbox" name="notice_sms_firm" <?=($settings['SMS_CONTRACT_BLOCK'] ? 'checked' : '')?>> SMS / Telegram</label>
+            <?}?>
+        </td>
+    </tr>
+    <tr>
+        <td class="gray right">При блокировке фирмы:</td>
+        <td>
+            <label><input type="checkbox" name="notice_email_firm" <?=($settings['EML_CONTRACT_BLOCK'] ? 'checked' : '')?>> E-mail</label>
+            <?if ($manager['PHONE_FOR_INFORM']) {?>
+                <br><label><input type="checkbox" name="notice_sms_firm" <?=($settings['SMS_CONTRACT_BLOCK'] ? 'checked' : '')?>> SMS / Telegram</label>
             <?}?>
         </td>
     </tr>
@@ -22,7 +31,7 @@
         <td>
             <label><input type="checkbox" name="notice_email_barrier" <?=($settings['EML_BLNC_CTRL'] ? 'checked' : '')?>> E-mail</label>
             <?if ($manager['PHONE_FOR_INFORM']) {?>
-            <br><label><input type="checkbox" name="notice_sms_barrier" <?=($settings['SMS_BLNC_CTRL'] ? 'checked' : '')?>> СМС / Telegram</label>
+            <br><label><input type="checkbox" name="notice_sms_barrier" <?=($settings['SMS_BLNC_CTRL'] ? 'checked' : '')?>> SMS / Telegram</label>
             <?}?>
         </td>
     </tr>

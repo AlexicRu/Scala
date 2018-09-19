@@ -39,7 +39,7 @@ class Controller_Cron extends Controller_Template
 
     /**
      * рассылка уведомлений
-     * последовательность: пуш, телеграм, смс
+     * последовательность: пуш, телеграм, sms
      *
      * @throws HTTP_Exception_500
      */
@@ -82,7 +82,7 @@ class Controller_Cron extends Controller_Template
     }
 
     /**
-     * проверяем статусы смс у оператора
+     * проверяем статусы sms у оператора
      */
     public function action_checkSmsStatus()
     {

@@ -42,7 +42,7 @@ class Sender
 
     /**
      * рассылка уведомлений
-     * последовательность: пуш, телеграм, смс
+     * последовательность: пуш, телеграм, sms
      */
     public function sendMessage($messageId, $managerId, $message, $forceType = false)
     {
@@ -188,7 +188,7 @@ class Sender
     }
 
     /**
-     * редактируем сообщение, например в смс при изменении статуса
+     * редактируем сообщение, например в sms при изменении статуса
      *
      * @param $messageId
      * @param $params
