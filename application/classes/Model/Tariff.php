@@ -11,6 +11,9 @@ class Model_Tariff extends Model
     const TARIFF_PARAM_PARAM_CURRENCY   = 2;
     const TARIFF_PARAM_PARAM_DISCOUNT   = 3;
 
+    const TARIFF_STATUS_ACTIVE = 1;
+    const TARIFF_STATUS_DELETED = 4;
+
     public static $paramsTypes = [
         self::TARIFF_PARAM_TYPE_DISCOUNT    => 'Скидка',
         self::TARIFF_PARAM_TYPE_MARKUP      => 'Наценка',
@@ -47,6 +50,7 @@ class Model_Tariff extends Model
         $sql = (new Builder())->select()
             ->from('V_WEB_TARIF_LIST t')
             ->whereNotIn('t.tarif_id', [0, -1])
+            ->where('t.tarif_status = ' . Model_Tariff::TARIFF_STATUS_ACTIVE)
             ->orderBy('t.TARIF_NAME')
         ;
 
@@ -342,5 +346,37 @@ class Model_Tariff extends Model
         ;
 
         return Oracle::init()->query($sql);
+    }
+
+    /**
+     * редактирование статуса тарифа
+     *
+     * @param $tariffId
+     * @param $status
+     * @return bool
+     */
+    public static function changeTariffStatus($tariffId, $status)
+    {
+        if (empty($tariffId) || empty($status)) {
+            return false;
+        }
+
+        $data = [
+            'p_tarif_id' 	    => $tariffId,
+            'p_new_status' 	    => $status,
+            'p_manager_id' 	    => User::id(),
+            'p_error_code' 	    => 'out',
+        ];
+
+        $res = Oracle::init()->procedure('ctrl_tarif_status', $data, true);
+
+        if($res['p_error_code'] != Oracle::CODE_SUCCESS){
+            if($res['p_error_code'] == Oracle::CODE_ERROR_EXISTS) {
+                Messages::put('Тариф закреплен за договором');
+            }
+
+            return false;
+        }
+        return true;
     }
 }

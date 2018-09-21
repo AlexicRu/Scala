@@ -177,6 +177,26 @@ function sectionMove(way, btn)
     }
 }
 
+function deleteTariff(btn)
+{
+    if (!confirm('Удаляем?')) {
+        return false;
+    }
+
+    var wrapper = btn.closest('.tariff_wrapper');
+
+    var tariffId = wrapper.find('[name=tarif_id]').val();
+
+    $.post('/control/delete-tariff', {tariff_id: tariffId}, function (data) {
+        if (data.success) {
+            message(1, 'Тариф удален');
+            window.location.reload();
+        } else {
+            message(0, 'Ошибка удаления тарифа');
+        }
+    });
+}
+
 function saveTariff(btn)
 {
     var wrapper = btn.closest('.tariff_wrapper');

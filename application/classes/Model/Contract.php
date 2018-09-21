@@ -298,17 +298,19 @@ class Model_Contract extends Model
 
 		$user = Auth::instance()->get_user();
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_LIST where agent_id = ".Oracle::quote($user['AGENT_ID']);
+		$sql = (new Builder())->select()
+            ->from('V_WEB_TARIF_LIST')
+            ->where('agent_id = ' . $user['AGENT_ID'])
+            ->where('tarif_status = ' . Model_Tariff::TARIFF_STATUS_ACTIVE)
+        ;
 
         if (!empty($params['tarif_name'])) {
-            $sql .= " and upper(tarif_name) like ".mb_strtoupper(Oracle::quote('%'.$params['tarif_name'].'%'));
+            $sql->where('upper(tarif_name) like ' . mb_strtoupper(Oracle::quote('%'.$params['tarif_name'].'%')));
         }
 
         if (!empty($params['ids'])) {
-            $sql .= " and id in (".implode(',', array_map('intval', $params['ids'])).")";
+            $sql->whereIn('id', array_map('intval', $params['ids']));
         }
-
-        $sql .= " order by tarif_name";
 
 		if (!empty($params['limit'])) {
             return $db->query($db->limit($sql, 0, $params['limit']));

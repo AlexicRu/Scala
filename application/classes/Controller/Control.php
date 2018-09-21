@@ -374,8 +374,11 @@ class Controller_Control extends Controller_Common {
         $version = $this->request->post('version');
 
         $tariff = Model_Tariff::getAvailableTariffs(['tariff_id' => $tariffId]);
+
         if(!empty($tariff)){
             $tariff = reset($tariff);
+        } else {
+            $this->html('<i class="gray">Тариф не найден</i>');
         }
 
         $versions = Model_Tariff::getVersions($tariffId);
@@ -829,5 +832,20 @@ class Controller_Control extends Controller_Common {
         $rows = $parser->parse($data, $mimeType);
 
         $this->jsonResult(true, ['rows' => $rows]);
+    }
+
+    /**
+     * удаление тарифа
+     */
+    public function action_deleteTariff()
+    {
+        $tariffId = $this->request->post('tariff_id');
+
+        $result = Model_Tariff::changeTariffStatus($tariffId, Model_Tariff::TARIFF_STATUS_DELETED);
+
+        if (empty($result)) {
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true);
     }
 }
