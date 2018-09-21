@@ -17,7 +17,7 @@
                         </option>
                     <?}?>
                 </select>
-                <span class="btn btn_small btn_green btn_reverse" onclick="loadTariffVersion($(this))">Загрузить</span>
+                <span class="btn btn_small btn_green btn_reverse" onclick="loadTariffVersion($(this))">Посмотреть</span>
             </td>
         </tr>
     </table>
@@ -32,9 +32,14 @@
             <?}?>
         <?}?>
     </div>
+
+    <?if ($tariff['current_version'] == $tariff['LAST_VERSION']) {?>
     <span class="btn btn_add_section" onclick="addSection($(this))">+ Добавить секцию</span>
 
     <div class="row_btns">
         <span class="btn btn_green" onclick="saveTariff($(this))"><i class="icon-ok"></i> Сохранить</span>
     </div>
+    <?} else {?>
+        <i class="gray">Только просмотр</i>
+    <?}?>
 </div>
