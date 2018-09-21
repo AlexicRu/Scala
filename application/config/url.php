@@ -28,5 +28,7 @@ return [
         '.*\.bin-oil\.com',
         'tway\.pro',
         '.*\.tway\.pro',
+        'petrolpark\.ru',
+        '.*\.petrolpark\.ru',
     ],
 ];

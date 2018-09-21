@@ -322,4 +322,25 @@ class Model_Tariff extends Model
 
         return true;
     }
+
+    /**
+     * получаем доступные версии тарифов
+     *
+     * @param $tariffId
+     * @return array|bool
+     */
+    public static function getVersions($tariffId)
+    {
+        if (empty($tariffId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_TARIF_HISTORY')
+            ->where('tarif_id = ' . $tariffId)
+            ->orderBy('VERSION_ID desc')
+        ;
+
+        return Oracle::init()->query($sql);
+    }
 }

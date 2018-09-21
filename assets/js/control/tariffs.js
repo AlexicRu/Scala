@@ -273,3 +273,31 @@ function saveTariff(btn)
         }
     });
 }
+
+
+function loadTariff(tariff, force, version)
+{
+    var block = $('.tariffs_block[tab_content='+ tariff +']');
+
+    if(block.text() == '' || force == true){
+        block.empty().addClass('block_loading');
+
+        if (!version) {
+            version = $('[tab='+ tariff +']').attr('version');
+        }
+
+        $.post('/control/load-tariff/' + tariff, { version: version }, function(data){
+            block.html(data).removeClass('block_loading');
+        });
+    }
+}
+
+function loadTariffVersion(btn)
+{
+    var wrapper = btn.closest('.tariff_wrapper');
+    var select = wrapper.find('[name=tariff_versions]');
+    var version = select.val();
+    var tariff = wrapper.find('[name=tarif_id]').val();
+
+    loadTariff(tariff, true, version);
+}

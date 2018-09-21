@@ -7,6 +7,19 @@
                 <input type="text" name="tarif_name" class="input_big input_grand" value="<?=(!empty($tariff['TARIF_NAME']) ? Text::quotesForForms($tariff['TARIF_NAME']) : '')?>">
             </td>
         </tr>
+        <tr>
+            <td class="gray right">Версия:</td>
+            <td>
+                <select name="tariff_versions">
+                    <?foreach ($tariff['versions'] as $version) {?>
+                        <option value="<?=$version['VERSION_ID']?>" <?=($version['VERSION_ID'] == $tariff['current_version'] ? 'selected' : '')?>>
+                            <?=$version['VERSION_ID']?> от <?=$version['DATE_CREATE_STR']?>
+                        </option>
+                    <?}?>
+                </select>
+                <span class="btn btn_small btn_green btn_reverse" onclick="loadTariffVersion($(this))">Загрузить</span>
+            </td>
+        </tr>
     </table>
 
     <div class="t_sections_list">

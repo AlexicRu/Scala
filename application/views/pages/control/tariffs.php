@@ -62,17 +62,4 @@
             }
         });
     });
-
-    function loadTariff(tariff, force)
-    {
-        var block = $('.tariffs_block[tab_content='+ tariff +']');
-
-        if(block.text() == '' || force == true){
-            block.empty().addClass('block_loading');
-
-            $.post('/control/load-tariff/' + tariff, { version: $('[tab='+ tariff +']').attr('version') }, function(data){
-                block.html(data).removeClass('block_loading');
-            });
-        }
-    }
 </script>

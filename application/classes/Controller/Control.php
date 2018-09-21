@@ -371,14 +371,19 @@ class Controller_Control extends Controller_Common {
             $this->html(Model_Tariff::buildTemplate([], []));
         }
 
-        $lastVersion = $this->request->post('version');
+        $version = $this->request->post('version');
 
         $tariff = Model_Tariff::getAvailableTariffs(['tariff_id' => $tariffId]);
         if(!empty($tariff)){
             $tariff = reset($tariff);
         }
 
-        $tariffSettings = Model_Tariff::getTariffSettings($tariffId, $lastVersion);
+        $versions = Model_Tariff::getVersions($tariffId);
+
+        $tariff['versions'] = $versions;
+        $tariff['current_version'] = $version;
+
+        $tariffSettings = Model_Tariff::getTariffSettings($tariffId, $version);
 
         $this->html(Model_Tariff::buildTemplate($tariff, $tariffSettings));
     }
