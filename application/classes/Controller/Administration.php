@@ -153,6 +153,10 @@ class Controller_Administration extends Controller_Common
     public function action_calcTariffs()
     {
         $this->_initJsGrid();
+
+        $calcQueue = Model_Tariff::getCalcQueue();
+
+        $this->tpl->bind('queue', $calcQueue);
     }
 
     /**
@@ -174,7 +178,52 @@ class Controller_Administration extends Controller_Common
      */
     public function action_calcTariff()
     {
-        $this->jsonResult(1, []);
+        $contractId = $this->request->post('contract_id');
+        $start = $this->request->post('start');
+        $end = $this->request->post('end');
+
+        $queuedContracts = Model_Tariff::getCalcQueue();
+
+        $badFl = false;
+        foreach ($queuedContracts as $contract) {
+            if ($contract['CONTRACT_ID'] == $contractId) {
+                Messages::put('Уже ведется расчет по договору: ' . $contract['CONTRACT_NAME']);
+                $badFl = true;
+            }
+        }
+
+        if ($badFl) {
+            $this->jsonResult(false);
+        }
+
+        //дата начала и дата окончания расчета тарифа не старше чем 3 месяца от текущей даты (указать в примечании, что расчет тарифа старше 3х месяцав через поддержку)
+        $dateStart = DateTime::createFromFormat('d.m.Y', $start);
+        $dateEnd = DateTime::createFromFormat('d.m.Y', $end);
+
+        if (
+            !$dateEnd ||
+            !$dateStart ||
+            $dateEnd > $dateStart ||
+            (time() - 60*60*24*30*3) > $dateStart  ||
+            (time() - 60*60*24*30*3) > $dateEnd
+        ) {
+            Messages::put('Некорректные даты');
+            $this->jsonResult(false);
+        }
+
+        $contractSettings = Model_Contract::getContractSettings($contractId);
+
+        $tariffId = $contractSettings['TARIF_OFFLINE'];
+
+        $result = Model_Tariff::calcTariff($tariffId, $contractId, [
+            'start' => $start,
+            'end' => $end,
+        ]);
+
+        if (empty($result)) {
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true);
     }
 
     /**

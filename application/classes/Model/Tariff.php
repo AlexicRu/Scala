@@ -379,4 +379,50 @@ class Model_Tariff extends Model
         }
         return true;
     }
+
+    /**
+     * ставим расчет тарифа в очередь
+     *
+     * @param $tariffId
+     * @param $contractId
+     * @param array $params
+     * @return bool
+     */
+    public static function calcTariff($tariffId, $contractId, $params = [])
+    {
+        if (empty($tariffId) || empty($contractId)) {
+            return false;
+        }
+
+        $data = [
+            'p_contract_id' 	=> $contractId,
+            'p_tarif_id' 	    => $tariffId,
+            'p_tarif_version' 	=> null,
+            'p_date_begin' 	    => !empty($params['start']) ? $params['start'] : date('01.m.Y'),
+            'p_date_end' 	    => !empty($params['end']) ? $params['end'] : date('d.m.Y'),
+            'p_manager_id' 	    => User::id(),
+            'p_error_code' 	    => 'out',
+        ];
+
+        $res = Oracle::init()->procedure('srv_ctr_tarif_calculate', $data);
+
+        if($res != Oracle::CODE_SUCCESS){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * получаем текущую очередь расчета тарифов
+     */
+    public static function getCalcQueue()
+    {
+        $sql = (new Builder())->select()
+            ->from('V_WEB_QUEUE_TARIF_CALC')
+            ->where('agent_id = ' . User::current()['AGENT_ID'])
+            ->orderBy('record_id')
+        ;
+
+        return Oracle::init()->query($sql);
+    }
 }

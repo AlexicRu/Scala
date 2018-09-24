@@ -23,9 +23,9 @@
         <tr>
             <td class="gray right">Период:</td>
             <td>
-                <input type="text" name="date_start_<?=$iteration?>" class="datepicker" readonly>
+                <input type="text" name="date_start_<?=$iteration?>" class="datepicker" readonly value="<?=date('01.m.Y')?>">
                 -
-                <input type="text" name="date_end_<?=$iteration?>" class="datepicker" readonly>
+                <input type="text" name="date_end_<?=$iteration?>" class="datepicker" readonly value="<?=date('d.m.Y')?>">
             </td>
         </tr>
     </table>
