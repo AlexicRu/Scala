@@ -153,10 +153,6 @@ class Controller_Administration extends Controller_Common
     public function action_calcTariffs()
     {
         $this->_initJsGrid();
-
-        $calcQueue = Model_Tariff::getCalcQueue();
-
-        $this->tpl->bind('queue', $calcQueue);
     }
 
     /**
@@ -203,9 +199,9 @@ class Controller_Administration extends Controller_Common
         if (
             !$dateEnd ||
             !$dateStart ||
-            $dateEnd > $dateStart ||
-            (time() - 60*60*24*30*3) > $dateStart  ||
-            (time() - 60*60*24*30*3) > $dateEnd
+            $dateEnd->getTimestamp() < $dateStart->getTimestamp() ||
+            (time() - 60*60*24*30*3) > $dateStart->getTimestamp()  ||
+            (time() - 60*60*24*30*3) > $dateEnd->getTimestamp()
         ) {
             Messages::put('Некорректные даты');
             $this->jsonResult(false);
@@ -224,6 +220,20 @@ class Controller_Administration extends Controller_Common
             $this->jsonResult(false);
         }
         $this->jsonResult(true);
+    }
+
+    /**
+     * грузим очередь текущих расечтов тарифов
+     */
+    public function action_loadCalcQueue()
+    {
+        $calcQueue = Model_Tariff::getCalcQueue();
+
+        $html = View::factory('ajax/administration/calc_tariffs/calc_queue')
+            ->bind('queue', $calcQueue)
+        ;
+
+        $this->html($html);
     }
 
     /**

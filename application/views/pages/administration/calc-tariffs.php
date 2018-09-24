@@ -8,7 +8,7 @@
 
 <div class="tabs_block tabs_switcher tabs_administration_calc_tariffs">
     <div class="tabs">
-        <span tab="client" class="tab active">Тариф клиента</span><span tab="close" class="tab">Закрытие периода</span><span tab="queue" class="tab">Очередь расчета</span>
+        <span tab="client" class="tab active">Тариф клиента</span><span tab="close" class="tab">Закрытие периода</span><span tab="queue" class="tab" onclick="loadQueueCalc()">Очередь расчета</span>
     </div>
     <div class="tabs_content">
         <div tab_content="client" class="tab_content active">
@@ -46,36 +46,7 @@
             </table>
         </div>
         <div tab_content="queue" class="tab_content">
-            <?if (empty($queue)) {?>
-                <i class="gray">Нет текущих расчетов</i>
-            <?} else {?>
-            <table class="table table_small">
-                <tr>
-                    <th>RECORD_ID</th>
-                    <th>CLIENT_NAME</th>
-                    <th>CONTRACT_ID</th>
-                    <th>CONTRACT_NAME</th>
-                    <th>TARIF_NAME</th>
-                    <th>TARIF_VERSION</th>
-                    <th>DATE_BEGIN</th>
-                    <th>DATE_END</th>
-                    <th>RECORD_STATUS</th>
-                </tr>
-                <?foreach ($queue as $row) {?>
-                    <tr>
-                        <td><?=$row['RECORD_ID']?></td>
-                        <td><?=$row['CLIENT_NAME']?></td>
-                        <td><?=$row['CONTRACT_ID']?></td>
-                        <td><?=$row['CONTRACT_NAME']?></td>
-                        <td><?=$row['TARIF_NAME']?></td>
-                        <td><?=$row['TARIF_VERSION']?></td>
-                        <td><?=$row['DATE_BEGIN_STR']?></td>
-                        <td><?=$row['DATE_END_STR']?></td>
-                        <td><?=$row['RECORD_STATUS']?></td>
-                    </tr>
-                <?}?>
-            </table>
-            <?}?>
+            <div class="calc_queue"></div>
         </div>
     </div>
 </div>
@@ -96,6 +67,19 @@
         $.post('/administration/calc-tariffs-render-client', params, function (data) {
             block.append(data)
         });
+    }
+
+    function loadQueueCalc()
+    {
+        var block = $('.calc_queue');
+
+        block.addClass(CLASS_LOADING);
+
+        $.post('/administration/load-calc-queue', {}, function (data) {
+            block.removeClass(CLASS_LOADING);
+
+            block.html(data);
+        })
     }
 
     var contractsInAction = [];
@@ -131,6 +115,10 @@
         if (flEmpty) {
             message(0, 'Нет данных для расчета');
         }
+
+        setTimeout(function () {
+            loadQueueCalc();
+        }, 1000);
     }
 
     function calcTariff(block)
