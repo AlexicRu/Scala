@@ -415,13 +415,17 @@ class Model_Tariff extends Model
     /**
      * получаем текущую очередь расчета тарифов
      */
-    public static function getCalcQueue()
+    public static function getCalcQueue($params = [])
     {
         $sql = (new Builder())->select()
             ->from('V_WEB_QUEUE_TARIF_CALC')
             ->where('agent_id = ' . User::current()['AGENT_ID'])
             ->orderBy('record_id')
         ;
+
+        if (isset($params['RECORD_STATUS_ID'])) {
+            $sql->where('RECORD_STATUS_ID = ' . (int)$params['RECORD_STATUS_ID']);
+        }
 
         return Oracle::init()->query($sql);
     }

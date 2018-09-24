@@ -178,7 +178,7 @@ class Controller_Administration extends Controller_Common
         $start = $this->request->post('start');
         $end = $this->request->post('end');
 
-        $queuedContracts = Model_Tariff::getCalcQueue();
+        $queuedContracts = Model_Tariff::getCalcQueue(['RECORD_STATUS_ID' => 0]);
 
         $badFl = false;
         foreach ($queuedContracts as $contract) {
@@ -261,5 +261,23 @@ class Controller_Administration extends Controller_Common
             }
             $this->jsonResult(true);
         }
+    }
+
+    /**
+     * получаем настройки тарифа по контракту
+     */
+    public function action_getTariffByContract()
+    {
+        $contractId = $this->request->post('contract_id');
+
+        $contractSettings = Model_Contract::getContractSettings($contractId);
+
+        if (empty($contractSettings)) {
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true, [
+            'id' => $contractSettings['TARIF_OFFLINE'],
+            'name' => $contractSettings['TARIF_NAME_OFFLINE'],
+        ]);
     }
 }

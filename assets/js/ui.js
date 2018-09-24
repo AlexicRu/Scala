@@ -515,6 +515,11 @@ function selectComboBoxResult(item)
     combo.val(item.text());
     hiddenValue.val(value);
 
+
+    if (combo.data('onSelect')) {
+        window[combo.data('onSelect')](value);
+    }
+
     $('.combobox_result', outer).hide().html('');
 }
 
