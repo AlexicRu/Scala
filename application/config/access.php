@@ -145,7 +145,7 @@ return [
             Access::ROLE_ROOT
         ],
         'administration_calc-tariffs' => [
-            Access::ROLE_ROOT
+            Access::ROLE_ADMIN
         ],
         'control_dots-groups' => [
             Access::ROLE_ADMIN,

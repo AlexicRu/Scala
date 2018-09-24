@@ -1,11 +1,11 @@
 <div class="tariff_wrapper">
     <table class="w100">
         <tr>
-            <td class="gray right" width="200">Название:</td>
+            <td class="gray right" width="170">Название:</td>
             <td>
                 <?if (!empty($tariff)) {?>
                 <div class="fr">
-                    <span class="btn btn_red" onclick="deleteTariff($(this))"><i class="icon-cancel"></i> Удалить</span>
+                    <span class="btn btn_red btn_icon" onclick="deleteTariff($(this))"><i class="icon-cancel"></i></span>
                 </div>
                 <?}?>
 
