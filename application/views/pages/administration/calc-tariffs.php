@@ -110,6 +110,7 @@
                     }
                 }
             }
+            block.find('input[type=text]').prop('disabled', true);
         });
 
         if (flEmpty) {

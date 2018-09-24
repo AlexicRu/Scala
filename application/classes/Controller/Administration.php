@@ -178,7 +178,7 @@ class Controller_Administration extends Controller_Common
         $start = $this->request->post('start');
         $end = $this->request->post('end');
 
-        $queuedContracts = Model_Tariff::getCalcQueue(['RECORD_STATUS_ID' => 0]);
+        $queuedContracts = Model_Tariff::getCalcQueue(['RECORD_STATUS_ID' => [0,2]]);
 
         $badFl = false;
         foreach ($queuedContracts as $contract) {

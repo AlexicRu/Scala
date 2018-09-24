@@ -424,7 +424,7 @@ class Model_Tariff extends Model
         ;
 
         if (isset($params['RECORD_STATUS_ID'])) {
-            $sql->where('RECORD_STATUS_ID = ' . (int)$params['RECORD_STATUS_ID']);
+            $sql->whereIn('RECORD_STATUS_ID', (array)$params['RECORD_STATUS_ID']);
         }
 
         return Oracle::init()->query($sql);
