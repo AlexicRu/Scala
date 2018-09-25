@@ -57,6 +57,10 @@ return array(
             'title' => 'ТК БИН-ОЙЛ',
             'class' => 'binoil'
         ],
+        'lketstradingru' => [
+            'title' => 'ETS Trading',
+            'class' => 'ets'
+        ],
     ],
     'user' => [
         'a_22' => [

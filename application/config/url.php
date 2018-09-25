@@ -30,5 +30,7 @@ return [
         '.*\.tway\.pro',
         'petrolpark\.ru',
         '.*\.petrolpark\.ru',
+        'ets-trading\.ru',
+        '.*\.ets-trading\.ru',
     ],
 ];
