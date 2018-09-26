@@ -77,6 +77,11 @@ function renderCheckbox(check)
     });
 
     check.on('change', function(){
+        if(check.is(':disabled')){
+            inner.addClass('checkbox_disabled');
+        }else{
+            inner.removeClass('checkbox_disabled');
+        }
         if(check.is(':checked')){
             inner.addClass('checkbox_checked');
         }else{

@@ -29,12 +29,8 @@ class Controller_Managers extends Controller_Common {
                 if (isset($params['manager_settings_limit_restriction'])) {
                     $params['manager_settings_limit_restriction'] = $params['manager_settings_limit_restriction'] == 'on' ? 1 : 0;
                 }
-                if (isset($params['manager_sms_is_on'])) {
-                    $params['manager_sms_is_on'] = $params['manager_sms_is_on'] == 'on' ? 1 : 0;
-                }
-                if (isset($params['manager_telegram_is_on'])) {
-                    $params['manager_telegram_is_on'] = $params['manager_telegram_is_on'] == 'on' ? 1 : 0;
-                }
+                $params['manager_sms_is_on'] = isset($params['manager_sms_is_on']) && $params['manager_sms_is_on'] == 'on' ? 1 : 0;
+                $params['manager_telegram_is_on'] = isset($params['manager_telegram_is_on']) && $params['manager_telegram_is_on'] == 'on' ? 1 : 0;
 
                 $result = Model_Manager::edit(!empty($params['manager_settings_id']) ? $params['manager_settings_id'] : User::id(), $params);
             }

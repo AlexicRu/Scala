@@ -121,24 +121,27 @@ class Model_Manager extends Model
         /*
          * система доступов
          */
-        $user = User::current();
-        switch ($user['ROLE_ID']) {
-            case Access::ROLE_ROOT:
-                break;
-            case Access::ROLE_ADMIN:
-                $params['roles_exclude'] = array_merge($params['roles_exclude'], [Access::ROLE_ADMIN, Access::ROLE_ROOT, Access::ROLE_ADMIN_READONLY]);
-                break;
-            case Access::ROLE_ADMIN_READONLY:
-                $params['roles_exclude'] = array_merge($params['roles_exclude'], [Access::ROLE_ADMIN, Access::ROLE_ROOT]);
-                break;
-            case Access::ROLE_SUPERVISOR:
-                $params['roles_exclude'] = array_merge($params['roles_exclude'], [Access::ROLE_ADMIN, Access::ROLE_ROOT, Access::ROLE_ADMIN_READONLY]);
-                break;
-            case Access::ROLE_MANAGER:
-            case Access::ROLE_MANAGER_SALE_SUPPORT:
-                $params['role_id'] = array_intersect($params['role_id'], array_keys(Access::$clientRoles));
-                break;
+        if (empty($params['skip_role_check'])) {
+            $user = User::current();
+            switch ($user['ROLE_ID']) {
+                case Access::ROLE_ROOT:
+                    break;
+                case Access::ROLE_ADMIN:
+                    $params['roles_exclude'] = array_merge($params['roles_exclude'], [Access::ROLE_ADMIN, Access::ROLE_ROOT, Access::ROLE_ADMIN_READONLY]);
+                    break;
+                case Access::ROLE_ADMIN_READONLY:
+                    $params['roles_exclude'] = array_merge($params['roles_exclude'], [Access::ROLE_ADMIN, Access::ROLE_ROOT]);
+                    break;
+                case Access::ROLE_SUPERVISOR:
+                    $params['roles_exclude'] = array_merge($params['roles_exclude'], [Access::ROLE_ADMIN, Access::ROLE_ROOT, Access::ROLE_ADMIN_READONLY]);
+                    break;
+                case Access::ROLE_MANAGER:
+                case Access::ROLE_MANAGER_SALE_SUPPORT:
+                    $params['role_id'] = array_intersect($params['role_id'], array_keys(Access::$clientRoles));
+                    break;
+            }
         }
+        unset($params['skip_role_check']);
 
         if(!empty($params['only_managers'])){
             $sql->whereNotIn("ROLE_ID", array_keys(Access::$clientRoles));
@@ -181,6 +184,8 @@ class Model_Manager extends Model
         if(!is_array($params)){
             $params = ['manager_id' => (int)$params];
         }
+
+        $params['skip_role_check'] = true;
 
         $managers = self::getManagersList($params);
 

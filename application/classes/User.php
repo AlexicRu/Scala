@@ -74,7 +74,7 @@ class User
         }
 
         $res = Oracle::init()->procedure('ctrl_manager_telegram_access', [
-            'p_phone_number'       => $phone,
+            'p_phone_number'       => '+' . str_replace('+', '', $phone),
             'p_telegram_chat_id'   => $chatId,
             'p_error_code'         => 'out',
         ]);

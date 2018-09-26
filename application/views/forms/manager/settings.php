@@ -168,7 +168,7 @@
                 message(1, 'Информирование успешно отключено');
 
                 $('.manager_settings_inform > div', btn.closest('.manager_settings_form')).toggle();
-                $('.manager_settings_inform_checkboxes [type=checkbox]', btn.closest('.manager_settings_form')).prop('disabled', true).trigger('change');
+                $('.manager_settings_inform_checkboxes [type=checkbox]', btn.closest('.manager_settings_form')).prop('disabled', false).trigger('change');
             } else {
                 message(0, 'Ошибка отключение информирования');
             }
