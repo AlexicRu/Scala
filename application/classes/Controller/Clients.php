@@ -235,6 +235,7 @@ class Controller_Clients extends Controller_Common {
         $transactions = Model_Transaction::getList($cardId, $contractId, ['limit' => 20]);
         Listing::$limit = 999;
         $settings = Model_Card::getCardLimitSettings($cardId);
+        $cardInfo = Model_Card::getCardInfo($cardId, $contractId);
 
 		$servicesList = Listing::getServices([
 		    'SYSTEM_SERVICE_CATEGORY' => true,
@@ -255,6 +256,7 @@ class Controller_Clients extends Controller_Common {
             ->bind('card', $card)
             ->bind('oilRestrictions', $oilRestrictions)
             ->bind('transactions', $transactions)
+            ->bind('cardInfo', $cardInfo)
             ->bind('popupCardHolderEdit', $popupCardHolderEdit)
             ->bind('popupCardLimitsEdit', $popupCardLimitsEdit)
         ;

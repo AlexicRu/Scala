@@ -1,25 +1,60 @@
 <input type="hidden" name="card_id" value="<?=$card['CARD_ID']?>">
 
-<?
-$user = Auth::instance()->get_user();
-?>
-
-<div class="fr">
-    <?if(Access::allow('clients_card_toggle_full')){?>
-        <?if(in_array($card['BLOCK_AVAILABLE'], [1,2]) || Access::allow('clients_card-toggle')){?>
-            <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
-                <button class="btn btn_green btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span style="display: none"><i class="icon-block"></i> Заблокировать</span><span><i class="icon-backblock"></i> Разблокировать</span></button>
-            <?}else{?>
-                <button class="btn btn_red btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span><i class="icon-block"></i> Заблокировать</span><span style="display: none"><i class="icon-backblock"></i> Разблокировать</span></button>
+<div class="tbl">
+    <div>
+        <span class="f20">Карта: <b><?=$card['CARD_ID']?></b></span>
+    </div>
+    <div class="right">
+        <span class="btn" toggle="card_info_block"><i class="icon icon-menu"></i></span>
+        <?if(Access::allow('clients_card_toggle_full')){?>
+            <?if(in_array($card['BLOCK_AVAILABLE'], [1,2]) || Access::allow('clients_card-toggle')){?>
+                <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
+                    <button class="btn btn_green btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span style="display: none"><i class="icon-block"></i> Заблокировать</span><span><i class="icon-backblock"></i> Разблокировать</span></button>
+                <?}else{?>
+                    <button class="btn btn_red btn_card_toggle" block_available="<?=$card['BLOCK_AVAILABLE']?>"><span><i class="icon-block"></i> Заблокировать</span><span style="display: none"><i class="icon-backblock"></i> Разблокировать</span></button>
+                <?}?>
             <?}?>
         <?}?>
-    <?}?>
-    <?if(Access::allow('clients_card-withdraw')){?>
-        <a href="#" class="btn btn_orange" onclick="cardWithdraw('<?=$card['CARD_ID']?>', <?=$card['BLOCK_AVAILABLE']?>)"><i class="icon-cancel"></i> Изъять</a>
-    <?}?>
-    <?if(Access::allow('clients_card_edit')){?>
-        <a href="#card_edit_holder_<?=$card['CARD_ID']?>" class="fancy btn"><i class="icon-pen"></i> Редактировать</a>
-    <?}?>
+        <?if(Access::allow('clients_card-withdraw')){?>
+            <a href="#" class="btn btn_orange" onclick="cardWithdraw('<?=$card['CARD_ID']?>', <?=$card['BLOCK_AVAILABLE']?>)"><i class="icon-cancel"></i> Изъять</a>
+        <?}?>
+        <?if(Access::allow('clients_card_edit')){?>
+            <a href="#card_edit_holder_<?=$card['CARD_ID']?>" class="fancy btn btn_icon"><i class="icon-pen"></i></a>
+        <?}?>
+    </div>
+</div>
+
+<hr class="out">
+
+<div class="dn" toggle_block="card_info_block">
+    <table>
+        <tr>
+            <td class="gray right" width="400">Тип источника карты</td>
+            <td><?=$cardInfo['CARD_FROM']?></td>
+        </tr>
+        <tr>
+            <td class="gray right">Источник карты</td>
+            <td><?=$cardInfo['SOURCE_NAME']?></td>
+        </tr>
+        <tr>
+            <td class="gray right">Дата последнего изменения лимита</td>
+            <td><?=$cardInfo['RECORD_LIMIT_DATE']?></td>
+        </tr>
+        <tr>
+            <td class="gray right">татус применения лимита в источнике</td>
+            <td><?=$cardInfo['LIMIT_SOURCE_STATUS']?></td>
+        </tr>
+        <tr>
+            <td class="gray right">Дата последнего изменения состояния</td>
+            <td><?=$cardInfo['RECORD_STATE_DATE']?></td>
+        </tr>
+        <tr>
+            <td class="gray right">Статус применения состояния в источнике</td>
+            <td><?=$cardInfo['STATE_SOURCE_STATUS']?></td>
+        </tr>
+    </table>
+
+    <hr class="out">
 </div>
 
 <b class="f18">Обороты за текущий период:</b><br>

@@ -1318,4 +1318,26 @@ class Model_Card extends Model
         }
         return false;
     }
+
+    /**
+     * получаем сгруппированную информацию по карте
+     *
+     * @param $cardId
+     * @param $contractId
+     * @return bool|mixed
+     */
+    public static function getCardInfo($cardId, $contractId)
+    {
+        if (empty($cardId) || empty($contractId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_CARDS_INFO')
+            ->where('card_id = ' . Oracle::quote($cardId))
+            ->where('contract_id = ' . (int)$contractId)
+        ;
+
+        return Oracle::init()->row($sql);
+    }
 }
