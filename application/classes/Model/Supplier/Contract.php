@@ -198,4 +198,38 @@ class Model_Supplier_Contract extends Model_Contract
 
         return Oracle::init()->query($sql);
     }
+
+    /**
+     * история оплат по договору поставщика
+     *
+     * @param array $params
+     * @return array|bool|mixed
+     */
+    public static function getPaymentsHistory($params = [])
+    {
+        if (empty($params['contract_id'])) {
+            return false;
+        }
+
+        $user = User::current();
+        $db = Oracle::init();
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_SUPPLIERS_PAYMENTS')
+            ->where('agent_id = ' . $user['AGENT_ID'])
+            ->orderBy('order_date desc')
+        ;
+
+        if (!empty($params['contract_id'])) {
+            $sql->where('supplier_contract_id = ' . (int)$params['contract_id']);
+        }
+
+        if (!empty($params['pagination'])) {
+            $params['limit'] = 15;
+
+            return $db->pagination($sql, $params);
+        }
+
+        return $db->query($sql);
+    }
 }

@@ -123,6 +123,9 @@ class Controller_Suppliers extends Controller_Common {
                     ->bind('popupAgreementAdd', $popupAgreementAdd)
                 ;
                 break;
+            case 'payments':
+                $content = View::factory('ajax/suppliers/contract/payments');
+                break;
         }
 
         $tabs = [
@@ -133,6 +136,10 @@ class Controller_Suppliers extends Controller_Common {
             'agreements'    => [
                 'name' => 'Соглашения',
                 'icon' => 'icon-reports',
+            ],
+            'payments'    => [
+                'name' => 'Оплаты',
+                'icon' => 'icon-account',
             ]
         ];
 
@@ -144,6 +151,26 @@ class Controller_Suppliers extends Controller_Common {
         ;
 
         $this->html($html);
+    }
+
+    /**
+     * аяксово грузим историю
+     */
+    public function action_contractPaymentsHistory()
+    {
+        $params = [
+            'contract_id'       => $this->request->param('id'),
+            'offset' 		    => $this->request->post('offset'),
+            'pagination'        => true
+        ];
+
+        list($paymentsHistory, $more) = Model_Supplier_Contract::getPaymentsHistory($params);
+
+        if(empty($paymentsHistory)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, ['items' => $paymentsHistory, 'more' => $more]);
     }
 
     /**
