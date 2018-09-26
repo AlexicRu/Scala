@@ -3,7 +3,6 @@
 class Telegram_GloProInfo extends Telegram_Common
 {
     protected $_bot = 'GloProInfo';
-    protected $_requestContact = true;
 
     /**
      * выполняем команду
@@ -19,6 +18,10 @@ class Telegram_GloProInfo extends Telegram_Common
                 case '/start':
                 case '/help':
                     $this->_buildHelpAnswer();
+                    break;
+                case '/connect':
+                    $this->_answer[] = 'Для завершения авторизации нажмите "Отправить контакт"';
+                    $this->_requestContact = true;
                     break;
                 default:
                     throw new Exception('Команда <b>'.$this->_command.'</b> не найдена');

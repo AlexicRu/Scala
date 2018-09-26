@@ -57,12 +57,6 @@
                         </td>
                     </tr>
                 <?}?>
-                <tr>
-                    <td></td>
-                    <td>
-                        <button class="btn btn_green btn_reverse btn_manager_settings_go"><i class="icon-ok"></i> Сохранить</button>
-                    </td>
-                </tr>
             </table>
         </div>
         <div class="col line_inner">
@@ -124,16 +118,19 @@
 
             <div class="padding__20 manager_settings_inform_checkboxes">
                 <label>
-                    <input type="checkbox" name="manager_sms_is_on"
+                    <input type="checkbox" name="manager_sms_is_on" class="<?=(!$manager['SENDER_SMS'] ? 'blocked' : '')?>"
                         <?=($manager['SMS_IS_ON'] ? 'checked' : '')?>
                         <?=(($manager['PHONE_FOR_INFORM'] && $manager['SENDER_SMS']) || Access::allow('root') ? '' : 'disabled')?>
                     >
-                    SMS
+                    SMS <?=(!$manager['SENDER_SMS'] ? '<span class="gray">Недоступно. Обратитесь к менеджеру.</span>' : '')?>
                 </label>
                 <br>
                 <label>
                     <input type="checkbox" name="manager_telegram_is_on" <?=($manager['TELEGRAM_IS_ON'] ? 'checked' : '')?> <?=($manager['PHONE_FOR_INFORM'] ? '' : 'disabled')?>>
-                    Telegram <span class="gray">Необходима авторизация через Telegram бота</span>
+                    Telegram
+                    <?if (empty($manager['TELEGRAM_CHAT_ID'])) {?>
+                        <span class="gray">Необходима авторизация через Telegram бота</span>
+                    <?}?>
                 </label>
                 <br><br>
                 <a href="https://t.me/GloProInfo_bot" target="_blank">@GloProInfo_bot</a> - наш телеграм бот.<br>
@@ -141,6 +138,10 @@
                 <i class="gray">Авторизация в телеграм боте автоматически установит галочку Telegram информирования.</i>
             </div>
         </div>
+    </div>
+
+    <div class="padding__20">
+        <button class="btn btn_green btn_reverse btn_manager_settings_go"><i class="icon-ok"></i> Сохранить</button>
     </div>
 </form>
 
@@ -168,7 +169,7 @@
                 message(1, 'Информирование успешно отключено');
 
                 $('.manager_settings_inform > div', btn.closest('.manager_settings_form')).toggle();
-                $('.manager_settings_inform_checkboxes [type=checkbox]', btn.closest('.manager_settings_form')).prop('disabled', false).trigger('change');
+                $('.manager_settings_inform_checkboxes [type=checkbox]', btn.closest('.manager_settings_form')).prop('disabled', true).trigger('change');
             } else {
                 message(0, 'Ошибка отключение информирования');
             }

@@ -68,6 +68,7 @@
 
                 $('.manager_settings_inform > div', form).toggle();
                 $('.manager_settings_inform_phone', form).text(params.phone);
+                $('.manager_settings_inform_checkboxes [type=checkbox]:not(.blocked)', form).prop('disabled', false).trigger('change');
             } else {
                 var error = '';
 
