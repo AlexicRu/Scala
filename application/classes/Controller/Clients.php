@@ -121,6 +121,8 @@ class Controller_Clients extends Controller_Common {
 				$contractSettings = Model_Contract::getContractSettings($contractId);
                 $contractTariffs = Model_Contract::getTariffs();
                 $noticeSettings = Model_Contract::getContractNoticeSettings($contractId);
+                $contractManagers = Model_Contract::getContractManagers($contractId);
+
 				$popupContractNoticeSettings = Form::popup('Настройка уведомлений', 'contract/notice_settings', [
 				    'settings'  => $noticeSettings,
                     'manager'   => User::current()
@@ -131,6 +133,7 @@ class Controller_Clients extends Controller_Common {
 					->bind('contract', $contract)
 					->bind('contractSettings', $contractSettings)
 					->bind('contractTariffs', $contractTariffs)
+					->bind('contractManagers', $contractManagers)
 					->bind('popupContractNoticeSettings', $popupContractNoticeSettings)
 					->bind('popupContractHistory', $popupContractHistory)
 				;

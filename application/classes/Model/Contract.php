@@ -905,4 +905,24 @@ class Model_Contract extends Model
         }
         return false;
     }
+
+    /**
+     * Получаем список менеджеров по контракту
+     *
+     * @param $contractId
+     * @return array|bool
+     */
+    public static function getContractManagers($contractId)
+    {
+        if (empty($contractId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_MANAGER_CTR_SS')
+            ->where('contract_id = ' . (int)$contractId)
+        ;
+
+        return Oracle::init()->query($sql);
+    }
 }

@@ -195,7 +195,7 @@
             <b class="f18">Тарификация</b>
             <table>
                 <tr>
-                    <td class="gray right">Online тариф:</td>
+                    <td class="gray right" width="160">Online тариф:</td>
                     <td>
                         <span toggle_block="block2">[<?=$contractSettings['TARIF_ONLINE']?>] <?=$contractSettings['TARIF_NAME_ONLINE']?></span>
                         <span toggle_block="block2" class="dn">
@@ -213,18 +213,59 @@
                     </td>
                 </tr>
             </table>
+
+            <br>
         <?}?>
 
-        <br>
         <a href="#contract_history" class="btn fancy">История по договору</a>
 
-        <?=$popupContractHistory?>
-        
         <a href="#contract_notice_settings" class="btn fancy">Настройка уведомлений</a>
 
-        <?=$popupContractNoticeSettings?>
+        <?if(Access::allow('view_contract_managers')){?>
+        <br><br>
+        <b class="f18">Менеджеры:</b><br>
+        <table>
+            <tr>
+                <td class="gray right" width="160">Менеджер по продажам:</td>
+                <td>
+                    <?
+                    $managers = [];
+                    foreach ($contractManagers as $manager) {
+                        if (in_array($manager['ROLE'], [Access::ROLE_MANAGER_SALE, Access::ROLE_MANAGER_SALE_SUPPORT])) {
+                            $managers[] = $manager['MANAGER_NAME'];
+                        }
+                    }
+                    if (empty($managers)) {
+                        echo '<i class="gray">Не закреплен</i>';
+                    } else {
+                        echo implode(', ', $managers);
+                    }?>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Менеджер по сопровождению:</td>
+                <td>
+                    <?
+                    $managers = [];
+                    foreach ($contractManagers as $manager) {
+                        if (in_array($manager['ROLE'], [Access::ROLE_MANAGER, Access::ROLE_MANAGER_SALE_SUPPORT])) {
+                            $managers[] = $manager['MANAGER_NAME'];
+                        }
+                    }
+                    if (empty($managers)) {
+                        echo '<i class="gray">Не закреплен</i>';
+                    } else {
+                        echo implode(', ', $managers);
+                    }?>
+                </td>
+            </tr>
+        </table>
+        <?}?>
     </div>
 </div>
+
+<?=$popupContractHistory?>
+<?=$popupContractNoticeSettings?>
 
 <script>
     $(function(){
