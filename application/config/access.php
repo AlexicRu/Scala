@@ -390,7 +390,8 @@ return [
         'view_payment_block' => [
             Access::ROLE_CLIENT
         ],
-        'view_contract_managers' => array_keys(Access::$clientRoles)
+        'view_contract_managers' => array_keys(Access::$clientRoles),
+        'view_card_info' => array_keys(Access::$clientRoles)
     ],
     /*
      * функции без авторизации

@@ -163,7 +163,7 @@ abstract class Telegram_Common
      */
     public function setWebHook()
     {
-        $result = $this->_telegram->setWebhook('https://dev.lk.glopro.ru' . $this->_configBot['web_hook']);
+        $result = $this->_telegram->setWebhook('https://lk.glopro.ru' . $this->_configBot['web_hook']);
 
         if ($result->isOk()) {
             echo $result->getDescription();

@@ -5,7 +5,9 @@
         <span class="f20">Карта: <b><?=$card['CARD_ID']?></b></span>
     </div>
     <div class="right">
-        <span class="btn" toggle="card_info_block"><i class="icon icon-menu"></i></span>
+        <?if(Access::allow('view_card_info')){?>
+            <span class="btn" toggle="card_info_block">Инфо</span>
+        <?}?>
         <?if(Access::allow('clients_card_toggle_full')){?>
             <?if(in_array($card['BLOCK_AVAILABLE'], [1,2]) || Access::allow('clients_card-toggle')){?>
                 <?if($card['CARD_STATE'] == Model_Card::CARD_STATE_BLOCKED){?>
@@ -26,36 +28,38 @@
 
 <hr class="out">
 
-<div class="dn" toggle_block="card_info_block">
-    <table>
-        <tr>
-            <td class="gray right" width="400">Тип источника карты</td>
-            <td><?=$cardInfo['CARD_FROM']?></td>
-        </tr>
-        <tr>
-            <td class="gray right">Источник карты</td>
-            <td><?=$cardInfo['SOURCE_NAME']?></td>
-        </tr>
-        <tr>
-            <td class="gray right">Дата последнего изменения лимита</td>
-            <td><?=$cardInfo['RECORD_LIMIT_DATE']?></td>
-        </tr>
-        <tr>
-            <td class="gray right">татус применения лимита в источнике</td>
-            <td><?=$cardInfo['LIMIT_SOURCE_STATUS']?></td>
-        </tr>
-        <tr>
-            <td class="gray right">Дата последнего изменения состояния</td>
-            <td><?=$cardInfo['RECORD_STATE_DATE']?></td>
-        </tr>
-        <tr>
-            <td class="gray right">Статус применения состояния в источнике</td>
-            <td><?=$cardInfo['STATE_SOURCE_STATUS']?></td>
-        </tr>
-    </table>
+<?if(Access::allow('view_card_info')){?>
+    <div class="dn" toggle_block="card_info_block">
+        <table>
+            <tr>
+                <td class="gray right" width="400">Тип источника карты</td>
+                <td><?=$cardInfo['CARD_FROM']?></td>
+            </tr>
+            <tr>
+                <td class="gray right">Источник карты</td>
+                <td><?=$cardInfo['SOURCE_NAME']?></td>
+            </tr>
+            <tr>
+                <td class="gray right">Дата последнего изменения лимита</td>
+                <td><?=$cardInfo['RECORD_LIMIT_DATE']?></td>
+            </tr>
+            <tr>
+                <td class="gray right">Статус применения лимита в источнике</td>
+                <td><?=$cardInfo['LIMIT_SOURCE_STATUS']?></td>
+            </tr>
+            <tr>
+                <td class="gray right">Дата последнего изменения состояния</td>
+                <td><?=$cardInfo['RECORD_STATE_DATE']?></td>
+            </tr>
+            <tr>
+                <td class="gray right">Статус применения состояния в источнике</td>
+                <td><?=$cardInfo['STATE_SOURCE_STATUS']?></td>
+            </tr>
+        </table>
 
-    <hr class="out">
-</div>
+        <hr class="out">
+    </div>
+<?}?>
 
 <b class="f18">Обороты за текущий период:</b><br>
 <?=number_format($card['REALIZ_LITRES'], 2, ',', ' ')?> л. / <?=number_format($card['REALIZ_CUR'], 2, ',', ' ')?> <?=Text::RUR?><br><br>
