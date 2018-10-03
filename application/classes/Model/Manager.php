@@ -30,7 +30,7 @@ class Model_Manager extends Model
 
         $data = [
             'p_manager_for_id' 	    => $managerId,
-            'p_role_id' 	        => !isset($params['manager_settings_role'])              ? $manager['ROLE_ID'] : $params['manager_settings_name'],
+            'p_role_id' 	        => !isset($params['manager_settings_role'])              ? $manager['ROLE_ID'] : $params['manager_settings_role'],
             'p_name' 	            => !isset($params['manager_settings_name'])              ? $manager['MANAGER_NAME'] : $params['manager_settings_name'],
             'p_surname' 	        => !isset($params['manager_settings_surname'])           ? $manager['MANAGER_SURNAME'] : $params['manager_settings_surname'],
             'p_middlename' 	        => !isset($params['manager_settings_middlename'])        ? $manager['MANAGER_MIDDLENAME'] : $params['manager_settings_middlename'],
