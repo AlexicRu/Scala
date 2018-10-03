@@ -23,16 +23,23 @@ class Controller_Cron extends Controller_Template
 
             if ($cron->isDue()) {
 
-                $url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $command[1];
+                //$url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $command[1];
+                $url = "https:". "://" . $_SERVER['HTTP_HOST'] . $command[1];
 
                 $request = Request::factory($url);
                 $request->client()->options([
                     CURLOPT_TIMEOUT => 1
                 ]);
 
+                echo $url . ' - ';
+
                 try {
                     $request->execute();
-                } catch (Exception $e) {}
+
+                    echo 'success';
+                } catch (Exception $e) {
+                    echo $e->getMessage();
+                }
             }
         }
     }
