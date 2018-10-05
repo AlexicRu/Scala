@@ -13,6 +13,7 @@ $params = [
     'config'    => $config['shell'], // ['login' => '', 'password' => '']
     'db'        => $database, // ['db' => '', 'name' => '', 'password' => '']
     'currency'  => Common::CURRENCY_RUR, // 643
+    'debug'     => true
 ];
 
-echo (new Shell($params))->loadTransactions(4, 70183602);
+echo (new Shell($params))->loadTransactions(4, 70183602, '2018-09-01', '2018-09-02');

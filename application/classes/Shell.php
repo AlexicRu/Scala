@@ -24,6 +24,9 @@ class Shell
         'In Flight',
         'Declined'
     ];
+    private $_debug = false;
+    private $_debugMT = [];
+    private $_debugT = false;
 
     public function __construct($params = [])
     {
@@ -33,9 +36,15 @@ class Shell
         $this->_configShell = !empty($params['config']) ? $params['config'] : Kohana::$config->load('config')['shell'];
         $this->_configDb = !empty($params['db']) ? $params['db'] : Kohana::$config->load('database');
         $this->_currency = !empty($params['currency']) ? $params['currency'] : Common::CURRENCY_RUR;
+        $this->_debug = !empty($params['debug']) ? $params['debug'] : false;
         /*
          * init variables END
          */
+
+        if ($this->_debug) {
+            $this->_debugT = microtime(true);
+            $this->_debugMT = [['start', 0, 0]];
+        }
 
         $response = $this->_request($this->_actions['getToken'], 'post');
 
@@ -44,6 +53,14 @@ class Shell
         }
 
         $this->_token = $response['access_token'];
+    }
+
+    public function __destruct()
+    {
+        if ($this->_debug) {
+            echo '<pre>';
+            print_r($this->_debugMT);
+        }
     }
 
     /**
@@ -118,12 +135,23 @@ class Shell
 
         $response = json_decode($content, true);
 
+        if ($this->_debug) {
+            $this->_debugMT[] = [
+                $url,
+                microtime(true) - $this->_debugT,
+                microtime(true) - $this->_debugT - $this->_debugMT[count($this->_debugMT) - 1][1]
+            ];
+        }
+
         if (isset($response['errorMessage'])) {
             if (in_array($response['errorMessage'], [
                 'Customer not found.',
                 'No Transactions found.',
                 'Transaction Details not found.',
             ])) {
+                if ($this->_debug) {
+                    $this->_debugMT[count($this->_debugMT) - 1][] = $response['errorMessage'];
+                }
                 return [];
             }
             throw new Exception($response['errorMessage']);
@@ -186,36 +214,17 @@ class Shell
      *
      * @param $customerNumber
      * @param $cardNumber
+     * @param $dateStart
+     * @param $dateEnd
      * @return array
      */
-    public function getCustomerCardTransactions($customerNumber, $cardNumber)
+    public function getCustomerCardTransactions($customerNumber, $cardNumber, $dateStart = false, $dateEnd = false)
     {
         if (empty($customerNumber) || empty($cardNumber)) {
             return [];
         }
 
         $url = str_replace(['__CUSTOMER__', '__CARD__'], [$customerNumber, $cardNumber], $this->_actions['getCustomerCardTransactions']);
-
-        return $this->_request($url) ?: [];
-    }
-
-    /**
-     * получение детальной инфы по транзакции
-     *
-     * @param $customerNumber
-     * @param $cardNumber
-     * @param $transactionId
-     * @param $dateStart
-     * @param $dateEnd
-     * @return array
-     */
-    public function getCustomerCardTransaction($customerNumber, $cardNumber, $transactionId, $dateStart = false, $dateEnd = false)
-    {
-        if (empty($customerNumber) || empty($cardNumber) || empty($transactionId)) {
-            return [];
-        }
-
-        $url = str_replace(['__CUSTOMER__', '__CARD__', '__TRANSACTION__'], [$customerNumber, $cardNumber, $transactionId], $this->_actions['getCustomerCardTransaction']);
 
         if (!empty($dateStart) || !empty($dateEnd)) {
             $url .= '?';
@@ -224,14 +233,33 @@ class Shell
         $params = [];
 
         if (!empty($dateStart)) {
-            $params[] = 'datStart=' . $dateStart;
+            $params[] = 'dateStart=' . $dateStart;
         }
 
         if (!empty($dateEnd)) {
-            $params[] = 'datStart=' . $dateEnd;
+            $params[] = 'dateEnd=' . $dateEnd;
         }
 
         return $this->_request($url . implode('&', $params)) ?: [];
+    }
+
+    /**
+     * получение детальной инфы по транзакции
+     *
+     * @param $customerNumber
+     * @param $cardNumber
+     * @param $transactionId
+     * @return array
+     */
+    public function getCustomerCardTransaction($customerNumber, $cardNumber, $transactionId)
+    {
+        if (empty($customerNumber) || empty($cardNumber) || empty($transactionId)) {
+            return [];
+        }
+
+        $url = str_replace(['__CUSTOMER__', '__CARD__', '__TRANSACTION__'], [$customerNumber, $cardNumber, $transactionId], $this->_actions['getCustomerCardTransaction']);
+
+        return $this->_request($url) ?: [];
     }
 
     /**
@@ -259,11 +287,11 @@ class Shell
 
             //cards
             foreach ($customerCards as $card) {
-                $cardTransactions = $this->getCustomerCardTransactions($card['customerNumber'], $card['cardNumber']);
+                $cardTransactions = $this->getCustomerCardTransactions($card['customerNumber'], $card['cardNumber'], $dateStart, $dateEnd);
 
                 //transactions
                 foreach ($cardTransactions as $transaction) {
-                    $transactionDetail = $this->getCustomerCardTransaction($card['customerNumber'], $card['cardNumber'], $transaction['transactionId'], $dateStart, $dateEnd);
+                    $transactionDetail = $this->getCustomerCardTransaction($card['customerNumber'], $card['cardNumber'], $transaction['transactionId']);
 
                     if (in_array($transactionDetail['transactionStatus'], $this->_skipTransactionStatuses)) {
                         continue;
