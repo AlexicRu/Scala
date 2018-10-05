@@ -64,6 +64,28 @@ class Shell
     }
 
     /**
+     * квотируем
+     *
+     * @param $value
+     * @return string
+     */
+    private function _quote($value)
+    {
+        return class_exists('Oracle') ? Oracle::quote($value) : ("'".str_replace(["'"], ["''"], trim($value))."'");
+    }
+
+    /**
+     * форматируем дату
+     *
+     * @param $value
+     * @return string
+     */
+    private function _date($value)
+    {
+        return class_exists('Oracle') ? Oracle::toDateOracle($value) : "to_date('".date('d.m.Y', $value)."', 'dd.mm.yyyy')";
+    }
+
+    /**
      * шлем запрос в shell
      *
      * @param $url
@@ -183,9 +205,11 @@ class Shell
      * @param $customerNumber
      * @param $cardNumber
      * @param $transactionId
+     * @param $dateStart
+     * @param $dateEnd
      * @return array
      */
-    public function getCustomerCardTransaction($customerNumber, $cardNumber, $transactionId)
+    public function getCustomerCardTransaction($customerNumber, $cardNumber, $transactionId, $dateStart = false, $dateEnd = false)
     {
         if (empty($customerNumber) || empty($cardNumber) || empty($transactionId)) {
             return [];
@@ -193,7 +217,21 @@ class Shell
 
         $url = str_replace(['__CUSTOMER__', '__CARD__', '__TRANSACTION__'], [$customerNumber, $cardNumber, $transactionId], $this->_actions['getCustomerCardTransaction']);
 
-        return $this->_request($url) ?: [];
+        if (!empty($dateStart) || !empty($dateEnd)) {
+            $url .= '?';
+        }
+
+        $params = [];
+
+        if (!empty($dateStart)) {
+            $params[] = 'datStart=' . $dateStart;
+        }
+
+        if (!empty($dateEnd)) {
+            $params[] = 'datStart=' . $dateEnd;
+        }
+
+        return $this->_request($url . implode('&', $params)) ?: [];
     }
 
     /**
@@ -201,8 +239,10 @@ class Shell
      *
      * @param $agentId
      * @param $tubeId
+     * @param $dateStart
+     * @param $dateEnd
      */
-    public function loadTransactions($agentId, $tubeId)
+    public function loadTransactions($agentId, $tubeId, $dateStart = false, $dateEnd = false)
     {
         if (empty($agentId) || empty($tubeId)) {
             die('empty params');
@@ -212,8 +252,6 @@ class Shell
         set_time_limit(0);
 
         $customers = $this->getCustomers();
-
-        $transactions = [];
 
         //customers
         foreach ($customers as $customer) {
@@ -225,7 +263,7 @@ class Shell
 
                 //transactions
                 foreach ($cardTransactions as $transaction) {
-                    $transactionDetail = $this->getCustomerCardTransaction($card['customerNumber'], $card['cardNumber'], $transaction['transactionId']);
+                    $transactionDetail = $this->getCustomerCardTransaction($card['customerNumber'], $card['cardNumber'], $transaction['transactionId'], $dateStart, $dateEnd);
 
                     if (in_array($transactionDetail['transactionStatus'], $this->_skipTransactionStatuses)) {
                         continue;
@@ -233,84 +271,62 @@ class Shell
 
                     $product = reset($transactionDetail['transactionLineItems']);
 
-                    $transactions[] = [
+                    $data = [
                         'agent_id'              => $agentId, //number -- (по умолчанию 4)
                         'tube_id'               => $tubeId, //number -- (по умолчанию 70183602)
-                        'account_number'        => '', //varchar2(50) -- номер аккаунта (не обязательно)
-                        'sub_account_number'    => $transactionDetail['accountNumber'], //varchar2(50) -- номер субаккаунта (не обязательно)
-                        'invoice_id'            => '', //varchar2(50) -- номер инвойса (не обязательно)
-                        'invoice_date'          => '', //varchar2(50) -- дата инвойса (не обязательно)
-                        'card_group'            => '', //varchar2(500) -- группа карт (не обязательно)
-                        'card_number'           => $transactionDetail['cardNumber'], //varchar2(20) -- номер карты
-                        'date_trn'              => date('d.m.Y', $transactionDetail['effectiveAt']['value']), //date -- дата транзакции
-                        'time_trn'              => date('H:i:s', $transactionDetail['effectiveAt']['value']), //varchar2(10) -- время транзакции (формат hh24:mi:ss)
-                        'holder'                => $transactionDetail['embossingName'], //varchar2(500) -- держатель карты (не обязательно)
-                        'vrn'                   => '', //varchar2(10) -- (не обязательно)
-                        'fleet_id'              => $transactionDetail['fleetId'], //varchar2(50) -- (не обязательно)
-                        'supplier_terminal'     => $transactionDetail['terminalId'], //varchar2(50) -- ID терминала в системе shell
-                        'pos_name'              => $transactionDetail['locationNumber'], //varchar2(255) -- название АЗС
-                        'trn_type'              => $transactionDetail['transactionType'], //varchar2(255) -- тип транзакции
-                        'receipt_number'        => $transactionDetail['orderNumber'], //varchar2(50) -- номер чека (не обязательно)
-                        'odometer'              => $transactionDetail['odometer'], //varchar2(50) -- показание одометра (не обязательно)
-                        'service_id'            => $product['product'], //varchar2(50) -- ID услуги @todo запросить у wex id услуги
-                        'service_name'          => $product['product'], //varchar2(500) -- название услуги (если отличается от ID услуги)
+                        'account_number'        => $this->_quote(''), //varchar2(50) -- номер аккаунта (не обязательно)
+                        'sub_account_number'    => $this->_quote($transactionDetail['accountNumber']), //varchar2(50) -- номер субаккаунта (не обязательно)
+                        'invoice_id'            => $this->_quote(''), //varchar2(50) -- номер инвойса (не обязательно)
+                        'invoice_date'          => $this->_quote(''), //varchar2(50) -- дата инвойса (не обязательно)
+                        'card_group'            => $this->_quote(''), //varchar2(500) -- группа карт (не обязательно)
+                        'card_number'           => $this->_quote($transactionDetail['cardNumber']), //varchar2(20) -- номер карты
+                        'date_trn'              => $this->_date($transactionDetail['effectiveAt']['value'] / 1000), //date -- дата транзакции
+                        'time_trn'              => $this->_quote(date('H:i:s', $transactionDetail['effectiveAt']['value'] / 1000)), //varchar2(10) -- время транзакции (формат hh24:mi:ss)
+                        'holder'                => $this->_quote($transactionDetail['embossingName']), //varchar2(500) -- держатель карты (не обязательно)
+                        'vrn'                   => $this->_quote(''), //varchar2(10) -- (не обязательно)
+                        'fleet_id'              => $this->_quote($transactionDetail['fleetId']), //varchar2(50) -- (не обязательно)
+                        'supplier_terminal'     => $this->_quote($transactionDetail['terminalId']), //varchar2(50) -- ID терминала в системе shell
+                        'pos_name'              => $this->_quote($transactionDetail['locationNumber']), //varchar2(255) -- название АЗС
+                        'trn_type'              => $this->_quote($transactionDetail['transactionType']), //varchar2(255) -- тип транзакции
+                        'receipt_number'        => $this->_quote($transactionDetail['orderNumber']), //varchar2(50) -- номер чека (не обязательно)
+                        'odometer'              => $this->_quote($transactionDetail['odometer']), //varchar2(50) -- показание одометра (не обязательно)
+                        'service_id'            => $this->_quote($product['product']), //varchar2(50) -- ID услуги @todo запросить у wex id услуги
+                        'service_name'          => $this->_quote($product['product']), //varchar2(500) -- название услуги (если отличается от ID услуги)
                         'service_amount'        => $product['quantity'], //number -- количество литров
-                        'units'                 => $product['isFuel'], //varchar2(50) -- размерность услуги (не обязательно)
+                        'units'                 => $this->_quote($product['isFuel']), //varchar2(50) -- размерность услуги (не обязательно)
                         'vat_rate'              => $product['taxRate'], //number -- размер НДС
                         'service_price'         => round($product['originalValue'] / $product['quantity'], 2), //number -- цена на АЗС
                         'price_buy'             => round($product['customerValue'] / $product['quantity'], 2), //number -- цена покупки на АЗС
-                        'rebate_rate'           => '', //number -- (не обязательно)
-                        'rebate_rate_type'      => '', //number -- (не обязательно)
+                        'rebate_rate'           => 'null', //number -- (не обязательно)
+                        'rebate_rate_type'      => 'null', //number -- (не обязательно)
                         'service_price_net'     => round(($product['customerValue'] - $product['customerTaxAmount']) / $product['quantity'], 2), //number -- цена на АЗС без НДС
-                        'rebate_value'          => '', //number -- (не обязательно)
+                        'rebate_value'          => 'null', //number -- (не обязательно)
                         'vat_amount'            => $product['customerTaxAmount'], //number -- размер налога
                         'service_sumprice_net'  => $product['originalValue'] - $product['customerTaxAmount'], //number -- стоимость на АЗС без НДС
                         'service_sumprice'      => $product['originalValue'], //number -- стоимость на АЗС с НДС
-                        'pos_currency'          => '', //varchar2(3) -- валюта АЗС @todo нет данных
-                        'currency_rate'         => '1', //number -- курс @todo нет данных
+                        'pos_currency'          => $this->_quote(''), //varchar2(3) -- валюта АЗС @todo нет данных
+                        'currency_rate'         => 1, //number -- курс @todo нет данных
                         'sumprice_buy_net'      => $product['customerValue'] - $product['customerTaxAmount'], //number -- цена покупки у Шелл без НДС
                         'sumprice_buy'          => $product['customerValue'], //number -- цена покупки у Шелл с НДС
-                        'client_currency'       => $this->_currency, //varchar2(3) -- валюта клиента (по умолчанию '643')
-                        'rrn'                   => $transactionDetail['transactionId'], //varchar2(50) -- номер транзакции
+                        'client_currency'       => $this->_quote($this->_currency), //varchar2(3) -- валюта клиента (по умолчанию '643')
+                        'rrn'                   => $this->_quote($transactionDetail['transactionId']), //varchar2(50) -- номер транзакции
                         //'date_insert'           => '', //date -- по умолчанию текущая дата (не нужно, подставляется сама)
                     ];
+
+                    $sql = 'INSERT INTO s_dev.test_transaction_shell_v2 (' . implode(', ', array_keys($data)) . ') VALUES (' . implode(', ', $data) . ')';
+
+                    try {
+                        //execute
+                        if (class_exists('Oracle')) {
+                            Oracle::init()->query($sql, 'insert');
+                        } else {
+                            $this->_dbExecute($sql);
+                        }
+                    } catch (Exception $e) {
+                        echo $e->getMessage();
+                    }
                 }
             }
-        }
-
-        //строим урл
-        if (!empty($transactions)) {
-            $values = [];
-
-            foreach ($transactions as $transaction) {
-                $str = [];
-                $str[] = '(';
-
-                foreach ($transaction as $value) {
-                    $str[] = class_exists('Oracle') ? Oracle::quote($value) : ("'".str_replace(["'"], ["''"], trim($value))."'");
-                }
-
-                $str[] = ')';
-
-                $values[] = implode(',', $str);
-            }
-
-            $sql = 'INSERT INTO s_dev.test_transaction_shell (' . implode(',', array_keys($transaction)) . ') VALUES ' . implode($values);
-
-            try {
-                //execute
-                if (class_exists('Oracle')) {
-                    $res = Oracle::init()->query($sql);
-                } else {
-                    $res =  $this->_dbExecute($sql);
-                }
-
-                var_dump($res);
-            } catch (Exception $e) {
-                echo $e->getMessage();
-            }
-        } else {
-            echo 'empty';
         }
     }
 }
