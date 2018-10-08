@@ -217,7 +217,7 @@ class Model_Supplier_Contract extends Model_Contract
         $sql = (new Builder())->select()
             ->from('V_WEB_SUPPLIERS_PAYMENTS')
             ->where('agent_id = ' . $user['AGENT_ID'])
-            ->orderBy('order_date desc')
+            ->orderBy('o_date desc')
         ;
 
         if (!empty($params['contract_id'])) {
