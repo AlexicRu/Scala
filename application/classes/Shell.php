@@ -3,6 +3,8 @@
 class Shell
 {
     const CARD_STATUS_ACTIVE = 'Active';
+    const CARD_STATUS_DECLINED = 'Declined';
+    const CARD_STATUS_IN_FLIGHT = 'In Flight';
 
     private $_url = 'https://api-emea.prod.emea.wexinc.co.uk';
     private $_token = null;
@@ -21,9 +23,9 @@ class Shell
     private $_currency = null;
     private $_connect = null;
     private $_skipTransactionStatuses = [
-        'In Flight',
-        'Declined'
+        //self::CARD_STATUS_IN_FLIGHT
     ];
+    private $_loadedTransactions = [];
     private $_debug = false;
     private $_debugMT = [];
     private $_debugT = false;
@@ -44,6 +46,7 @@ class Shell
         if ($this->_debug) {
             $this->_debugT = microtime(true);
             $this->_debugMT = [['start', 0, 0]];
+            ob_start();
         }
 
         $response = $this->_request($this->_actions['getToken'], 'post');
@@ -53,14 +56,6 @@ class Shell
         }
 
         $this->_token = $response['access_token'];
-    }
-
-    public function __destruct()
-    {
-        if ($this->_debug) {
-            echo '<pre>';
-            print_r($this->_debugMT);
-        }
     }
 
     /**
@@ -141,6 +136,11 @@ class Shell
                 microtime(true) - $this->_debugT,
                 microtime(true) - $this->_debugT - $this->_debugMT[count($this->_debugMT) - 1][1]
             ];
+
+            $cnt = count($this->_debugMT);
+
+            echo $cnt . ': ' . print_r($this->_debugMT[$cnt - 1], true) . "\n";
+            ob_flush();
         }
 
         if (isset($response['errorMessage'])) {
@@ -150,7 +150,8 @@ class Shell
                 'Transaction Details not found.',
             ])) {
                 if ($this->_debug) {
-                    $this->_debugMT[count($this->_debugMT) - 1][] = $response['errorMessage'];
+                    echo $response['errorMessage'] . "\n";
+                    ob_flush();
                 }
                 return [];
             }
@@ -233,11 +234,11 @@ class Shell
         $params = [];
 
         if (!empty($dateStart)) {
-            $params[] = 'dateStart=' . $dateStart;
+            $params[] = 'startDate=' . $dateStart;
         }
 
         if (!empty($dateEnd)) {
-            $params[] = 'dateEnd=' . $dateEnd;
+            $params[] = 'endDate=' . $dateEnd;
         }
 
         return $this->_request($url . implode('&', $params)) ?: [];
@@ -273,11 +274,12 @@ class Shell
     public function loadTransactions($agentId, $tubeId, $dateStart = false, $dateEnd = false)
     {
         if (empty($agentId) || empty($tubeId)) {
-            die('empty params');
+            die('loadTransactions empty params');
         }
 
         //unlim
         set_time_limit(0);
+        $cnt = 0;
 
         $customers = $this->getCustomers();
 
@@ -291,43 +293,130 @@ class Shell
 
                 //transactions
                 foreach ($cardTransactions as $transaction) {
-                    $transactionDetail = $this->getCustomerCardTransaction($card['customerNumber'], $card['cardNumber'], $transaction['transactionId']);
-
-                    if (in_array($transactionDetail['transactionStatus'], $this->_skipTransactionStatuses)) {
+                    if (in_array($transaction['transactionId'], $this->_loadedTransactions)) {
                         continue;
                     }
 
+                    //wrong statuses
+                    if (empty($transaction['status']) || in_array($transaction['status'], $this->_skipTransactionStatuses)) {
+                        if ($this->_debug) {
+                            echo $transaction['transactionId'] . ' - ' . $transaction['status'] . "\n";
+                            ob_flush();
+                        }
+                        continue;
+                    }
+
+                    //GET transaction detail
+                    $transactionDetail = $this->getCustomerCardTransaction($card['customerNumber'], $card['cardNumber'], $transaction['transactionId']);
+
+                    //empty detail
+                    if (empty($transactionDetail)) {
+                        continue;
+                    }
+
+                    //wrong statuses, малоли по какой-то причине первая проверка пропустила...мб данные различаются
+                    if (empty($transactionDetail['transactionStatus']) || in_array($transactionDetail['transactionStatus'], $this->_skipTransactionStatuses)) {
+                        if ($this->_debug) {
+                            echo $transactionDetail['transactionStatus'] . "\n";
+                            ob_flush();
+                        }
+                        continue;
+                    }
+
+                    //empty params
+                    if (
+                        //empty($transactionDetail['cardNumber']) ||
+                        empty($transactionDetail['effectiveAt']['value']) ||
+                        //empty($transactionDetail['terminalId']) ||
+                        //empty($transactionDetail['locationNumber']) ||
+                        //empty($transactionDetail['transactionType']) ||
+                        //empty($transactionDetail['transactionId']) ||
+                        empty($transactionDetail['transactionLineItems'])
+                    ) {
+                        if ($this->_debug) {
+                            echo "empty params: " .
+                            //' cardNumber - ' . (!empty($transactionDetail['cardNumber']) ? $transactionDetail['cardNumber'] : '') .
+                            ' effectiveAt - ' . (!empty($transactionDetail['effectiveAt']['value']) ? $transactionDetail['effectiveAt']['value'] : '') .
+                            //' terminalId - ' . (!empty($transactionDetail['terminalId']) ? $transactionDetail['terminalId'] : '') .
+                            //' locationNumber - ' . (!empty($transactionDetail['locationNumber']) ? $transactionDetail['locationNumber'] : '') .
+                            //' transactionType - ' . (!empty($transactionDetail['transactionType']) ? $transactionDetail['transactionType'] : '') .
+                            //' transactionId - ' . (!empty($transactionDetail['transactionId']) ? $transactionDetail['transactionId'] : '') .
+                            ' transactionLineItems - ' . (!empty($transactionDetail['transactionLineItems']) ? 'exists' : '') .
+                            "\n";
+                            print_r($transactionDetail);die;
+                        }
+                        continue;
+                    }
+
+                    //@todo почему-то иногда пусто
+                    $transactionDetail['terminalId'] = !isset($transactionDetail['terminalId']) ? '' : $transactionDetail['terminalId'];
+                    $transactionDetail['transactionType'] = !isset($transactionDetail['transactionType']) ? '' : $transactionDetail['transactionType'];
+                    $transactionDetail['cardNumber'] = !isset($transactionDetail['cardNumber']) ? '' : $transactionDetail['cardNumber'];
+                    $transactionDetail['locationNumber'] = !isset($transactionDetail['locationNumber']) ? '' : $transactionDetail['locationNumber'];
+                    $transactionDetail['transactionId'] = !isset($transactionDetail['transactionId']) ? '' : $transactionDetail['transactionId'];
+
+                    //GET product
                     $product = reset($transactionDetail['transactionLineItems']);
+
+                    //empty product params
+                    /*if (
+                        empty($product['product']) ||
+                        empty($product['quantity']) ||
+                        empty($product['originalValue']) ||
+                        empty($product['customerValue']) ||
+                        empty($product['customerTaxAmount'])
+                    ) {
+                        if ($this->_debug) {
+                            echo "empty product params: " .
+                            ' product - ' . (!empty($product['product']) ? $product['product'] : '') .
+                            ' quantity - ' . (!empty($product['quantity']) ? $product['quantity'] : '') .
+                            ' originalValue - ' . (!empty($product['originalValue']) ? $product['originalValue'] : '') .
+                            ' customerValue - ' . (!empty($product['customerValue']) ? $product['customerValue'] : '') .
+                            ' customerTaxAmount - ' . (!empty($product['customerTaxAmount']) ? $product['customerTaxAmount'] : '') .
+                            ' taxRate - ' . (!empty($product['taxRate']) ? $product['taxRate'] : '') .
+                            "\n";
+                            print_r($transactionDetail);die;
+                        }
+                        continue;
+                    }*/
+
+                    //@todo почему-то иногда пусто
+                    $product['product'] = !isset($product['product']) ? '' : $product['product'];
+                    $product['customerValue'] = !isset($product['customerValue']) ? 0 : $product['customerValue'];
+                    $product['customerTaxAmount'] = !isset($product['customerTaxAmount']) ? 0 : $product['customerTaxAmount'];
+                    $product['quantity'] = !isset($product['quantity']) ? 0 : $product['quantity'];
+                    $product['taxRate'] = !isset($product['taxRate']) ? 'null' : $product['taxRate'];
+                    $product['originalValue'] = !isset($product['originalValue']) ? 0 : $product['originalValue'];
 
                     $data = [
                         'agent_id'              => $agentId, //number -- (по умолчанию 4)
                         'tube_id'               => $tubeId, //number -- (по умолчанию 70183602)
                         'account_number'        => $this->_quote(''), //varchar2(50) -- номер аккаунта (не обязательно)
-                        'sub_account_number'    => $this->_quote($transactionDetail['accountNumber']), //varchar2(50) -- номер субаккаунта (не обязательно)
+                        'sub_account_number'    => $this->_quote(isset($transactionDetail['accountNumber']) ? $transactionDetail['accountNumber'] : ''), //varchar2(50) -- номер субаккаунта (не обязательно)
                         'invoice_id'            => $this->_quote(''), //varchar2(50) -- номер инвойса (не обязательно)
                         'invoice_date'          => $this->_quote(''), //varchar2(50) -- дата инвойса (не обязательно)
                         'card_group'            => $this->_quote(''), //varchar2(500) -- группа карт (не обязательно)
                         'card_number'           => $this->_quote($transactionDetail['cardNumber']), //varchar2(20) -- номер карты
                         'date_trn'              => $this->_date($transactionDetail['effectiveAt']['value'] / 1000), //date -- дата транзакции
                         'time_trn'              => $this->_quote(date('H:i:s', $transactionDetail['effectiveAt']['value'] / 1000)), //varchar2(10) -- время транзакции (формат hh24:mi:ss)
-                        'holder'                => $this->_quote($transactionDetail['embossingName']), //varchar2(500) -- держатель карты (не обязательно)
+                        'holder'                => $this->_quote(isset($transactionDetail['embossingName']) ? $transactionDetail['embossingName'] : ''), //varchar2(500) -- держатель карты (не обязательно)
                         'vrn'                   => $this->_quote(''), //varchar2(10) -- (не обязательно)
-                        'fleet_id'              => $this->_quote($transactionDetail['fleetId']), //varchar2(50) -- (не обязательно)
+                        'fleet_id'              => $this->_quote(isset($transactionDetail['fleetId']) ? $transactionDetail['fleetId'] : ''), //varchar2(50) -- (не обязательно)
                         'supplier_terminal'     => $this->_quote($transactionDetail['terminalId']), //varchar2(50) -- ID терминала в системе shell
                         'pos_name'              => $this->_quote($transactionDetail['locationNumber']), //varchar2(255) -- название АЗС
-                        'trn_type'              => $this->_quote($transactionDetail['transactionType']), //varchar2(255) -- тип транзакции
-                        'receipt_number'        => $this->_quote($transactionDetail['orderNumber']), //varchar2(50) -- номер чека (не обязательно)
-                        'odometer'              => $this->_quote($transactionDetail['odometer']), //varchar2(50) -- показание одометра (не обязательно)
+                        'transaction_type'      => $this->_quote($transactionDetail['transactionType']), //varchar2(255) -- тип транзакции
+                        'receipt_number'        => $this->_quote(isset($transactionDetail['orderNumber']) ? $transactionDetail['orderNumber'] : ''), //varchar2(50) -- номер чека (не обязательно)
+                        'odometer'              => $this->_quote(isset($transactionDetail['odometer']) ? $transactionDetail['odometer'] : ''), //varchar2(50) -- показание одометра (не обязательно)
                         'service_id'            => $this->_quote($product['product']), //varchar2(50) -- ID услуги @todo запросить у wex id услуги
                         'service_name'          => $this->_quote($product['product']), //varchar2(500) -- название услуги (если отличается от ID услуги)
                         'service_amount'        => $product['quantity'], //number -- количество литров
-                        'units'                 => $this->_quote($product['isFuel']), //varchar2(50) -- размерность услуги (не обязательно)
+                        'units'                 => $this->_quote(isset($product['isFuel']) ? $product['isFuel'] : ''), //varchar2(50) -- размерность услуги (не обязательно)
                         'vat_rate'              => $product['taxRate'], //number -- размер НДС
-                        'service_price'         => round($product['originalValue'] / $product['quantity'], 2), //number -- цена на АЗС
-                        'price_buy'             => round($product['customerValue'] / $product['quantity'], 2), //number -- цена покупки на АЗС
+                        'service_price'         => empty($product['quantity']) ? 'null' : round($product['originalValue'] / $product['quantity'], 2), //number -- цена на АЗС
+                        'price_buy'             => empty($product['quantity']) ? 'null' : round($product['customerValue'] / $product['quantity'], 2), //number -- цена покупки на АЗС
                         'rebate_rate'           => 'null', //number -- (не обязательно)
                         'rebate_rate_type'      => 'null', //number -- (не обязательно)
-                        'service_price_net'     => round(($product['customerValue'] - $product['customerTaxAmount']) / $product['quantity'], 2), //number -- цена на АЗС без НДС
+                        'service_price_net'     => empty($product['quantity']) ? 'null' : round(($product['customerValue'] - $product['customerTaxAmount']) / $product['quantity'], 2), //number -- цена на АЗС без НДС
                         'rebate_value'          => 'null', //number -- (не обязательно)
                         'vat_amount'            => $product['customerTaxAmount'], //number -- размер налога
                         'service_sumprice_net'  => $product['originalValue'] - $product['customerTaxAmount'], //number -- стоимость на АЗС без НДС
@@ -337,7 +426,8 @@ class Shell
                         'sumprice_buy_net'      => $product['customerValue'] - $product['customerTaxAmount'], //number -- цена покупки у Шелл без НДС
                         'sumprice_buy'          => $product['customerValue'], //number -- цена покупки у Шелл с НДС
                         'client_currency'       => $this->_quote($this->_currency), //varchar2(3) -- валюта клиента (по умолчанию '643')
-                        'rrn'                   => $this->_quote($transactionDetail['transactionId']), //varchar2(50) -- номер транзакции
+                        'transaction_id'        => $this->_quote($transactionDetail['transactionId']), //varchar2(50) -- номер транзакции
+                        'transaction_status'    => $this->_quote($transactionDetail['transactionStatus']), //varchar2(50) -- стутус транзакции
                         //'date_insert'           => '', //date -- по умолчанию текущая дата (не нужно, подставляется сама)
                     ];
 
@@ -350,11 +440,24 @@ class Shell
                         } else {
                             $this->_dbExecute($sql);
                         }
+
+                        //for checking loaded
+                        $this->_loadedTransactions[] = $transaction['transactionId'];
+
+                        if ($this->_debug) {
+                            $cnt++;
+                            echo "inserted\n";
+                            ob_flush();
+                        }
                     } catch (Exception $e) {
                         echo $e->getMessage();
                     }
                 }
             }
+        }
+
+        if ($this->_debug) {
+            echo 'loadTransactions finished: ' . $cnt;
         }
     }
 }

@@ -16,4 +16,9 @@ $params = [
     'debug'     => true
 ];
 
-echo (new Shell($params))->loadTransactions(4, 70183602, '2018-09-01', '2018-09-02');
+$agentId = !empty($argv[1]) ? $argv[1] : 4;
+$tubeId = !empty($argv[2]) ? $argv[2] : 70183602;
+$dateStart = !empty($argv[3]) ? $argv[3] : date('Y-m-01');
+$dateEnd = !empty($argv[4]) ? $argv[4] : date('Y-m-d');
+
+echo (new Shell($params))->loadTransactions($agentId, $tubeId, $dateStart, $dateEnd);

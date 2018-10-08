@@ -31,7 +31,7 @@ class Controller_Cron extends Controller_Template
                     CURLOPT_TIMEOUT => 1
                 ]);
 
-                echo $url . ' - ';
+                echo "\n" . $url . ' - ';
 
                 try {
                     $request->execute();
