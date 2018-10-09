@@ -9,40 +9,65 @@ class Model_Client extends Model
      *
      * @param array $search
      */
-    public static function getFullClientsList($search = '')
+    public static function getFullClientsList($params = [])
     {
-        $db = Oracle::init();
-
-        $user = User::current();
-
-        $sql = (new Builder())->select()
-            ->from('v_web_clients_title v')
-            ->where("v.manager_id = " . (int)$user['MANAGER_ID'])
-            ->orderBy([
-                'client_id desc'
-            ])
-        ;
-
-        if(!empty($search)){
-            $search = mb_strtoupper(Oracle::quote('%'.$search.'%'));
-
-            $sql
-                ->whereStart()
-                ->where("upper(v.client_name) like " . $search)
-                ->whereOr("upper(v.long_name) like " . $search)
-                ->whereOr("upper(v.contract_name) like " . $search)
-                ->whereOr("upper(v.CARD_ID) like " . $search)
-                ->whereEnd()
-            ;
+        /*
+         * костыльнем немного, будем держать кеш по сумме параметров, чтобы постраничность быстро отработала
+         */
+        $cache = Cache::instance();
+        $cacheKeyParams = $params;
+        if (!empty($cacheKeyParams['pagination'])) {
+            unset($cacheKeyParams['pagination']);
+            unset($cacheKeyParams['offset']);
         }
+        $key = 'getFullClientsList_' . implode('_', array_keys($cacheKeyParams)) . '_' . implode('_', $cacheKeyParams);
+        $result = $cache->get($key);
 
-        $result = $db->tree($sql, 'CLIENT_ID');
+        if (empty($result)) {
+            $db = Oracle::init();
+
+            $user = User::current();
+
+            $sql = (new Builder())->select()
+                ->from('v_web_clients_title v')
+                ->where("v.manager_id = " . (int)$user['MANAGER_ID'])
+                ->orderBy([
+                    'client_id desc'
+                ]);
+
+            if (!empty($params['search'])) {
+                $search = mb_strtoupper(Oracle::quote('%' . $params['search'] . '%'));
+
+                $sql
+                    ->whereStart()
+                    ->where("upper(v.client_name) like " . $search)
+                    ->whereOr("upper(v.long_name) like " . $search)
+                    ->whereOr("upper(v.contract_name) like " . $search)
+                    ->whereOr("upper(v.CARD_ID) like " . $search)
+                    ->whereEnd();
+            }
+
+            $result = $db->tree($sql, 'CLIENT_ID');
+
+            $cache->set($key, $result, 30);
+        }
 
         $clients = [];
 
         $user = User::current();
 
-        foreach($result as $clientId => $rows){
+        if (!empty($params['pagination'])) {
+            $more = true;
+            $items = array_slice($result, $params['offset'], Listing::$limit + 1);
+
+            if (count($items) != Listing::$limit + 1) {
+                $more = false;
+            }
+
+            array_pop($items);
+        }
+
+        foreach($items as $clientId => $rows){
             $client = reset($rows);
 
             foreach($rows as $row){
@@ -60,9 +85,19 @@ class Model_Client extends Model
 
             if (!empty($client['contracts'])) {
                 $client['contracts'] = array_values($client['contracts']);
+
+                foreach ($client['contracts'] as &$contract) {
+                    $contract['contract_state_class']   = Model_Contract::$statusContractClasses[$contract['CONTRACT_STATE']];
+                    $contract['contract_state_name']    = Model_Contract::$statusContractNames[$contract['CONTRACT_STATE']];
+                    $contract['balance_formatted']      = number_format($contract['BALANCE'], 2, ',', ' ') . ' ' . Text::RUR;
+                }
             }
 
             $clients[] = $client;
+        }
+
+        if (!empty($params['pagination'])) {
+            return [$clients, $more];
         }
 
         return $clients;

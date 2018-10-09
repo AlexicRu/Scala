@@ -18,6 +18,8 @@ if(!empty($_REQUEST['search'])){?>
         paginationAjax('/clients/?search=<?=(!empty($_REQUEST['search']) ? strip_tags($_REQUEST['search']) : '')?>', 'ajax_block_clients', renderAjaxPaginationClients, {show_all_btn: true});
     });
 
+    var fl = true;
+
     function renderAjaxPaginationClients(data, block)
     {
         for(var i in data){
@@ -56,6 +58,10 @@ if(!empty($_REQUEST['search'])){?>
             block.append(tpl);
         }
 
-        EnjoyHintRun('clients');
+        if (fl) {
+            EnjoyHintRun('clients');
+            fl = false;
+            block.parent().find('.ajax_block_load_all').click();
+        }
     }
 </script>

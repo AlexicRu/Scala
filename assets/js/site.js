@@ -101,6 +101,9 @@ $(function(){
 
 function cardLoad(elem, force)
 {
+    var search = '?tab=cards&card=' + elem.attr('tab');
+    history.pushState("","", location.pathname + search);
+
     if($(".tabs_cards [tab_content="+ elem.attr('tab') +"]").text() == '' || force == true){
         $(".tabs_cards [tab_content="+ elem.attr('tab') +"]").empty().addClass('block_loading');
 

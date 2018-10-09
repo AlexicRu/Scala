@@ -54,14 +54,18 @@ class Controller_System extends Controller_Common {
                 $query = $db->limit($query, 0, $limit);
             }
 
+            $mt = microtime(true);
             $data = $db->query($query);
+            $mt = microtime(true) - $mt;
+
+            $html = "<script>$('.time').text('" . $mt . "')</script>";
 
             if (empty($data)) {
-                $html = 'Запрос выдал пустой рузельтат';
+                $html .= 'Запрос выдал пустой рузельтат';
             } else {
                 $headers = array_keys($data[0]);
 
-                $html = '<table class="table table_small">';
+                $html .= '<table class="table table_small">';
                 $html .= '<tr>';
 
                 foreach ($headers as $header) {

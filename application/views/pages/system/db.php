@@ -28,7 +28,7 @@
 </div>
 
 <div class="result__block">
-    <h2>Результат</h2>
+    <h2>Результат <span class="gray time"></span></h2>
     <div class="block">
         <div class="result"></div>
     </div>

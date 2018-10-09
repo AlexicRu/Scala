@@ -169,7 +169,7 @@ function paginationAjax(url, name, callback, params)
     var block = $('<div class="' + name + '" />');
     var btnBlock = $('<div class="ajax_block_more" />');
     var more = $('<button class="btn btn_small ajax_block_load">Загрузить еще...</button>');
-    var all = $('<button class="btn btn_small">Загрузить все</button>');
+    var all = $('<button class="btn btn_small ajax_block_load_all">Загрузить все</button>');
 
     outer.addClass('ajax_pagination_out');
     block.addClass('ajax_pagination');
@@ -212,9 +212,9 @@ function _paginationAjaxLoad(url, outer, block, callback, params)
 
     $.post(url, params, function(data){
         if(data.success){
-            callback(data.data.items, block, params);
-
             outer.data('offset', parseInt(outer.data('offset')) + data.data.items.length);
+
+            callback(data.data.items, block, params);
 
             if(data.data.more){
                 //ALL
@@ -528,3 +528,19 @@ function renderPhoneInput(elem)
         });
     }
 }
+
+function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+    return '';
+};

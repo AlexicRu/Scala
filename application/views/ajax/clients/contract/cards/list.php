@@ -3,6 +3,8 @@
 </div>
 
 <script>
+    var findCard = getUrlParameter('card');
+    var foundCard = false;
     $(function () {
         paginationAjax('/clients/cards-list/?contract_id=' + $('[name=contracts_list]').val(), 'ajax_block_cards_list', renderAjaxPaginationCardsList);
 
@@ -84,9 +86,19 @@
                 tpl.appendTo(block);
 
                 contentBlock.append('<div class="tab_v_content" tab_content="'+ data[i].CARD_ID +'"></div>');
+
+                if (findCard == data[i].CARD_ID) {
+                    foundCard = true;
+                }
             }
 
-            if (!firstLoad) {
+            if (findCard) {
+                if (!foundCard) {
+                    block.parent().find('.ajax_block_load').click();
+                } else {
+                    block.find('.tab_v[tab="'+ findCard +'"]').click();
+                }
+            } else if (!firstLoad) {
                 block.find('.tab_v[tab]:first').click();
             }
         }

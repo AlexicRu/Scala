@@ -18,23 +18,19 @@ class Controller_Clients extends Controller_Common {
 	{
         if ($this->request->is_ajax()) {
 
-            $clients = Model_Client::getFullClientsList($this->request->query('search'));
+            $params = [
+                'search'        => $this->request->query('search'),
+                'offset' 		=> $this->request->post('offset'),
+                'pagination'	=> true
+            ];
+
+            list($clients, $more) = Model_Client::getFullClientsList($params);
 
             if(empty($clients)){
                 $this->jsonResult(false);
             }
 
-            foreach ($clients as &$client) {
-                if (!empty($client['contracts'])) {
-                    foreach ($client['contracts'] as &$contract) {
-                        $contract['contract_state_class']   = Model_Contract::$statusContractClasses[$contract['CONTRACT_STATE']];
-                        $contract['contract_state_name']    = Model_Contract::$statusContractNames[$contract['CONTRACT_STATE']];
-                        $contract['balance_formatted']      = number_format($contract['BALANCE'], 2, ',', ' ') . ' ' . Text::RUR;
-                    }
-                }
-            }
-
-            $this->jsonResult(true, ['items' => $clients, 'more' => false]);
+            $this->jsonResult(true, ['items' => $clients, 'more' => $more]);
         } else {
             $this->_initEnjoyHint();
 
