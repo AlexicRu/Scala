@@ -20,6 +20,7 @@ return [
         ]
     ],
     'shell' => [
+        'url'           => '__REPLACE__',
         'login'         => '__REPLACE__',
         'password'      => '__REPLACE__',
     ]

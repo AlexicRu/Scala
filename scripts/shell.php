@@ -1,16 +1,21 @@
-<?php defined('SYSPATH') or die('No direct script access.');
+<?php
+
+include '_log.php';
+include '_debug.php';
 
 class Shell
 {
-    const CARD_STATUS_ACTIVE = 'Active';
-    const CARD_STATUS_DECLINED = 'Declined';
+    use Log;
+    use Debug;
+
+    const CARD_STATUS_ACTIVE    = 'Active';
+    const CARD_STATUS_DECLINED  = 'Declined';
     const CARD_STATUS_IN_FLIGHT = 'In Flight';
 
-    private $_url = 'https://api-emea.prod.emea.wexinc.co.uk';
-    private $_token = null;
-    private $_configShell = null;
-    private $_configDb = null;
-    private $_actions = [
+    private $_token         = null;
+    private $_configShell   = null;
+    private $_configDb      = null;
+    private $_actions       = [
         'getToken'                      => '/oauth/token',
         'getCustomers'                  => '/customers',
         'getCustomer'                   => '/customer/__CUSTOMER__',
@@ -20,39 +25,30 @@ class Shell
         'getCustomerCardTransaction'    => '/customer/__CUSTOMER__/card/__CARD__/transaction/__TRANSACTION__',
         'setCustomerCardStatus'         => '/customer/__CUSTOMER__/card/__CARD__/status/__STATUS__',
     ];
-    private $_currency = null;
-    private $_connect = null;
-    private $_skipTransactionStatuses = [
-        //self::CARD_STATUS_IN_FLIGHT
-    ];
-    private $_loadedTransactions = [];
-    private $_debug = false;
-    private $_debugMT = [];
-    private $_debugT = false;
+    private $_currency      = 643; //руб
+    private $_connectDb     = null;
+    private $_skipTransactionStatuses   = [];
+    private $_loadedTransactions        = [];
 
     public function __construct($params = [])
     {
         /*
          * init variables START
          */
-        $this->_configShell = !empty($params['config']) ? $params['config'] : Kohana::$config->load('config')['shell'];
-        $this->_configDb = !empty($params['db']) ? $params['db'] : Kohana::$config->load('database');
-        $this->_currency = !empty($params['currency']) ? $params['currency'] : Common::CURRENCY_RUR;
+        $this->_configShell = !empty($params['config']) ? $params['config'] : null;
+        $this->_configDb = !empty($params['db']) ? $params['db'] : null;
         $this->_debug = !empty($params['debug']) ? $params['debug'] : false;
+        $this->_logFile = !empty($params['log_file']) ? $params['log_file'] : false;
         /*
          * init variables END
          */
 
-        if ($this->_debug) {
-            $this->_debugT = microtime(true);
-            $this->_debugMT = [['start', 0, 0]];
-            ob_start();
-        }
+        $this->_debugStart();
 
         $response = $this->_request($this->_actions['getToken'], 'post');
 
         if (empty($response['access_token'])) {
-            throw new Exception('empty token');
+            die($this->_logErrorAuth);
         }
 
         $this->_token = $response['access_token'];
@@ -67,10 +63,10 @@ class Shell
     private function _dbExecute($sql)
     {
         if (is_null($this->_connect)) {
-            $this->_connect = oci_connect($this->_configDb['name'], $this->_configDb['password'], $this->_configDb['db'], 'UTF8');
+            $this->_connectDb = oci_connect($this->_configDb['name'], $this->_configDb['password'], $this->_configDb['db'], 'UTF8');
         }
 
-        $query = oci_parse($this->_connect, $sql);
+        $query = oci_parse($this->_connectDb, $sql);
 
         return oci_execute($query);
     }
@@ -83,7 +79,7 @@ class Shell
      */
     private function _quote($value)
     {
-        return class_exists('Oracle') ? Oracle::quote($value) : ("'".str_replace(["'"], ["''"], trim($value))."'");
+        return "'".str_replace(["'"], ["''"], trim($value))."'";
     }
 
     /**
@@ -94,7 +90,7 @@ class Shell
      */
     private function _date($value)
     {
-        return class_exists('Oracle') ? Oracle::toDateOracle($value) : "to_date('".date('d.m.Y', $value)."', 'dd.mm.yyyy')";
+        return "to_date('".date('d.m.Y', $value)."', 'dd.mm.yyyy')";
     }
 
     /**
@@ -122,7 +118,7 @@ class Shell
             $options[CURLOPT_HTTPHEADER][] = $authorization;
         }
 
-        $ch      = curl_init( $this->_url . $url );
+        $ch      = curl_init( $this->_configShell['url'] . $url );
 
         curl_setopt_array( $ch, $options );
         $content = curl_exec( $ch );
@@ -130,18 +126,7 @@ class Shell
 
         $response = json_decode($content, true);
 
-        if ($this->_debug) {
-            $this->_debugMT[] = [
-                $url,
-                microtime(true) - $this->_debugT,
-                microtime(true) - $this->_debugT - $this->_debugMT[count($this->_debugMT) - 1][1]
-            ];
-
-            $cnt = count($this->_debugMT);
-
-            echo $cnt . ': ' . print_r($this->_debugMT[$cnt - 1], true) . "\n";
-            ob_flush();
-        }
+        $this->_debug($method . ': ' . $url);
 
         if (isset($response['errorMessage'])) {
             if (in_array($response['errorMessage'], [
@@ -149,13 +134,11 @@ class Shell
                 'No Transactions found.',
                 'Transaction Details not found.',
             ])) {
-                if ($this->_debug) {
-                    echo $response['errorMessage'] . "\n";
-                    ob_flush();
-                }
+                $this->_log($response['errorMessage']);
+
                 return [];
             }
-            throw new Exception($response['errorMessage']);
+            die($this->_logErrorExecute);
         }
 
         return $response;
@@ -274,8 +257,12 @@ class Shell
     public function loadTransactions($agentId, $tubeId, $dateStart = false, $dateEnd = false)
     {
         if (empty($agentId) || empty($tubeId)) {
-            die('loadTransactions empty params');
+            die($this->_logErrorArguments);
         }
+
+        $this->_agentId = $agentId;
+        $this->_tubeId  = $tubeId;
+        $this->_log('loadTransactions start');
 
         //unlim
         set_time_limit(0);
@@ -285,10 +272,12 @@ class Shell
 
         //customers
         foreach ($customers as $customer) {
+            $this->_customerId = $customer['customerNumber'];
             $customerCards = $this->getCustomerCards($customer['customerNumber']);
 
             //cards
             foreach ($customerCards as $card) {
+                $this->_cardId = $card['cardNumber'];
                 $cardTransactions = $this->getCustomerCardTransactions($card['customerNumber'], $card['cardNumber'], $dateStart, $dateEnd);
 
                 //transactions
@@ -299,10 +288,7 @@ class Shell
 
                     //wrong statuses
                     if (empty($transaction['status']) || in_array($transaction['status'], $this->_skipTransactionStatuses)) {
-                        if ($this->_debug) {
-                            echo $transaction['transactionId'] . ' - ' . $transaction['status'] . "\n";
-                            ob_flush();
-                        }
+                        $this->_log($transaction['transactionId'] . ' - ' . $transaction['status']);
                         continue;
                     }
 
@@ -311,82 +297,45 @@ class Shell
 
                     //empty detail
                     if (empty($transactionDetail)) {
-                        continue;
+                        $this->_log('empty detail transaction ' . $transaction['transactionId']);
+                        die($this->_logErrorExecute);
                     }
 
                     //wrong statuses, малоли по какой-то причине первая проверка пропустила...мб данные различаются
                     if (empty($transactionDetail['transactionStatus']) || in_array($transactionDetail['transactionStatus'], $this->_skipTransactionStatuses)) {
-                        if ($this->_debug) {
-                            echo $transactionDetail['transactionStatus'] . "\n";
-                            ob_flush();
-                        }
+                        $this->_log($transaction['transactionId'] . ' - ' . $transactionDetail['transactionStatus']);
                         continue;
                     }
 
                     //empty params
                     if (
-                        //empty($transactionDetail['cardNumber']) ||
                         empty($transactionDetail['effectiveAt']['value']) ||
-                        //empty($transactionDetail['terminalId']) ||
-                        //empty($transactionDetail['locationNumber']) ||
-                        //empty($transactionDetail['transactionType']) ||
-                        //empty($transactionDetail['transactionId']) ||
                         empty($transactionDetail['transactionLineItems'])
                     ) {
-                        if ($this->_debug) {
-                            echo "empty params: " .
-                            //' cardNumber - ' . (!empty($transactionDetail['cardNumber']) ? $transactionDetail['cardNumber'] : '') .
-                            ' effectiveAt - ' . (!empty($transactionDetail['effectiveAt']['value']) ? $transactionDetail['effectiveAt']['value'] : '') .
-                            //' terminalId - ' . (!empty($transactionDetail['terminalId']) ? $transactionDetail['terminalId'] : '') .
-                            //' locationNumber - ' . (!empty($transactionDetail['locationNumber']) ? $transactionDetail['locationNumber'] : '') .
-                            //' transactionType - ' . (!empty($transactionDetail['transactionType']) ? $transactionDetail['transactionType'] : '') .
-                            //' transactionId - ' . (!empty($transactionDetail['transactionId']) ? $transactionDetail['transactionId'] : '') .
-                            ' transactionLineItems - ' . (!empty($transactionDetail['transactionLineItems']) ? 'exists' : '') .
-                            "\n";
-                            print_r($transactionDetail);die;
-                        }
-                        continue;
+                        $this->_log("empty params: " .
+                            ' effectiveAt - ' . (!empty($transactionDetail['effectiveAt']['value']) ? $transactionDetail['effectiveAt']['value'] : 'empty') .
+                            ' transactionLineItems - ' . (!empty($transactionDetail['transactionLineItems']) ? 'exists' : 'empty')
+                        );
+                        die($this->_logErrorExecute);
                     }
 
-                    //@todo почему-то иногда пусто
-                    $transactionDetail['terminalId'] = !isset($transactionDetail['terminalId']) ? '' : $transactionDetail['terminalId'];
-                    $transactionDetail['transactionType'] = !isset($transactionDetail['transactionType']) ? '' : $transactionDetail['transactionType'];
-                    $transactionDetail['cardNumber'] = !isset($transactionDetail['cardNumber']) ? '' : $transactionDetail['cardNumber'];
-                    $transactionDetail['locationNumber'] = !isset($transactionDetail['locationNumber']) ? '' : $transactionDetail['locationNumber'];
-                    $transactionDetail['transactionId'] = !isset($transactionDetail['transactionId']) ? '' : $transactionDetail['transactionId'];
+                    //почему-то иногда пусто
+                    $transactionDetail['terminalId']        = !isset($transactionDetail['terminalId']) ? '' : $transactionDetail['terminalId'];
+                    $transactionDetail['transactionType']   = !isset($transactionDetail['transactionType']) ? '' : $transactionDetail['transactionType'];
+                    $transactionDetail['cardNumber']        = !isset($transactionDetail['cardNumber']) ? '' : $transactionDetail['cardNumber'];
+                    $transactionDetail['locationNumber']    = !isset($transactionDetail['locationNumber']) ? '' : $transactionDetail['locationNumber'];
+                    $transactionDetail['transactionId']     = !isset($transactionDetail['transactionId']) ? '' : $transactionDetail['transactionId'];
 
                     //GET product
                     $product = reset($transactionDetail['transactionLineItems']);
 
-                    //empty product params
-                    /*if (
-                        empty($product['product']) ||
-                        empty($product['quantity']) ||
-                        empty($product['originalValue']) ||
-                        empty($product['customerValue']) ||
-                        empty($product['customerTaxAmount'])
-                    ) {
-                        if ($this->_debug) {
-                            echo "empty product params: " .
-                            ' product - ' . (!empty($product['product']) ? $product['product'] : '') .
-                            ' quantity - ' . (!empty($product['quantity']) ? $product['quantity'] : '') .
-                            ' originalValue - ' . (!empty($product['originalValue']) ? $product['originalValue'] : '') .
-                            ' customerValue - ' . (!empty($product['customerValue']) ? $product['customerValue'] : '') .
-                            ' customerTaxAmount - ' . (!empty($product['customerTaxAmount']) ? $product['customerTaxAmount'] : '') .
-                            ' taxRate - ' . (!empty($product['taxRate']) ? $product['taxRate'] : '') .
-                            "\n";
-                            print_r($transactionDetail);die;
-                        }
-                        continue;
-                    }*/
-
-                    //@todo почему-то иногда пусто
-                    $product['product'] = !isset($product['product']) ? '' : $product['product'];
-                    $product['customerValue'] = !isset($product['customerValue']) ? 0 : $product['customerValue'];
-                    $product['customerTaxAmount'] = !isset($product['customerTaxAmount']) ? 0 : $product['customerTaxAmount'];
-                    $product['quantity'] = !isset($product['quantity']) ? 0 : $product['quantity'];
-                    $product['taxRate'] = !isset($product['taxRate']) ? 'null' : $product['taxRate'];
-                    $product['originalValue'] = !isset($product['originalValue']) ? 0 : $product['originalValue'];
+                    //почему-то иногда пусто
+                    $product['product']             = !isset($product['product']) ? '' : $product['product'];
+                    $product['customerValue']       = !isset($product['customerValue']) ? 0 : $product['customerValue'];
+                    $product['customerTaxAmount']   = !isset($product['customerTaxAmount']) ? 0 : $product['customerTaxAmount'];
+                    $product['quantity']            = !isset($product['quantity']) ? 0 : $product['quantity'];
+                    $product['taxRate']             = !isset($product['taxRate']) ? 'null' : $product['taxRate'];
+                    $product['originalValue']       = !isset($product['originalValue']) ? 0 : $product['originalValue'];
 
                     $data = [
                         'agent_id'              => $agentId, //number -- (по умолчанию 4)
@@ -435,29 +384,19 @@ class Shell
 
                     try {
                         //execute
-                        if (class_exists('Oracle')) {
-                            Oracle::init()->query($sql, 'insert');
-                        } else {
-                            $this->_dbExecute($sql);
-                        }
+                        $this->_dbExecute($sql);
 
                         //for checking loaded
                         $this->_loadedTransactions[] = $transaction['transactionId'];
 
-                        if ($this->_debug) {
-                            $cnt++;
-                            echo "inserted\n";
-                            ob_flush();
-                        }
+                        $this->_log('inserted transaction ' . $transaction['transactionId']);
                     } catch (Exception $e) {
-                        echo $e->getMessage();
+                        die($this->_logErrorExecute);
                     }
                 }
             }
         }
 
-        if ($this->_debug) {
-            echo 'loadTransactions finished: ' . $cnt;
-        }
+        $this->_log('loadTransactions finished: ' . $cnt);
     }
 }
