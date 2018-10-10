@@ -24,7 +24,7 @@ class Report_1c_Agent2 extends Report_1c_Common
                 '(case
   when v.contract_id in (50, 51, 52, 83, 90) then 49 
   when v.contract_id in (1835, 1836) then 1834
-  when v.contract_id in (2283, 2160) then 2127
+  when v.contract_id in (2283, 2160, 2803, 2802, 2801, 3269, 3267, 3266) then 2127
   else v.contract_id end) as id',
                 'replace(v.client_name,\'"\', \'\') as name',
                 'pi.country_id as territory_id',
