@@ -338,6 +338,7 @@ return [
         ],
         'suppliers_supplier-add' => [
             'a_10',
+            'g_1',
         ],
         'dashboard_get-realization-by-clients-summary' => [
             Access::ROLE_USER,
