@@ -2,7 +2,7 @@
 
 return array(
     'dashboard'         => ['title' => 'Dashboard', 'icon' => 'icon-calendar', 'children' => [
-        'index'         => 'Клиенты',
+        'index'         => 'Фирмы',
         'agent'         => 'Дистрибьюторы',
     ]],
     'info'              => ['title' => 'Инфо-портал', 'icon' => 'icon-news', 'children' => [

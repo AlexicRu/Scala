@@ -1,4 +1,4 @@
-<h1>Реализация по клиентам</h1>
+<h1>Реализация по фирмам</h1>
 
 <div class="as_table as_table__dashboard">
     <div class="col" style="width: 500px">

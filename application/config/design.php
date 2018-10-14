@@ -64,8 +64,12 @@ return array(
     ],
     'user' => [
         'a_22' => [
-            'title' => 'ETS Trading',
-            'class' => 'ets'
+            'title' => 'GloPro :: Почта России',
+            'class' => 'pochta'
+        ],
+        'a_21' => [
+            'title' => 'GloPro :: Почта России',
+            'class' => 'pochta'
         ],
         'u_2126' => [
             'title' => 'GloPro',

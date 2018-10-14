@@ -41,6 +41,24 @@
       background-image: url(../img/projects/logo_pochta.png);
     }
   }
+  aside{
+    background: darkblue;
+    >div >a, .sub_menu_title{
+      color: white;
+      &:hover, &.act{
+        background:#0055A6 ; color: white;
+        span{
+          color: white;
+        }
+      }
+      [class^="icon-"]{
+        color: rgba(255,255,255,.5);
+      }
+    }
+  }
+  .sub_menu_items a:hover, .sub_menu_items a.act{
+    color: white;
+  }
 }
 .custom_view_ctpz{
   .logo{
