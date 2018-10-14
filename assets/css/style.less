@@ -117,7 +117,7 @@ header{
     display: inline-block; width: 120px; height: 40px; background:  no-repeat center; background-size: contain;
   }
 }
-.hamburger, .mail, .settings, .logout{
+.hamburger, .mail, .settings, .logout, .new{
   width: 70px; text-align: center; font-size: 20px;
   > a{
     display: table-cell; width: 70px; height: 70px; color:#7e7e7e; text-decoration: none; vertical-align: middle; padding: 0 20px;
@@ -147,7 +147,7 @@ header{
   }
 }
 .personal{
-  width: 220px; color: black; padding-left: 60px; padding-right: 10px; font-size: 16px;
+  width: 230px; color: black; padding-left: 70px; padding-right: 10px; font-size: 16px;
   .avatar{
     float: left; margin-left: -60px;
   }
@@ -157,6 +157,19 @@ header{
   i{
     display: table-cell; text-align: center; vertical-align: middle; font-size: 22px;
   }
+}
+.new{
+  a{
+    background: url(/assets/img/new.svg) no-repeat center / cover; width: 40px; height: 40px; display: inline-block; margin: auto;
+    animation: newDesign 3s infinite;
+  }
+}
+@keyframes newDesign {
+  0% {transform: rotate(0)}
+  25% {transform: rotate(5deg)}
+  50% {transform: rotate(0)}
+  75% {transform: rotate(-5deg)}
+  100% {transform: rotate(0)}
 }
 aside{
   vertical-align: top; position: fixed; width: 210px; overflow: hidden; z-index: 2; height: 100%; padding-top: 85px;

@@ -26,9 +26,7 @@ class Controller_Managers extends Controller_Common {
 
             if(!empty($params)){
                 //форма сабмититься обычным способом, и чек бокс приходит вот так
-                if (isset($params['manager_settings_limit_restriction'])) {
-                    $params['manager_settings_limit_restriction'] = $params['manager_settings_limit_restriction'] == 'on' ? 1 : 0;
-                }
+                $params['manager_settings_limit'] = isset($params['manager_settings_limit']) && $params['manager_settings_limit'] == 'on' ? 1 : 0;
                 $params['manager_sms_is_on'] = isset($params['manager_sms_is_on']) && $params['manager_sms_is_on'] == 'on' ? 1 : 0;
                 $params['manager_telegram_is_on'] = isset($params['manager_telegram_is_on']) && $params['manager_telegram_is_on'] == 'on' ? 1 : 0;
 

@@ -37,7 +37,7 @@ class Model_Manager extends Model
             'p_phone' 		        => !isset($params['manager_settings_phone'])             ? $manager['CELLPHONE'] : $params['manager_settings_phone'],
             'p_email' 		        => !isset($params['manager_settings_email'])             ? $manager['EMAIL'] :
                 (!empty($params['manager_settings_email']) ? Text::checkEmailMulti($params['manager_settings_email']) : ''),
-            'p_limit_restriction' 	=> !isset($params['manager_settings_limit_restriction']) ? $manager['LIMIT_RESTRICTION'] : $params['manager_settings_limit_restriction'],
+            'p_limit_restriction' 	=> !isset($params['manager_settings_limit'])             ? $manager['LIMIT_RESTRICTION'] : $params['manager_settings_limit'],
             'p_sms_is_on' 	        => !isset($params['manager_sms_is_on'])                  ? $manager['SMS_IS_ON'] : $params['manager_sms_is_on'],
             'p_telegram_is_on' 	    => !isset($params['manager_telegram_is_on'])             ? $manager['TELEGRAM_IS_ON'] : $params['manager_telegram_is_on'],
             'p_manager_who_id' 	    => $user['MANAGER_ID'],
