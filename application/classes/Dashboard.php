@@ -311,7 +311,7 @@ class Dashboard
 
         $sqlJoin = (new Builder())->select([
             'c.agent_id',
-            'count(1) as cl_count'
+            'count(distinct c.client_id) as cl_count'
         ])
             ->from('V_WEB_CLIENTS_LIST c')
             ->groupBy('c.agent_id')
