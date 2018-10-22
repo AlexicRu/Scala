@@ -77,6 +77,29 @@
             <h2>Мониторинг цен</h2>
 
             <div class="info__list">
+                <a href="/file/info/Мониторинг_цен/Price_Monitoring_03_08.pdf" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
+                        <div class="info__item-name">Price Monitoring 03 08</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
+                <a href="/file/info/Мониторинг_цен/Price_Monitoring_03_10.pdf" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
+                        <div class="info__item-name">Price Monitoring 03 10</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
+                <a href="/file/info/Мониторинг_цен/Price_Monitoring_05_09.pdf" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-pdf"></span></div>
+                        <div class="info__item-name">Price Monitoring 05 09</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
+
+
                 <a href="/file/info/Мониторинг_цен/Price_Monitoring_сентябрь2018.pdf" class="info__item" target="_blank">
                     <div>
                         <div><span class="info__icon info__icon-pdf"></span></div>
