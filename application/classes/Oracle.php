@@ -180,20 +180,22 @@ class Oracle{
     /**
      * экранируем
      *
-     * @param $str
+     * @param $val
      * @param $like
      */
-    public static function quote($str, $like = false)
+    public static function quote($val, $like = false)
     {
         $postfix = '';
 
         if ($like) {
-            $str = str_replace(["%", "*", "?", "_"], ["\%", "\*", "\?", "\_"], $str);
+            $str = str_replace(["%", "*", "?", "_"], ["\%", "\*", "\?", "\_"], $val);
             $str = preg_replace('/^\\\\%|\\\\%$/', "%", $str);
 
             if ($str != $val) {
                 $postfix = " ESCAPE '\' ";
             }
+        } else {
+            $str = $val;
         }
 
         return "'".str_replace(["'"], ["''"], trim($str))."'" . $postfix;
