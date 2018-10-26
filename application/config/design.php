@@ -112,5 +112,9 @@ return array(
             'class' => 'ctpz',
             'url'   => 'demolkgloproru'
         ],
+        'a_35' => [
+            'title' => 'КЕС ОЙЛ',
+            'class' => 'kec'
+        ],
     ]
 );
