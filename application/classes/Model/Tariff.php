@@ -63,11 +63,11 @@ class Model_Tariff extends Model
                 $sql
                     ->whereStart()
                     ->where('t.tarif_id = ' . (int)$params['search'])
-                    ->whereOr("upper(t.TARIF_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['search'].'%')))
+                    ->whereOr("upper(t.TARIF_NAME) like ".mb_strtoupper(Oracle::quoteLike('%'.$params['search'].'%')))
                     ->whereEnd()
                 ;
             } else {
-                $sql->where("upper(t.TARIF_NAME) like " . mb_strtoupper(Oracle::quote('%' . $params['search'] . '%')));
+                $sql->where("upper(t.TARIF_NAME) like " . mb_strtoupper(Oracle::quoteLike('%' . $params['search'] . '%')));
             }
         }
 

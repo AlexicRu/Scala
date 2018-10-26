@@ -177,22 +177,30 @@ class Oracle{
 		return Common::buildTreeFromDBResult($result, $field, $noArray, $subField);
 	}
 
-	/**
-	 * экранируем
-	 *
-	 * @param $val
-	 */
-    public static function quote($val)
+    /**
+     * экранируем
+     *
+     * @param $val
+     * @param $like
+     */
+    public static function quote($val, $like = false)
     {
-        $str = str_replace(["%", "*", "?", "_"], ["\%", "\*", "\?", "\_"], $val);
-        $str = preg_replace('/^\\\\%|\\\\%$/', "%", $str);
+        if ($like) {
+            $str = str_replace(["%", "*", "?", "_"], ["\%", "\*", "\?", "\_"], $val);
+            $str = preg_replace('/^\\\\%|\\\\%$/', "%", $str);
 
-        $postfix = '';
-        if ($str != $val) {
-            $postfix = " ESCAPE '\' ";
+            $postfix = '';
+            if ($str != $val) {
+                $postfix = " ESCAPE '\' ";
+            }
         }
 
         return "'".str_replace(["'"], ["''"], trim($str))."'" . $postfix;
+    }
+
+    public static function quoteLike($val)
+    {
+        return self::quote($val, true);
     }
 
     /**

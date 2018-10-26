@@ -106,7 +106,7 @@ class Model_Contract extends Model
         }
 
         if(!empty($params['search'])){
-            $sql->where("upper(contract_name) like upper(".Oracle::quote('%'.$params['search'].'%').")");
+            $sql->where("upper(contract_name) like upper(".Oracle::quoteLike('%'.$params['search'].'%').")");
         }
 
         if(!empty($params['agent_id'])){
@@ -305,7 +305,7 @@ class Model_Contract extends Model
         ;
 
         if (!empty($params['tarif_name'])) {
-            $sql->where('upper(tarif_name) like ' . mb_strtoupper(Oracle::quote('%'.$params['tarif_name'].'%')));
+            $sql->where('upper(tarif_name) like ' . mb_strtoupper(Oracle::quoteLike('%'.$params['tarif_name'].'%')));
         }
 
         if (!empty($params['ids'])) {

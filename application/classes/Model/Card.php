@@ -126,8 +126,8 @@ class Model_Card extends Model
 
 		if(!empty($params['query'])){
 		    $sql->whereStart();
-			$sql->where("card_id like ".Oracle::quote('%'.$params['query'].'%'));
-			$sql->whereOr("upper(holder) like ".mb_strtoupper(Oracle::quote('%'.$params['query'].'%')));
+			$sql->where("card_id like ".Oracle::quoteLike('%'.$params['query'].'%'));
+			$sql->whereOr("upper(holder) like ".mb_strtoupper(Oracle::quoteLike('%'.$params['query'].'%')));
             $sql->whereEnd();
 		}
 
@@ -842,7 +842,7 @@ class Model_Card extends Model
             $sql->where("t.group_id in (".implode(',', $filter['ids']).")");
         } else {
             if (!empty($filter['search'])) {
-                $sql->where("upper(t.group_name) like " . mb_strtoupper(Oracle::quote('%' . $filter['search'] . '%')));
+                $sql->where("upper(t.group_name) like " . mb_strtoupper(Oracle::quoteLike('%' . $filter['search'] . '%')));
             }
         }
 
@@ -1005,15 +1005,15 @@ class Model_Card extends Model
             ";
 
         if(!empty($params['CARD_ID'])){
-            $sql .= ' and vc.CARD_ID like '.Oracle::quote('%'.$params['CARD_ID'].'%');
+            $sql .= ' and vc.CARD_ID like '.Oracle::quoteLike('%'.$params['CARD_ID'].'%');
         }
 
         if(!empty($params['HOLDER'])){
-            $sql .= ' and vc.HOLDER like '.Oracle::quote('%'.$params['HOLDER'].'%');
+            $sql .= ' and vc.HOLDER like '.Oracle::quoteLike('%'.$params['HOLDER'].'%');
         }
 
         if(!empty($params['DESCRIPTION_RU'])){
-            $sql .= ' and vc.DESCRIPTION_RU like '.Oracle::quote('%'.$params['DESCRIPTION_RU'].'%');
+            $sql .= ' and vc.DESCRIPTION_RU like '.Oracle::quoteLike('%'.$params['DESCRIPTION_RU'].'%');
         }
 
         return $db->pagination($sql, $params);

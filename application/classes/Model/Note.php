@@ -88,7 +88,7 @@ class Model_Note extends Model
         ;
 
         if(!empty($params['search'])){
-            $search = mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
+            $search = mb_strtoupper(Oracle::quoteLike('%'.$params['search'].'%'));
             $sql->where("(upper(t.NOTE_BODY) like ".$search." or subject like ".$search.")");
         }
 

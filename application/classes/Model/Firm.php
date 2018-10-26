@@ -17,7 +17,7 @@ class Model_Firm extends Model
         ;
 
         if(!empty($filter['search'])){
-            $sql->where("upper(t.group_name) like ".mb_strtoupper(Oracle::quote('%'.$filter['search'].'%')));
+            $sql->where("upper(t.group_name) like ".mb_strtoupper(Oracle::quoteLike('%'.$filter['search'].'%')));
         }
 
         return Oracle::init()->query($sql);

@@ -24,7 +24,7 @@ class Model_Client extends Model
         ;
 
         if (!empty($params['search'])) {
-            $search = mb_strtoupper(Oracle::quote('%' . $params['search'] . '%'));
+            $search = mb_strtoupper(Oracle::quoteLike('%' . $params['search'] . '%'));
 
             $sql
                 ->join('v_web_title_contracts contracts', 'clients.client_id = contracts.client_id and clients.manager_id = contracts.manager_id')

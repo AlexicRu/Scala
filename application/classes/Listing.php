@@ -25,7 +25,7 @@ class Listing
         $sql = "select * from ".Oracle::$prefix."V_WEB_DIC_COUNTRY t where 1=1";
 
         if(!empty($search)){
-            $sql .= " and upper(t.NAME_RU) like ".mb_strtoupper(Oracle::quote('%'.$search.'%'));
+            $sql .= " and upper(t.NAME_RU) like ".mb_strtoupper(Oracle::quoteLike('%'.$search.'%'));
         }
 
         if(!empty($ids)){
@@ -71,7 +71,7 @@ class Listing
         } else {
 
             if (!empty($params['search'])) {
-                $sql->where("upper(t.long_desc) like " . mb_strtoupper(Oracle::quote('%' . $params['search'] . '%')));
+                $sql->where("upper(t.long_desc) like " . mb_strtoupper(Oracle::quoteLike('%' . $params['search'] . '%')));
             }
 
             if (!empty($params['TUBE_ID'])) {
@@ -118,7 +118,7 @@ class Listing
             $sql->where("t.CARD_ID in (".implode(',', $ids).")");
         } else {
             if(!empty($params['search'])){
-                $sql->where("t.CARD_ID like ".Oracle::quote('%'.$params['search'].'%'));
+                $sql->where("t.CARD_ID like ".Oracle::quoteLike('%'.$params['search'].'%'));
             }
             if(!empty($params['contract_id'])){
                 $sql->where("t.contract_id = ".(int)$params['contract_id']);
@@ -148,7 +148,7 @@ class Listing
         $sql = "select * from ".Oracle::$prefix."V_WEB_CRD_AVAILABLE t where t.agent_id = ".$user['AGENT_ID'];
 
         if(!empty($search)){
-            $sql .= " and t.CARD_ID like ".Oracle::quote('%'.$search.'%');
+            $sql .= " and t.CARD_ID like ".Oracle::quoteLike('%'.$search.'%');
         }
 
         if(!empty($ids)){
@@ -176,7 +176,7 @@ class Listing
         $sql = "select * from ".Oracle::$prefix."V_WEB_SUPPLIERS_LIST t where t.agent_id = ".$user['AGENT_ID'];
 
         if(!empty($search)){
-            $sql .= " and upper(t.SUPPLIER_NAME) like ".mb_strtoupper(Oracle::quote('%'.$search.'%'));
+            $sql .= " and upper(t.SUPPLIER_NAME) like ".mb_strtoupper(Oracle::quoteLike('%'.$search.'%'));
         }
 
         if(!empty($ids)){
@@ -205,7 +205,7 @@ class Listing
         $sql = "select * from ".Oracle::$prefix."V_WEB_SUPPLIERS_CONTRACTS t where t.agent_id = ".$user['AGENT_ID']." and t.supplier_id = ".$supplierId;
 
         if(!empty($search)){
-            $sql .= " and upper(t.CONTRACT_NAME) like ".mb_strtoupper(Oracle::quote('%'.$search.'%'));
+            $sql .= " and upper(t.CONTRACT_NAME) like ".mb_strtoupper(Oracle::quoteLike('%'.$search.'%'));
         }
 
         return $db->query($db->limit($sql, 0, self::$limit));
@@ -230,7 +230,7 @@ class Listing
         ;
 
         if(!empty($search)){
-            $sql->where("upper(TUBE_NAME) like " . mb_strtoupper(Oracle::quote('%'.$search.'%')));
+            $sql->where("upper(TUBE_NAME) like " . mb_strtoupper(Oracle::quoteLike('%'.$search.'%')));
         }
 
         if(!empty($ids)){

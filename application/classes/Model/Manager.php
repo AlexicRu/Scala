@@ -101,7 +101,7 @@ class Model_Manager extends Model
         ;
 
         if(!empty($params['search'])){
-            $params['search'] = Oracle::quote('%'.mb_strtoupper($params['search']).'%');
+            $params['search'] = Oracle::quoteLike('%'.mb_strtoupper($params['search']).'%');
 
             $sql
                 ->whereStart()
@@ -443,7 +443,7 @@ class Model_Manager extends Model
         }
 
         if(!empty($params['search'])){
-            $sql->where("upper(t.CLIENT_NAME) like " . mb_strtoupper(Oracle::quote('%'.$params['search'].'%')));
+            $sql->where("upper(t.CLIENT_NAME) like " . mb_strtoupper(Oracle::quoteLike('%'.$params['search'].'%')));
         }
 
         if (!empty($columns)) {
@@ -506,7 +506,7 @@ class Model_Manager extends Model
         }
 
         if(!empty($params['search'])){
-            $sql->where("upper(r.WEB_NAME) like " . mb_strtoupper(Oracle::quote('%'.$params['search'].'%')));
+            $sql->where("upper(r.WEB_NAME) like " . mb_strtoupper(Oracle::quoteLike('%'.$params['search'].'%')));
         }
 
         return $db->query($sql);
