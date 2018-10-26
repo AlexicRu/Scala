@@ -61,7 +61,7 @@ if(!empty($_REQUEST['search'])){?>
         if (fl) {
             EnjoyHintRun('clients');
             fl = false;
-            block.parent().find('.ajax_block_load_all').click();
+            block.parent().find('.ajax_block_load_all:visible').click();
         }
     }
 </script>

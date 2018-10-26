@@ -21,7 +21,7 @@ class Model_Client extends Model
             unset($cacheKeyParams['offset']);
         }
         $key = 'getFullClientsList_' . implode('_', array_keys($cacheKeyParams)) . '_' . implode('_', $cacheKeyParams);
-        $result = $cache->get($key);
+        $result = []; //$cache->get($key);
 
         if (empty($result)) {
             $db = Oracle::init();
@@ -56,18 +56,7 @@ class Model_Client extends Model
 
         $user = User::current();
 
-        if (!empty($params['pagination'])) {
-            $more = true;
-            $items = array_slice($result, $params['offset'], Listing::$limit + 1);
-
-            if (count($items) != Listing::$limit + 1) {
-                $more = false;
-            }
-
-            array_pop($items);
-        }
-
-        foreach($items as $clientId => $rows){
+        foreach($result as $clientId => $rows){
             $client = reset($rows);
 
             foreach($rows as $row){
@@ -97,6 +86,15 @@ class Model_Client extends Model
         }
 
         if (!empty($params['pagination'])) {
+            $more = true;
+            $items = array_slice($clients, $params['offset'], Listing::$limit + 1);
+
+            if (count($items) != Listing::$limit + 1) {
+                $more = false;
+            }
+
+            array_pop($items);
+
             return [$clients, $more];
         }
 

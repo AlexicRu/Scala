@@ -47,9 +47,11 @@
 		<div class="search">
 			<form action="/clients" method="post"><button class="icon-find"></button><input type="text" name="search" placeholder="Поиск..." value="<?=(!empty($_REQUEST['search']) ? Text::quotesForForms($_REQUEST['search']) : '')?>"></form>
 		</div>
-        <?/*?><div class="new">
-            <a href="/news/116321"></a>
-        </div><?*/?>
+        <?if (!in_array($user['ROLE_ID'], array_keys(Access::$clientRoles))) {?>
+        <div class="new">
+            <a href="https://new.lk.glopro.ru/"></a>
+        </div>
+        <?}?>
 		<div class="personal">
 			<div class="avatar" <?/*style="background-image: url(/img/pic/01.png)"*/?>><i class="icon-user"></i></div>
 			<div class="personal_name"><?=User::getName($user)?></div>
