@@ -214,6 +214,8 @@ function _paginationAjaxLoad(url, outer, block, callback, params)
         if(data.success){
             outer.data('offset', parseInt(outer.data('offset')) + data.data.items.length);
 
+            params.more = data.data.more;
+
             callback(data.data.items, block, params);
 
             if(data.data.more){

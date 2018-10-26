@@ -184,7 +184,7 @@ class Oracle{
 	 */
     public static function quote($val)
     {
-        $str = str_replace(["%", "*", "?"], ["\%", "\*", "\?"], $val);
+        $str = str_replace(["%", "*", "?", "_"], ["\%", "\*", "\?", "\_"], $val);
         $str = preg_replace('/^\\\\%|\\\\%$/', "%", $str);
 
         $postfix = '';
@@ -310,9 +310,8 @@ class Oracle{
 		$from = $params['offset'];
 		$to = $params['limit']+$params['offset'];
 
-		if(!empty($params['pagination'])){
-			$to++;
-		}
+		//достаем на 1 больше, чтобы проверить есть ли еще данные на следующей странице
+        $to++;
 
         //builder
         if (is_a($sql, 'Builder')) {
@@ -324,7 +323,7 @@ class Oracle{
 		$items = $this->query($sql);
 
 		$more = false;
-		if (count($items) > $params['limit']) {
+		if (count($items) == $params['limit'] + 1) {
 			$more = true;
 			array_pop($items);
 		}
