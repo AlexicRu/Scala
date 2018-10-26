@@ -1,6 +1,6 @@
 <?php
 
-if (!preg_match('/gpn_(\d+)_(\d+)_report.php/', $argv[0], $m)) {
+if (!preg_match('/shell_(\d+)_(\d+)_report.php/', $argv[0], $m)) {
     do_log("invalid filename: ".$argv[0]);
     die("valid filename: shell_{agentId}_{tubeId}_report.php\n");
 }
