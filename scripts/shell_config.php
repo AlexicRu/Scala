@@ -1,7 +1,9 @@
 <?php
 
-//for loading
-define('SYSPATH', 'fake');
+$database = [
+    'db'        => '(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 10.8.2.1)(PORT = 1521)))(CONNECT_DATA=(SID=KF)(SERVER=DEDICATED)))',
+    'name'      => 's_web',
+    'password'  => '61a5yh1jeq',
+];
 
-$config = include(__DIR__ . '/../application/config/config.php');
-$database = include(__DIR__ . '/../application/config/database.php');
+$shellUrl = 'https://api-emea.prod.emea.wexinc.co.uk';

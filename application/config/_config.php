@@ -19,9 +19,4 @@ return [
             'debug'     => false
         ]
     ],
-    'shell' => [
-        'url'           => '__REPLACE__',
-        'login'         => '__REPLACE__',
-        'password'      => '__REPLACE__',
-    ]
 ];

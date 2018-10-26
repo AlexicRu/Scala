@@ -32,9 +32,14 @@ class Shell
 
     public function __construct($params = [])
     {
+        if (empty($params['agent_id']) || empty($params['tube_id'])) {
+            die($this->_logErrorArguments);
+        }
         /*
          * init variables START
          */
+        $this->_agentId = $params['agent_id'];
+        $this->_tubeId  = $params['tube_id'];
         $this->_configShell = !empty($params['config']) ? $params['config'] : null;
         $this->_configDb = !empty($params['db']) ? $params['db'] : null;
         $this->_debug = !empty($params['debug']) ? $params['debug'] : false;
@@ -249,19 +254,11 @@ class Shell
     /**
      * загружаем транзакции
      *
-     * @param $agentId
-     * @param $tubeId
      * @param $dateStart
      * @param $dateEnd
      */
-    public function loadTransactions($agentId, $tubeId, $dateStart = false, $dateEnd = false)
+    public function loadTransactions($dateStart = false, $dateEnd = false)
     {
-        if (empty($agentId) || empty($tubeId)) {
-            die($this->_logErrorArguments);
-        }
-
-        $this->_agentId = $agentId;
-        $this->_tubeId  = $tubeId;
         $this->_log('loadTransactions start');
 
         //unlim
@@ -338,8 +335,8 @@ class Shell
                     $product['originalValue']       = !isset($product['originalValue']) ? 0 : $product['originalValue'];
 
                     $data = [
-                        'agent_id'              => $agentId, //number -- (по умолчанию 4)
-                        'tube_id'               => $tubeId, //number -- (по умолчанию 70183602)
+                        'agent_id'              => $this->_agentId, //number -- (по умолчанию 4)
+                        'tube_id'               => $this->_tubeId, //number -- (по умолчанию 70183602)
                         'account_number'        => $this->_quote(''), //varchar2(50) -- номер аккаунта (не обязательно)
                         'sub_account_number'    => $this->_quote(isset($transactionDetail['accountNumber']) ? $transactionDetail['accountNumber'] : ''), //varchar2(50) -- номер субаккаунта (не обязательно)
                         'invoice_id'            => $this->_quote(''), //varchar2(50) -- номер инвойса (не обязательно)
