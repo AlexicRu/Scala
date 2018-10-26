@@ -185,11 +185,12 @@ class Oracle{
      */
     public static function quote($val, $like = false)
     {
+        $postfix = '';
+
         if ($like) {
             $str = str_replace(["%", "*", "?", "_"], ["\%", "\*", "\?", "\_"], $val);
             $str = preg_replace('/^\\\\%|\\\\%$/', "%", $str);
 
-            $postfix = '';
             if ($str != $val) {
                 $postfix = " ESCAPE '\' ";
             }
