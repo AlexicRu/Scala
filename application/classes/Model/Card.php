@@ -37,6 +37,10 @@ class Model_Card extends Model
     const CARD_ICON_GPC         = 'GPC PPR';
     const CARD_ICON_SCANOIL     = 'ScanOil';
     const CARD_ICON_E100        = 'E100PRO';
+    const CARD_ICON_PETROL_PTK  = 'PetrolPTK';
+    const CARD_ICON_PETROL_SURGUT       = 'PetrolSurgut';
+    const CARD_ICON_PETROL_NEFTEMARKET  = 'PetrolNeftemarket';
+    const CARD_ICON_NIKA        = 'CommonNIKA';
 
     const CARD_SYSTEM_GPN = 5;
     const CARD_SYSTEM_NINE = 9;
@@ -54,6 +58,10 @@ class Model_Card extends Model
         self::CARD_ICON_GPC         => 'gpc.jpg',
         self::CARD_ICON_SCANOIL     => 'scanoil.jpg',
         self::CARD_ICON_E100        => 'e100.jpg',
+        self::CARD_ICON_NIKA        => 'nika.jpg',
+        self::CARD_ICON_PETROL_PTK  => 'ptk.jpg',
+        self::CARD_ICON_PETROL_SURGUT       => 'surgut.jpg',
+        self::CARD_ICON_PETROL_NEFTEMARKET  => 'neftemarket.jpg',
     ];
 
 	public static $cardLimitsParams = [
