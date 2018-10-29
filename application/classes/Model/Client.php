@@ -93,7 +93,8 @@ class Model_Client extends Model
                     'contracts.CONTRACT_STATE',
                     'contracts.BALANCE',
                     'contracts.ALL_CARDS',
-                    'LISTAGG(cards.CARD_ID, \',\') WITHIN GROUP (ORDER BY cards.CARD_ID) "CARDS_LIST"'
+                    'count(cards.CARD_ID) CARDS_CNT',
+                    'max(cards.CARD_ID) CARDS_MAX'
                 ])
             ;
         }
@@ -107,7 +108,7 @@ class Model_Client extends Model
             foreach ($contracts as $contract) {
                 if ($contract['CLIENT_ID'] == $client['CLIENT_ID'] && $contract['MANAGER_ID'] == $client['MANAGER_ID']) {
                     $client['contracts'][] = [
-                        'found_card'            => !empty($params['search']) && $params['search'] == $contract['CARDS_LIST'] ? $params['search'] : false,
+                        'found_card'            => $contract['CARDS_CNT'] == 1 && !empty($params['search']) && $params['search'] == $contract['CARDS_MAX'] ? $params['search'] : false,
                         'CONTRACT_ID'           => $contract['CONTRACT_ID'],
                         'CONTRACT_NAME'         => $contract['CONTRACT_NAME'],
                         'ALL_CARDS'             => $contract['ALL_CARDS'],
