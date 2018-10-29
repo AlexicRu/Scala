@@ -62,11 +62,39 @@ class Model_Client extends Model
 
         //делаем выборку данных по контрактам
         $sql = (new Builder())->select()
-            ->from('v_web_title_contracts')
+            ->from('v_web_title_contracts contracts')
         ;
 
         foreach ($clients as $client) {
-            $sql->whereOr('(client_id = '. $client['CLIENT_ID'] .' and manager_id = '. $client['MANAGER_ID'] .')');
+            $sql->whereOr('(contracts.client_id = '. $client['CLIENT_ID'] .' and contracts.manager_id = '. $client['MANAGER_ID'] .')');
+        }
+
+        if (!empty($search)) {
+            $sql
+                ->join('v_web_title_cards cards', 'cards.contract_id = contracts.contract_id')
+                ->whereStart()
+                ->whereOr("upper(contracts.contract_name) like " . $search)
+                ->whereOr("upper(cards.card_id) like " . $search)
+                ->whereEnd()
+                ->groupBy([
+                    'contracts.CLIENT_ID',
+                    'contracts.MANAGER_ID',
+                    'contracts.CONTRACT_ID',
+                    'contracts.CONTRACT_NAME',
+                    'contracts.CONTRACT_STATE',
+                    'contracts.BALANCE',
+                    'contracts.ALL_CARDS',
+                ])
+                ->select([
+                    'contracts.CLIENT_ID',
+                    'contracts.MANAGER_ID',
+                    'contracts.CONTRACT_ID',
+                    'contracts.CONTRACT_NAME',
+                    'contracts.CONTRACT_STATE',
+                    'contracts.BALANCE',
+                    'contracts.ALL_CARDS',
+                ])
+            ;
         }
 
         $contracts = $db->query($sql);
