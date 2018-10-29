@@ -50,8 +50,6 @@ class Model_Client extends Model
                     'clients.LONG_NAME',
                     'clients.CLIENT_STATE',
                     'clients.AGENT_ID',
-                    'count(distinct contracts.CONTRACT_ID) CONTRACTS_CNT',
-                    'count(distinct cards.CARD_ID) CARDS_CNT'
                 ])
             ;
         }
@@ -136,8 +134,8 @@ class Model_Client extends Model
                 ->from('v_web_title_contracts contracts')
             ;
 
-            foreach ($clientsIdsContractsEmpty as $client) {
-                $sql->whereOr('(contracts.client_id = '. $client['CLIENT_ID'] .' and contracts.manager_id = '. $client['MANAGER_ID'] .')');
+            foreach ($clientsIdsContractsEmpty as $clientEmpty) {
+                $sql->whereOr('(contracts.client_id = '. $clientEmpty['CLIENT_ID'] .' and contracts.manager_id = '. $clientEmpty['MANAGER_ID'] .')');
             }
 
             $contracts = $db->query($sql);
