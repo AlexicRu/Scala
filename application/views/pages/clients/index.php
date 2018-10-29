@@ -46,9 +46,15 @@ if(!empty($_REQUEST['search'])){?>
 
                 for (var j in client.contracts) {
                     var contract = client.contracts[j];
+                    var link = '/clients/client/' + client.CLIENT_ID + '?contract_id=' + contract.CONTRACT_ID;
+
+                    if (contract.found_card !== false) {
+                        link = link + '&tab=cards&card=' + contract.found_card;
+                    }
+
                     $('<tr>' +
                         '<td><span class="label ' + contract.contract_state_class + '">' + contract.contract_state_name + '</span></td>' +
-                        '<td><a href="/clients/client/' + client.CLIENT_ID + '?contract_id=' + contract.CONTRACT_ID + '">' + contract.CONTRACT_NAME + '</td>' +
+                        '<td><a href="'+ link +'">' + contract.CONTRACT_NAME + '</td>' +
                         '<td><span class="gray">Счет:</span> ' + contract.balance_formatted + '</td>' +
                         '<td><span class="gray">Карты:</span> ' + contract.ALL_CARDS + '</td>' +
                     '</tr>').appendTo(tpl.find('table'));
