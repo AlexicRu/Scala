@@ -108,7 +108,7 @@ class Model_Client extends Model
             foreach ($contracts as $contract) {
                 if ($contract['CLIENT_ID'] == $client['CLIENT_ID'] && $contract['MANAGER_ID'] == $client['MANAGER_ID']) {
                     $client['contracts'][] = [
-                        'found_card'            => $contract['CARDS_CNT'] == 1 && !empty($params['search']) && $params['search'] == $contract['CARDS_MAX'] ? $params['search'] : false,
+                        'found_card'            => !empty($params['search']) && $contract['CARDS_CNT'] == 1 && $params['search'] == $contract['CARDS_MAX'] ? $params['search'] : false,
                         'CONTRACT_ID'           => $contract['CONTRACT_ID'],
                         'CONTRACT_NAME'         => $contract['CONTRACT_NAME'],
                         'ALL_CARDS'             => $contract['ALL_CARDS'],
