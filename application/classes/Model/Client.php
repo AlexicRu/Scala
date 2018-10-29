@@ -27,8 +27,8 @@ class Model_Client extends Model
             $search = mb_strtoupper(Oracle::quoteLike('%' . $params['search'] . '%'));
 
             $sql
-                ->join('v_web_title_contracts contracts', 'clients.client_id = contracts.client_id and clients.manager_id = contracts.manager_id')
-                ->join('v_web_title_cards cards', 'cards.contract_id = contracts.contract_id')
+                ->joinLeft('v_web_title_contracts contracts', 'clients.client_id = contracts.client_id and clients.manager_id = contracts.manager_id')
+                ->joinLeft('v_web_title_cards cards', 'cards.contract_id = contracts.contract_id')
                 ->whereStart()
                 ->where("upper(clients.client_name) like " . $search)
                 ->whereOr("upper(clients.long_name) like " . $search)
@@ -50,6 +50,8 @@ class Model_Client extends Model
                     'clients.LONG_NAME',
                     'clients.CLIENT_STATE',
                     'clients.AGENT_ID',
+                    'count(distinct contracts.CONTRACT_ID) CONTRACTS_CNT',
+                    'count(distinct cards.CARD_ID) CARDS_CNT'
                 ])
             ;
         }
@@ -71,7 +73,7 @@ class Model_Client extends Model
 
         if (!empty($search)) {
             $sql
-                ->join('v_web_title_cards cards', 'cards.contract_id = contracts.contract_id')
+                ->joinLeft('v_web_title_cards cards', 'cards.contract_id = contracts.contract_id')
                 ->whereStart()
                 ->whereOr("upper(contracts.contract_name) like " . $search)
                 ->whereOr("upper(cards.card_id) like " . $search)
@@ -100,6 +102,7 @@ class Model_Client extends Model
         }
 
         $contracts = $db->query($sql);
+        $clientsIdsContractsEmpty = [];
 
         //подставляем контракты к клиентам
         foreach ($clients as &$client) {
@@ -116,6 +119,43 @@ class Model_Client extends Model
                         'contract_state_name'   => Model_Contract::$statusContractNames[$contract['CONTRACT_STATE']],
                         'balance_formatted'     => number_format($contract['BALANCE'], 2, ',', ' ') . ' ' . Text::RUR,
                     ];
+                }
+            }
+
+            if (empty($client['contracts'])) {
+                $clientsIdsContractsEmpty[] = [
+                    'CLIENT_ID'     => $client['CLIENT_ID'],
+                    'MANAGER_ID'    => $client['MANAGER_ID'],
+                ];
+            }
+        }
+
+        if (!empty($clientsIdsContractsEmpty)) {
+            //делаем выборку всех контрактов если поиск был строго по имени
+            $sql = (new Builder())->select()
+                ->from('v_web_title_contracts contracts')
+            ;
+
+            foreach ($clientsIdsContractsEmpty as $client) {
+                $sql->whereOr('(contracts.client_id = '. $client['CLIENT_ID'] .' and contracts.manager_id = '. $client['MANAGER_ID'] .')');
+            }
+
+            $contracts = $db->query($sql);
+
+            //подставляем контракты к клиентам
+            foreach ($clients as &$client) {
+                foreach ($contracts as $contract) {
+                    if ($contract['CLIENT_ID'] == $client['CLIENT_ID'] && $contract['MANAGER_ID'] == $client['MANAGER_ID']) {
+                        $client['contracts'][] = [
+                            'found_card'            => false,
+                            'CONTRACT_ID'           => $contract['CONTRACT_ID'],
+                            'CONTRACT_NAME'         => $contract['CONTRACT_NAME'],
+                            'ALL_CARDS'             => $contract['ALL_CARDS'],
+                            'contract_state_class'  => Model_Contract::$statusContractClasses[$contract['CONTRACT_STATE']],
+                            'contract_state_name'   => Model_Contract::$statusContractNames[$contract['CONTRACT_STATE']],
+                            'balance_formatted'     => number_format($contract['BALANCE'], 2, ',', ' ') . ' ' . Text::RUR,
+                        ];
+                    }
                 }
             }
         }

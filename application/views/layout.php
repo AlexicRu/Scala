@@ -47,7 +47,7 @@
 		<div class="search">
 			<form action="/clients" method="post"><button class="icon-find"></button><input type="text" name="search" placeholder="Поиск..." value="<?=(!empty($_REQUEST['search']) ? Text::quotesForForms($_REQUEST['search']) : '')?>"></form>
 		</div>
-        <?if (!in_array($user['ROLE_ID'], array_keys(Access::$clientRoles))) {?>
+        <?if (!in_array($user['ROLE_ID'], array_keys(Access::$clientRoles)) && $user['AGENT_GROUP_ID'] == 0) {?>
         <div class="new">
             <a href="https://new.lk.glopro.ru/"></a>
         </div>
