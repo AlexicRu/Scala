@@ -65,6 +65,10 @@ return array(
             'title' => 'ETS Trading',
             'class' => 'ets'
         ],
+        'lkkecoilru' => [
+            'title' => 'КЕС ОЙЛ',
+            'class' => 'kec'
+        ],
     ],
     'user' => [
         'a_22' => [
