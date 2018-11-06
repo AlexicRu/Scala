@@ -41,6 +41,7 @@ class Model_Card extends Model
     const CARD_ICON_PETROL_SURGUT       = 'PetrolSurgut';
     const CARD_ICON_PETROL_NEFTEMARKET  = 'PetrolNeftemarket';
     const CARD_ICON_NIKA        = 'CommonNIKA';
+    const CARD_ICON_PEREKRESTOK = 'CommonPerekrestok';
 
     const CARD_SYSTEM_GPN = 5;
     const CARD_SYSTEM_NINE = 9;
@@ -62,6 +63,7 @@ class Model_Card extends Model
         self::CARD_ICON_PETROL_PTK  => 'ptk.jpg',
         self::CARD_ICON_PETROL_SURGUT       => 'surgut.jpg',
         self::CARD_ICON_PETROL_NEFTEMARKET  => 'neftemarket.jpg',
+        self::CARD_ICON_PEREKRESTOK  => 'perekrestokoil.jpg',
     ];
 
 	public static $cardLimitsParams = [
