@@ -589,9 +589,6 @@ class Model_Contract extends Model
         $data = [
             'p_contract_id'         => $contractId,
             'p_manager_id'          => $user['MANAGER_ID'],
-            'p_report_send'         => 0,
-            'p_rep_send_per'        => 'W',
-            'p_rep_send_per_value'  => 0,
             'p_eml_card_block'      => !empty($params['notice_email_card']) ? 1 : 0,
             'p_eml_contract_block'  => !empty($params['notice_email_firm']) ? 1 : 0,
             'p_eml_blnc_ctrl'       => !empty($params['notice_email_barrier']) ? 1 : 0,
@@ -602,6 +599,9 @@ class Model_Contract extends Model
             'p_sms_blnc_ctrl'       => !empty($params['notice_sms_barrier']) ? 1 : 0,
             'p_sms_add_payment'     => !empty($params['notice_sms_payment']) ? 1 : 0,
             'p_sms_card_trz'        => 0,
+            'p_eml_balance'         => !empty($params['notice_email_balance']) ? 1 : 0,
+            'p_sms_balance'         => !empty($params['notice_sms_balance']) ? 1 : 0,
+            'p_balance_when'        => !empty($params['notice_balance_days']) ? $params['notice_balance_days'] : '0000000',
             'p_error_code' 		    => 'out',
         ];
 
