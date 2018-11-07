@@ -124,6 +124,10 @@ class Controller_Clients extends Controller_Common {
                     'manager'   => User::current()
                 ]);
 				$popupContractHistory = Form::popup('История по договору', 'contract/history');
+                $popupContractTariffEdit = Form::popup('Тариф по договору', 'contract/tariff_edit', [
+                    'tariffId' => $contractSettings['TARIF_OFFLINE'],
+                    'contractId' => $contractId,
+                ]);
 
 				$content = View::factory('ajax/clients/contract/contract')
 					->bind('contract', $contract)
@@ -132,6 +136,7 @@ class Controller_Clients extends Controller_Common {
 					->bind('contractManagers', $contractManagers)
 					->bind('popupContractNoticeSettings', $popupContractNoticeSettings)
 					->bind('popupContractHistory', $popupContractHistory)
+					->bind('popupContractTariffEdit', $popupContractTariffEdit)
 				;
 				break;
 			case 'cards':
@@ -744,5 +749,45 @@ class Controller_Clients extends Controller_Common {
         }
 
         $this->jsonResult(true);
+    }
+
+    /**
+     * редактирование тарифа по договору
+     */
+    public function action_contractTariffEdit()
+    {
+        $contractId = $this->request->post('contract_id');
+        $tariffId = $this->request->post('tariff_id');
+        $dateFrom = $this->request->post('date_from');
+
+        $result = Model_Contract::editTariff($tariffId, $contractId, $dateFrom);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * получаем историю редактирование тарифа
+     */
+    public function action_getContractTariffChangeHistory()
+    {
+        $contractId = $this->request->post('contract_id');
+
+        $params = [
+            'contract_id'   => $contractId,
+            'offset' 		=> $this->request->post('offset'),
+            'pagination'	=> true,
+        ];
+
+        list($items, $more) = Model_Contract::getContractTariffChangeHistory($contractId, $params);
+
+        if (empty($items)) {
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, ['items' => $items, 'more' => $more]);
     }
 }

@@ -230,7 +230,7 @@ function _paginationAjaxLoad(url, outer, block, callback, params)
             if (onError) {
                 onError(block, params);
             } else {
-                outer.find('.ajax_block_more').fadeIn().html('<span class="gray">Данные отсутствуют</span>');
+                outer.find('.ajax_block_more').fadeIn().html(params.emptyMessage ? params.emptyMessage : '<span class="gray">Данные отсутствуют</span>');
             }
         }
         block.closest('.block_loading').removeClass('block_loading');

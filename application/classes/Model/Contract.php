@@ -923,4 +923,69 @@ class Model_Contract extends Model
 
         return Oracle::init()->query($sql);
     }
+
+    /**
+     * редактирование тарифа по договору
+     *
+     * @param $tariffId
+     * @param $contractId
+     * @param $dateFrom
+     * @return bool
+     */
+    public static function editTariff($tariffId, $contractId, $dateFrom)
+    {
+        if (empty($tariffId) || empty($contractId) || empty($dateFrom)) {
+            return false;
+        }
+
+        $data = [
+            'p_contract_id' 	=> $contractId,
+            'p_tarif_id'		=> $tariffId,
+            'p_date_from'		=> $dateFrom,
+            'p_manager_id'		=> User::id(),
+            'p_error_code'		=> 'out',
+        ];
+
+        $res = Oracle::init()->procedure('client_contract_tarif_edit', $data);
+
+        if($res == Oracle::CODE_SUCCESS){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * получаем историю редактирование тарифа
+     *
+     * @param $contractId
+     * @param $tariffId
+     * @param $params
+     * @return array|bool|mixed
+     */
+    public static function getContractTariffChangeHistory($contractId, $params)
+    {
+        if(empty($contractId)){
+            return [];
+        }
+
+        $db = Oracle::init();
+
+        $sql = (new Builder())->select([
+            'TARIF_NAME',
+            'DATE_FROM_STR',
+            'DATE_TO_STR'
+        ])
+            ->from('V_WEB_CTR_TARIF_HISTORY')
+            ->where('contract_id = ' . (int)$contractId)
+            ->orderBy('date_from desc')
+        ;
+
+        if(!empty($params['pagination'])) {
+            $params['limit'] = 5;
+
+            return $db->pagination($sql, $params);
+        }
+
+        return $db->query($sql);
+    }
 }

@@ -179,12 +179,18 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="gray right">Тариф по договору:</td>
+                    <td class="gray right">Текущий тариф:</td>
                     <td>
                         [<?=$contractSettings['TARIF_OFFLINE']?>]  <?=$contractSettings['TARIF_NAME_OFFLINE']?>
+                        <a href="#contract_tariff_edit" class="fancy btn btn_small btn_icon"><i class="icon-pen"></i></a>
                     </td>
                 </tr>
             </table>
+
+            <br>
+
+            <b class="f18">История изменения тарифов</b>
+            <div class="ajax_block_contract_tariff_history_out block_loading"></div>
 
             <br>
         <?}?>
@@ -238,6 +244,7 @@
 
 <?=$popupContractHistory?>
 <?=$popupContractNoticeSettings?>
+<?=$popupContractTariffEdit?>
 
 <script>
     $(function(){
@@ -249,6 +256,13 @@
         $('.datepicker').each(function(){
             renderDatePicker($(this));
         });
+
+        <?if(Access::allow('view_tariffs')){?>
+            paginationAjax('/clients/get-contract-tariff-change-history/', 'ajax_block_contract_tariff_history', renderAjaxPaginationContractTariffHistory, {
+                contract_id: <?=$contract['CONTRACT_ID']?>,
+                emptyMessage: '<span class="gray">История изменения тарифа отсутствует</span>'
+            });
+        <?}?>
 
         <?if ($contractSettings['AUTOBLOCK_FLAG_DATE'] == Date::DATE_MAX) {?>
             $('.autoblock_flag_date_checkbox').prop('checked', true).trigger('change');
@@ -335,6 +349,28 @@
             $('[name=AUTOBLOCK_FLAG_DATE]').prop('disabled', true).parent().find('img').hide();
         } else {
             $('[name=AUTOBLOCK_FLAG_DATE]').prop('disabled', false).parent().find('img').show();
+        }
+    }
+
+    function renderAjaxPaginationContractTariffHistory(data, block)
+    {
+        for(var i in data){
+            var tpl = $('<div class="line_inner">' +
+                '<span class="gray th_data_from"> c <span /></span>' +
+                '<span class="gray th_data_to">&nbsp;&nbsp;&nbsp; до <span /></span>' +
+                '&nbsp;&nbsp;&nbsp;'+
+                '<span class="th_name" />' +
+                '</div>');
+
+            tpl.find('.th_data_from span').text(data[i].DATE_FROM_STR);
+            if (data[i].DATE_TO_STR != '<?=Date::DATE_MAX?>') {
+                tpl.find('.th_data_to span').text(data[i].DATE_TO_STR);
+            } else {
+                tpl.find('.th_data_to').remove();
+            }
+            tpl.find('.th_name').text(data[i].TARIF_NAME);
+
+            block.append(tpl);
         }
     }
 </script>
