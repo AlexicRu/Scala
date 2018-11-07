@@ -62,10 +62,12 @@
                         <?}?>
                     </span>
                     <span toggle_block="block2" class="dn">
-                        <input type="text" name="AUTOBLOCK_FLAG_DATE" class="datepicker" readonly>
+                        <input type="text" name="AUTOBLOCK_FLAG_DATE" class="datepicker" readonly
+                               value="<?=($contractSettings['AUTOBLOCK_FLAG_DATE'] == Date::DATE_MAX ? '' : $contractSettings['AUTOBLOCK_FLAG_DATE'])?>"
+                        >
                         <br>
                         <label>
-                            <input type="checkbox" onchange="checkAutoblockFlagDateIndefinitely($(this))"> Бессрочно
+                            <input type="checkbox" class="autoblock_flag_date_checkbox" onchange="checkAutoblockFlagDateIndefinitely($(this))"> Бессрочно
                         </label>
                     </span>
                 </td>
@@ -247,6 +249,10 @@
         $('.datepicker').each(function(){
             renderDatePicker($(this));
         });
+
+        <?if ($contractSettings['AUTOBLOCK_FLAG_DATE'] == Date::DATE_MAX) {?>
+            $('.autoblock_flag_date_checkbox').prop('checked', true).trigger('change');
+        <?}?>
 
         $("select[name=scheme]").on('change', function(){
             var t = $(this);
