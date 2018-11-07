@@ -58,6 +58,7 @@ class Listing
 
         $sql = (new Builder())->select([
                 't.SERVICE_ID',
+                't.MEASURE',
                 't.' . $description
             ])->distinct()
             ->from('V_WEB_SERVICE_LIST t')

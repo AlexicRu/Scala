@@ -11,6 +11,7 @@ class Model_Card extends Model
 
 	const CARD_LIMIT_PARAM_VOLUME 	= 1;
 	const CARD_LIMIT_PARAM_RUR 		= 2;
+	const CARD_LIMIT_PARAM_ITEMS 	= 3;
 
 	const CARD_LIMIT_TYPE_DAY		    = 1;
 	const CARD_LIMIT_TYPE_WEEK		    = 2;
@@ -71,6 +72,7 @@ class Model_Card extends Model
 	public static $cardLimitsParams = [
 		self::CARD_LIMIT_PARAM_VOLUME 	=> 'л.',
 		self::CARD_LIMIT_PARAM_RUR 		=> Text::RUR,
+		self::CARD_LIMIT_PARAM_ITEMS 	=> 'шт.',
 	];
 
 	public static $cardLimitsTypes = [

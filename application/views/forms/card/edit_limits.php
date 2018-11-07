@@ -238,7 +238,9 @@ if(!empty($card['CHANGE_LIMIT_AVAILABLE']) && Access::allow('clients_card-edit-l
         $('[name=limit_service]', form).each(function () {
             var select = $(this);
             var selectVal = select.val();
-            var group = select.closest('td').find('[name=limit_service]:first option:selected').attr('group');
+            var selected = select.closest('td').find('[name=limit_service]:first option:selected');
+            var group = selected.attr('group');
+            var measure = selected.attr('measure').split(';');
             var cnt = select.closest('td').find('[name=limit_service]').length;
 
             select.find('option').each(function () {
