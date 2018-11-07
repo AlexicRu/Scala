@@ -2,6 +2,8 @@
 
 class Date extends Kohana_Date
 {
+    const DATE_MAX = '31.12.2099';
+
     public static $dateFormatRu = 'd.m.Y';
     public static $dateFormatDefault = 'Y-m-d';
 

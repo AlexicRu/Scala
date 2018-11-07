@@ -1,7 +1,7 @@
 <div class="tc_top_line">
     [<?=$contract['CONTRACT_ID']?>]
     <span toggle_block="block2">
-        <?=$contract['CONTRACT_NAME']?> от <?=$contract['DATE_BEGIN']?> <?if($contract['DATE_END'] != '31.12.2099'){?>до <?=$contract['DATE_END']?><?}?> &nbsp;
+        <?=$contract['CONTRACT_NAME']?> от <?=$contract['DATE_BEGIN']?> <?if($contract['DATE_END'] != Date::DATE_MAX){?>до <?=$contract['DATE_END']?><?}?> &nbsp;
         <span class="label <?=Model_Contract::$statusContractClasses[$contract['STATE_ID']]?>"><?=Model_Contract::$statusContractNames[$contract['STATE_ID']]?></span>
     </span>
     <span toggle_block="block2" class="dn gray">
@@ -51,8 +51,27 @@
                     </span>
                 </td>
             </tr>
+            <tr class="contract-payment-scheme-limit-tr" <?if($contractSettings['scheme'] != Model_Contract::PAYMENT_SCHEME_LIMIT){?>style="display: none"<?}?>>
+                <td class="gray right">Действует до:</td>
+                <td>
+                    <span toggle_block="block2">
+                        <?if ($contractSettings['AUTOBLOCK_FLAG_DATE'] == Date::DATE_MAX) {?>
+                            Бессрочно
+                        <?} else {?>
+                            <?=$contractSettings['AUTOBLOCK_FLAG_DATE']?>
+                        <?}?>
+                    </span>
+                    <span toggle_block="block2" class="dn">
+                        <input type="text" name="AUTOBLOCK_FLAG_DATE" class="datepicker" readonly>
+                        <br>
+                        <label>
+                            <input type="checkbox" onchange="checkAutoblockFlagDateIndefinitely($(this))"> Бессрочно
+                        </label>
+                    </span>
+                </td>
+            </tr>
             <tr>
-                <td class="gray right" width="130">Блокировка:</td>
+                <td class="gray right">Блокировка:</td>
                 <td>
                     <span toggle_block="block2">
                         <?if($contractSettings['scheme'] == Model_Contract::PAYMENT_SCHEME_UNLIMITED){?>
@@ -78,17 +97,6 @@
                     }
                     ?>
                     <?=$contractSettings['INVOICE_PERIOD_VALUE'].' '.$period?>
-                    <?/*<span toggle_block="block2"><?=$contractSettings['INVOICE_PERIOD_VALUE'].' '.$period?></span>
-                    <span toggle_block="block2" class="dn">
-                        <select name="INVOICE_PERIOD_TYPE">
-                            <?
-                            foreach(Model_Contract::$invoicePeriods as $id => $value){
-                                ?><option value="<?=$id?>" <?if($contractSettings['INVOICE_PERIOD_TYPE'] == $id){echo 'selected';}?>><?=$value?></option><?
-                            }
-                            ?>
-                        </select>
-                        <input type="text" name="INVOICE_PERIOD_VALUE" value="<?=$contractSettings['INVOICE_PERIOD_VALUE']?>">
-                    </span>*/?>
                 </td>
             </tr>
             <tr>
@@ -153,41 +161,6 @@
                 </tr>
             </table>
         </fieldset>
-            <?/*?>
-        <fieldset class="inline_block">
-            <legend>По карте</legend>
-            <table>
-                <tr>
-                    <td class="gray right" width="200">Штрафы за маленькие обороты:</td>
-                    <td>
-                        <span toggle_block="block2"><input type="checkbox" class="switch" disabled></span>
-                        <span toggle_block="block2" class="dn"><input type="checkbox" class="switch"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="gray right">Оборот за период менее:</td>
-                    <td>
-                        <span toggle_block="block2">15000 <?=Text::RUR?></span>
-                        <span toggle_block="block2" class="dn">
-                            <input type="text" class="input_tiny" value="15000">
-                            <select>
-                                <option><?=Text::RUR?></option>
-                                <option>Л</option>
-                            </select>
-                        </span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="gray right">Размер штрафа:</td>
-                    <td>
-                        <span toggle_block="block2">500</span>
-                        <span toggle_block="block2" class="dn"><input type="text" class="input_small" value="500"></span>
-                        <?=Text::RUR?>
-                    </td>
-                </tr>
-            </table>
-        </fieldset>
-<?*/?>
         <?}?>
     </div>
     <div class="col line_inner">
@@ -206,10 +179,7 @@
                 <tr>
                     <td class="gray right">Тариф по договору:</td>
                     <td>
-                        <span toggle_block="block2">[<?=$contractSettings['TARIF_OFFLINE']?>]  <?=$contractSettings['TARIF_NAME_OFFLINE']?></span>
-                        <span toggle_block="block2" class="dn">
-                            <?=Form::buildField('contract_tariffs', 'TARIF_OFFLINE', $contractSettings['TARIF_OFFLINE'])?>
-                        </span>
+                        [<?=$contractSettings['TARIF_OFFLINE']?>]  <?=$contractSettings['TARIF_NAME_OFFLINE']?>
                     </td>
                 </tr>
             </table>
@@ -271,9 +241,18 @@
     $(function(){
         renderElements();
         renderTootip();
+        $('[type=checkbox]').each(function(){
+            renderCheckbox($(this));
+        });
+        $('.datepicker').each(function(){
+            renderDatePicker($(this));
+        });
 
         $("select[name=scheme]").on('change', function(){
             var t = $(this);
+            var tr = $('.contract-payment-scheme-limit-tr');
+
+            tr.hide();
 
             if(t.val() == 1){ //безлимит
                 $("[name=AUTOBLOCK_LIMIT]").val(0).prop('disabled', true);
@@ -281,6 +260,8 @@
                 $("[name=AUTOBLOCK_LIMIT]").val(0).prop('disabled', true);
             }else{ //порог отключения
                 $("[name=AUTOBLOCK_LIMIT]").prop('disabled', false);
+
+                tr.show();
             }
         });
 
@@ -295,12 +276,10 @@
                     },
                     settings:{
                         TARIF_ONLINE:           getComboboxValue($('[name=TARIF_ONLINE].combobox')),
-                        TARIF_OFFLINE:          getComboboxValue($('[name=TARIF_OFFLINE].combobox')),
                         AUTOBLOCK_LIMIT:        $("[name=AUTOBLOCK_LIMIT]").val(),
+                        AUTOBLOCK_FLAG_DATE:    $("[name=AUTOBLOCK_FLAG_DATE]").prop('disabled') ? '<?=Date::DATE_MAX?>' : $("[name=AUTOBLOCK_FLAG_DATE]").val(),
                         PENALTIES:              $("[name=PENALTIES]").val(),
                         OVERDRAFT:              $("[name=OVERDRAFT]").val(),
-                        //INVOICE_PERIOD_TYPE:    $("[name=INVOICE_PERIOD_TYPE]").val(),
-                        //INVOICE_PERIOD_VALUE:   $("[name=INVOICE_PERIOD_VALUE]").val(),
                         GOODS_RECIEVER:         getComboboxValue($("[name=GOODS_RECIEVER].combobox")),
                         CONTRACT_COMMENT:       $("[name=CONTRACT_COMMENT]").val(),
                         scheme:                 $("[name=scheme]").val()
@@ -330,7 +309,7 @@
                                 window.location.reload();
                             }, 500);
                         } else {
-                            var contractFullName = "Договор: [<?=$contractSettings['CONTRACT_ID']?>] " + params.contract.CONTRACT_NAME + " от " + params.contract.DATE_BEGIN + (params.contract.DATE_END != '31.12.2099' ? " до " + params.contract.DATE_END : '');
+                            var contractFullName = "Договор: [<?=$contractSettings['CONTRACT_ID']?>] " + params.contract.CONTRACT_NAME + " от " + params.contract.DATE_BEGIN + (params.contract.DATE_END != '<?=Date::DATE_MAX?>' ? " до " + params.contract.DATE_END : '');
 
                             $("[name=contracts_list] option:selected").text(contractFullName);
 
@@ -343,4 +322,13 @@
             });
         <?}?>
     });
+
+    function checkAutoblockFlagDateIndefinitely(checkbox)
+    {
+        if (checkbox.is(':checked')) {
+            $('[name=AUTOBLOCK_FLAG_DATE]').prop('disabled', true).parent().find('img').hide();
+        } else {
+            $('[name=AUTOBLOCK_FLAG_DATE]').prop('disabled', false).parent().find('img').show();
+        }
+    }
 </script>

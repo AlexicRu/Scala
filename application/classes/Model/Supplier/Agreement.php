@@ -74,7 +74,7 @@ class Model_Supplier_Agreement extends Model
             'p_agreement_id' 	=> $params['agreement_id'],
             'p_agreement_name' 	=> $params['agreement_name'],
             'p_date_begin' 		=> $params['date_begin'],
-            'p_date_end' 	    => !empty($params['date_end']) ? $params['date_end'] : Model_Contract::DEFAULT_DATE_END,
+            'p_date_end' 	    => !empty($params['date_end']) ? $params['date_end'] : Date::DATE_MAX,
             'p_discount_type' 	=> $params['discount_type'],
             'p_tarif_id' 		=> $params['tarif_id'] ?: -1,
             'p_manager_id' 		=> $user['MANAGER_ID'],

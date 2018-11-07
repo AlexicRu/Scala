@@ -30,8 +30,6 @@ class Model_Contract extends Model
         Access::ROLE_SUPERVISOR,
     ];
 
-	const DEFAULT_DATE_END				= '31.12.2099';
-
 	const PAYMENT_SCHEME_UNLIMITED 		= 1;
 	const PAYMENT_SCHEME_PREPAYMENT 	= 2;
 	const PAYMENT_SCHEME_LIMIT 			= 3;
@@ -154,6 +152,7 @@ class Model_Contract extends Model
             'TARIF_OFFLINE'         => false,
             'TARIF_NAME_OFFLINE'    => false,
             'AUTOBLOCK_FLAG'        => false,
+            'AUTOBLOCK_FLAG_DATE'   => false,
             'AUTOBLOCK_LIMIT'       => false,
             'PENALTIES_FLAG'        => false,
             'PENALTIES'             => false,
@@ -187,7 +186,7 @@ class Model_Contract extends Model
 			$contract['scheme'] = self::PAYMENT_SCHEME_LIMIT;
 		}
 
-		return $contract;
+		return array_merge($emptyContractSettings, $contract);
 	}
 
 	/**
@@ -218,7 +217,6 @@ class Model_Contract extends Model
 	 *
 	 * @param $contractId
 	 * @param $params
-	 * todo переделать
 	 */
 	public static function editContract($contractId, $params)
 	{
@@ -244,24 +242,6 @@ class Model_Contract extends Model
 			'p_error_code' 		=> 'out',
 		];
 
-        $data1 = [
-            'p_contract_id'		        => $contractId,
-            'p_tarif_online' 	        => $params['settings']['TARIF_ONLINE'],
-            'p_tarif_offline' 		    => $params['settings']['TARIF_OFFLINE'],
-            'p_autoblock_limit' 		=> Num::toFloat($params['settings']['AUTOBLOCK_LIMIT']),
-            'p_autoblock_flag' 		    => $params['settings']['scheme'] == 1 ? 0 : 1,
-            'p_penalties' 		        => abs(Num::toFloat($params['settings']['PENALTIES'])),
-            'p_penalties_flag' 		    => $params['settings']['PENALTIES'] ? 1 : 0,
-            'p_overdraft' 		        => abs(Num::toFloat($params['settings']['OVERDRAFT'])),
-            'p_invoice_currency' 		=> Common::CURRENCY_RUR,
-            'p_invoice_period_type' 	=> self::INVOICE_PERIOD_TYPE_MONTH,//$params['settings']['INVOICE_PERIOD_TYPE'],
-            'p_invoice_period_value' 	=> 1, //$params['settings']['INVOICE_PERIOD_VALUE'],
-            'p_goods_reciever' 	        => !empty($params['settings']['GOODS_RECIEVER']) ? $params['settings']['GOODS_RECIEVER'] : null,
-            'p_contract_comment' 	    => !empty($params['settings']['CONTRACT_COMMENT']) ? $params['settings']['CONTRACT_COMMENT'] : null,
-            'p_manager_id' 		        => $user['MANAGER_ID'],
-            'p_error_code' 		        => 'out',
-        ];
-
 		$res = $db->procedure('client_contract_edit', $data);
 
 		switch($res) {
@@ -279,6 +259,24 @@ class Model_Contract extends Model
             default:
                 return false;
         }
+
+        $data1 = [
+            'p_contract_id'		        => $contractId,
+            'p_tarif_online' 	        => $params['settings']['TARIF_ONLINE'],
+            'p_autoblock_limit' 		=> Num::toFloat($params['settings']['AUTOBLOCK_LIMIT']),
+            'p_autoblock_flag' 		    => $params['settings']['scheme'] == self::PAYMENT_SCHEME_UNLIMITED ? 0 : 1,
+            'p_autoblock_flag_date' 	=> $params['settings']['scheme'] == self::PAYMENT_SCHEME_LIMIT ? $params['settings']['AUTOBLOCK_FLAG_DATE'] : Date::DATE_MAX,
+            'p_penalties' 		        => abs(Num::toFloat($params['settings']['PENALTIES'])),
+            'p_penalties_flag' 		    => $params['settings']['PENALTIES'] ? 1 : 0,
+            'p_overdraft' 		        => abs(Num::toFloat($params['settings']['OVERDRAFT'])),
+            'p_invoice_currency' 		=> Common::CURRENCY_RUR,
+            'p_invoice_period_type' 	=> self::INVOICE_PERIOD_TYPE_MONTH,
+            'p_invoice_period_value' 	=> 1,
+            'p_goods_reciever' 	        => !empty($params['settings']['GOODS_RECIEVER']) ? $params['settings']['GOODS_RECIEVER'] : null,
+            'p_contract_comment' 	    => !empty($params['settings']['CONTRACT_COMMENT']) ? $params['settings']['CONTRACT_COMMENT'] : null,
+            'p_manager_id' 		        => $user['MANAGER_ID'],
+            'p_error_code' 		        => 'out',
+        ];
 
 		$res1 = $db->procedure('client_contract_settings_edit', $data1);
 
@@ -342,7 +340,7 @@ class Model_Contract extends Model
 			'p_client_id' 		=> $params['client_id'],
 			'p_contract_name' 	=> $params['name'],
 			'p_date_begin' 		=> $params['date_start'],
-			'p_date_end' 		=> !empty($params['date_end']) ? $params['date_end'] : self::DEFAULT_DATE_END,
+			'p_date_end' 		=> !empty($params['date_end']) ? $params['date_end'] : Date::DATE_MAX,
 			'p_currency' 		=> Common::CURRENCY_RUR,
 			'p_manager_id' 		=> $user['MANAGER_ID'],
 			'p_contract_id' 	=> 'out',

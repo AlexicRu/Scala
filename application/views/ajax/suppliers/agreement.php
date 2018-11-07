@@ -5,7 +5,7 @@ $toggle = 'agreement'.$agreement['AGREEMENT_ID'];
     <div class="tc_top_line">
         [<?=$agreement['AGREEMENT_ID']?>]
         <span toggle_block="<?=$toggle?>">
-            <?=$agreement['AGREEMENT_NAME']?> от <?=$agreement['WEB_DATE_BEGIN']?> <?if($agreement['WEB_DATE_END'] != '31.12.2099'){?>до <?=$agreement['WEB_DATE_END']?><?}?> &nbsp;
+            <?=$agreement['AGREEMENT_NAME']?> от <?=$agreement['WEB_DATE_BEGIN']?> <?if($agreement['WEB_DATE_END'] != Date::DATE_MAX){?>до <?=$agreement['WEB_DATE_END']?><?}?> &nbsp;
         </span>
         <span toggle_block="<?=$toggle?>" class="dn gray">
             <input type="text" name="AGREEMENT_NAME" value="<?=Text::quotesForForms($agreement['AGREEMENT_NAME'])?>" class="input_big input_medium" placeholder="Название">
