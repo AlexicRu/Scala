@@ -17,6 +17,9 @@ abstract class Controller_Common extends Controller_Template {
 
     public function before()
     {
+        //force using HTTPS
+        $this->request->secure(true);
+
         View::set_global('js', []);
         View::set_global('css', []);
 
