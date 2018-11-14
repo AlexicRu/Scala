@@ -22,6 +22,7 @@ abstract class Controller_Common extends Controller_Template {
 
         View::set_global('js', []);
         View::set_global('css', []);
+        View::set_global('customView', '');
 
         $controller = Text::camelCaseToDashed($this->request->controller());
         $action = Text::camelCaseToDashed($this->request->action());
