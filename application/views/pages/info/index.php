@@ -6,6 +6,20 @@
             <h2>Материалы для работы через аукционы и конкурсы</h2>
 
             <div class="info__list">
+                <a href="/file/info/Материалы_АиК/Презентация_29.10.2018_вебинар.pptx" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-ppt"></span></div>
+                        <div class="info__item-name">Презентация 29.10.2018 вебинар</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
+                <a href="/file/info/Материалы_АиК/Тех_Карта_по_подготовке_ТЗ.docx" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-doc"></span></div>
+                        <div class="info__item-name">Тех. Карта по подготовке ТЗ</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
                 <a href="/file/info/Материалы_АиК/Алгоритм_действий_заказчика_при_принятии_решения_об_одностороннем_отказе.pptx" class="info__item" target="_blank">
                     <div>
                         <div><span class="info__icon info__icon-ppt"></span></div>
