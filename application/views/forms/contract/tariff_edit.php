@@ -38,10 +38,12 @@
 
         if(params.date == false){
             message(0, 'Заполните дату');
+            endSubmitForm();
             return;
         }
 
         $.post('/clients/contract-tariff-edit', params, function (data) {
+            endSubmitForm();
             if (data.success) {
                 message(1, 'Тариф успешно обновлен');
 

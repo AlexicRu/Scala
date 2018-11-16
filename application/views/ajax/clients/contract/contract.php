@@ -51,7 +51,7 @@
                     </span>
                 </td>
             </tr>
-            <tr class="contract-payment-scheme-limit-tr" <?if($contractSettings['scheme'] != Model_Contract::PAYMENT_SCHEME_LIMIT){?>style="display: none"<?}?>>
+            <tr class="contract-payment-scheme-limit-tr" <?/*if($contractSettings['scheme'] != Model_Contract::PAYMENT_SCHEME_LIMIT){?>style="display: none"<?}*/?>>
                 <td class="gray right">Действует до:</td>
                 <td>
                     <span toggle_block="block2">
@@ -272,7 +272,7 @@
             var t = $(this);
             var tr = $('.contract-payment-scheme-limit-tr');
 
-            tr.hide();
+            //tr.hide();
 
             if(t.val() == 1){ //безлимит
                 $("[name=AUTOBLOCK_LIMIT]").val(0).prop('disabled', true);
@@ -281,7 +281,7 @@
             }else{ //порог отключения
                 $("[name=AUTOBLOCK_LIMIT]").prop('disabled', false);
 
-                tr.show();
+                //tr.show();
             }
         });
 
