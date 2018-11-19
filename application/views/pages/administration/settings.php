@@ -34,7 +34,7 @@
                                 <?if (Access::allow('root')) {?>
                                     <span toggle_block="agentBlock" v-html="checkEmpty(agent.title.FULL_NAME)"></span>
                                     <span toggle_block="agentBlock" class="dn">
-                                        <input class="input_grand" type="text" v-model="agent.title.FULL_NAME" placeholder="Имя в WEB">
+                                        <input class="input_grand" type="text" v-model="agent.title.FULL_NAME">
                                     </span>
                                 <?} else {?>
                                     <span v-html="checkEmpty(agent.title.FULL_NAME)"></span>
