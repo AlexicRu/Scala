@@ -63,6 +63,7 @@
                     </span>
                     <span toggle_block="block2" class="dn">
                         <input type="text" name="AUTOBLOCK_FLAG_DATE" class="datepicker" readonly
+                               min="<?=date('Y-m-d')?>"
                                value="<?=($contractSettings['AUTOBLOCK_FLAG_DATE'] == Date::DATE_MAX ? '' : $contractSettings['AUTOBLOCK_FLAG_DATE'])?>"
                         >
                         <br>
@@ -253,6 +254,7 @@
         $('[type=checkbox]').each(function(){
             renderCheckbox($(this));
         });
+        renderDatePicker($('[name=AUTOBLOCK_FLAG_DATE]'));
         $('.datepicker').each(function(){
             renderDatePicker($(this));
         });

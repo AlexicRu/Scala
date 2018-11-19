@@ -280,4 +280,43 @@ class Controller_Administration extends Controller_Common
             'name' => $contractSettings['TARIF_NAME_OFFLINE'],
         ]);
     }
+
+    /**
+     * страница настроек агента
+     */
+    public function action_settings()
+    {
+        $this->_initVueJs();
+        $this->_initPhoneInputWithFlags();
+
+        $agent = Model_Agent::getAgentInfo(User::current()['AGENT_ID']);
+
+        $this->tpl
+            ->bind('agent', $agent)
+        ;
+    }
+
+    /**
+     * редактируем агента
+     */
+    public function action_agentEdit()
+    {
+        $agentId = $this->request->param('id');
+        $params = $this->request->post('params');
+        $part = $this->request->post('part');
+
+        if (Access::deny('root') && in_array($part, [
+                Model_Agent::AGENT_PART_TITLE,
+                Model_Agent::AGENT_PART_SERVICE,
+            ])) {
+            throw new HTTP_Exception_403();
+        }
+
+        $result = Model_Agent::editAgent($agentId, $params, $part);
+
+        if (empty($result)) {
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true);
+    }
 }

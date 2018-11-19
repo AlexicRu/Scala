@@ -131,6 +131,9 @@ function renderDatePicker(elem)
     if(elem.attr('maxDate') == 1){
         options.maxDate = new Date();
     }
+    if (elem.attr('min')) {
+        options.minDate = new Date(elem.attr('min'));
+    }
 
     elem.wrap('<span class="datepicker_out" />');
 

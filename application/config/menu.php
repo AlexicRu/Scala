@@ -32,7 +32,8 @@ return array(
     'administration'    => ['title' => 'Сервис', 'icon' => 'icon-service', 'children' => [
         'transactions'      => 'Транзакции',
         'calc-tariffs'      => 'Расчет тарифов',
-        'cards-transfer'    => 'Перенос карт'
+        'cards-transfer'    => 'Перенос карт',
+        'settings'          => 'Настройки',
     ]],
     'news'              => ['title' => 'Новости', 'icon' => 'icon-news'],
     'support'           => ['title' => 'Поддержка', 'icon' => 'icon-question'],

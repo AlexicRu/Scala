@@ -219,6 +219,9 @@ return [
         'info_passports' => [
             'g_1',
         ],
+        'administration_settings' => [
+            Access::ROLE_ADMIN,
+        ],
         // custom
         'view_contract_balances' => [
 			Access::ROLE_SUPERVISOR,
