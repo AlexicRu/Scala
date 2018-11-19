@@ -321,10 +321,10 @@
                 return val ? val : '<i class="gray">Не заполнено</i>';
             },
             cancelForm: function () {
-                Object.assign(this.agent, this._cache);
+                this.agent = JSON.parse(JSON.stringify(this._cache));
             },
             cacheForm: function () {
-                this._cache = Object.assign({}, this.agent);
+                this._cache = JSON.parse(JSON.stringify(this.agent));
             }
         },
         mounted: function () {
