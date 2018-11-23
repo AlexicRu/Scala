@@ -169,6 +169,14 @@
             <h2>API</h2>
 
             <div class="info__list">
+                <a href="/file/info/API/Specification_VIP_API_v.1.1.9.docx" class="info__item" target="_blank">
+                    <div>
+                        <div><span class="info__icon info__icon-doc"></span></div>
+                        <div class="info__item-name">Specification VIP API v.1.1.9</div>
+                    </div>
+                    <span class="btn btn_icon btn_reverse info__item-btn"><i class="icon-download"></i></span>
+                </a>
+
                 <a href="/file/info/API/Specification_VIP_API_v.1.1.8.docx" class="info__item" target="_blank">
                     <div>
                         <div><span class="info__icon info__icon-doc"></span></div>
