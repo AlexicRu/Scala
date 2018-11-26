@@ -1007,7 +1007,8 @@ class Model_Card extends Model
                         from ".Oracle::$prefix."v_web_manager_cards vmc
                         where vmc.MANAGER_ID = {$user['MANAGER_ID']}
                          and vmc.card_id = vc.card_id
-                   )                    
+                   )
+            order by vc.card_id
             ";
 
         if(!empty($params['CARD_ID'])){
