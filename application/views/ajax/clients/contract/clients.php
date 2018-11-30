@@ -10,7 +10,7 @@
                 <a href="#" class="red del" onclick="delManagersClient($(this))">Удалить <i class="icon-cancel"></i></a>
             </div>
 
-            <?if(Access::allow('managers_edit_manager_clients_contract_binds')) {?>
+            <?if(Access::allow('managers_edit-manager-clients-contract-binds')) {?>
                 <div class="line_inner__second_line">
                     <table class="table_form">
                         <tr>
@@ -25,7 +25,7 @@
                                         $contractsIds = $contractsTree[$client['CLIENT_ID']];
                                     }
                                 ?>
-                                <?=Common::buildFormField('client_contract_choose_multi', 'manager_clients_contract_binds'.$client['CLIENT_ID'], implode(',', $contractsIds), ['client_id' => $client['CLIENT_ID']])?>
+                                <?=Form::buildField('contract_choose_multi', 'manager_clients_contract_binds'.$client['CLIENT_ID'], implode(',', $contractsIds), ['client_id' => $client['CLIENT_ID']])?>
                             </td>
                             <td>
                                 <span class="btn btn_green" onclick="saveManagerClientContractBinds($(this))">Сохранить</span>

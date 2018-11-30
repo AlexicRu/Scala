@@ -11,13 +11,14 @@ class Controller_News extends Controller_Common {
 
 	public function action_index()
 	{
-		if($this->_isPost()) {
+		if($this->isPost()) {
 			$params = [
-				'offset' => $this->request->post('offset'),
-				'pagination' => true
+			    'note_type'     => Model_Note::NOTE_TYPE_NEWS,
+				'offset'        => $this->request->post('offset'),
+				'pagination'    => true
 			];
 
-			list($news, $more) = Model_News::getList($params);
+			list($news, $more) = Model_Note::getList($params);
 
 			if(empty($news)){
 				$this->jsonResult(false);
@@ -26,7 +27,9 @@ class Controller_News extends Controller_Common {
 			$this->jsonResult(true, ['items' => $news, 'more' => $more]);
 		}
 
-        $popupNewsAdd = Common::popupForm('Добавление новости', 'news/edit');
+        $popupNewsAdd = Form::popup('Добавление новости', 'news/edit', [
+            'user' => User::current()
+        ]);
 
         $this->_initWYSIWYG();
         $this->_initDropZone();
@@ -41,17 +44,17 @@ class Controller_News extends Controller_Common {
      *
      * @throws HTTP_Exception_404
      */
-	public function action_news_detail()
+	public function action_newsDetail()
     {
         $newsId = $this->request->param('id');
 
-        $newsDetail = Model_News::getNewsById($newsId);
+        $newsDetail = Model_Note::getNoteById($newsId);
 
         if(empty($newsDetail)){
             throw new HTTP_Exception_404();
         }
 
-        $popupNewsEdit = Common::popupForm('Редактирование новости', 'news/edit', ['detail' => $newsDetail]);
+        $popupNewsEdit = Form::popup('Редактирование новости', 'news/edit', ['detail' => $newsDetail]);
         $this->_initWYSIWYG();
         $this->_initDropZone();
 
@@ -62,13 +65,13 @@ class Controller_News extends Controller_Common {
     }
 
     /**
-     * добавление новости
+     * добавление / редактирование новости
      */
-    public function action_news_edit()
+    public function action_noteEdit()
     {
         $params = $this->request->post('params');
 
-        $result = Model_News::editNews($params);
+        $result = Model_Note::editNote($params);
 
         if(empty($result)){
             $this->jsonResult(false);

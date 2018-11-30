@@ -1,29 +1,12 @@
-<?
-$isEdit = true;
-if(empty($manager)){
-    $manager = $user;
-    $isEdit = false;
-}
-if(empty($width)){
-    $width = 170;
-}
-if(!isset($reload)){
-    $reload = true;
-}
-if(empty($changeRole)){
-    $changeRole = false;
-}
-?>
-<form method="post" onsubmit="return checkFormManagerSettings($(this));">
-    <input type="hidden" name="form_type" value="settings">
-    <?if($isEdit){?>
+<form method="post" onsubmit="return checkFormManagerSettings($(this));" class="manager_settings_form">
+    <?if(empty($selfEdit)){?>
         <input type="hidden" name="manager_settings_id" value="<?=$manager['MANAGER_ID']?>">
     <?}?>
     <div class="as_table">
         <div class="col">
             <table class="table_form">
                 <tr>
-                    <td class="gray right" width="<?=$width?>">Имя:</td>
+                    <td class="gray right" width="170">Имя:</td>
                     <td>
                         <input type="text" name="manager_settings_name" class="input_big" value="<?=$manager['MANAGER_NAME']?>">
                     </td>
@@ -52,33 +35,37 @@ if(empty($changeRole)){
                         <input type="text" name="manager_settings_phone" class="input_big" value="<?=$manager['CELLPHONE']?>">
                     </td>
                 </tr>
-                <?if($changeRole){?>
+                <?if(!empty($changeRole)){?>
                     <tr>
                         <td class="gray right">Роль:</td>
                         <td>
                             <select name="manager_settings_role" class="select_big">
-                                <?foreach(Access::$roles as $role => $name){?>
+                                <?foreach(Access::getAvailableRoles() as $role => $name){?>
                                     <option value="<?=$role?>" <?if($role == $manager['ROLE_ID']){?>selected<?}?>><?=$name?></option>
                                 <?}?>
                             </select>
                         </td>
                     </tr>
                 <?}?>
-                <tr>
-                    <td></td>
-                    <td>
-                        <button class="btn btn_green btn_reverse btn_manager_settings_go"><i class="icon-ok"></i> Сохранить</button>
-                    </td>
-                </tr>
+                <?if (Access::allow('change_manager_settings_limit') && in_array($manager['ROLE_ID'], array_keys(Access::$clientRoles))) {?>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="manager_settings_limit" <?if ($manager['LIMIT_RESTRICTION'] == 1) {?>checked<?}?>> Ограничение в 1000 литров и 30000 рублей на лимит
+                            </label>
+                        </td>
+                    </tr>
+                <?}?>
             </table>
         </div>
         <div class="col line_inner">
             <b class="f18">Смена пароля</b>
             <table class="table_form">
                 <tr class="form_attention">
-                    <td class="gray right" width="<?=$width?>">Логин:</td>
+                    <td class="gray right" width="170">Логин:</td>
                     <td>
-                        <?if (Access::allow('clients_edit_login')) {?>
+                        <?if (Access::allow('clients_edit-login')) {?>
                             <div toggle_block="edit_login">
                                 <span class="login_value"><?=$manager['LOGIN']?></span>
                                 <span class="btn btn_small" toggle="edit_login"><i class="icon icon-pen"></i></span>
@@ -106,12 +93,90 @@ if(empty($changeRole)){
                     </td>
                 </tr>
             </table>
+
+            <br>
+            <b class="f18">Информирование</b>
+            <br><br>
+
+            <div class="manager_settings_inform">
+                <div <?=($manager['PHONE_FOR_INFORM'] ? '' : 'style="display:none"')?>>
+                    <b>Подключено на номер <span class="manager_settings_inform_phone"><?=$manager['PHONE_FOR_INFORM']?></span></b>
+
+                    <?if(!empty($selfEdit)){?>
+                        &nbsp;&nbsp;&nbsp; <span class="btn btn_small btn_red btn_reverse" onclick="disableInform($(this))">Отключить</span>
+                    <?}?>
+                </div>
+                <div <?=(!$manager['PHONE_FOR_INFORM'] ? '' : 'style="display:none"')?>>
+                    <b>Не подключено</b>
+
+                    <?if(!empty($selfEdit)){?>
+                        &nbsp;&nbsp;&nbsp;
+                        <a href="#manager_inform" class="fancy btn btn_small btn_green btn_reverse">Подключить</a>
+                    <?}?>
+                </div>
+            </div>
+
+            <div class="padding__20 manager_settings_inform_checkboxes">
+                <label>
+                    <input type="checkbox" name="manager_sms_is_on" class="<?=(!$manager['SENDER_SMS'] ? 'blocked' : '')?>"
+                        <?=($manager['SMS_IS_ON'] ? 'checked' : '')?>
+                        <?=(($manager['PHONE_FOR_INFORM'] && $manager['SENDER_SMS']) || Access::allow('root') ? '' : 'disabled')?>
+                    >
+                    SMS <?=(!$manager['SENDER_SMS'] ? '<span class="gray">Недоступно. Обратитесь к менеджеру.</span>' : '')?>
+                </label>
+                <br>
+                <label>
+                    <input type="checkbox" name="manager_telegram_is_on" <?=($manager['TELEGRAM_IS_ON'] ? 'checked' : '')?> <?=($manager['PHONE_FOR_INFORM'] ? '' : 'disabled')?>>
+                    Telegram
+                    <?if (empty($manager['TELEGRAM_CHAT_ID'])) {?>
+                        <span class="gray">Необходима авторизация через Telegram бота</span>
+                    <?}?>
+                </label>
+                <br><br>
+                <a href="https://t.me/GloProInfo_bot" target="_blank">@GloProInfo_bot</a> - наш телеграм бот.<br>
+                <i class="gray">Перейдите по ссылке или найдите его через поиск в Telegram.</i><br>
+                <i class="gray">Авторизация в телеграм боте автоматически установит галочку Telegram информирования.</i>
+            </div>
         </div>
     </div>
 
+    <div class="padding__20">
+        <button class="btn btn_green btn_reverse btn_manager_settings_go"><i class="icon-ok"></i> Сохранить</button>
+    </div>
 </form>
 
+<?if (!empty($selfEdit) && !empty($popupManagerInform)) {
+    echo $popupManagerInform;
+}?>
+
 <script>
+    $(function () {
+        $("[name=manager_settings_phone]").each(function () {
+            renderPhoneInput($(this));
+        });
+        renderCheckbox($('[name=manager_settings_limit]'));
+    });
+
+    <?if (!empty($selfEdit)) {?>
+    function disableInform(btn)
+    {
+        if (!confirm('Отключаем информирование?')) {
+            return false;
+        }
+
+        $.post('/inform/disable-inform', {}, function (data) {
+            if (data.success) {
+                message(1, 'Информирование успешно отключено');
+
+                $('.manager_settings_inform > div', btn.closest('.manager_settings_form')).toggle();
+                $('.manager_settings_inform_checkboxes [type=checkbox]', btn.closest('.manager_settings_form')).prop('disabled', true).trigger('change');
+            } else {
+                message(0, 'Ошибка отключение информирования');
+            }
+        });
+    }
+    <?}?>
+
     function checkFormManagerSettings(form)
     {
         var pass = $('[name=manager_settings_password]', form).val();
@@ -122,15 +187,32 @@ if(empty($changeRole)){
             return false;
         }
 
+        var phone = $("[name=manager_settings_phone]");
+
+        if (
+            phone.intlTelInput('isValidNumber') == false &&
+            ('+' + phone.intlTelInput("getSelectedCountryData").dialCode) != phone.intlTelInput('getNumber') &&
+            phone.intlTelInput('getNumber') != ''
+        ) {
+            message(0, 'Некорректный номер телефона');
+            return false;
+        }
+
         $.post('/managers/settings', form.find(':input[name!="edit_login"]').serialize(), function (data) {
            if(data.success){
-               <?if($reload){?>
-               window.location.reload();
-               <?}?>
-
                message(1, 'Данные обновлены');
+
+               <?if(!empty($noReload)){?>
+               setTimeout(function () {
+                   window.location.reload();
+               }, 1000);
+               <?}?>
            }else{
-               message(0, 'Ошибка обновления');
+               var error = 'Ошибка обновления';
+               if (data.data) {
+                   error = data.data;
+               }
+               message(0, error);
            }
         });
 
@@ -155,7 +237,7 @@ if(empty($changeRole)){
             manager_id: managerId
         };
 
-        $.post('/clients/edit_login', params, function (data) {
+        $.post('/clients/edit-login', params, function (data) {
             if(data.success){
                 message(1, 'Логин обновлен');
                 txt.text(data.data.login)

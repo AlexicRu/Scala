@@ -1,18 +1,16 @@
-<h1>Поставщики <?if(Access::allow('suppliers_supplier_add')){?><a href="#supplier_add" class="btn fancy">+ Добавить поставщика</a><?}?></h1>
+<h1>Поставщики <?if(Access::allow('suppliers_supplier-add')){?><a href="#supplier_add" class="btn fancy">+ Добавить поставщика</a><?}?></h1>
 
 
-<?if(Access::allow('suppliers_supplier_add')){?>
+<?if(Access::allow('suppliers_supplier-add')){?>
     <?=$popupSupplierAdd?>
 <?}?>
 
 
-<div class="ajax_block_suppliers_out block_loading">
-
-</div>
+<div class="ajax_block_suppliers_out block_loading"></div>
 
 <script>
     $(function(){
-        paginationAjax('/suppliers/suppliers_list/', 'ajax_block_suppliers', renderAjaxPaginationSuppliers, {show_all_btn: true});
+        paginationAjax('/suppliers/suppliers-list/', 'ajax_block_suppliers', renderAjaxPaginationSuppliers, {show_all_btn: true});
     });
 
     function renderAjaxPaginationSuppliers(data, block)

@@ -18,16 +18,19 @@ class Controller_Administration extends Controller_Common
         $this->redirect('/administration/transactions');
     }
 
-
+    /**
+     * управление транзакциями
+     */
     public function action_transactions()
     {
-
+        $this->_initDropZone();
+        $this->_initJsGrid();
     }
 
     /**
      * грузим отказные транзакции
      */
-    public function action_transactions_errors()
+    public function action_transactionsErrors()
     {
         $params = [
             'offset' 		=> $this->request->post('offset'),
@@ -63,10 +66,50 @@ class Controller_Administration extends Controller_Common
         $this->jsonResult(true, ['items' => $transactions, 'more' => $more]);
     }
 
+
+    /**
+     * грузим транзакции, которые в процессе
+     */
+    public function action_transactionsProcess()
+    {
+        $params = [
+            'offset' 		=> $this->request->post('offset'),
+            'pagination'    => $this->toXls ? false : true
+        ];
+
+        $result = Model_Transaction::getTransactionsProcess($params);
+
+        if ($this->toXls){
+            $this->showXls('transactions_process', $result, [
+                'SOURCE_NAME'       => 'SOURCE_NAME',
+                'DATETIME_TRN'      => 'DATETIME_TRN',
+                'CARD_ID'           => 'CARD_ID',
+                'OPERATION'         => 'OPERATION',
+                'SERVICE_NAME'      => 'SERVICE_NAME',
+                'SERVICE_AMOUNT'    => 'SERVICE_AMOUNT',
+                'SERVICE_PRICE'     => 'SERVICE_PRICE',
+                'SERVICE_SUMPRICE'  => 'SERVICE_SUMPRICE',
+                'SUPPLIER_EMITENT'  => 'SUPPLIER_EMITENT',
+                'SUPPLIER_TERMINAL' => 'SUPPLIER_TERMINAL',
+                'POS_ADDRESS'       => 'POS_ADDRESS',
+                'PROJECT_SERVICE'   => 'PROJECT_SERVICE',
+                'ERROR_DESCR'       => 'ERROR_DESCR'
+            ],true);
+        } else {
+            list($transactions, $more) = $result;
+        }
+
+        if(empty($transactions)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, ['items' => $transactions, 'more' => $more]);
+    }
+
     /**
      * грузим историю операций
      */
-    public function action_transactions_history()
+    public function action_transactionsHistory()
     {
         $params = [
             'filter'        => $this->request->post('filter'),
@@ -107,7 +150,7 @@ class Controller_Administration extends Controller_Common
     /**
      * расчет тарифов
      */
-    public function action_calc_tariffs()
+    public function action_calcTariffs()
     {
         $this->_initJsGrid();
     }
@@ -115,7 +158,7 @@ class Controller_Administration extends Controller_Common
     /**
      * отрисовываем блок клиента
      */
-    public function action_calc_tariffs_render_client()
+    public function action_calcTariffsRenderClient()
     {
         $iteration = $this->request->post('iteration');
 
@@ -126,8 +169,154 @@ class Controller_Administration extends Controller_Common
         $this->html($html);
     }
 
-    public function action_calc_tariff()
+    /**
+     * рассчет тарифов
+     */
+    public function action_calcTariff()
     {
-        $this->jsonResult(1, []);
+        $contractId = $this->request->post('contract_id');
+        $start = $this->request->post('start');
+        $end = $this->request->post('end');
+
+        $queuedContracts = Model_Tariff::getCalcQueue(['RECORD_STATUS_ID' => [0,2]]);
+
+        $badFl = false;
+        foreach ($queuedContracts as $contract) {
+            if ($contract['CONTRACT_ID'] == $contractId) {
+                Messages::put('Уже ведется расчет по договору: ' . $contract['CONTRACT_NAME']);
+                $badFl = true;
+            }
+        }
+
+        if ($badFl) {
+            $this->jsonResult(false);
+        }
+
+        //дата начала и дата окончания расчета тарифа не старше чем 3 месяца от текущей даты (указать в примечании, что расчет тарифа старше 3х месяцав через поддержку)
+        $dateStart = DateTime::createFromFormat('d.m.Y', $start);
+        $dateEnd = DateTime::createFromFormat('d.m.Y', $end);
+
+        if (
+            !$dateEnd ||
+            !$dateStart ||
+            $dateEnd->getTimestamp() < $dateStart->getTimestamp() ||
+            (time() - 60*60*24*30*3) > $dateStart->getTimestamp()  ||
+            (time() - 60*60*24*30*3) > $dateEnd->getTimestamp()
+        ) {
+            Messages::put('Некорректные даты');
+            $this->jsonResult(false);
+        }
+
+        $contractSettings = Model_Contract::getContractSettings($contractId);
+
+        $tariffId = $contractSettings['TARIF_OFFLINE'];
+
+        $result = Model_Tariff::calcTariff($tariffId, $contractId, [
+            'start' => $start,
+            'end' => $end,
+        ]);
+
+        if (empty($result)) {
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true);
+    }
+
+    /**
+     * грузим очередь текущих расечтов тарифов
+     */
+    public function action_loadCalcQueue()
+    {
+        $calcQueue = Model_Tariff::getCalcQueue();
+
+        $html = View::factory('ajax/administration/calc_tariffs/calc_queue')
+            ->bind('queue', $calcQueue)
+        ;
+
+        $this->html($html);
+    }
+
+    /**
+     * страница пеерноса карт и транзакций
+     */
+    public function action_cardsTransfer()
+    {
+        if ($this->request->is_ajax()) {
+            $oldContractId = $this->request->post('old_contract');
+            $newContractId = $this->request->post('new_contract');
+            $cards = $this->request->post('cards') ?: [];
+            $cardsList = $this->request->post('cards_list');
+            $params = $this->request->post('params');
+
+            if (!empty($cardsList)) {
+                $cardsList = array_filter(explode("\n", preg_replace("/[^\d\n]/", '', $cardsList)));
+
+                $cards = array_merge($cards, $cardsList);
+            }
+
+            $result = Model_Card::transferCards($oldContractId, $newContractId, $cards, $params);
+
+            if (empty($result)) {
+                $this->jsonResult(false);
+            }
+            $this->jsonResult(true);
+        }
+    }
+
+    /**
+     * получаем настройки тарифа по контракту
+     */
+    public function action_getTariffByContract()
+    {
+        $contractId = $this->request->post('contract_id');
+
+        $contractSettings = Model_Contract::getContractSettings($contractId);
+
+        if (empty($contractSettings)) {
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true, [
+            'id' => $contractSettings['TARIF_OFFLINE'],
+            'name' => $contractSettings['TARIF_NAME_OFFLINE'],
+        ]);
+    }
+
+    /**
+     * страница настроек агента
+     */
+    public function action_settings()
+    {
+        $this->_initVueJs();
+        $this->_initPhoneInputWithFlags();
+
+        $agent = Model_Agent::getAgentInfo(User::current()['AGENT_ID']);
+
+        $this->tpl
+            ->bind('agent', $agent)
+        ;
+    }
+
+    /**
+     * редактируем агента
+     */
+    public function action_agentEdit()
+    {
+        $agentId = $this->request->param('id');
+        $params = $this->request->post('params');
+        $part = $this->request->post('part');
+
+        if (Access::deny('root') && in_array($part, [
+                Model_Agent::AGENT_PART_TITLE,
+                Model_Agent::AGENT_PART_SERVICE,
+            ])) {
+            throw new HTTP_Exception_403();
+        }
+
+        $result = Model_Agent::editAgent($agentId, $params, $part);
+
+        if (empty($result)) {
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true);
     }
 }

@@ -12,7 +12,7 @@
 </div>
 <div class="tabs_vertical_block tabs_switcher tabs_cards">
     <div class="tabs_v">
-        <?if(Access::allow('clients_card_add')){?>
+        <?if(Access::allow('clients_card-add')){?>
             <div class="before_scroll">
                 <div class="tab_v"><div>
                     <a href="#card_add" class="fancy"><span class="icon-card"></span> Добавить карту</a>
@@ -26,7 +26,7 @@
     <div class="tabs_v_content"></div>
 </div>
 
-<?if(Access::allow('clients_card_add')){?>
+<?if(Access::allow('clients_card-add')){?>
     <?=$popupCardAdd?>
 <?}?>
 
@@ -54,7 +54,7 @@
                     comment: comment
                 };
 
-                $.post('/clients/card_toggle', {params:params}, function (data) {
+                $.post('/clients/card-toggle', {params:params}, function (data) {
                     if (data.success) {
                         t.toggleClass('btn_red').toggleClass('btn_green').find('span').toggle();
 
@@ -63,7 +63,7 @@
                         var cnt_blocked = $('.cards_cnt_blocked');
 
                         if(t.hasClass('btn_green')){
-                            tab.append('<span class="label label_error label_small">Заблокирована</span>');
+                            tab.append('<span class="label label_error"><i class="icon-block"></i></span>');
                             cnt_in_work.text(parseInt(cnt_in_work.text()) - 1);
                             cnt_blocked.text(parseInt(cnt_blocked.text()) + 1);
 
@@ -88,7 +88,7 @@
     function renderAjaxPaginationOperationsHistory(data, block)
     {
         for(var i = 0 in data){
-            var tpl = $('<div class="line_inner"><span class="gray" /> &nbsp;&nbsp;&nbsp; <span /><div class="fr" /></div>');
+            var tpl = $('<div class="line_inner"><div class="fr" /><span class="gray" /> &nbsp;&nbsp;&nbsp; <span /></div>');
             tpl.find('span.gray').text(data[i].H_DATE);
             tpl.find('span:last').text(data[i].M_FIO);
             tpl.find('div.fr').html(data[i].SHORT_DESCRIPTION);
@@ -117,7 +117,7 @@
             contract_id: $('[name=contracts_list]').val()
         };
 
-        $.post('/clients/card_withdraw', {params:params}, function (data) {
+        $.post('/clients/card-withdraw', {params:params}, function (data) {
             if (data.success) {
 
                 message(1, blockAvailable == 2 ? 'Карта откреплена от договора! Проверьте статус в сторонней системе!' : 'Успешное изъятие');

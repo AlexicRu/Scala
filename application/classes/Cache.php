@@ -2,6 +2,16 @@
 
 class Cache extends Kohana_Cache 
 {
+    /**
+     * кеш общий, поэтому добавляем префикс сервера
+     *
+     * @param $key
+     */
+    protected function _key($key)
+    {
+        return $_SERVER['HTTP_HOST'] . '_host_' . $key;
+    }
+
 	/**
 	 * если передают массив, то переводим его в строку
 	 * 
@@ -16,7 +26,7 @@ class Cache extends Kohana_Cache
 			$data = json_encode($data);
 		}
 		
-		return parent::set($id, $data, $lifetime);
+		return parent::set($this->_key($id), $data, $lifetime);
 	}
 
 	/**
@@ -28,7 +38,7 @@ class Cache extends Kohana_Cache
 	 */
 	public function get($id, $default = NULL)
 	{
-		$data = parent::get($id, $default);
+		$data = parent::get($this->_key($id), $default);
 		
 		$testArray = json_decode($default, true);
 		
@@ -41,7 +51,7 @@ class Cache extends Kohana_Cache
 	
 	public function delete($id)
 	{
-		return parent::delete($id);
+		return parent::delete($this->_key($id));
 	}
 	
 	public function delete_all()

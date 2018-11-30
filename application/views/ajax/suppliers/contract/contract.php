@@ -2,11 +2,11 @@
     <div class="tc_top_line">
         [<?=$contract['CONTRACT_ID']?>]
         <span toggle_block="toggle_contract">
-            <?=$contract['CONTRACT_NAME']?> от <?=$contract['DATE_BEGIN']?> <?if($contract['DATE_END'] != '31.12.2099'){?>до <?=$contract['DATE_END']?><?}?> &nbsp;
+            <?=$contract['CONTRACT_NAME']?> от <?=$contract['DATE_BEGIN']?> <?if($contract['DATE_END'] != Date::DATE_MAX){?>до <?=$contract['DATE_END']?><?}?> &nbsp;
             <span class="label <?=Model_Supplier_Contract::$statusContractClasses[$contract['CONTRACT_STATE']]?>"><?=Model_Supplier_Contract::$statusContractNames[$contract['CONTRACT_STATE']]?></span>
         </span>
         <span toggle_block="toggle_contract" class="dn gray">
-            <input type="text" name="CONTRACT_NAME" value="<?=$contract['CONTRACT_NAME']?>" class="input_big input_medium">
+            <input type="text" name="CONTRACT_NAME" value="<?=Text::quotesForForms($contract['CONTRACT_NAME'])?>" class="input_big input_medium">
             от
             <input type="text" name="DATE_BEGIN" value="<?=$contract['DATE_BEGIN']?>" class="input_big input_medium datepicker" readonly>
             до
@@ -20,7 +20,7 @@
             </select>
         </span>
     
-        <?if(Access::allow('suppliers_contract_edit')){?>
+        <?if(Access::allow('suppliers_contract-edit')){?>
             <div class="fr" toggle_block="toggle_contract"><button class="btn" toggle="toggle_contract"><i class="icon-pen"></i> Редактировать</button></div>
             <div class="fr dn" toggle_block="toggle_contract">
                 <button class="btn btn_green btn_reverse" onclick="editSupplierContract()"><i class="icon-ok"></i> Сохранить</button>
@@ -46,7 +46,7 @@
                             <?}else{
                                 foreach ($tubes as $tube) {
                                     if ($tube['TUBE_ID'] == $contract['TUBE_ID']) {
-                                        ?>Внешний - <b><?=$tube['TUBE_NAME']?></b><?
+                                        ?>Внешний - <?=($tube['CURRENT_STATE'] == Model_Tube::STATE_INACTIVE ? '[Не в работе] ' : '')?><b><?=$tube['TUBE_NAME']?></b><?
                                     }
                                 }
                             }?>
@@ -65,7 +65,9 @@
                                 </label>
                                 <select name="TUBE_ID" <?=($contract['DATA_SOURCE'] != Model_Supplier_Contract::DATA_SOURCE_OUTSIDE ? 'disabled' : '')?>>
                                     <?foreach ($tubes as $tube) {?>
-                                        <option value="<?=$tube['TUBE_ID']?>" <?=($tube['TUBE_ID'] == $contract['TUBE_ID'] ? 'selected' : '')?>><?=$tube['TUBE_NAME']?></option>
+                                        <option value="<?=$tube['TUBE_ID']?>" <?=($tube['TUBE_ID'] == $contract['TUBE_ID'] ? 'selected' : '')?>>
+                                            <?=($tube['CURRENT_STATE'] == Model_Tube::STATE_INACTIVE ? '[Не в работе] ' : '')?><?=$tube['TUBE_NAME']?>
+                                        </option>
                                     <?}?>
                                 </select>
                             </div>
@@ -77,20 +79,20 @@
                     <td>
                         <div toggle_block="toggle_contract" class="contract_service_render_value"></div>
                         <div class="dn" toggle_block="toggle_contract">
-                            <?=Common::buildFormField('service_choose_single', 'CONTRACT_SERVICES', $contractServices, [
+                            <?=Form::buildField('service_choose_single', 'CONTRACT_SERVICES', $contractServices, [
                                 'show_all' => true,
                                 'render_value_to' => '.contract_service_render_value'
                             ])?>
                         </div>
                     </td>
                 </tr><?*/?>
-                <?if(Access::allow('show_supplier_contract_group_dots')){?>
+                <?if(Access::allow('view_supplier_contract_group_dots')){?>
                 <tr>
                     <td class="gray right">Группы точек:</td>
                     <td>
                         <div toggle_block="toggle_contract" class="contract_pos_groups_render_value"></div>
                         <div class="dn" toggle_block="toggle_contract">
-                            <?=Common::buildFormField('pos_group_choose_single', 'CONTRACT_POS_GROUPS', $contractDotsGroups, [
+                            <?=Form::buildField('pos_group_choose_single', 'CONTRACT_POS_GROUPS', $contractDotsGroups, [
                                 'show_all' => true,
                                 'render_value_to' => '.contract_pos_groups_render_value',
                                 'group_type' => Model_Dot::GROUP_TYPE_SUPPLIER

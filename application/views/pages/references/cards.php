@@ -1,11 +1,15 @@
-<h1>Список карт</h1>
+<div>
+    <div class="fr">
+        <span class="btn btn_green btn_reverse" onclick="gridToXls()"><i class="icon-exel1"></i> Выгрузить в Excel</span>
+    </div>
+    <h1>Список карт</h1>
+</div>
 
 <div class="jsGrid references_cards_jsGrid"></div>
 
 <script>
     var db = {
         loadData: function(filter) {
-            console.log(filter);
             return $.grep(this.rows, function(row) {
                 return (!filter.CARD_ID || row.CARD_ID.toLowerCase().indexOf(filter.CARD_ID.toLowerCase()) > -1)
                     && (!filter.SOURCE_NAME || row.SOURCE_NAME.toLowerCase().indexOf(filter.SOURCE_NAME.toLowerCase()) > -1)
@@ -63,4 +67,17 @@
     });
 
     grid.jsGrid("search");
+    
+    function gridToXls()
+    {
+        var csv = grid.jsGrid("exportData");
+
+        var form = $('<form method="post" action="/index/as-xls" style="display: none" />');
+        var textarea = $('<textarea name="csv" />');
+        textarea.val(csv);
+        textarea.appendTo(form);
+        form.appendTo('body');
+        form.submit();
+        form.remove();
+    }
 </script>

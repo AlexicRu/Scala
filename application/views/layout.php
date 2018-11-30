@@ -2,17 +2,17 @@
 <html lang="ru-RU">
 <head>
 
-    <?=$favicon?>
+    <?=Common::getFaviconRawData($customView)?>
 
 	<meta charset="UTF-8">
 
 	<title><?=$title?></title>
 
 	<?foreach($styles as $style){?>
-		<link href="<?=$style?>?t=<?=(!empty($cssSalt) ? $cssSalt : time())?>" rel="stylesheet">
+		<link href="<?=$style?>?t=<?=Common::getVersion()?>" rel="stylesheet">
 	<?}?>
 	<?foreach($scripts as $script){?>
-		<script src="<?=$script?>?t=<?=(!empty($jsSalt) ? $jsSalt : time())?>"></script>
+		<script src="<?=$script?>?t=<?=Common::getVersion()?>"></script>
 	<?}?>
 
 	<!--[if lt IE 9]>
@@ -29,31 +29,37 @@
 			<a href="/"></a>
 		</div>
 		<div class="hamburger">
-			<a href="#"><span class="icon-menu"></span></a>
+            <?if (empty($user['managers_binds'])) {?>
+			    <a href="#" class="menu-toggle"><span class="icon-menu"></span></a>
+            <?}else{
+                $currentManager = reset($user['managers_binds']);
+                ?>
+                <a href="#" class="clients-toggle"><span class="icon-clients"></span> <?=$currentManager['WEB_NAME_CURRENT']?></a>
+                <div class="clients-float-list clients-toggle block customScroll">
+                    <?foreach ($user['managers_binds'] as $manager) {?>
+                        <div>
+                            <?=$manager['WEB_NAME_TO']?> &nbsp; <a href="/force-login/<?=Common::encrypt($user['MANAGER_ID'] . ' ' . $manager['MANAGER_TO'])?>" class="btn btn_small">Переключиться</a>
+                        </div>
+                    <?}?>
+                </div>
+            <?}?>
 		</div>
 		<div class="search">
-			<form action="/clients" method="post"><button class="icon-find"></button><input type="text" name="search" placeholder="Поиск..." value="<?=(!empty($_REQUEST['search']) ? $_REQUEST['search'] : '')?>"></form>
+			<form action="/clients" method="post"><button class="icon-find"></button><input type="text" name="search" placeholder="Поиск..." value="<?=(!empty($_REQUEST['search']) ? Text::quotesForForms($_REQUEST['search']) : '')?>"></form>
 		</div>
+        <?if (!in_array($user['ROLE_ID'], array_keys(Access::$clientRoles)) && $user['AGENT_GROUP_ID'] == 0) {?>
+        <div class="new">
+            <a href="https://new.lk.glopro.ru/"></a>
+        </div>
+        <?}?>
 		<div class="personal">
 			<div class="avatar" <?/*style="background-image: url(/img/pic/01.png)"*/?>><i class="icon-user"></i></div>
-			<div class="personal_name">
-			<?
-			if(!empty($user['M_NAME'])){
-				echo $user['M_NAME'];
-			}elseif(!empty($user['MANAGER_NAME']) && !empty($user['MANAGER_SURNAME']) && !empty($user['MANAGER_MIDDLENAME'])){
-				echo $user['MANAGER_NAME'].' '.$user['MANAGER_SURNAME'].' '.$user['MANAGER_MIDDLENAME'];
-			}elseif(!empty($user['FIRM_NAME'])){
-				echo $user['FIRM_NAME'];
-			}else{
-				echo $user['LOGIN'];
-			}
-			?>
-			</div>
+			<div class="personal_name"><?=User::getName($user)?></div>
 		</div>
 		<div class="mail">
 			<a href="/messages"><span class="icon-mail"><?if(count($notices)){?><span><?=count($notices)?></span><?}?></span></a>
 			<?if(count($notices)){?>
-				<div class="notices">
+				<div class="notices customScroll">
 					<?
 					$i = 5;
 					foreach($notices as $notice){
@@ -62,8 +68,8 @@
 						}
 						?>
 						<div class="notice">
-							<div class="n_title"><?=$notice['SUBJECT']?></div>
-							<?=$notice['NOTIFICATION_BODY']?>
+							<div class="n_title"><?=$notice['NOTE_TITLE']?></div>
+							<?=$notice['NOTE_BODY']?>
 						</div>
 					<?}?>
 					<div>
@@ -106,6 +112,14 @@
                     padding: [0,0,0,0]
                 });
             });
+        </script>
+    <?}?>
+
+    <?if (!empty($scriptsRaw)) {?>
+        <script>
+            <?foreach ($scriptsRaw as $script) {?>
+                <?=$script?>
+            <?}?>
         </script>
     <?}?>
 

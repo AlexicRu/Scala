@@ -5,7 +5,7 @@ $postfix = $card['CARD_ID'];
     <tr>
         <td class="gray right" width="170">Держатель:</td>
         <td>
-            <input type="text" name="card_edit_holder" class="input_big input_grand" value="<?=$card['HOLDER']?>" maxlength="200">
+            <input type="text" name="card_edit_holder" class="input_big input_grand" value="<?=Text::quotesForForms($card['HOLDER'])?>" maxlength="200">
         </td>
     </tr>
     <tr>
@@ -25,7 +25,7 @@ $postfix = $card['CARD_ID'];
         <td>
             <span class="btn btn_reverse" onclick="cardEditHolderGo_<?=$postfix?>($(this))"><i class="icon-ok"></i> Сохранить</span>
 
-            <?if(empty($card['CHANGE_LIMIT_AVAILABLE']) || !Access::allow('clients_card_edit_limits')){?>
+            <?if(empty($card['CHANGE_LIMIT_AVAILABLE']) || !Access::allow('clients_card-edit-limits')){?>
                 <span class="btn btn_red fancy_close">Отмена</span>
             <?}?>
         </td>
@@ -55,7 +55,7 @@ $postfix = $card['CARD_ID'];
             return;
         }
 
-        $.post('/clients/card_edit_holder', params, function (data) {
+        $.post('/clients/card-edit-holder', params, function (data) {
             if (data.success) {
                 message(1, 'Держатель карты успешно обновлен');
                 $.fancybox.close();

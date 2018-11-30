@@ -1,4 +1,4 @@
-<script src="/js/reports/reports.js"></script>
+<script src="<?=Common::getAssetsLink()?>js/reports/reports.js"></script>
 
 <?if(empty($reports)){?>
     <div class="error_block">Нет доступных отчетов</div>
@@ -8,12 +8,12 @@
             <?foreach($reports as $reportGroupId => $reportsList){?>
                 <div class="tab_v" tab="<?=$reportGroupId?>">
                     <div>
-                        <a href="#"><span class="icon-dailes f20"></span> <?=Model_Report::$reportGroups[$reportGroupId]['name']?></a>
+                        <a href="#"><span class="<?=Model_Report::$reportGroups[$reportGroupId]['icon']?> f20"></span> <?=Model_Report::$reportGroups[$reportGroupId]['name']?></a>
                     </div>
                 </div>
             <?}?>
         </div>
-        <div class="tabs_v_content">
+        <div class="tabs_v_content webtour-reports">
             <?foreach($reports as $reportGroupId => $reportsList){?>
                 <div class="tab_v_content" tab_content="<?=$reportGroupId?>">
                     <table>
@@ -80,7 +80,7 @@
         if(block.text() == '' || force == true){
             block.empty().addClass('block_loading');
 
-            $.post('/reports/load_report_template/' + reportId, {}, function(data){
+            $.post('/reports/load-report-template/' + reportId, {}, function(data){
                 block.html(data).removeClass('block_loading');
             });
         }

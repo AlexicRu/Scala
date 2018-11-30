@@ -1,11 +1,11 @@
-<script src="/js/clients/client.js"></script>
+<script src="<?=Common::getAssetsLink()?>js/clients/client.js"></script>
 
 <div class="back_link">&larr; <a href="/clients">Вернуться назад</a></div>
 <h2>
     <span toggle_block="edit_client" uid="client_name"><?=$client['NAME']?></span>
     <span toggle_block="edit_client" uid="client_name" class="dn">
         <nobr>
-            <input type="text" class="input_big input_grand" name="NAME" value="<?=$client['NAME']?>"
+            <input type="text" class="input_big input_grand" name="NAME" value="<?=Text::quotesForForms($client['NAME'])?>"
                 <?=(!empty($client['NAME']) && Access::deny('edit_client_full') ? 'disabled' : '')?>
             >*
         </nobr>
@@ -14,7 +14,7 @@
 
 <p>
     <span toggle_block="edit_client" uid="client_long_name"><?if($client['LONG_NAME']){?><?=$client['LONG_NAME']?><?}?></span>
-    <span toggle_block="edit_client" uid="client_long_name" class="dn"><input type="text" class="input_grand" placeholder="Полное название" name="LONG_NAME" value="<?=$client['LONG_NAME']?>"></span>
+    <span toggle_block="edit_client" uid="client_long_name" class="dn"><input type="text" class="input_grand" placeholder="Полное название" name="LONG_NAME" value="<?=Text::quotesForForms($client['LONG_NAME'])?>"></span>
 </p>
 
 <div toggle_block="block1" class="dn edit_client_block">
@@ -54,21 +54,18 @@
                     <span toggle_block="edit_client" uid="client_comments" class="dn"><textarea name="COMMENTS"><?=$client['COMMENTS']?></textarea></span>
                 </td>
             </tr>
-        </table>
-    </div><div class="col">
-        <table>
             <tr>
-                <td class="gray right" width="170">Телефон:</td>
-                <td width="200">
+                <td class="gray right">Телефон:</td>
+                <td>
                     <span toggle_block="edit_client" uid="client_phone"><?=($client['PHONE'] ?: '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_phone" class="dn"><nobr><input type="text" name="PHONE" value="<?=$client['PHONE']?>">*</nobr></span>
+                    <span toggle_block="edit_client" uid="client_phone" class="dn"><nobr><input type="text" name="PHONE" value="<?=$client['PHONE']?>"></nobr></span>
                 </td>
             </tr>
             <tr>
                 <td class="gray right">E-mail:</td>
                 <td>
                     <span toggle_block="edit_client" uid="client_email"><?=($client['EMAIL'] ? '<a href="mailto:'.$client['EMAIL'].'">'.$client['EMAIL'].'</a>' : '<span class="gray">Не заполнено</span>')?></span>
-                    <span toggle_block="edit_client" uid="client_email" class="dn"><nobr><input type="text" name="EMAIL" value="<?=$client['EMAIL']?>">*</nobr></span>
+                    <span toggle_block="edit_client" uid="client_email" class="dn"><nobr><input type="text" name="EMAIL" value="<?=$client['EMAIL']?>"></nobr></span>
                 </td>
             </tr>
             <tr>
@@ -92,7 +89,7 @@
                         <nobr>
                             <input type="text" name="KPP" value="<?=$client['KPP']?>"
                                 <?=(!empty($client['KPP']) && Access::deny('edit_client_full') ? 'disabled' : '')?>
-                            >*
+                            >
                         </nobr>
                     </span>
                 </td>
@@ -116,6 +113,72 @@
                 </td>
             </tr>
         </table>
+    </div><div class="col">
+        <table>
+            <tr>
+                <td class="gray right" width="170">Наименование банка:</td>
+                <td width="200">
+                    <span toggle_block="edit_client" uid="bank"><?=($client['BANK'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="bank" class="dn"><input type="text" name="BANK" value="<?=$client['BANK']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">БИК Банка:</td>
+                <td>
+                    <span toggle_block="edit_client" uid="bank_bik"><?=($client['BANK_BIK'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="bank_bik" class="dn"><input type="text" name="BANK_BIK" value="<?=$client['BANK_BIK']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Корреспондентский счет:</td>
+                <td>
+                    <span toggle_block="edit_client" uid="bank_corr_account"><?=($client['BANK_CORR_ACCOUNT'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="bank_corr_account" class="dn"><input type="text" name="BANK_CORR_ACCOUNT" value="<?=$client['BANK_CORR_ACCOUNT']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Расчетный счет:</td>
+                <td>
+                    <span toggle_block="edit_client" uid="bank_account"><?=($client['BANK_ACCOUNT'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="bank_account" class="dn"><input type="text" name="BANK_ACCOUNT" value="<?=$client['BANK_ACCOUNT']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Адрес банка:</td>
+                <td>
+                    <span toggle_block="edit_client" uid="bank_address"><?=($client['BANK_ADDRESS'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="bank_address" class="dn"><input type="text" name="BANK_ADDRESS" value="<?=$client['BANK_ADDRESS']?>"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="gray right">Генеральный директор:</td>
+                <td>
+                    <span toggle_block="edit_client" uid="ceo"><?=($client['CEO'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="ceo" class="dn"><input type="text" name="CEO" value="<?=$client['CEO']?>"></span>
+                </td>
+            </tr>
+            <?/*?><tr>
+                <td class="gray right">Генеральный директор (кратко):</td>
+                <td>
+                    <span toggle_block="edit_client" uid="ceo_short"><?=($client['CEO_SHORT'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="ceo_short" class="dn"><input type="text" name="CEO_SHORT" value="<?=$client['CEO_SHORT']?>"></span>
+                </td>
+            </tr><?*/?>
+            <tr>
+                <td class="gray right">Главный бухгалтер:</td>
+                <td>
+                    <span toggle_block="edit_client" uid="accountant"><?=($client['ACCOUNTANT'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="accountant" class="dn"><input type="text" name="ACCOUNTANT" value="<?=$client['ACCOUNTANT']?>"></span>
+                </td>
+            </tr>
+            <?/*?><tr>
+                <td class="gray right">Главный бухгалтер (кратко):</td>
+                <td>
+                    <span toggle_block="edit_client" uid="accountant_short"><?=($client['ACCOUNTANT_SHORT'] ?: '<span class="gray">Не заполнено</span>')?></span>
+                    <span toggle_block="edit_client" uid="accountant_short" class="dn"><input type="text" name="ACCOUNTANT_SHORT" value="<?=$client['ACCOUNTANT_SHORT']?>"></span>
+                </td>
+            </tr><?*/?>
+        </table>
     </div>
     <br>
 </div>
@@ -123,11 +186,15 @@
 <div class="more_info dn" toggle_block="block1">
     <a href="#" class="btn btn_gray btn_min_width" toggle="block1">Скрыть информацию о компании</a> &nbsp;
 
-    <?if(Access::allow('clients_client_edit')){?>
+    <?if(Access::allow('clients_client-edit')){?>
         <button class="btn" toggle="edit_client" toggle_block="edit_client"><i class="icon-pen"></i> Редактировать</button> &nbsp;
     <?}?>
 
-    <?if(Access::allow('client_cabinet_create') && empty($client['EXISTS_OFFICE'])){?>
+    <?if(Access::allow('clients_client-delete')){?>
+        <button class="btn btn_red" onclick="clientDelete($(this))"><i class="icon-cancel"></i> Удалить</button> &nbsp;
+    <?}?>
+
+    <?if(Access::allow('client_cabinet-create') && empty($client['EXISTS_OFFICE'])){?>
         <a href="#client_cabinet_create" class="btn btn_green fancy">+ Создать ЛК</a>
     <?}?>
 
@@ -144,18 +211,18 @@
     <?}else{
     foreach($contracts as $contract){?>
         <option value="<?=$contract['CONTRACT_ID']?>" <?=((!empty($contractId) && $contractId == $contract['CONTRACT_ID']) ? 'selected' : '')?>>
-            Договор: [<?=$contract['CONTRACT_ID']?>] <?=$contract['CONTRACT_NAME']?> от <?=$contract['DATE_BEGIN']?> <?if($contract['DATE_END'] != '31.12.2099'){?>до <?=$contract['DATE_END']?><?}?>
+            Договор: [<?=$contract['CONTRACT_ID']?>] <?=$contract['CONTRACT_NAME']?> от <?=$contract['DATE_BEGIN']?> <?if($contract['DATE_END'] != Date::DATE_MAX){?>до <?=$contract['DATE_END']?><?}?>
         </option>
     <?}}?>
 </select>
 
-<?if(Access::allow('clients_contract_add')){?>
+<?if(Access::allow('clients_contract-add')){?>
     &nbsp;&nbsp;&nbsp;<a href="#contract_add" class="btn fancy">+ Создать договор</a>
 
     <?=$popupContractAdd?>
 <?}?>
 
-<?if(Access::allow('client_cabinet_create')){?>
+<?if(Access::allow('client_cabinet-create')){?>
     <?=$popupCabinetCreate?>
 <?}?>
 

@@ -28,7 +28,7 @@
             return false;
         }
 
-        $.post('/suppliers/supplier_add', {params:params}, function(data){
+        $.post('/suppliers/supplier-add', {params:params}, function(data){
             if(data.success){
                 message(1, 'Поставщик успешно добавлен');
                 setTimeout(function(){

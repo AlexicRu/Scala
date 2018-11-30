@@ -37,10 +37,10 @@ class Model_Supplier_Contract extends Model_Contract
         $sql = "select * from ".Oracle::$prefix."V_WEB_SUPPLIERS_CONTRACTS t where 1=1 ";
 
         if(!empty($params['supplier_id'])){
-            $sql .= " and t.supplier_id = ".Oracle::toInt($params['supplier_id']);
+            $sql .= " and t.supplier_id = ".Num::toInt($params['supplier_id']);
         }
         if(!empty($params['contract_id'])){
-            $sql .= " and t.contract_id = ".Oracle::toInt($params['contract_id']);
+            $sql .= " and t.contract_id = ".Num::toInt($params['contract_id']);
         }
 
         return $db->query($sql);
@@ -89,7 +89,7 @@ class Model_Supplier_Contract extends Model_Contract
             'p_contract_name'       => $params['CONTRACT_NAME'],
             'p_date_begin'          => $params['DATE_BEGIN'],
             'p_date_end'            => $params['DATE_END'],
-            'p_contract_cur'        => self::CURRENCY_RUR,
+            'p_contract_cur'        => Common::CURRENCY_RUR,
             'p_contract_source'     => $params['DATA_SOURCE'],
             'p_contract_tube'       => $params['TUBE_ID'],
             //'p_contract_service'    => [(!empty($params['CONTRACT_SERVICES']) ? $params['CONTRACT_SERVICES'] : [-1]), SQLT_INT],
@@ -133,7 +133,7 @@ class Model_Supplier_Contract extends Model_Contract
             return [false, 'Ошибка'];
         }
 
-        if(!empty($params['date_end']) && strtotime($params['date_start']) > strtotime($params['date_end'])) {
+        if(!empty($params['date_end']) && Date::dateDifference($params['date_start'], $params['date_end'])) {
             return [false, 'Дата начала не может быть позже даты окончания'];
         }
 
@@ -145,8 +145,8 @@ class Model_Supplier_Contract extends Model_Contract
             'p_supplier_id' 	=> $params['supplier_id'],
             'p_contract_name' 	=> $params['name'],
             'p_date_begin' 		=> $params['date_start'],
-            'p_date_end' 		=> !empty($params['date_end']) ? $params['date_end'] : self::DEFAULT_DATE_END,
-            'p_contract_cur'    => self::CURRENCY_RUR,
+            'p_date_end' 		=> !empty($params['date_end']) ? $params['date_end'] : Date::DATE_MAX,
+            'p_contract_cur'    => Common::CURRENCY_RUR,
             'p_manager_id' 		=> $user['MANAGER_ID'],
             'p_contract_id' 	=> 'out',
             'p_error_code' 		=> 'out',
@@ -197,5 +197,39 @@ class Model_Supplier_Contract extends Model_Contract
         ;
 
         return Oracle::init()->query($sql);
+    }
+
+    /**
+     * история оплат по договору поставщика
+     *
+     * @param array $params
+     * @return array|bool|mixed
+     */
+    public static function getPaymentsHistory($params = [])
+    {
+        if (empty($params['contract_id'])) {
+            return false;
+        }
+
+        $user = User::current();
+        $db = Oracle::init();
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_SUPPLIERS_PAYMENTS')
+            ->where('agent_id = ' . $user['AGENT_ID'])
+            ->orderBy('o_date desc')
+        ;
+
+        if (!empty($params['contract_id'])) {
+            $sql->where('supplier_contract_id = ' . (int)$params['contract_id']);
+        }
+
+        if (!empty($params['pagination'])) {
+            $params['limit'] = 15;
+
+            return $db->pagination($sql, $params);
+        }
+
+        return $db->query($sql);
     }
 }

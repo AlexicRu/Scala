@@ -55,7 +55,7 @@
                 return false;
             }
 
-            $.post('/clients/cabinet_create', {params:params}, function(data){
+            $.post('/clients/cabinet-create', {params:params}, function(data){
                 if(data.success){
                     message(1, 'Личный кабинет успешно создан');
                     $.fancybox.close();

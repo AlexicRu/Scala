@@ -63,8 +63,8 @@
                 var t = $(this);
                 var product = {
                     service: getComboboxValue($('[name^=add_bill_product_service_]', t)),
-                    cnt: $('[name^=add_bill_product_cnt_]', t).val(),
-                    price: $('[name^=add_bill_product_price_]', t).val(),
+                    cnt: $('[name^=add_bill_product_cnt_]', t).val().replace(',', '.'),
+                    price: $('[name^=add_bill_product_price_]', t).val().replace(',', '.'),
                 };
 
                 if (product.service == '' || product.cnt == '' || product.price == '') {
@@ -74,7 +74,7 @@
                 }
 
                 params.products.push(product);
-                params.sum += $('[name^=add_bill_product_summ_]', t).val();
+                params.sum += parseFloat($('[name^=add_bill_product_summ_]', t).val());
             });
         }
 
@@ -87,17 +87,21 @@
             return false;
         }
 
-        window.location.href = '/clients/add_bill?' + $.param(params);
+        window.location.href = '/clients/add-bill?' + $.param(params);
         $.fancybox.close();
+
+        setTimeout(function () {
+            paginationAjaxRefresh('ajax_block_client_bills_list');
+        }, 1000);
     }
 
     function calcRowSumm(item)
     {
          var row = item.closest('.form_client_add_bill_product');
          var cnt = $('[name^=add_bill_product_cnt_]', row);
-         var cntVal = cnt.val();
+         var cntVal = cnt.val().replace(',', '.');
          var price = $('[name^=add_bill_product_price_]', row);
-         var priceVal = price.val();
+         var priceVal = price.val().replace(',', '.');
          var summ = $('[name^=add_bill_product_summ_]', row);
 
          if (isNaN(cntVal) || cntVal < 0) {
@@ -127,16 +131,18 @@
         summ.val(sumRow);
 
         recalcNDS();
+        recalcSum();
     }
     
     function renderProduct()
     {
         var block = $('.form_client_add_bill_products');
 
-        $.post('/clients/add_bill_product_template', {}, function (data) {
+        $.post('/clients/add-bill-product-template', {}, function (data) {
             block.append(data);
             $('[name=client_add_bill_summ]').prop('disabled', true);
             recalcNDS();
+            recalcSum();
         });
 
     }
@@ -153,8 +159,10 @@
 
         if ($('.form_client_add_bill_product').length == 0){
             $('[name=client_add_bill_summ]').prop('disabled', false);
-            recalcNDS();
         }
+
+        recalcNDS();
+        recalcSum();
     }
 
     /**
@@ -180,5 +188,22 @@
         }
 
         ndsInput.val(parseInt(nds*100) / 100);
+    }
+
+    function recalcSum()
+    {
+        var summField = $('[name=client_add_bill_summ]');
+        var summ = 0;
+
+        $('[name^=add_bill_product_summ_]').each(function () {
+            var t = $(this);
+            var val = t.val();
+
+            if (!isNaN(val) && val) {
+                summ += parseFloat(val);
+            }
+        });
+
+        summField.val(summ);
     }
 </script>

@@ -44,11 +44,15 @@ Temporary Items
 
 tmp/
 .idea/
-application/cache/
-application/logs/
 application/config/database.php
 application/config/auth.php
 application/config/jasper.php
 application/config/config.php
-test.php
+application/config/prod.php
+application/config/dev.php
 /vendor/
+/node_modules/
+/assets/build/
+/assets/css/*.css
+/composer.phar
+/assets/files

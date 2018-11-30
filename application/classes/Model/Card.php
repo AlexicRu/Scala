@@ -11,18 +11,70 @@ class Model_Card extends Model
 
 	const CARD_LIMIT_PARAM_VOLUME 	= 1;
 	const CARD_LIMIT_PARAM_RUR 		= 2;
+	const CARD_LIMIT_PARAM_ITEMS 	= 3;
 
-	const CARD_LIMIT_TYPE_DAY		= 1;
-	const CARD_LIMIT_TYPE_WEEK		= 2;
-	const CARD_LIMIT_TYPE_MONTH		= 3;
-	const CARD_LIMIT_TYPE_ONCE		= 4;
+	const CARD_LIMIT_TYPE_DAY		    = 1;
+	const CARD_LIMIT_TYPE_WEEK		    = 2;
+	const CARD_LIMIT_TYPE_MONTH		    = 3;
+	const CARD_LIMIT_TYPE_QUARTER	    = 4;
+	const CARD_LIMIT_TYPE_YEAR	        = 5;
+	const CARD_LIMIT_TYPE_TRANSACTION	= 10;
 
     const CARDS_GROUP_ACTION_EDIT = 1;
     const CARDS_GROUP_ACTION_DEL = 0;
 
+    const CARD_GROUP_TYPE_USER      = 1;
+    const CARD_GROUP_TYPE_SYSTEM    = 2;
+
+    const CARD_ICON_WAY4_LUKOIL = 'Way4 Lukoil';
+    const CARD_ICON_WAY4_GPN    = 'Way4 GPN';
+    const CARD_ICON_PETROL_RN   = 'Petrol RN';
+    const CARD_ICON_NEFTIKA     = 'Neftika';
+    const CARD_ICON_BASHNEFT    = 'Petrol Bashneft';
+    const CARD_ICON_SKON        = 'Petrol SKON';
+    const CARD_ICON_CPK         = 'Petrol CPK';
+    const CARD_ICON_TATNEFT     = 'Tatneft';
+    const CARD_ICON_CLEVEROIL   = 'Cleveroil';
+    const CARD_ICON_GPC         = 'GPC PPR';
+    const CARD_ICON_SCANOIL     = 'ScanOil';
+    const CARD_ICON_E100        = 'E100PRO';
+    const CARD_ICON_PETROL_PTK  = 'PetrolPTK';
+    const CARD_ICON_PETROL_SURGUT       = 'PetrolSurgut';
+    const CARD_ICON_PETROL_NEFTEMARKET  = 'PetrolNeftemarket';
+    const CARD_ICON_NIKA        = 'CommonNIKA';
+    const CARD_ICON_PEREKRESTOK = 'CommonPerekrestok';
+    const CARD_ICON_NNK         = 'ITOil_NNK';
+    const CARD_ICON_SHELL       = 'ShellPartnerCard';
+
+    const CARD_SYSTEM_GPN = 5;
+    const CARD_SYSTEM_NINE = 9;
+
+    public static $cardIcons = [
+        self::CARD_ICON_WAY4_LUKOIL => 'card_lukoil.png',
+        self::CARD_ICON_WAY4_GPN    => 'card_gpn.png',
+        self::CARD_ICON_PETROL_RN   => 'card_rn.png',
+        self::CARD_ICON_NEFTIKA     => 'card_neftika.png',
+        self::CARD_ICON_BASHNEFT    => 'card_bashneft.png',
+        self::CARD_ICON_SKON        => 'card_skon.png',
+        self::CARD_ICON_CPK         => 'cpk.jpg',
+        self::CARD_ICON_TATNEFT     => 'tatneft.jpg',
+        self::CARD_ICON_CLEVEROIL   => 'cleveroil.jpg',
+        self::CARD_ICON_GPC         => 'gpc.jpg',
+        self::CARD_ICON_SCANOIL     => 'scanoil.jpg',
+        self::CARD_ICON_E100        => 'e100.jpg',
+        self::CARD_ICON_NIKA        => 'nika.jpg',
+        self::CARD_ICON_PETROL_PTK  => 'ptk.jpg',
+        self::CARD_ICON_PETROL_SURGUT       => 'surgut.jpg',
+        self::CARD_ICON_PETROL_NEFTEMARKET  => 'neftemarket.jpg',
+        self::CARD_ICON_PEREKRESTOK => 'perekrestokoil.jpg',
+        self::CARD_ICON_NNK         => 'nnk.png',
+        self::CARD_ICON_SHELL       => 'shell.png',
+    ];
+
 	public static $cardLimitsParams = [
 		self::CARD_LIMIT_PARAM_VOLUME 	=> 'л.',
 		self::CARD_LIMIT_PARAM_RUR 		=> Text::RUR,
+		self::CARD_LIMIT_PARAM_ITEMS 	=> 'шт.',
 	];
 
 	public static $cardLimitsTypes = [
@@ -32,8 +84,24 @@ class Model_Card extends Model
 		//self::CARD_LIMIT_TYPE_ONCE 	=> 'единовременно',
 	];
 
-	public static $editLimitsManagerNoLimit = [
-	    1233
+    public static $cardLimitsTypesFull = [
+        self::CARD_LIMIT_TYPE_DAY 	        => 'сутки',
+        self::CARD_LIMIT_TYPE_WEEK 	        => 'неделя',
+        self::CARD_LIMIT_TYPE_MONTH         => 'месяц',
+        self::CARD_LIMIT_TYPE_QUARTER       => 'квартал',
+        self::CARD_LIMIT_TYPE_YEAR          => 'год',
+        self::CARD_LIMIT_TYPE_TRANSACTION   => 'транзакций'
+    ];
+
+	private static $_selectedCards = [];
+
+	public static $cantDelCardLimitSystems = [
+	    1, 3, 4
+    ];
+
+	public static $cardsGroupsTypes = [
+	    self::CARD_GROUP_TYPE_USER      => 'Пользовательская группа',
+	    self::CARD_GROUP_TYPE_SYSTEM    => 'Группа для служебных операций',
     ];
 
 	/**
@@ -66,16 +134,16 @@ class Model_Card extends Model
 
 		if(!empty($params['query'])){
 		    $sql->whereStart();
-			$sql->where("card_id like ".Oracle::quote('%'.$params['query'].'%'));
-			$sql->whereOr("upper(holder) like ".mb_strtoupper(Oracle::quote('%'.$params['query'].'%')));
+			$sql->where("card_id like ".Oracle::quoteLike('%'.$params['query'].'%'));
+			$sql->whereOr("upper(holder) like ".mb_strtoupper(Oracle::quoteLike('%'.$params['query'].'%')));
             $sql->whereEnd();
 		}
 
         if(!empty($params['status'])){
             if($params['status'] == 'work'){
-                $sql->where('CARD_STATE != '.Model_Card::CARD_STATE_BLOCKED);
+                $sql->where('CARD_STATE != '.self::CARD_STATE_BLOCKED);
             } else {
-                $sql->where('CARD_STATE = '.Model_Card::CARD_STATE_BLOCKED);
+                $sql->where('CARD_STATE = '.self::CARD_STATE_BLOCKED);
             }
         }
 
@@ -99,44 +167,112 @@ class Model_Card extends Model
 
 	/**
 	 * вытягиваем одну карту
+     *
+     * используем статический массив, так как карту иногда надо достать много раз внутри этого класса в рамках одной функции
 	 */
 	public static function getCard($cardId, $contractId = false)
 	{
-		$card = self::getCards($contractId, $cardId);
+	    $key = $cardId . '_' . (int)$contractId;
 
-		if(!empty($card)){
-			return reset($card);
-		}
+	    if (empty(self::$_selectedCards[$key])) {
+            $cards = self::getCards($contractId, $cardId);
 
-		return false;
-	}
-
-	/**
-	 * получаем данные по ограничениям по топливу
-	 *
-	 * @param $cardId
-	 */
-	public static function getOilRestrictions($cardId, $select = [])
-	{
-		if(empty($cardId)){
-			return [];
-		}
-
-		$db = Oracle::init();
-
-		$sql = (new Builder())->select()
-            ->from('V_WEB_CRD_LIMITS')
-            ->where('card_id = ' . Oracle::quote($cardId))
-        ;
-
-		if (!empty($select)) {
-		    $sql->select($select);
+            self::$_selectedCards[$key] = !empty($cards) ? reset($cards) : false;
         }
 
-		$restrictions = $db->tree($sql, 'LIMIT_GROUP');
-
-		return $restrictions;
+        return self::$_selectedCards[$key];
 	}
+
+    /**
+     * получаем список доступных сервисов по карте
+     *
+     * @param $cardId
+     * @param $select
+     */
+	public static function getServices($cardId, $select = [])
+    {
+        if (empty($cardId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_CARDS_SERVICE_AVAILABLE t')
+            ->where('t.card_id = ' . Oracle::quote($cardId))
+        ;
+
+        if (!empty($select)) {
+            $sql->select($select);
+        }
+
+        return Oracle::init()->query($sql);
+    }
+
+    /**
+     * получаем данные по ограничениям по топливу
+     *
+     * @param $cardId
+     */
+    public static function getOilRestrictions($cardId, $limitId = false, $select = [])
+    {
+        if(empty($cardId) && empty($limitId)){
+            return [];
+        }
+
+        $db = Oracle::init();
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_CARDS_LIMITS')
+        ;
+
+        if (!empty($cardId)) {
+            $sql->where('card_id = ' . Oracle::quote($cardId));
+        }
+
+        if (!empty($limitId)) {
+            $sql->where('limit_id = ' . (int)$limitId);
+        }
+
+        if (!empty($select)) {
+            $sql->select($select);
+        }
+
+        $restrictions = $db->tree($sql, 'LIMIT_ID');
+
+        $result = [];
+
+        foreach ($restrictions as $services) {
+
+            $restrictionServices = [];
+
+            $restriction = reset($services);
+
+            foreach ($services as $service) {
+                $restrictionServices[] = [
+                    'id'    => $service['SERVICE_ID'],
+                    'name'  => $service['SERVICE_NAME'],
+                ];
+            }
+
+            $restriction['services'] = $restrictionServices;
+
+            $result[$restriction['LIMIT_ID']] = $restriction;
+        }
+
+        return $result;
+    }
+
+    /**
+     * получаем инфу по конкретному лимиту
+     *
+     * @param $limitId
+     * @return bool|mixed
+     */
+    public static function getLimit($limitId)
+    {
+        $result = self::getOilRestrictions(false, $limitId);
+
+        return !empty($result[0]) ? $result[0] : false;
+    }
 
 	/**
 	 * данные по последней заправке
@@ -152,12 +288,12 @@ class Model_Card extends Model
 
 		$db = Oracle::init();
 
-		$card = Model_Card::getCard($cardId);
+		$card = self::getCard($cardId);
 
 		$where = ["card_id = ".Oracle::quote($cardId)];
 
 		if (!empty($contractId)) {
-            $where[] = "contract_id = ".Oracle::toInt($contractId);
+            $where[] = "contract_id = ".Num::toInt($contractId);
         } else if(!empty($card['CONTRACT_ID'])){
 			$where[] = "contract_id = ".Oracle::quote($card['CONTRACT_ID']);
 		}
@@ -199,7 +335,6 @@ class Model_Card extends Model
 		$data = [
 			'p_contract_id' 	=> $params['contract_id'],
 			'p_card_id' 		=> $params['card_id'],
-			'p_card_type' 		=> 1, //1-EMV, 2 - PayFlex, 3 - Loyalty
 			'p_holder' 			=> empty($params['holder']) ? '' : $params['holder'],
 			'p_expire_date' 	=> !empty($params['expire_date']) ? date('m/Y', strtotime($params['expire_date'])) : '',
 			'v_action' 			=> $action,
@@ -232,7 +367,7 @@ class Model_Card extends Model
 
         $contractId = !empty($params['CONTRACT_ID']) ? $params['CONTRACT_ID'] : false;
 
-		$card = Model_Card::getCard($cardId, $contractId);
+		$card = self::getCard($cardId, $contractId);
         $user = Auth::instance()->get_user();
 
 		$where = [
@@ -310,182 +445,359 @@ class Model_Card extends Model
 		return false;
 	}
 
-	/**
-	 * редактирование карты и лимитов
-	 *
-	 * @param $params
-	 * @return array
-	 */
-	public static function editCardLimits($cardId, $contractId, $limits = [])
-	{
-		if(empty($cardId)){
-			return [false, 'Ошибка'];
-		}
-
-        $user = Auth::instance()->get_user();
-
-		$limits = (array)$limits;
-
-        if (count($limits) > 9) {
-            return [false, 'Изменение лимитов не произошло. Превышен лимит ограничений'];
-        }
-
-		if(
-		    in_array($user['role'], array_keys(Access::$clientRoles)) &&
-            !in_array($user['MANAGER_ID'], self::$editLimitsManagerNoLimit)
-        ) {
-            $currentLimits = self::getOilRestrictions($cardId);
-
-            foreach($limits as $limit){
-                if(
-                    ($limit['param'] == 1 && $limit['value'] > 1000) ||
-                    ($limit['param'] == 2 && $limit['value'] > 30000)
-                ){
-                    if(empty($currentLimits)){
-                        return [false, 'Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру'];
-                    }
-                    foreach($limit['services'] as $service){
-                        foreach ($currentLimits as $currentLimit){
-                            foreach ($currentLimit as $currentL) {
-                                if ($currentL['SERVICE_ID'] == $service && $limit['value'] != $currentL['LIMIT_VALUE']) {
-                                    return [false, 'Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру'];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-		$db = Oracle::init();
-
-		if(empty($limits)){
-            $db->procedure('card_service_refresh', ['p_card_id' => $cardId]);
-
-			return [true, ''];
-		}
-
-        /*
-        S1,S2,S3:P1:T1:V1:PCS1;
-        S4,S5,S6:P2:T2:V2:PCS2;
-
-        где S1,S2,S3 - ID услуг через "запятую" в рамках указанной группы ограничения
-        P1 - параметр лимита для указанной группы ограничения (1 - в литрах, 2 - в рублях)
-        T1 - тип лимита для указанной группы ограничения (1 - суточный, 2 - недельный, 3 - месячный)
-        V1 - размер лимита для указанной группы ограничения (дробная часть через "точку")
-        PCS1 - лимит на количество операций для указанной группы ограничения (по умолчанию пока "0" - без ограничений)
-         */
-        $limitsArray = [];
-
-		foreach($limits as $group => $limit){
-
-		    $limitsArray[] =
-                implode(',', $limit['services']) . ':' .
-                $limit['param'] . ':' .
-                $limit['type'] . ':' .
-                str_replace(",", ".", $limit['value']) . ':' .
-                0 . ';'
-            ;
-		}
-
-        $data = [
-            'p_card_id'			=> $cardId,
-            'p_contract_id'		=> $contractId,
-            'p_limit_array'		=> [$limitsArray, SQLT_CHR],
-            'p_manager_id' 		=> $user['MANAGER_ID'],
-            'p_error_code' 		=> 'out',
-        ];
-
-        $res = $db->procedure('card_service_edit_ar', $data);
-
-        switch ($res) {
-            case Oracle::CODE_ERROR:
-                return [false, 'Ошибка'];
-            case 2:
-                return [false, 'Превышен лимит ограничений'];
-            case 3:
-                return [false, 'Задвоенные лимиты'];
-        }
-
-		return [true, ''];
-	}
-
     /**
      * редактирование карты и лимитов
      *
      * @param $params
-     * @return bool
-     * @deprecated
+     * @return array
      */
-    public static function OLD_editCardLimits($cardId, $limits = [])
+    public static function editCardLimits($cardId, $contractId, $limits = [])
     {
-        if(empty($cardId)){
-            return false;
+        if(empty($cardId) || empty($contractId)){
+            return [false, 'Ошибка'];
         }
 
-        $user = Auth::instance()->get_user();
+        $currentLimits = self::getOilRestrictions($cardId);
 
-        if(in_array($user['role'], array_keys(Access::$clientRoles))) {
-            $currentLimits = self::getOilRestrictions($cardId);
+        $checkResult = self::checkCardLimits($cardId, $contractId, $limits, $currentLimits);
 
-            foreach($limits as $limit){
-                if(
-                    ($limit['param'] == 1 && $limit['value'] > 1000) ||
-                    ($limit['param'] == 2 && $limit['value'] > 30000)
-                ){
-                    if(empty($currentLimits)){
-                        Messages::put('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
-                        return false;
-                    }
-                    foreach($limit['services'] as $service){
-                        foreach ($currentLimits as $currentLimit){
-                            foreach ($currentLimit as $currentL) {
-                                if ($currentL['SERVICE_ID'] == $service && $limit['value'] != $currentL['LIMIT_VALUE']) {
-                                    Messages::put('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
-                                    return false;
+        if (empty($checkResult[0])) {
+            return $checkResult;
+        }
+
+        $limitsIds = !empty($limits) ? array_column($limits, 'limit_id') : [];
+
+        foreach ($currentLimits as $limit) {
+            if (!in_array($limit['LIMIT_ID'], $limitsIds)) {
+                $result = self::delLimit($limit['LIMIT_ID'], $limit);
+
+                if (empty($result[0])) {
+                    return $result;
+                }
+            }
+        }
+
+        if(empty($limits)){
+            return [true, ''];
+        }
+
+        return self::editCardLimitsSimple($cardId, $contractId, $limits);
+    }
+
+    /**
+     * проверяем корректность лимитов
+     */
+    public static function checkCardLimits($cardId, $contractId, $limits, $currentLimits = [])
+    {
+        try {
+            $settings = self::getCardLimitSettings($cardId);
+
+            if ($settings['cntLimits'] < count($limits)) {
+                throw new Exception('Превышено допустимое колво лимитов');
+            }
+
+            if ($settings['canSave'] == false) {
+                throw new Exception('Отсутствует доступ на сохранение лимитов');
+            }
+
+            if (empty($currentLimits)) {
+                $currentLimits = self::getOilRestrictions($cardId);
+            }
+
+            $user = User::current();
+
+            if (
+                (count($limits) > 9) ||
+                (count($limits) == 1 && $limits[0]['limit_id'] == -1 && count($currentLimits) == 9)
+            ) {
+                throw new Exception('Изменение лимитов не произошло. Превышен лимит ограничений');
+            }
+
+            if (
+                in_array($user['ROLE_ID'], array_keys(Access::$clientRoles)) &&
+                $user['LIMIT_RESTRICTION'] == 1
+            ) {
+                foreach ($limits as $limit) {
+                    if (
+                        ($limit['unit_type'] == 1 && $limit['value'] > 1000) ||
+                        ($limit['unit_type'] == 2 && $limit['value'] > 30000)
+                    ) {
+                        if (empty($currentLimits)) {
+                            throw new Exception('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
+                        }
+                        foreach ($limit['services'] as $service) {
+                            foreach ($currentLimits as $currentLimitId => $currentLimit) {
+                                foreach ($currentLimit['services'] as $currentService) {
+                                    if ($currentService['id'] == $service && $limit['value'] != $currentLimit['LIMIT_VALUE']) {
+                                        throw new Exception('Изменение лимитов не произошло. Превышен допустимый лимит! Обратитесь к вашему менеджеру');
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
 
-        $db = Oracle::init();
+            //проверка в зависимости от системы карт
+            $firstFl = true;
+            foreach($limits as $limit){
+                $isNew = $limit['limit_id'] == -1;
+                $value = str_replace(',', '.', $limit['value']);
 
-        $db->procedure('card_service_refresh', ['p_card_id' => $cardId]);
+                if (!$isNew && empty($currentLimits[$limit['limit_id']])) {
+                    throw new Exception('Отсутствует запрашиваемый на редактировнаие лимит');
+                }
 
-        if(empty($limits)){
-            $db->procedure('card_queue_limit_add', ['p_card_id' => $cardId]);
-            return true;
-        }
+                if (empty($limit['services'])) {
+                    throw new Exception('Список сервисов для лимита должен быть заполнен');
+                }
 
-        foreach($limits as $group => $limit){
-            foreach($limit['services'] as $service){
-                $data = [
-                    'p_card_id'			=> $cardId,
-                    'p_service_id'		=> $service,
-                    'p_limit_group'		=> $group,
-                    'p_limit_param'		=> $limit['param'],
-                    'p_limit_type'		=> $limit['type'],
-                    'p_limit_value'		=> str_replace(",", ".", $limit['value']),
-                    'p_limit_currency'	=> Model_Contract::CURRENCY_RUR,
-                    'p_limit_pcs'		=> 0, //default
-                    'p_manager_id' 		=> $user['MANAGER_ID'],
-                    'p_error_code' 		=> 'out',
-                ];
+                if ($value < $settings['minValue']) {
+                    throw new Exception('Минимальное доступное значение: ' . $settings['minValue']);
+                }
 
-                $res = $db->procedure('card_service_edit', $data);
+                $servicesIds = $limit['services'];
+                sort($servicesIds);
+                if (!$isNew) {
+                    $servicesCurrentIds = array_column($currentLimits[$limit['limit_id']]['services'], 'id');
+                    sort($servicesCurrentIds);
+                }
 
-                if(!empty($res)){
-                    return false;
+                //проверка доступа на добавление лимитов
+                if ($isNew && $settings['canAddLimit'] == false) {
+                    throw new Exception('Отсутствует доступ на добавление лимитов');
+                }
+
+                //проверка на добавление сервисов
+                if ($settings['canAddService'] == false) {
+                    if ($isNew) {
+                        throw new Exception('Отсутствует доступ на добавление сервисов лимита');
+                    } else {
+                        if (!empty(array_diff($servicesIds, $servicesCurrentIds))) {
+                            throw new Exception('Отсутствует доступ на добавление сервисов лимита');
+                        }
+                    }
+                }
+
+                //проверка на удаление сервисов
+                if ($settings['canDelService'] == false && !$isNew) {
+                    if (!empty(array_diff($servicesCurrentIds, $servicesIds))) {
+                        throw new Exception('Отсутствует доступ на удаление сервисов лимита');
+                    }
+                }
+
+                //проверка доступного колва сервисов
+                if ($firstFl) {
+                    $firstFl = false;
+                    if (count($limit['services']) > $settings['cntServiceForFirstLimit']) {
+                        throw new Exception('Превышено колво сервисов для первого лимита');
+                    }
+                } else {
+                    if (count($limit['services']) > $settings['cntServiceForLimit']) {
+                        throw new Exception('Превышено колво сервисов лимита');
+                    }
+                }
+
+                //проверка доступных limitParams (unit_type)
+                if (!in_array($limit['unit_type'], array_keys($settings['limitParams']))) {
+                    throw new Exception('Использован недопустимый unit_type');
+                }
+
+                //проверка доступных limitTypes (duration_type)
+                if (!in_array($limit['duration_type'], array_keys($settings['limitTypes']))) {
+                    throw new Exception('Использован недопустимый duration_type');
+                }
+
+                //проверка возможности изменения сервисов
+                if ($settings['editServiceSelect'] == false && !$isNew) {
+                    if (
+                        !empty(array_diff($servicesCurrentIds, $servicesIds))
+                        || count($servicesCurrentIds) != count($servicesIds)
+                    ) {
+                        throw new Exception('Запрещено изменение сервисов');
+                    }
+                }
+
+                //проверка возможности изменения limitParams (unit_type) и limitTypes (duration_type)
+                if ($settings['editSelect'] == false && !$isNew) {
+                    if ($limit['unit_type'] != $currentLimits[$limit['limit_id']]['UNIT_TYPE']) {
+                        throw new Exception('Запрещено изменение unit_type');
+                    }
+
+                    if ($limit['duration_type'] != $currentLimits[$limit['limit_id']]['DURATION_TYPE']) {
+                        throw new Exception('Запрещено изменение duration_type');
+                    }
+                }
+
+                //проверка возможности изменения duration_value
+                if ($settings['editDurationValue'] == false && !$isNew) {
+                    if (isset($limit['duration_value']) && $limit['duration_value'] != $currentLimits[$limit['limit_id']]['DURATION_VALUE']) {
+                        throw new Exception('Запрещено изменение duration_value');
+                    }
+                }
+
+                //проверка duration_value
+                if ($settings['minDurationValue'] !== false) {
+                    if (isset($limit['duration_value']) && $limit['duration_value'] < $settings['minDurationValue']) {
+                        throw new Exception('Значение duration_value меньше разрешенного');
+                    }
+                }
+                if ($settings['maxDurationValue'] !== false) {
+                    if (isset($limit['duration_value']) && $limit['duration_value'] > $settings['maxDurationValue']) {
+                        throw new Exception('Значение duration_value больше разрешенного');
+                    }
+                }
+
+                //проверка возможности установки duration_value
+                if ($settings['cntTypes'] == false && $isNew) {
+                    if (!empty($limit['duration_value'])) {
+                        throw new Exception('Запрещена установка duration_value');
+                    }
+                }
+
+                //проверка возможности использования float
+                if ($settings['canUseFloat'] == false){
+                    if (is_float($value)) {
+                        throw new Exception('Запрещено использование дробных значений');
+                    }
                 }
             }
+
+        } catch (Exception $e) {
+            return [false, $e->getMessage()];
         }
 
-        $db->procedure('card_queue_limit_add', ['p_card_id' => $cardId]);
+        return [true, ''];
+    }
 
-        return true;
+    /**
+     * простое редактирование лимитов
+     *
+     * @param $cardId
+     * @param $contractId
+     * @param array $limits
+     */
+    public static function editCardLimitsSimple($cardId, $contractId = -1, $limits = [])
+    {
+        try {
+            if(empty($cardId) || !is_array($limits)){
+                throw new Exception('Некорректные входные данные');
+            }
+
+            $user = User::current();
+            $card = self::getCard($cardId);
+
+            /*
+    S1,S2,S3:DT1:DV1:UT1:UC1:V1:DWT1:DWV1:TiFr1:TiTo1:ID1
+
+    S1,S2,S3 - набор услуг в ограничении
+    DT1 - Duration type - периодичность услуги 1 - сутки, 2 недели, 3 - месяцы, 4 - кварталы, 5 - года, 10 - транзакция
+    DV1 - Duration value - количество выбранных периодов
+    UT1 - Unit type - параметр лимита 1 - литры, 2 - валюта
+    UC1 - Unit currency - если в предыдущем параметре выбраны литры передаем "LIT", если валюта - код валюты (ISO 4217 number) пока по умолчанию передаем 643
+    TC1 - Transaction count - ограничение на количество транзакций, если пустое, передаем -1 (по умолчанию передаем -1)
+    V1 - Limit value - количественное значение лимита
+    DWT1 - Limit of days week type - Ограничение по дням недели вкл/выкл (по умолчанию 0 - выкл)
+    DWV1 - Limit of days week - Значение ограничения по дням недели, имеет вид строки из семи нулей и единиц: 0000000, 0 - выключен день, 1 - включен (по умолчанию передаем '0000000')
+    TiFr1:TiTo1 - Time from / time to - Время в секундах с начала суток, показывающее период разрешенных заправок (по умолчанию передаем и там и там 0)
+    ID1: Limit_id in DB. If '-1' - create new limit - Лимит полученный выборкой из БД. Если передаем значение '-1' создается новый лимит
+     */
+            $limitsArray = [];
+
+            foreach($limits as $limit){
+
+                if (empty($limit['duration_type']) || empty($limit['unit_type']) || (empty($limit['value']) && in_array($card['SYSTEM_ID'], [self::CARD_SYSTEM_GPN, self::CARD_SYSTEM_NINE]))) {
+                    throw new Exception('Недостаточно данных по лимиту');
+                }
+
+                $str =
+                    /*dt*/ (int)$limit['duration_type'] . ':' .
+                    /*dv*/ (int)(!empty($limit['duration_value']) ? $limit['duration_value'] : 1) . ':' .
+                    /*ut*/ (int)$limit['unit_type'] . ':' .
+                    /*uc*/ ($limit['unit_type'] == self::CARD_LIMIT_PARAM_VOLUME ? 'LIT' : Common::CURRENCY_RUR) . ':' .
+                    /*tc*/ '-1:' .
+                    /*v*/  $limit['value'] . ':' .
+                    /*dwt*/'0:' .
+                    /*dwv*/'0000000:' .
+                    /*tf*/ '0:' .
+                    /*tt*/ '0:' .
+                    /*id*/ (!empty($limit['limit_id']) ? (int)$limit['limit_id'] : -1).
+                    ';'
+                ;
+
+                $limitsArray[] =
+                    /*s*/  implode(',', array_map('intval', $limit['services'])) . ':' .
+                    str_replace(",", ".", $str)
+                ;
+            }
+
+            $data = [
+                'p_card_id'			=> $cardId,
+                'p_contract_id'		=> $contractId,
+                'p_limit_array'		=> [$limitsArray, SQLT_CHR],
+                'p_json_str' 		=> -1,//json_encode($limits),
+                'p_manager_id' 		=> $user['MANAGER_ID'],
+                'p_error_code' 		=> 'out',
+            ];
+
+            $res = Oracle::init()->procedure('card_service_edit', $data);
+
+            switch ($res) {
+                case Oracle::CODE_ERROR:
+                    throw new Exception('Ошибка');
+                case 2:
+                    throw new Exception('Превышен лимит ограничений');
+                case 3:
+                    throw new Exception('Задвоенные лимиты');
+            }
+        } catch (Exception $e) {
+            return [false, $e->getMessage()];
+        }
+
+        return [true, ''];
+    }
+
+    /**
+     * удаляем лимит
+     *
+     * @param $limitId
+     * @return array
+     */
+    public static function delLimit($limitId, $limit = [])
+    {
+        try {
+            if (empty($limitId)) {
+                throw new Exception('Некорректные входные параметры');
+            }
+
+            if (empty($limit)) {
+                $limit = self::getLimit($limitId);
+            }
+
+            $card = self::getCard($limit['CARD_ID']);
+
+            if (in_array($card['SYSTEM_ID'], self::$cantDelCardLimitSystems)) {
+                throw new Exception('Отсутствует доступ на удаление лимитов');
+            }
+
+            $user = User::current();
+
+            $data = [
+                'p_limit_id' => $limitId,
+                'p_manager_id' => $user['MANAGER_ID'],
+                'p_error_code' => 'out',
+            ];
+
+            $res = Oracle::init()->procedure('card_limit_del', $data);
+
+            if ($res != Oracle::CODE_SUCCESS) {
+                throw new Exception('Ошибка');
+            }
+        } catch (Exception $e) {
+            return [false, $e->getMessage()];
+        }
+
+        return [true, ''];
     }
 
 	/**
@@ -513,11 +825,11 @@ class Model_Card extends Model
 
 		$res = $db->procedure('card_contract_withdraw', $data);
 
-		if(!empty($res)){
-			return $res;
+		if($res == Oracle::CODE_SUCCESS){
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
     /**
@@ -530,7 +842,7 @@ class Model_Card extends Model
         $user = User::current();
 
         $sql = (new Builder())->select()
-            ->from('V_WEB_CARD_GROUPS t')
+            ->from('V_WEB_CARDS_GROUPS t')
             ->where("t.manager_id = ".$user['MANAGER_ID'])
         ;
 
@@ -538,8 +850,16 @@ class Model_Card extends Model
             $sql->where("t.group_id in (".implode(',', $filter['ids']).")");
         } else {
             if (!empty($filter['search'])) {
-                $sql->where("upper(t.group_name) like " . mb_strtoupper(Oracle::quote('%' . $filter['search'] . '%')));
+                $sql->where("upper(t.group_name) like " . mb_strtoupper(Oracle::quoteLike('%' . $filter['search'] . '%')));
             }
+        }
+
+        if (!in_array($user['ROLE_ID'], Access::$adminRoles)) {
+            $sql->where('t.GROUP_TYPE = ' . self::CARD_GROUP_TYPE_USER);
+        }
+
+        if (!empty($filter['group_type'])) {
+            $sql->where('t.group_type = ' . (int)$filter['group_type']);
         }
 
         $db = Oracle::init();
@@ -567,10 +887,11 @@ class Model_Card extends Model
         $user = Auth::instance()->get_user();
 
         $data = [
-            'p_pos_group_name'    => $params['name'],
-            'p_manager_id'        => $user['MANAGER_ID'],
-            'p_group_id'          => 'out',
-            'p_error_code' 		  => 'out',
+            'p_group_name'      => $params['name'],
+            'p_manager_id'      => $user['MANAGER_ID'],
+            'p_group_type'      => !empty($params['type']) ? $params['type'] : self::CARD_GROUP_TYPE_USER,
+            'p_group_id'        => 'out',
+            'p_error_code' 	    => 'out',
         ];
 
         return $db->procedure('ctrl_card_group_add', $data);
@@ -584,7 +905,7 @@ class Model_Card extends Model
     public static function editCardsGroup($params, $action = self::CARDS_GROUP_ACTION_EDIT)
     {
         if(empty($params['group_id'])){
-            return Oracle::CODE_ERROR;
+            return false;
         }
 
         $db = Oracle::init();
@@ -595,11 +916,17 @@ class Model_Card extends Model
             'p_group_id'          => $params['group_id'],
             'p_action'            => $action,
             'p_group_name'        => !empty($params['name']) ? $params['name'] : '',
+            'p_group_type'        => !empty($params['type']) ? $params['type'] : self::CARD_GROUP_TYPE_USER,
             'p_manager_id'        => $user['MANAGER_ID'],
             'p_error_code' 		  => 'out',
         ];
 
-        return $db->procedure('ctrl_card_group_edit', $data);
+        $res = $db->procedure('ctrl_card_group_edit', $data);
+
+        if ($res == Oracle::CODE_SUCCESS) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -682,19 +1009,20 @@ class Model_Card extends Model
                         from ".Oracle::$prefix."v_web_manager_cards vmc
                         where vmc.MANAGER_ID = {$user['MANAGER_ID']}
                          and vmc.card_id = vc.card_id
-                   )                    
+                   )
+            order by vc.card_id
             ";
 
         if(!empty($params['CARD_ID'])){
-            $sql .= ' and vc.CARD_ID like '.Oracle::quote('%'.$params['CARD_ID'].'%');
+            $sql .= ' and vc.CARD_ID like '.Oracle::quoteLike('%'.$params['CARD_ID'].'%');
         }
 
         if(!empty($params['HOLDER'])){
-            $sql .= ' and vc.HOLDER like '.Oracle::quote('%'.$params['HOLDER'].'%');
+            $sql .= ' and vc.HOLDER like '.Oracle::quoteLike('%'.$params['HOLDER'].'%');
         }
 
         if(!empty($params['DESCRIPTION_RU'])){
-            $sql .= ' and vc.DESCRIPTION_RU like '.Oracle::quote('%'.$params['DESCRIPTION_RU'].'%');
+            $sql .= ' and vc.DESCRIPTION_RU like '.Oracle::quoteLike('%'.$params['DESCRIPTION_RU'].'%');
         }
 
         return $db->pagination($sql, $params);
@@ -839,5 +1167,194 @@ class Model_Card extends Model
             return true;
         }
         return false;
+    }
+
+    /**
+     * проверка доступа карты к сервису
+     *
+     * @param $cardId
+     * @param $serviceId
+     * @return bool
+     */
+    public static function checkServiceAccess($cardId, $serviceId)
+    {
+        if (empty($cardId) || empty($serviceId)) {
+            return false;
+        }
+
+        $data = [
+            'p_card_id' 		=> $cardId,
+            'p_service_id'		=> $serviceId,
+        ];
+
+        $res = Oracle::init()->func('check_card_service', $data);
+
+        if($res == Oracle::CODE_SUCCESS){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * получаем настройки лимитов по карте
+     *
+     * @param $cardId
+     */
+    public static function getCardLimitSettings($cardId)
+    {
+        $card = Model_Card::getCard($cardId);
+        $systemId = $card['SYSTEM_ID'];
+
+        /*
+         * + значит, что учтено в проверке
+         */
+        $settings = [
+            /*+*/'canDelService'             => true,
+            /*+*/'canAddService'             => true,
+            /*+*/'canDelLimit'               => !in_array($systemId, Model_Card::$cantDelCardLimitSystems),
+            /*+*/'canAddLimit'               => true,
+            /*+*/'canSave'                   => true,
+            /*+*/'editSelect'                => true,
+            /*+*/'editServiceSelect'         => true,
+            /*+*/'cntServiceForLimit'        => 1,
+            /*+*/'cntServiceForFirstLimit'   => 1,
+            /*+*/'limitParams'               => self::$cardLimitsParams,
+            /*+*/'limitTypes'                => self::$cardLimitsTypes,
+            /*+*/'cntTypes'                  => false,
+            /*+*/'canUseFloat'               => true,
+            /*+*/'cntLimits'                 => 999,
+            /*+*/'editDurationValue'         => false,
+            /*+*/'minValue'                  => 0,
+            /*+*/'minDurationValue'          => false,
+            /*+*/'maxDurationValue'          => false,
+        ];
+
+        switch ($systemId) {
+            case 1:
+                $settings['canDelService']  = false;
+                $settings['canAddService']  = false;
+                $settings['canAddLimit']    = false;
+                $settings['canSave']        = false;
+                break;
+            case 3:
+                $settings['canAddLimit']        = false;
+                $settings['canDelService']      = false;
+                $settings['canAddService']      = false;
+                $settings['editSelect']         = false;
+                $settings['editServiceSelect']  = false;
+                break;
+            case 4:
+                $settings['canDelService']  = false;
+                $settings['canAddService']  = false;
+                $settings['canAddLimit']    = false;
+                $settings['canSave']        = false;
+                break;
+            case self::CARD_SYSTEM_NINE:
+                $settings['cntServiceForFirstLimit'] = 999;
+                $settings['limitTypes']         = Model_Card::$cardLimitsTypes;
+                $settings['editSelect']         = false;
+                $settings['canUseFloat']        = false;
+                $settings['minValue']           = 1;
+                break;
+            case self::CARD_SYSTEM_GPN:
+                $settings['cntServiceForFirstLimit'] = 999;
+                $settings['limitTypes']         = Model_Card::$cardLimitsTypesFull;
+                $settings['cntTypes']           = true;
+                $settings['editSelect']         = false;
+                $settings['canUseFloat']        = false;
+                $settings['minValue']           = 1;
+                $settings['minDurationValue']   = 1;
+                $settings['maxDurationValue']   = 99;
+                break;
+            case 6:
+                $settings['cntServiceForLimit'] = 999;
+                $settings['cntServiceForFirstLimit'] = 999;
+                //можно все
+                break;
+            case 7:
+                $settings['limitParams'] = [
+                    self::CARD_LIMIT_PARAM_RUR => $settings['limitParams'][self::CARD_LIMIT_PARAM_RUR]
+                ];
+                $settings['limitTypes'] = [
+                    self::CARD_LIMIT_TYPE_DAY => $settings['limitTypes'][self::CARD_LIMIT_TYPE_DAY]
+                ];
+                break;
+            case 8:
+                $settings['cntLimits'] = 1;
+                $settings['cntServiceForFirstLimit'] = 999;
+                $settings['limitParams'] = [
+                    self::CARD_LIMIT_PARAM_RUR => $settings['limitParams'][self::CARD_LIMIT_PARAM_RUR]
+                ];
+                $settings['limitTypes'] = [
+                    self::CARD_LIMIT_TYPE_DAY => $settings['limitTypes'][self::CARD_LIMIT_TYPE_DAY]
+                ];
+                break;
+        }
+
+        return $settings;
+    }
+
+    /**
+     * перенос карт с одного договора на другой
+     *
+     * @param $oldContractId
+     * @param $newContractId
+     * @param $cards
+     * @param $params
+     * @return bool
+     */
+    public static function transferCards($oldContractId, $newContractId, $cards = [], $params = [])
+    {
+        if (empty($oldContractId) || empty($newContractId)) {
+            return false;
+        }
+
+        if (empty($cards)) {
+            $cards = [-1];
+        }
+
+        $user = User::current();
+
+        $data = [
+            'p_old_contract'        => $oldContractId,
+            'p_new_contract'        => $newContractId,
+            'p_cards_array'         => [(array)$cards, SQLT_CHR],
+            'p_date_change'         => !empty($params['date_from']) ? $params['date_from'] : date('d.m.Y'),
+            'p_date_last_trz'       => !empty($params['date_to']) ? $params['date_to'] : Date::DATE_MAX,
+            'p_fl_transfer_cards'   => !empty($params['transfer_cards']) ? 1 : 0,
+            'p_fl_transfer_trn'     => !empty($params['transfer_transactions']) ? 1 : 0,
+            'p_fl_save_holder'      => !empty($params['save_holder']) ? 1 : 0,
+            'p_manager_id'          => $user['MANAGER_ID'],
+            'p_error_code'          => 'out',
+        ];
+
+        $res = Oracle::init()->procedure('srv_ctr_cards_trz_change', $data);
+
+        if($res == Oracle::CODE_SUCCESS){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * получаем сгруппированную информацию по карте
+     *
+     * @param $cardId
+     * @param $contractId
+     * @return bool|mixed
+     */
+    public static function getCardInfo($cardId, $contractId)
+    {
+        if (empty($cardId) || empty($contractId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_CARDS_INFO')
+            ->where('card_id = ' . Oracle::quote($cardId))
+            ->where('contract_id = ' . (int)$contractId)
+        ;
+
+        return Oracle::init()->row($sql);
     }
 }

@@ -9,11 +9,12 @@ class Access
     const ROLE_ADMIN 	                = 2;
     const ROLE_SUPERVISOR               = 3;
     const ROLE_MANAGER                  = 4;
-    const ROLE_USER		                = 99;
-    const ROLE_USER_SECOND		        = 98;
     const ROLE_MANAGER_SALE		        = 5;
     const ROLE_MANAGER_SALE_SUPPORT		= 6;
+    const ROLE_ADMIN_READONLY		    = 7;
     const ROLE_CLIENT		            = 97;
+    const ROLE_USER_SECOND		        = 98;
+    const ROLE_USER		                = 99;
 
     public static $roles = [
         self::ROLE_MANAGER              => 'Менеджер сопровождения',
@@ -34,20 +35,30 @@ class Access
     public static $adminRoles = [
         self::ROLE_ADMIN,
         self::ROLE_ROOT,
-        self::ROLE_GOD
+        self::ROLE_GOD,
+        self::ROLE_SUPERVISOR,
     ];
 
-    public static $rolesForCardGroups = [
-        self::ROLE_ADMIN,
-        self::ROLE_ROOT,
+    public static $managerRoles = [
         self::ROLE_GOD,
+        self::ROLE_ROOT,
+        self::ROLE_ADMIN,
+        self::ROLE_SUPERVISOR,
+        self::ROLE_MANAGER,
+        self::ROLE_MANAGER_SALE,
+        self::ROLE_MANAGER_SALE_SUPPORT,
+        self::ROLE_ADMIN_READONLY,
+    ];
+
+    public static $readonlyRoles = [
         self::ROLE_CLIENT,
+        self::ROLE_ADMIN_READONLY,
     ];
 
     /**
      * функция проверки доступа
      */
-    public static function allow($action, $onlySee = false)
+    public static function allow($action, $allowToReadOnly = false)
     {
         if(empty($action)){
             return true;
@@ -55,11 +66,9 @@ class Access
 
         $user = Auth_Oracle::instance()->get_user();
 
-        if(in_array($user['role'], [self::ROLE_ROOT])){
+        if(in_array($user['ROLE_ID'], [self::ROLE_ROOT])){
             return true;
         }
-
-        if(Kohana::$environment == Kohana::DEVELOPMENT && $user['MANAGER_ID'] == 7) return true;
 
         $access = Kohana::$config->load('access')->as_array();
 
@@ -69,14 +78,16 @@ class Access
         if(
             // если задано разрешение и нет роли/агента/юзера, то нельзя
             (isset($allow[$action]) && (
-                !in_array($user['role'], $allow[$action]) &&
+                !in_array($user['ROLE_ID'], $allow[$action]) &&
                 !in_array('u_'.$user['MANAGER_ID'], $allow[$action]) &&
+                !in_array('g_'.$user['AGENT_GROUP_ID'], $allow[$action]) &&
                 !in_array('a_'.$user['AGENT_ID'], $allow[$action])
             )) ||
             // если задан запрет на действие и хоть где-то роль/агент/юзер, то нельзя
             (isset($deny[$action]) && (
-                in_array($user['role'], $deny[$action]) ||
+                in_array($user['ROLE_ID'], $deny[$action]) ||
                 in_array('u_'.$user['MANAGER_ID'], $deny[$action]) ||
+                in_array('g_'.$user['AGENT_GROUP_ID'], $deny[$action]) ||
                 in_array('a_'.$user['AGENT_ID'], $deny[$action])
             ))
         ){
@@ -85,7 +96,7 @@ class Access
 
         //если нет явного запрета или наоборот, доступа только конкретной роли
 
-        if(!$onlySee && in_array($user['role'], [self::ROLE_CLIENT])){
+        if(!$allowToReadOnly && in_array($user['ROLE_ID'], self::$readonlyRoles)){
             return false;
         }
 
@@ -93,14 +104,48 @@ class Access
     }
 
     /**
+     * функция проверки доступа к скачиванию файлов
+     * по умолчанию запрет
+     */
+    public static function file($file)
+    {
+        if(empty($file)){
+            return false;
+        }
+
+        $user = User::current();
+
+        if(in_array($user['ROLE_ID'], [self::ROLE_ROOT])){
+            return true;
+        }
+
+        $access = Kohana::$config->load('access')['files'];
+
+        if(
+            // если задано разрешение и есть роль/агент/юзер, то можно
+            isset($access[$file]) && (
+                    in_array($user['ROLE_ID'], $access[$file]) ||
+                    in_array('u_'.$user['MANAGER_ID'], $access[$file]) ||
+                    in_array('g_'.$user['AGENT_GROUP_ID'], $access[$file]) ||
+                    in_array('a_'.$user['AGENT_ID'], $access[$file])
+                )
+        ){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * проверка запрета доступа
      *
      * @param $action
+     * @param $readOnly
      * @return bool
      */
-    public static function deny($action)
+    public static function deny($action, $readOnly = false)
     {
-        return !self::allow($action);
+        return !self::allow($action, $readOnly);
     }
 
     /**
@@ -108,9 +153,9 @@ class Access
      *
      * @param $type
      * @param $id
-     * @param $additionalId
+     * @param $additional
      */
-    public static function check($type, $id, $additionalId = false)
+    public static function check($type, $id, $additional = false)
     {
         if (empty($type) || empty($id)) {
             throw new HTTP_Exception_404();
@@ -122,11 +167,13 @@ class Access
 
         switch($type){
             case 'client':
-                $clients = Model_Client::getClientsList(null, [
+                $clients = Model_Manager::getClientsList([
                     'ids' => [$id]
                 ]);
 
-                if(!empty($clients[$id])){
+                $clientsIds = !empty($clients) ? array_column($clients, 'CLIENT_ID') : [];
+
+                if(in_array($id, $clientsIds)){
                     $allow = true;
                 }
                 break;
@@ -136,12 +183,56 @@ class Access
                 break;
 
             case 'card':
-                $allow = Model_Card::checkUserAccess($user['MANAGER_ID'], $id, $additionalId);
+                $allow = Model_Card::checkUserAccess($user['MANAGER_ID'], $id, $additional);
                 break;
+
+            case 'service':
+                $allow = Model_Card::checkServiceAccess($id, $additional);
         }
 
         if(!$allow){
             throw new HTTP_Exception_404();
         }
+    }
+
+    /**
+     * проверка доступа к процедуре
+     *
+     * @param $procedure
+     * @param $role
+     * @return bool
+     */
+    public static function checkReadOnly($procedure, $role)
+    {
+        if (empty($role) || empty($procedure)) {
+            return false;
+        }
+
+        $access = Kohana::$config->load('access')['skip_readonly'];
+
+        if (isset($access[$role]) && !in_array($procedure, $access[$role])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * получаем список доступных ролей
+     *
+     * @return array
+     */
+    public static function getAvailableRoles()
+    {
+        $roles = self::$roles;
+
+        $user = User::current();
+
+        if ($user['ROLE_ID'] == self::ROLE_ROOT) {
+            $roles[self::ROLE_ADMIN] = 'Администратор';
+            $roles[self::ROLE_ADMIN_READONLY] = 'Супервайзер группы агентов';
+        }
+
+        return $roles;
     }
 }

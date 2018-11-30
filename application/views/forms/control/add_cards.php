@@ -28,7 +28,7 @@
 
             var groupId = $('.tabs_cards_groups .tab_v.active [name=group_id]').val();
 
-            $.post('/control/show_group_cards', { postfix: 'popup_list', show_checkbox:1, group_id:groupId }, function (data) {
+            $.post('/control/show-cards', { postfix: 'popup_list', show_checkbox:1, group_id:groupId }, function (data) {
                 block.removeClass('block_loading');
 
                 block.html(data);
@@ -49,7 +49,7 @@
                 return false;
             }
 
-            $.post('/control/add_cards_to_group', {cards_ids:cardsIds, group_id:groupId}, function (data) {
+            $.post('/control/add-cards-to-group', {cards_ids:cardsIds, group_id:groupId}, function (data) {
                 if(data.success){
                     message(1, 'Карты успешно добавлены');
 

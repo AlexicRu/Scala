@@ -7,7 +7,7 @@
             <b class="f18">Выбрать источник:</b><br>
             <select class="sources_list">
                 <?foreach ($tubesList as $tube) {?>
-                    <option value="<?=$tube['TUBE_ID']?>"><?=$tube['TUBE_NAME']?></option>
+                    <option value="<?=$tube['TUBE_ID']?>" <?=($tube['CARD_LIMIT_CHANGE_ID'] == 1 ? 'disabled' : '')?>><?=$tube['TUBE_NAME']?></option>
                 <?}?>
             </select>
             <br><br>
@@ -26,7 +26,7 @@
                 <tr>
                     <td class="gray right">Выбор из справочника</td>
                     <td>
-                        <?=Common::buildFormField('service_choose_single', 'add_service_in_service')?>
+                        <?=Form::buildField('service_choose_single', 'add_service_in_service')?>
                     </td>
                 </tr>
                 <tr>
@@ -36,6 +36,12 @@
                     </td>
                 </tr>
             </table>
+
+
+            <br>
+            <i class="gray">
+                Примечание: Для настройки конвертации услуг по источникам, где доступно управление лимитами карт, обратитесь в <a href="/support">Техническую поддержку</a>
+            </i>
         </div>
     </div>
 
@@ -68,7 +74,7 @@
             return false;
         }
 
-        $.post('/references/add_convert_service', params, function (data) {
+        $.post('/references/add-convert-service', params, function (data) {
             if (data.success) {
                 message('success', 'Услуга успшно добавлена');
 
@@ -91,7 +97,7 @@
             return false;
         }
 
-        $.post('/references/service_list_load', {tube_id: source}, function (data) {
+        $.post('/references/service-list-load', {tube_id: source}, function (data) {
             if (data.success) {
                 drawTable(data.data);
                 //changeSelect(data.data);

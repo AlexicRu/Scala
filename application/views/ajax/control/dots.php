@@ -18,7 +18,7 @@
             params.group_id = $('[name=group_id_<?=$postfix?>]').val();
         }
 
-        paginationAjax('/control/load_dots/', 'ajax_block_dots_list_<?=$postfix?>', renderAjaxPaginationDotsList<?=$postfix?>, params);
+        paginationAjax('/control/load-dots/', 'ajax_block_dots_list_<?=$postfix?>', renderAjaxPaginationDotsList<?=$postfix?>, params);
     });
 
     function renderFilterDotsList<?=$postfix?>(block, params)
@@ -107,10 +107,10 @@
             renderCheckbox(tpl.find('.td_check [type=checkbox]'));
         }
 
-        if($('.tabs_group_dots .action_del', block).is(':visible')){
+        if($('.tabs_dots_groups .action_del', block).is(':visible')){
             $('.td_edit', block).show();
         }
-        if($('.tabs_group_dots .action_del', block).is(':visible') || $('[name=show_dots_<?=$postfix?>]').length){
+        if($('.tabs_dots_groups .action_del', block).is(':visible') || $('[name=show_dots_<?=$postfix?>]').length){
             $('.td_check', block).show();
         }
     }
@@ -136,6 +136,6 @@
 
         block.empty().addClass('block_loading');
 
-        paginationAjax('/control/load_dots/', 'ajax_block_dots_list_<?=$postfix?>', renderAjaxPaginationDotsList<?=$postfix?>, params);
+        paginationAjax('/control/load-dots/', 'ajax_block_dots_list_<?=$postfix?>', renderAjaxPaginationDotsList<?=$postfix?>, params);
     }
 </script>

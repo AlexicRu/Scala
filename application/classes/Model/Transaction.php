@@ -3,6 +3,43 @@
 class Model_Transaction extends Model
 {
     /**
+     * получаем список транзакций
+     *
+     * @param $cardId
+     * @param $contractId
+     * @param array $params
+     * @return array|bool
+     */
+    public static function getList($cardId, $contractId, $params = [])
+    {
+        $sql = (new Builder())->select()
+            ->from('v_rep_transaction')
+            ->where('card_id = ' . Oracle::quote($cardId))
+            ->where('contract_id = ' . (int)$contractId)
+            ->columns([
+                "to_char(date_trn, 'dd.mm.yyyy') as date_trn_formatted",
+                "date_trn",
+                "time_trn",
+                "pos_petrol_name",
+                "pos_address",
+                "long_desc",
+                "service_amount",
+                "sumprice_discount",
+            ])
+            ->orderBy([
+                'date_trn desc',
+                'time_trn desc'
+            ])
+        ;
+
+        if (!empty($params['limit'])) {
+            $sql->limit($params['limit']);
+        }
+
+        return Oracle::init()->query($sql);
+    }
+
+    /**
      * получаем плохие транзакции по заданным параметрам
      *
      * @param $params
@@ -19,6 +56,31 @@ class Model_Transaction extends Model
         ";
 
         $sql .= " order by datetime_trn ";
+
+        if (!empty($params['pagination'])) {
+            return $db->pagination($sql, $params);
+        }
+        return $db->query($sql);
+    }
+
+
+    /**
+     * получаем транзакции (в процессе) по заданным параметрам
+     *
+     * @param $params
+     * @return mixed
+     */
+    public static function getTransactionsProcess($params)
+    {
+        $db = Oracle::init();
+
+        $user = User::current();
+
+        $sql = (new Builder())->select()
+            ->from('v_web_transaction_process')
+            ->where("agent_id = ".$user['AGENT_ID'])
+            ->orderBy('datetime_trn')
+        ;
 
         if (!empty($params['pagination'])) {
             return $db->pagination($sql, $params);
@@ -51,7 +113,7 @@ class Model_Transaction extends Model
         if (!empty($params['filter'])) {
             foreach ($params['filter'] as $key => $value) {
                 if (!empty($value)) {
-                    $sql->where("upper(t." . $key . ") like " . mb_strtoupper(Oracle::quote('%'.$value.'%')));
+                    $sql->where("upper(t." . $key . ") like " . mb_strtoupper(Oracle::quoteLike('%'.$value.'%')));
                 }
             }
         }
@@ -65,20 +127,40 @@ class Model_Transaction extends Model
     /**
      * получение списка транзакций
      *
-     * @param $contractId
      * @param array $select
      * @return array|bool
      */
-    public static function getTransactions($contractId, $params = [], $select = [])
+    public static function getTransactionsForApi($params = [], $select = [])
     {
-        if (empty($contractId)) {
+        if (empty($params)) {
             return false;
         }
 
+        $user = User::current();
+
+        $subSql = (new Builder())->select([
+            'mc.contract_id'
+        ])
+            ->from('v_web_manager_contracts mc')
+            ->where('mc.manager_id = ' . $user['MANAGER_ID'])
+        ;
+
         $sql = (new Builder())->select()
             ->from('V_API_TRANSACTION')
-            ->where('contract_id = ' . (int)$contractId)
+            ->whereIn('contract_id', $subSql)
         ;
+
+        if (!empty($params['client_id'])) {
+            $sql->where('client_id = ' . (int)$params['client_id']);
+        }
+
+        if (!empty($params['card_id'])) {
+            $sql->where('card_id = ' . (int)$params['card_id']);
+        }
+
+        if (!empty($params['contract_id'])) {
+            $sql->where('contract_id = ' . (int)$params['contract_id']);
+        }
 
         if (!empty($params['date_from'])) {
             $sql->where('DATE_TRN >= '. Oracle::toDateOracle($params['date_from'], 'd.m.Y'));
@@ -93,5 +175,25 @@ class Model_Transaction extends Model
         }
 
         return Oracle::init()->query($sql);
+    }
+
+    /**
+     * проверяем транзакцию
+     *
+     * @param $transactionId
+     */
+    public static function checkTransaction($transactionId)
+    {
+        if (empty($transactionId)) {
+            return false;
+        }
+
+        $data = [
+            'p_trans_id' 		=> $transactionId,
+        ];
+
+        $db = Oracle::init();
+
+        return $db->func('trn_check_exists', $data);
     }
 }

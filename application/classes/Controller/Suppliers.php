@@ -11,7 +11,7 @@ class Controller_Suppliers extends Controller_Common {
 
 	public function action_index()
 	{
-        $popupSupplierAdd = Common::popupForm('Добавление нового поставщика', 'supplier/add');
+        $popupSupplierAdd = Form::popup('Добавление нового поставщика', 'supplier/add');
 
         $this->tpl
             ->bind('popupSupplierAdd', $popupSupplierAdd)
@@ -21,7 +21,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * аяксово грузим поставщиков
      */
-    public function action_suppliers_list()
+    public function action_suppliersList()
     {
         $params = [
             'offset' 		    => $this->request->post('offset'),
@@ -40,7 +40,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * Детальная страница по поставщику
      */
-    public function action_supplier_detail()
+    public function action_supplierDetail()
     {
         $supplierId = $this->request->param('id');
 
@@ -50,13 +50,16 @@ class Controller_Suppliers extends Controller_Common {
             throw new HTTP_Exception_404();
         }
 
+        $this->_initVueJs();
+        $this->_initPhoneInputWithFlags();
+
         $supplierContracts = Model_Supplier_Contract::getList(['supplier_id' => $supplierId]);
 
         $this->title[] = $supplier['SUPPLIER_NAME'];
 
         $this->_initDropZone();
 
-        $popupSupplierContractAdd = Common::popupForm('Добавление нового договора', 'supplier/contract/add');
+        $popupSupplierContractAdd = Form::popup('Добавление нового договора', 'supplier/contract/add');
 
         $this->tpl
             ->bind('supplier', $supplier)
@@ -68,7 +71,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * редактирование поставщика
      */
-    public function action_supplier_edit()
+    public function action_supplierEdit()
     {
         $supplierId = $this->request->param('id');
         $params = $this->request->post('params');
@@ -113,12 +116,15 @@ class Controller_Suppliers extends Controller_Common {
             case 'agreements':
                 $agreements = Model_Supplier_Agreement::getList(['contract_id' => $contractId]);
 
-                $popupAgreementAdd = Common::popupForm('Добавление нового соглашения', 'supplier/agreement/add');
+                $popupAgreementAdd = Form::popup('Добавление нового соглашения', 'supplier/agreement/add');
 
                 $content = View::factory('ajax/suppliers/contract/agreements')
                     ->bind('agreements', $agreements)
                     ->bind('popupAgreementAdd', $popupAgreementAdd)
                 ;
+                break;
+            case 'payments':
+                $content = View::factory('ajax/suppliers/contract/payments');
                 break;
         }
 
@@ -130,6 +136,10 @@ class Controller_Suppliers extends Controller_Common {
             'agreements'    => [
                 'name' => 'Соглашения',
                 'icon' => 'icon-reports',
+            ],
+            'payments'    => [
+                'name' => 'Оплаты',
+                'icon' => 'icon-account',
             ]
         ];
 
@@ -144,9 +154,29 @@ class Controller_Suppliers extends Controller_Common {
     }
 
     /**
+     * аяксово грузим историю
+     */
+    public function action_contractPaymentsHistory()
+    {
+        $params = [
+            'contract_id'       => $this->request->param('id'),
+            'offset' 		    => $this->request->post('offset'),
+            'pagination'        => true
+        ];
+
+        list($paymentsHistory, $more) = Model_Supplier_Contract::getPaymentsHistory($params);
+
+        if(empty($paymentsHistory)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, ['items' => $paymentsHistory, 'more' => $more]);
+    }
+
+    /**
      * редактирование контракта
      */
-    public function action_contract_edit()
+    public function action_contractEdit()
     {
         $contractId = $this->request->param('id');
         $params = $this->request->post('params');
@@ -162,7 +192,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * добавление контракта
      */
-    public function action_contract_add()
+    public function action_contractAdd()
     {
         $params = $this->request->post('params');
 
@@ -178,7 +208,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * создание нового поставщика
      */
-    public function action_supplier_add()
+    public function action_supplierAdd()
     {
         $params = $this->request->post('params');
 
@@ -217,7 +247,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * редактирование соглашения
      */
-    public function action_agreement_edit()
+    public function action_agreementEdit()
     {
         $params = $this->request->post('params');
 
@@ -233,7 +263,7 @@ class Controller_Suppliers extends Controller_Common {
     /**
      * добавление нового соглашения
      */
-    public function action_agreement_add()
+    public function action_agreementAdd()
     {
         $params = $this->request->post('params');
 

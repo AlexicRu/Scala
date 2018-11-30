@@ -19,7 +19,7 @@ class Model_Reference extends Model
         ;
 
         if (!empty($arParams['tube_id'])) {
-            $sql->where('tube_id = '.Oracle::toInt($arParams['tube_id']));
+            $sql->where('tube_id = '.Num::toInt($arParams['tube_id']));
         }
 
         return $db->query($sql);
@@ -61,6 +61,10 @@ class Model_Reference extends Model
                 break;
             case Oracle::CODE_ERROR_EXISTS:
                 $error = 'Услуга уже закреплена за источником';
+                $result = 0;
+                break;
+            case 3:
+                $error = 'Невозможно добавить конвертацию в цепочке договоров';
                 $result = 0;
                 break;
         }

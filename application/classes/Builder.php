@@ -20,6 +20,16 @@ class Builder
     private $_distinct  = false;
 
     /**
+     * echo $sql;
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->build();
+    }
+
+    /**
      * @return $this
      */
     public function select($array = [])
@@ -59,18 +69,27 @@ class Builder
     /**
      * @param $table
      * @param $str
+     * @param $join
      * @return $this
      */
-    public function join($table, $str)
+    public function join($table, $str, $join = 'join')
     {
         if (empty($str) || empty($table)) {
             return $this;
         }
 
+        $alias = '';
+
+        if (is_array($table)) {
+            $alias = key($table);
+            $table = reset($table);
+        }
+
         $this->_joins[] = [
-            'join'  => 'join',
+            'join'  => $join,
             'table' => $table,
-            'str'   => $str
+            'str'   => $str,
+            'alias' => $alias
         ];
 
         return $this;
@@ -83,17 +102,7 @@ class Builder
      */
     public function joinLeft($table, $str)
     {
-        if (empty($str) || empty($table)) {
-            return $this;
-        }
-
-        $this->_joins[] = [
-            'join'  => 'left join',
-            'table' => $table,
-            'str'   => $str
-        ];
-
-        return $this;
+        return $this->join($table, $str, 'left join');
     }
 
     /**
@@ -105,7 +114,7 @@ class Builder
         if (empty($array)) {
             return $this;
         }
-        if (is_string($array)) {
+        if (!is_array($array)) {
             $array = [$array];
         }
 
@@ -173,6 +182,49 @@ class Builder
         $this->_where[] = [
             'connector' => 'and',
             'where'     => $where,
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param $param
+     * @param $array
+     * @return $this
+     */
+    public function whereNotIn($param, $array)
+    {
+        return $this->whereIn($param, $array, true);
+    }
+
+    /**
+     * @param $param
+     * @param $array
+     * @param $notIn
+     * @return $this
+     */
+    public function whereIn($param, $array, $notIn = false)
+    {
+        if (empty($param) || empty($array)) {
+            return $this;
+        }
+
+        //builder
+        if (is_a($array, 'Builder')) {
+            $string = $array->build();
+        } else {
+            $array = (array)$array;
+
+            foreach ($array as &$elem) {
+                $elem = Oracle::quote($elem);
+            }
+
+            $string = implode(', ', (array)$array);
+        }
+
+        $this->_where[] = [
+            'connector' => 'and',
+            'where'     => $param . ($notIn ? ' not ' : '') . ' in (' . $string . ')',
         ];
 
         return $this;
@@ -271,18 +323,26 @@ class Builder
     public function resetColumns()
     {
         $this->_columns = [];
+
+        return $this;
     }
     public function resetOrderBy()
     {
         $this->_orderBy = [];
+
+        return $this;
     }
     public function resetGroupBy()
     {
         $this->_groupBy = [];
+
+        return $this;
     }
     public function resetHaving()
     {
         $this->_having= [];
+
+        return $this;
     }
 
     /**
@@ -311,7 +371,12 @@ class Builder
         //joins
         if (!empty($this->_joins)) {
             foreach ($this->_joins as $join) {
-                $sql .= " {$join['join']} {$prefix}{$join['table']} on {$join['str']} ";
+                if (is_a($join['table'], 'Builder')) {
+                    $table = '(' . $join['table']->build() . ')';
+                } else {
+                    $table = $prefix . $join['table'];
+                }
+                $sql .= " {$join['join']} {$table} {$join['alias']} on {$join['str']} ";
             }
         }
 

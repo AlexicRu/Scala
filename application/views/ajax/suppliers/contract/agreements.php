@@ -1,6 +1,6 @@
 <div class="tabs_vertical_block tabs_switcher tabs_agreements">
     <div class="tabs_v">
-        <?if(Access::allow('suppliers_agreement_add')){?>
+        <?if(Access::allow('suppliers_agreement-add')){?>
             <div class="before_scroll">
                 <div class="tab_v"><div>
                         <a href="#supplier_agreement_add" class="fancy"><span class="icon-card"></span> Добавить соглашение</a>
@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<?if(Access::allow('suppliers_agreement_add')){?>
+<?if(Access::allow('suppliers_agreement-add')){?>
     <?=$popupAgreementAdd?>
 <?}?>
 

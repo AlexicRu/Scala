@@ -1,49 +1,78 @@
-<h1>Список клиентов <?if(Access::allow('clients_client_add')){?><a href="#client_add" class="btn fancy">+ Добавить клиента</a><?}?></h1>
+<h1>Список фирм <?if(Access::allow('clients_client-add')){?><a href="#client_add" class="btn fancy">+ Добавить клиента</a><?}?></h1>
 <?
 if(!empty($_REQUEST['search'])){?>
     <h3>Результаты поиска</h3>
-<?}
-
-if(!empty($clients)){
-
-    foreach($clients as $client){
-        ?>
-        <div class="block">
-            <div class="fr label label_big">ID <?=$client['CLIENT_ID']?></div>
-
-            <?if(!empty($client['contracts'])){?>
-                <div class="fr btn" toggle="client<?=$client['CLIENT_ID']?>">
-                    <span toggle_block="client<?=$client['CLIENT_ID']?>">Договоры</span>
-                    <span toggle_block="client<?=$client['CLIENT_ID']?>" class="dn">Свернуть</span>
-                </div>
-            <?}?>
-
-            <h2 class="f24 blue"><a href="/clients/client/<?=$client['CLIENT_ID']?>"><?=$client['CLIENT_NAME']?></a></h2>
-            <?if(!empty($client['LONG_NAME'])){?>
-                <h3><?=$client['LONG_NAME']?></h3>
-            <?}?>
-
-            <?if(!empty($client['contracts'])){?>
-                <div class="table_out dn" toggle_block="client<?=$client['CLIENT_ID']?>">
-                    <br>
-                    <table class="table">
-                        <?foreach($client['contracts'] as $contract){?>
-                            <tr>
-                                <td><span class="label <?=Model_Contract::$statusContractClasses[$contract['CONTRACT_STATE']]?>"><?=Model_Contract::$statusContractNames[$contract['CONTRACT_STATE']]?></span></td>
-                                <td><a href="/clients/client/<?=$client['CLIENT_ID']?>?contract_id=<?=$contract['CONTRACT_ID']?>"><?=$contract['CONTRACT_NAME']?></td>
-                                <td><span class="gray">Счет:</span> <?=number_format($contract['BALANCE'], 2, ',', ' ')?> <?=Text::RUR?></td>
-                                <td><span class="gray">Карты:</span> <?=$contract['ALL_CARDS']?></td>
-                            </tr>
-                        <?}?>
-                    </table>
-                </div>
-            <?}?>
-        </div>
-    <?}
-}else{?>
-    <div class="block">Клиенты не найдены</div>
 <?}?>
 
-<?if(Access::allow('clients_client_add')){?>
+<div class="ajax_block_clients_out block_loading">
+
+</div>
+
+<?if(Access::allow('clients_client-add')){?>
     <?=$popupClientAdd?>
 <?}?>
+
+
+<script>
+    $(function(){
+        paginationAjax('/clients/?search=<?=(!empty($_REQUEST['search']) ? strip_tags($_REQUEST['search']) : '')?>', 'ajax_block_clients', renderAjaxPaginationClients, {show_all_btn: true});
+    });
+
+    var fl = true;
+
+    function renderAjaxPaginationClients(data, block, params)
+    {
+        for(var i in data){
+            var client = data[i];
+            var tpl = $('<div class="block client">' +
+                '<div class="fr label label_big">ID ' + client.CLIENT_ID + '</div>' +
+                '<h2 class="f24 blue"><a href="/clients/client/' + client.CLIENT_ID + '">' + client.CLIENT_NAME + '</a></h2>' +
+            '</div>');
+
+            if (client.LONG_NAME) {
+                $('<h3>' + client.LONG_NAME + '</h3>').insertAfter(tpl.find('h2'));
+            }
+
+            if (client.contracts && client.contracts.length) {
+                $('<div class="fr btn" toggle="client' + client.CLIENT_ID + '">' +
+                    '<span toggle_block="client' + client.CLIENT_ID + '">Договоры</span>' +
+                    '<span toggle_block="client' + client.CLIENT_ID + '" class="dn">Свернуть</span>' +
+                '</div>').insertAfter(tpl.find('.fr'));
+
+                $('<div class="table_out dn" toggle_block="client' + client.CLIENT_ID + '">' +
+                    '<br>' +
+                    '<table class="table table_small" />' +
+                '</div>').appendTo(tpl);
+
+                for (var j in client.contracts) {
+                    var contract = client.contracts[j];
+                    var link = '/clients/client/' + client.CLIENT_ID + '?contract_id=' + contract.CONTRACT_ID;
+
+                    if (contract.found_card !== false) {
+                        link = link + '&tab=cards&card=' + contract.found_card;
+                    }
+
+                    $('<tr>' +
+                        '<td><span class="label ' + contract.contract_state_class + '">' + contract.contract_state_name + '</span></td>' +
+                        '<td><a href="'+ link +'">' + contract.CONTRACT_NAME + '</td>' +
+                        '<td><span class="gray">Счет:</span> ' + contract.balance_formatted + '</td>' +
+                        '<td><span class="gray">Карты:</span> ' + contract.ALL_CARDS + '</td>' +
+                    '</tr>').appendTo(tpl.find('table'));
+                }
+            }
+
+            block.append(tpl);
+        }
+
+        if (fl) {
+            EnjoyHintRun('clients');
+            fl = false;
+
+            if (params.more) {
+                setTimeout(function () {
+                    block.parent().find('.ajax_block_load_all').click();
+                }, 1000);
+            }
+        }
+    }
+</script>

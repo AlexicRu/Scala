@@ -6,11 +6,11 @@
                 <?foreach($contractLimits as $limits){
                     $limitFirst = reset($limits);
                     ?>
-                    <tr limit_group>
+                    <tr limit_group="<?=$limitFirst['LIMIT_ID']?>">
                         <td>
                             <?foreach($limits as $limit){?>
                                 <div class="form_elem" limit_service><nobr>
-                                        <select name="limit_service">
+                                        <select name="limit_service" onchange="checkServices()">
                                             <?foreach($servicesList as $service){?>
                                                 <option value="<?=$service['SERVICE_ID']?>" <?if($service['SERVICE_ID'] == $limit['SERVICE_ID']){?>selected<?}?>><?=$service['LONG_DESC']?></option>
                                             <?}?>
@@ -30,7 +30,7 @@
                             <select name="limit_param">
                                 <?
                                 $param = Model_Card::$cardLimitsParams[Model_Card::CARD_LIMIT_PARAM_VOLUME];
-                                if ($limitFirst['CURRENCY'] == Model_Contract::CURRENCY_RUR) {
+                                if ($limitFirst['CURRENCY'] == Common::CURRENCY_RUR) {
                                     $param = Model_Card::$cardLimitsParams[Model_Card::CARD_LIMIT_PARAM_RUR];
                                 }
                                 foreach(Model_Card::$cardLimitsParams as $limitParam => $value){?>
@@ -55,6 +55,12 @@
     <tr>
         <td></td>
         <td>
+            <label><input type="checkbox" name="recalc" checked> Пересчет остатков по договору</label>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
             <span class="btn btn_reverse btn_contract_limits_edit_go" onclick="contractLimitsEditGo($(this))"><i class="icon-ok"></i> Сохранить</span>
             <span class="btn btn_red fancy_close">Отмена</span>
         </td>
@@ -66,7 +72,10 @@
         $('.form_contract_limits_edit [type=checkbox]').each(function(){
             renderCheckbox($(this));
         });
+        checkServices();
     });
+
+    var services_cnt = <?=count($servicesList)?>;
 
     var services = {
         <?foreach($servicesList as $service){?>
@@ -84,6 +93,8 @@
         t.closest('[limit_service]').fadeOut();
         setTimeout(function () {
             t.closest('[limit_service]').remove();
+
+            checkServices();
         }, 300);
     }
 
@@ -96,10 +107,22 @@
             return false;
         }*/
 
-        var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" /> <button class="btn btn_small btn_red btn_contract_limits_edit_del_serviсe" onclick="contractLimitsEditDelService($(this))">&times;</button></nobr></div>');
+        var tpl = $('<div class="form_elem" limit_service><nobr><select name="limit_service" onchange="checkServices()" /> <button class="btn btn_small btn_red btn_contract_limits_edit_del_serviсe" onclick="contractLimitsEditDelService($(this))">&times;</button></nobr></div>');
+
+        var disabled = [
+            $('.form_contract_limits_edit [name=limit_service]:first').val()
+        ];
+        $('.form_contract_limits_edit [name=limit_service]:first option:disabled').each(function () {
+            disabled.push($(this).attr('value'));
+        });
+
+        if (disabled.length == services_cnt) {
+            message(0, 'Доступные услуги закончились');
+            return false;
+        }
 
         for (var i in services) {
-            tpl.find('select').append('<option value="' + i + '">' + services[i] + '</option>');
+            tpl.find('select').append('<option value="' + i + '" '+ (disabled.indexOf(i) != -1 ? 'disabled' : '') +'>' + services[i] + '</option>');
         }
 
         if (td.find('[limit_service]').size()) {
@@ -107,6 +130,8 @@
         } else {
             tpl.insertBefore(td.find('div'));
         }
+
+        checkServices();
     }
 
     function contractLimitsEditDelLimit(t)
@@ -115,6 +140,8 @@
             t.closest('[limit_group]').fadeOut();
             setTimeout(function () {
                 t.closest('[limit_group]').remove();
+
+                checkServices();
             }, 300);
         }
     }
@@ -169,6 +196,7 @@
         $('[limit_group]', form).each(function(){
             var group_block = $(this);
             var group = {
+                id:         group_block.attr('limit_group'),
                 value:      $('[name=limit_value]', group_block).val(),
                 param:      $('[name=limit_param]', group_block).val(),
                 unlim:      $('[name=limit_unlim]', group_block).is(':checked') ? 1 : 0,
@@ -191,7 +219,13 @@
             return;
         }
 
-        $.post('/clients/contract_limits_edit', {contract_id : $('[name=contracts_list]').val(), limits: limits}, function (data) {
+        var params = {
+            contract_id : $('[name=contracts_list]').val(),
+            limits: limits,
+            recalc: $("[name=recalc]", form).is(":checked") ? 1 : 0,
+        };
+
+        $.post('/clients/contract-limits-edit', params, function (data) {
             if (data.success) {
                 message(1, 'Ограничения по договору успешно обновлены');
                 loadContract('account');
@@ -204,6 +238,33 @@
                     }
                 }
             }
+        });
+    }
+
+    function checkServices()
+    {
+        var form = $('.form_contract_limits_edit');
+
+        var services = [];
+
+        $('[name=limit_service]', form).each(function () {
+            services.push($(this).val());
+        });
+
+        $('[name=limit_service]', form).each(function () {
+            var select = $(this);
+            var selectVal = select.val();
+
+            select.find('option').each(function () {
+                var option = $(this);
+                var optionVal = option.attr('value');
+
+                if (services.indexOf(optionVal) == -1 || optionVal == selectVal) {
+                    option.prop('disabled', false);
+                } else {
+                    option.prop('disabled', true);
+                }
+            });
         });
     }
 </script>

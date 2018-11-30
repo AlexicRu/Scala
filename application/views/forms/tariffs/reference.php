@@ -36,7 +36,7 @@
         <td>
             <?foreach($reference as $referenceBlock){
                 $referenceFirst = reset($referenceBlock);?>
-                <span class="web_form_element" condition_id="<?=$referenceFirst['CONDITION_ID']?>"><?=Common::buildFormField($referenceFirst['WEB_FORM'], $referenceFirst['WEB_FORM'])?></span>
+                <span class="web_form_element" condition_id="<?=$referenceFirst['CONDITION_ID']?>"><?=Form::buildField($referenceFirst['WEB_FORM'], $referenceFirst['WEB_FORM'])?></span>
             <?}?>
         </td>
     </tr>

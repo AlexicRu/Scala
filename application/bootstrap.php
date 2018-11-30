@@ -88,7 +88,7 @@ if (isset($_SERVER['SERVER_PROTOCOL']))
  * saying "Couldn't find constant Kohana::<INVALID_ENV_NAME>"
  */
 
-if (strpos($_SERVER['HTTP_HOST'], 'dev.') !== 0) {
+if (strpos($_SERVER['HTTP_HOST'], 'dev.') === false) {
     // We are live!
     Kohana::$environment = Kohana::PRODUCTION;
 } elseif (isset($_SERVER['KOHANA_ENV'])) {
@@ -111,12 +111,20 @@ if (strpos($_SERVER['HTTP_HOST'], 'dev.') !== 0) {
  * - boolean  expose      set the X-Powered-By header                        FALSE
  */
 
+$initParams = [
+    'base_url'      => '/',
+    'index_file'    => false,
+];
 
-Kohana::init(array(
-	'base_url'      => '/',
-	'index_file'    => false,
-    'errors'        => false,
-));
+switch (Kohana::$environment) {
+    case Kohana::PRODUCTION:
+        $initParams['errors'] = false;
+        break;
+    default:
+        $initParams['errors'] = true;
+}
+
+Kohana::init($initParams);
 
 /**
  * Attach the file write to logging. Multiple writers are supported.
@@ -129,6 +137,7 @@ Kohana::$log->attach(new Log_File(APPPATH.'logs'));
 Kohana::$config->attach(new Config_File);
 
 $config = Kohana::$config->load('config');
+$configEnvironment = Common::getEnvironmentConfig();
 
 /**
  * Enable modules. Modules are referenced by a relative or absolute path.
@@ -143,7 +152,8 @@ Kohana::modules(array(
 	'orm'        => MODPATH.'orm',        // Object Relationship Mapping
 	// 'unittest'   => MODPATH.'unittest',   // Unit testing
 	// 'userguide'  => MODPATH.'userguide',  // User guide and API documentation
-	));
+	'camelCaseRouter'  => MODPATH.'camelCaseRouter',
+));
 
 /**
  * Cookie Salt
@@ -152,11 +162,11 @@ Kohana::modules(array(
  * If you have not defined a cookie salt in your Cookie class then
  * uncomment the line below and define a preferrably long salt.
  */
-Cookie::$salt = $config['cookie_salt'];
+Cookie::$salt = $config['salt'];
 
 //логирование ошибок
-$sentryClient = new Raven_Client($config['sentry_dsn'], [
-    'release' => $config['sentry_release']
+$sentryClient = new Raven_Client($configEnvironment['sentry_dsn'], [
+    'release' => $configEnvironment['sentry_release']
 ]);
 $sentryClient->install();
 
@@ -167,18 +177,31 @@ Cache::$default = 'memcache';
  * defaults for the URI.
  */
 
+Route::set('telegram', 'telegram/<bot>(/<action>)')
+    ->defaults(array(
+        'controller' => 'telegram',
+        'action'     => 'index',
+    ));
+
+Route::set('file', 'file/<file>', array('file' => '.+'))
+    ->defaults(array(
+        'controller' => 'index',
+        'action'     => 'file',
+    ));
+
 Route::set('suppliers', 'suppliers/<id>', array('id' => '[\d]+'))
     ->defaults(array(
         'controller' => 'suppliers',
-        'action'     => 'supplier_detail',
+        'action'     => 'supplier-detail',
     ));
+
 Route::set('news', 'news/<id>', array('id' => '[\d]+'))
     ->defaults(array(
         'controller' => 'news',
-        'action'     => 'news_detail',
+        'action'     => 'news-detail',
     ));
 
-Route::set('auth', '<action>', array('action' => '^(login|logout)$'))
+Route::set('auth', '<action>(/<hash>)', array('action' => '(login|logout|force-login)', 'hash' => '.*'))
 	->defaults(array(
 		'controller' => 'index',
 		'action'     => 'index',

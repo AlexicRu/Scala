@@ -2,12 +2,15 @@
 
 class Model_Tube extends Model
 {
+    const STATE_ACTIVE = 'В работе';
+    const STATE_INACTIVE = 'Не в работе';
+
     /**
      * получаем список труб
      *
      * @return array|bool
      */
-    public static function getTubes()
+    public static function getTubes($params = [])
     {
         $db = Oracle::init();
 
@@ -17,6 +20,10 @@ class Model_Tube extends Model
             ->from('V_WEB_TUBES_LIST')
             ->where('agent_id = '.$user['AGENT_ID'])
         ;
+
+        if (isset($params['is_owner'])) {
+            $sql->where('is_owner = ' . $params['is_owner']);
+        }
 
         return $db->query($sql);
     }

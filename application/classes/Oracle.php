@@ -174,43 +174,36 @@ class Oracle{
 	{
 		$result = $this->query($sql);
 
-		$return = [];
-
-		if(!empty($result)){
-			$check = reset($result);
-
-			if(!isset($check[$field])){
-				return $return;
-			}
-
-			foreach($result as $row){
-				if($noArray) {
-					$return[$row[$field]] = !empty($subField) ? $row[$subField] : $row;
-				}else{
-					$return[$row[$field]][] =  !empty($subField) ? $row[$subField] : $row;
-				}
-			}
-		}
-
-		return $return;
+		return Common::buildTreeFromDBResult($result, $field, $noArray, $subField);
 	}
 
-	/**
-	 * экранируем
-	 *
-	 * @param $val
-	 */
-    public static function quote($val)
+    /**
+     * экранируем
+     *
+     * @param $val
+     * @param $like
+     */
+    public static function quote($val, $like = false)
     {
-        $str = str_replace(["%", "*", "?"], ["\%", "\*", "\?"], $val);
-        $str = preg_replace('/^\\\\%|\\\\%$/', "%", $str);
-
         $postfix = '';
-        if ($str != $val) {
-            $postfix = " ESCAPE '\' ";
+
+        if ($like) {
+            $str = str_replace(["%", "*", "?", "_"], ["\%", "\*", "\?", "\_"], $val);
+            $str = preg_replace('/^\\\\%|\\\\%$/', "%", $str);
+
+            if ($str != $val) {
+                $postfix = " ESCAPE '\' ";
+            }
+        } else {
+            $str = $val;
         }
 
         return "'".str_replace(["'"], ["''"], trim($str))."'" . $postfix;
+    }
+
+    public static function quoteLike($val)
+    {
+        return self::quote($val, true);
     }
 
     /**
@@ -249,20 +242,10 @@ class Oracle{
 			return self::CODE_ERROR;
 		}
 
-		//если роль КЛИЕНТ, то процедуры (add|edit) выполнять нельзя
         $user = User::current();
 
-		if ($user['role'] == Access::ROLE_CLIENT && !in_array($procedure, [
-            'auth_user',
-            'notification_change_status',
-            'ctrl_card_group_add',
-            'ctrl_card_group_collection',
-            'ctrl_card_group_edit',
-            'client_contract_notify_config',
-            'ctrl_manager_change_password',
-            'ctrl_manager_edit',
-        ])) {
-		    Messages::put('Данной роли разрешен только просмотр', 'info');
+		if (Access::checkReadOnly($procedure, $user['ROLE_ID'])) {
+            Messages::put('Данной роли разрешен только просмотр', 'info');
             return self::CODE_ERROR;
         }
 
@@ -338,9 +321,8 @@ class Oracle{
 		$from = $params['offset'];
 		$to = $params['limit']+$params['offset'];
 
-		if(!empty($params['pagination'])){
-			$to++;
-		}
+		//достаем на 1 больше, чтобы проверить есть ли еще данные на следующей странице
+        $to++;
 
         //builder
         if (is_a($sql, 'Builder')) {
@@ -352,35 +334,13 @@ class Oracle{
 		$items = $this->query($sql);
 
 		$more = false;
-		if (count($items) > $params['limit']) {
+		if (count($items) == $params['limit'] + 1) {
 			$more = true;
 			array_pop($items);
 		}
 
 		return [$items, $more];
 	}
-
-	/**
-	 * меняем запятую на точку, это для корректной записи в базу
-	 *
-	 * @param $number
-	 * @return mixed
-	 */
-	public static function toFloat($number)
-	{
-		return str_replace([',', ' ', " "], ['.', '', ""], $number);
-	}
-
-    /**
-     * возвращает инт
-     *
-     * @param $number
-     * @return int
-     */
-	public static function toInt($number)
-    {
-        return (int)$number;
-    }
 
     /**
      * переводим строку в дату

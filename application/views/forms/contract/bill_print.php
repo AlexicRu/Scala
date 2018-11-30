@@ -4,7 +4,7 @@
 
 <script>
     $(function(){
-        paginationAjax('/clients/bills_list', 'ajax_block_client_bills_list', renderAjaxPaginationClientBillsList, {
+        paginationAjax('/clients/bills-list', 'ajax_block_client_bills_list', renderAjaxPaginationClientBillsList, {
             'contract_id': $('[name=contracts_list]').val()
         });
     });

@@ -21,20 +21,21 @@ class Controller_Control extends Controller_Common {
     {
         $this->title[] = 'Менеджеры';
 
+        $this->_initPhoneInputWithFlags();
+
         $filter = $this->request->query('filter') ?: ['only_managers' => 1];
 
         $user = Auth::instance()->get_user();
 
         $params = [
-            'agent_id' => $user['AGENT_ID'],
-            'not_admin' => true
+            'agent_id'      => $user['AGENT_ID'],
         ];
 
         $params = array_merge($params, $filter);
 
         $managers = Model_Manager::getManagersList($params);
 
-        $popupManagerAdd = Common::popupForm('Добавление менеджера', 'manager/add');
+        $popupManagerAdd = Form::popup('Добавление менеджера', 'manager/add');
 
         $this->tpl
             ->bind('managers', $managers)
@@ -58,20 +59,27 @@ class Controller_Control extends Controller_Common {
 
         $managerSettingsForm = View::factory('forms/manager/settings');
 
+        $changeRole = true;
+
+        if (User::id() == $managerId) {
+            $changeRole = false;
+        }
+
         $managerSettingsForm
             ->set('manager', $manager)
-            ->set('width', 100)
-            ->set('reload', 0)
-            ->set('changeRole', 1)
+            ->set('noReload', 0)
+            ->set('changeRole', $changeRole)
         ;
 
-        $popupManagerAddClients = Common::popupForm('Добавление клиентов', 'manager/add_clients');
+        $popupManagerAddClients = Form::popup('Добавление клиентов', 'manager/add_clients');
+        $popupManagerAddReports = Form::popup('Доступные для добавления отчеты', 'manager/add_reports');
 
         $html = View::factory('ajax/control/manager')
             ->bind('managerId', $managerId)
             ->bind('manager', $manager)
             ->bind('managerSettingsForm', $managerSettingsForm)
             ->bind('popupManagerAddClients', $popupManagerAddClients)
+            ->bind('popupManagerAddReports', $popupManagerAddReports)
         ;
 
         $this->html($html);
@@ -80,7 +88,7 @@ class Controller_Control extends Controller_Common {
     /**
      * страницы групп точек
      */
-    public function action_dots_groups()
+    public function action_dotsGroups()
     {
         $this->title[] = 'Группы точек';
 
@@ -88,16 +96,16 @@ class Controller_Control extends Controller_Common {
 
         $dotsGroups = Model_Dot::getGroups($filter);
 
-        $popupAddDotsGroup = Common::popupForm('Добавление группы точек', 'control/add_dots_group');
-        $popupAddDot = Common::popupForm('Добавление точек', 'control/add_dot');
+        $popupAddDotsGroup = Form::popup('Добавление группы точек', 'control/add_dots_group');
+        $popupAddDots = Form::popup('Добавление точек', 'control/add_dots');
 
-        $popupEditDotsGroup = Common::popupForm('Редактирование группы точек', 'control/edit_dots_group');
+        $popupEditDotsGroup = Form::popup('Редактирование группы точек', 'control/edit_dots_group');
 
         $this->tpl
             ->bind('dotsGroups', $dotsGroups)
             ->bind('filter', $filter)
             ->bind('popupEditDotsGroup', $popupEditDotsGroup)
-            ->bind('popupAddDot', $popupAddDot)
+            ->bind('popupAddDots', $popupAddDots)
             ->bind('popupAddDotsGroup', $popupAddDotsGroup)
         ;
     }
@@ -105,7 +113,7 @@ class Controller_Control extends Controller_Common {
     /**
      * оболочка для постраничной загрузки списка точек группы
      */
-    public function action_group_dots()
+    public function action_groupDots()
     {
         $groupId = $this->request->param('id');
 
@@ -114,7 +122,7 @@ class Controller_Control extends Controller_Common {
         $user = User::current();
 
         $canEdit = true;
-        if($group['GROUP_TYPE'] == Model_Dot::GROUP_TYPE_SUPPLIER && !in_array($user['role'], Access::$adminRoles)){
+        if($group['GROUP_TYPE'] == Model_Dot::GROUP_TYPE_SUPPLIER && !in_array($user['ROLE_ID'], Access::$adminRoles)){
             $canEdit = false;
         }
 
@@ -129,7 +137,7 @@ class Controller_Control extends Controller_Common {
     /**
      * получаем список точек по группе
      */
-    public function action_load_group_dots()
+    public function action_loadGroupDots()
     {
         $params = [
             'group_id'	    => $this->request->post('group_id') ?: $this->request->query('group_id'),
@@ -162,7 +170,7 @@ class Controller_Control extends Controller_Common {
     /**
      * удаляем группы точек
      */
-    public function action_del_group_dots()
+    public function action_delGroupDots()
     {
         $groupsIds = $this->request->post('groups');
 
@@ -177,7 +185,7 @@ class Controller_Control extends Controller_Common {
 
                 $canEdit = true;
                 foreach($groups as $group){
-                    if($group['GROUP_ID'] == $groupId && $group['GROUP_TYPE'] == Model_Dot::GROUP_TYPE_SUPPLIER && !in_array($user['role'], Access::$adminRoles)){
+                    if($group['GROUP_ID'] == $groupId && $group['GROUP_TYPE'] == Model_Dot::GROUP_TYPE_SUPPLIER && !in_array($user['ROLE_ID'], Access::$adminRoles)){
                         $canEdit = false;
                         break;
                     }
@@ -199,7 +207,7 @@ class Controller_Control extends Controller_Common {
     /**
      * удаление точек из группы
      */
-    public function action_del_dots()
+    public function action_delDots()
     {
         $groupId = $this->request->post('group_id');
         $dots = $this->request->post('dots');
@@ -210,9 +218,25 @@ class Controller_Control extends Controller_Common {
     }
 
     /**
+     * добавляем группу фирм
+     */
+    public function action_addFirmsGroup()
+    {
+        $params = $this->request->post('params');
+
+        $result = Model_Firm::addFirmsGroup($params);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
      * добавляем группу точек
      */
-    public function action_add_dots_group()
+    public function action_addDotsGroup()
     {
         $params = $this->request->post('params');
 
@@ -228,7 +252,7 @@ class Controller_Control extends Controller_Common {
     /**
      * редактирование группы точек
      */
-    public function action_edit_dots_group()
+    public function action_editDotsGroup()
     {
         $params = $this->request->post('params');
 
@@ -244,7 +268,7 @@ class Controller_Control extends Controller_Common {
     /**
      * показываем таб списка точек, сами точки будут аяксом постранично грузиться
      */
-    public function action_show_dots()
+    public function action_showDots()
     {
         $postfix = $this->request->post('postfix') ?: '';
         $showCheckbox = $this->request->post('show_checkbox') ?: '';
@@ -262,7 +286,7 @@ class Controller_Control extends Controller_Common {
     /**
      * аяксовая постраничная загрузка точек
      */
-    public function action_load_dots()
+    public function action_loadDots()
     {
         $params = [
             'POS_ID'        => $this->request->post('POS_ID'),
@@ -308,7 +332,7 @@ class Controller_Control extends Controller_Common {
     /**
      * добавляем точки к конкретной группе
      */
-    public function action_add_dots_to_group()
+    public function action_addDotsToGroup()
     {
         $posIds = $this->request->post('pos_ids');
         $groupId = $this->request->post('group_id');
@@ -323,10 +347,10 @@ class Controller_Control extends Controller_Common {
      */
     public function action_tariffs()
     {
-        $this->scripts[] = '/js/control/tariffs.js';
-        $this->scripts[] = '/js/plugins/jquery.mask.js';
+        $this->scripts[] = Common::getAssetsLink() . 'js/control/tariffs.js';
+        $this->scripts[] = '/assets/plugins/jquery.mask.js';
 
-        $filter = $this->request->query('filter') ?: ['only_managers' => 1];
+        $filter = $this->request->query('filter');
 
         $tariffs = Model_Tariff::getAvailableTariffs($filter);
 
@@ -339,7 +363,7 @@ class Controller_Control extends Controller_Common {
     /**
      * загрудаем выбранный тариф
      */
-    public function action_load_tariff()
+    public function action_loadTariff()
     {
         $tariffId = $this->request->param('id');
 
@@ -347,14 +371,22 @@ class Controller_Control extends Controller_Common {
             $this->html(Model_Tariff::buildTemplate([], []));
         }
 
-        $lastVersion = $this->request->post('version');
+        $version = $this->request->post('version');
 
         $tariff = Model_Tariff::getAvailableTariffs(['tariff_id' => $tariffId]);
+
         if(!empty($tariff)){
             $tariff = reset($tariff);
+        } else {
+            $this->html('<i class="gray">Тариф не найден</i>');
         }
 
-        $tariffSettings = Model_Tariff::getTariffSettings($tariffId, $lastVersion);
+        $versions = Model_Tariff::getVersions($tariffId);
+
+        $tariff['versions'] = $versions;
+        $tariff['current_version'] = $version;
+
+        $tariffSettings = Model_Tariff::getTariffSettings($tariffId, $version);
 
         $this->html(Model_Tariff::buildTemplate($tariff, $tariffSettings));
     }
@@ -362,7 +394,7 @@ class Controller_Control extends Controller_Common {
     /**
      * грузим свеженький шаблон шаблон условий
      */
-    public function action_get_tariff_reference_tpl()
+    public function action_getTariffReferenceTpl()
     {
         $usedConditions = $this->request->post('used_conditions');
         $uidSection = $this->request->post('uid_section');
@@ -399,7 +431,7 @@ class Controller_Control extends Controller_Common {
     /**
      * подгружаем пустой шаблон секции
      */
-    public function action_get_tariff_section_tpl()
+    public function action_getTariffSectionTpl()
     {
         $uidSection = $this->request->post('uid_section');
         $sectionNum = $this->request->post('section_num');
@@ -416,7 +448,7 @@ class Controller_Control extends Controller_Common {
     /**
      * сохраняем тариф
      */
-    public function action_edit_tariff()
+    public function action_editTariff()
     {
         $params = $this->request->post('params');
         $tariffId = $this->request->post('tariff_id');
@@ -432,7 +464,7 @@ class Controller_Control extends Controller_Common {
     /**
      * страница загрузки транзакций
      */
-    public function action_connect_1c()
+    public function action_1cConnect()
     {
         $this->title[] = 'Связь с 1с';
 
@@ -443,53 +475,59 @@ class Controller_Control extends Controller_Common {
     /**
      * считываем файл с платежами
      */
-    public function action_upload_pays()
+    public function action_uploadPays()
     {
+        $dateFormat = $this->request->post('date_format') ?: Date::$dateFormatRu;
+
         $file = Upload::uploadFile('pays');
 
         if(empty($file)){
             $this->jsonResult(false);
         }
 
-        list($data, $mimeType) = Upload::readFile($_SERVER["DOCUMENT_ROOT"].$file);
+        list($data, $mimeType) = Upload::readFile($_SERVER["DOCUMENT_ROOT"].$file['file']);
 
         if(empty($data)){
             $this->jsonResult(false);
         }
 
-        $rows = (new Model_Transaction_Parser())->parse($data, $mimeType);
+        $parser = new Model_Parser_Transaction();
+        $parser->setDateFormat($dateFormat);
 
-        $this->jsonResult(true, $rows);
+        $rows = $parser->parse($data, $mimeType);
+        $summary = $parser->getSummary();
+
+        $this->jsonResult(true, ['rows' => $rows, 'summary' => $summary]);
     }
 
     /**
      * страница работыс группами фирм
      */
-    public function action_firms_groups()
+    public function action_firmsGroups()
     {
         $this->title[] = 'Группы фирм';
 
         $filter = $this->request->query('filter');
 
-        $groups = Model_Card::getGroups($filter);
+        $firmsGroups = Model_Firm::getFirmsGroups($filter);
 
-        $popupAddCards = Common::popupForm('Добавление карт', 'control/add_cards');
-        $popupAddGroup = Common::popupForm('Добавление группы', 'control/add_group');
-        $popupEditGroup = Common::popupForm('Редактирование группы', 'control/edit_group');
+        $popupAddFirms = Form::popup('Добавление фирм', 'control/add_firms');
+        $popupAddFirmsGroup = Form::popup('Добавление группы фирм', 'control/add_firms_group');
+        $popupEditFirmsGroup = Form::popup('Редактирование группы фирм', 'control/edit_firms_group');
 
         $this->tpl
-            ->bind('groups', $groups)
+            ->bind('firmsGroups', $firmsGroups)
             ->bind('filter', $filter)
-            ->bind('popupAddCards', $popupAddCards)
-            ->bind('popupAddGroup', $popupAddGroup)
-            ->bind('popupEditGroup', $popupEditGroup)
+            ->bind('popupAddFirms', $popupAddFirms)
+            ->bind('popupAddFirmsGroup', $popupAddFirmsGroup)
+            ->bind('popupEditFirmsGroup', $popupEditFirmsGroup)
         ;
     }
 
     /**
      * страница работыс группами карт
      */
-    public function action_cards_groups()
+    public function action_cardsGroups()
     {
         $this->title[] = 'Группы карт';
 
@@ -497,9 +535,9 @@ class Controller_Control extends Controller_Common {
 
         $cardsGroups = Model_Card::getGroups($filter);
 
-        $popupAddCards = Common::popupForm('Добавление карт', 'control/add_cards');
-        $popupAddCardsGroup = Common::popupForm('Добавление группы карт', 'control/add_cards_group');
-        $popupEditCardsGroup = Common::popupForm('Редактирование группы точек', 'control/edit_cards_group');
+        $popupAddCards = Form::popup('Добавление карт', 'control/add_cards');
+        $popupAddCardsGroup = Form::popup('Добавление группы карт', 'control/add_cards_group');
+        $popupEditCardsGroup = Form::popup('Редактирование группы точек', 'control/edit_cards_group');
 
         $this->tpl
             ->bind('cardsGroups', $cardsGroups)
@@ -513,7 +551,7 @@ class Controller_Control extends Controller_Common {
     /**
      * добавление группы карт
      */
-    public function action_add_cards_group()
+    public function action_addCardsGroup()
     {
         $params = $this->request->post('params');
 
@@ -527,9 +565,9 @@ class Controller_Control extends Controller_Common {
     }
 
     /**
-     * грузим список карт по группе
+     * грузим список фирм по группе
      */
-    public function action_load_group_cards()
+    public function action_loadGroupFirms()
     {
         //если это есть значит уже грузим данные а не страницу
         $offset = $this->request->post('offset');
@@ -541,9 +579,60 @@ class Controller_Control extends Controller_Common {
             $user = User::current();
 
             $canEdit = true;
-            if (!in_array($user['role'], Access::$rolesForCardGroups)) {
+            if (!in_array($user['ROLE_ID'], Access::$adminRoles)) {
                 $canEdit = false;
             }
+
+            $html = View::factory('ajax/control/firms_in_group')
+                ->bind('groupId', $groupId)
+                ->bind('canEdit', $canEdit);
+
+            $this->html($html);
+        }else{
+            $params = [
+                'group_id'      => $this->request->post('group_id'),
+                'offset'        => $offset,
+                'pagination'    => $this->toXls ? false : true
+            ];
+
+            $result = Model_Card::getGroupCards($params);
+
+            if ($this->toXls){
+                $this->showXls('group_firms', $result, [
+                    'CLIENT_ID'         => 'CLIENT ID',
+                    'HOLDER'            => 'Владелец',
+                    'DESCRIPTION_RU'    => 'Описание'
+                ]);
+            } else {
+                list($items, $more) = $result;
+            }
+
+            if (empty($items)) {
+                $this->jsonResult(false);
+            }
+
+            $this->jsonResult(true, ['items' => $items, 'more' => $more]);
+        }
+    }
+
+    /**
+     * грузим список карт по группе
+     */
+    public function action_loadGroupCards()
+    {
+        //если это есть значит уже грузим данные а не страницу
+        $offset = $this->request->post('offset');
+
+        if(is_null($offset) && !$this->toXls){
+
+            $groupId = $this->request->param('id');
+
+            $user = User::current();
+
+            $canEdit = true;
+            /*if (in_array($user['ROLE_ID'], Access::$adminRoles)) {
+                $canEdit = true;
+            }*/
 
             $html = View::factory('ajax/control/cards_in_group')
                 ->bind('groupId', $groupId)
@@ -582,29 +671,25 @@ class Controller_Control extends Controller_Common {
     /**
      * редактирование группы карт
      */
-    public function action_edit_cards_group()
+    public function action_editCardsGroup()
     {
         $params = $this->request->post('params');
 
         $result = Model_Card::editCardsGroup($params);
 
-        if(!empty($result)){
-            $this->jsonResult(false);
-        }
-
-        $this->jsonResult(true);
+        $this->jsonResult($result);
     }
 
     /**
      * показываем карты, сами карты будут аяксом постранично грузиться
      */
-    public function action_show_group_cards()
+    public function action_showCards()
     {
         $postfix = $this->request->post('postfix') ?: '';
         $showCheckbox = $this->request->post('show_checkbox') ?: '';
         $groupId = $this->request->post('group_id') ?: '';
 
-        $html = View::factory('ajax/control/show_group_cards')
+        $html = View::factory('ajax/control/cards')
             ->bind('postfix', $postfix)
             ->bind('showCheckbox', $showCheckbox)
             ->bind('groupId', $groupId)
@@ -616,7 +701,7 @@ class Controller_Control extends Controller_Common {
     /**
      * аяксовая постраничная загрузка точек
      */
-    public function action_load_cards()
+    public function action_loadCards()
     {
         $params = [
             'CARD_ID'           => $this->request->post('CARD_ID'),
@@ -639,7 +724,7 @@ class Controller_Control extends Controller_Common {
     /**
      * добавляем точки к конкретной группе
      */
-    public function action_add_cards_to_group()
+    public function action_addCardsToGroup()
     {
         $cardsIds = $this->request->post('cards_ids');
         $groupId = $this->request->post('group_id');
@@ -654,9 +739,28 @@ class Controller_Control extends Controller_Common {
     }
 
     /**
+     * удаление группы
+     */
+    public function action_delCardsGroup()
+    {
+        $groups = (array)$this->request->post('groups');
+
+        $result = [];
+
+        foreach ($groups as $group) {
+            $result[] = [
+                'group_id' => $group,
+                'deleted' => Model_Card::editCardsGroup(['group_id' => $group], Model_Card::CARDS_GROUP_ACTION_DEL)
+            ];
+        }
+
+        $this->jsonResult(true, $result);
+    }
+
+    /**
      * удаление карт из группы
      */
-    public function action_del_cards_from_group()
+    public function action_delCardsFromGroup()
     {
         $cardsNumbers = $this->request->post('cards_numbers');
         $groupId = $this->request->post('group_id');
@@ -669,7 +773,7 @@ class Controller_Control extends Controller_Common {
     /**
      * рендерим блок формы
      */
-    public function action_client_contract_form()
+    public function action_clientContractForm()
     {
         $iteration = $this->request->query('iteration') ?: 1;
 
@@ -683,7 +787,7 @@ class Controller_Control extends Controller_Common {
     /**
      * экспорт данный для 1с
      */
-    public function action_export_1c()
+    public function action_1cExport()
     {
         $get = $this->request->query();
 
@@ -691,37 +795,57 @@ class Controller_Control extends Controller_Common {
             $contracts = [];
 
             foreach ($get['contracts'] as $item) {
-                $contracts = array_merge($contracts, $item);
+                $contracts = array_merge($contracts, (array)$item);
             }
 
             $get['contracts'] = $contracts;
         }
 
-        $data = Model_Report::exportTo1c($get);
+        $user = User::current();
 
-        //render xml
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"></root>');
+        $report = Report_1c_Common::factory($user['AGENT_ID']);
 
-        $oldClient = false;
-        foreach ($data as $item) {
-            if ($oldClient != $item['ID']) {
-                $oldClient = $item['ID'];
-                $client = $xml->addChild('client');
-                $client->addAttribute('id', $item['ID']);
-                $client->addAttribute('name', $item['NAME']);
-            }
+        $data = $report->getDataForExport($get);
 
-            $delivery = $client->addChild('delivery');
-            $delivery->addChild('territory_id', $item['TERRITORY_ID']);
-            $delivery->addChild('supplier_id', $item['SUPPLIER_ID']);
-            $delivery->addChild('unit_type', $item['UNIT_TYPE']);
-            $delivery->addChild('vat_rate', $item['VAT_RATE']);
-            $delivery->addChild('recharge_vat', $item['RECHARGE_VAT']);
-            $delivery->addChild('volume', $item['VOLUME']);
-            $delivery->addChild('cost', $item['COST']);
-            $delivery->addChild('sale', $item['SALE']);
+        $this->showXml($report->generateXmlForExport($data));
+    }
+
+    /**
+     * считываем файл с платежами
+     */
+    public function action_uploadJournal()
+    {
+        $file = Upload::uploadFile('journal');
+
+        if(empty($file)){
+            $this->jsonResult(false);
         }
 
-        $this->_showXml($xml->asXML());
+        list($data, $mimeType) = Upload::readFile($_SERVER["DOCUMENT_ROOT"].$file['file']);
+
+        if(empty($data)){
+            $this->jsonResult(false);
+        }
+
+        $parser = new Model_Parser_Journal();
+
+        $rows = $parser->parse($data, $mimeType);
+
+        $this->jsonResult(true, ['rows' => $rows]);
+    }
+
+    /**
+     * удаление тарифа
+     */
+    public function action_deleteTariff()
+    {
+        $tariffId = $this->request->post('tariff_id');
+
+        $result = Model_Tariff::changeTariffStatus($tariffId, Model_Tariff::TARIFF_STATUS_DELETED);
+
+        if (empty($result)) {
+            $this->jsonResult(false);
+        }
+        $this->jsonResult(true);
     }
 }

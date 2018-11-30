@@ -11,6 +11,9 @@ class Model_Tariff extends Model
     const TARIFF_PARAM_PARAM_CURRENCY   = 2;
     const TARIFF_PARAM_PARAM_DISCOUNT   = 3;
 
+    const TARIFF_STATUS_ACTIVE = 1;
+    const TARIFF_STATUS_DELETED = 4;
+
     public static $paramsTypes = [
         self::TARIFF_PARAM_TYPE_DISCOUNT    => 'Скидка',
         self::TARIFF_PARAM_TYPE_MARKUP      => 'Наценка',
@@ -44,25 +47,35 @@ class Model_Tariff extends Model
             $params['agent_id'] = $user['AGENT_ID'];
         }
 
-        $sql = "select * from ".Oracle::$prefix."V_WEB_TARIF_LIST t where t.tarif_id not in (0,-1)";
+        $sql = (new Builder())->select()
+            ->from('V_WEB_TARIF_LIST t')
+            ->whereNotIn('t.tarif_id', [0, -1])
+            ->where('t.tarif_status = ' . Model_Tariff::TARIFF_STATUS_ACTIVE)
+            ->orderBy('t.TARIF_NAME')
+        ;
 
         if(!empty($params['agent_id'])){
-            $sql .= " and t.agent_id = ".$params['agent_id'];
-        }
-
-        if(!empty($params['tariff_id'])){
-            $sql .= " and t.tarif_id = ".$params['tariff_id'];
+            $sql->where("t.agent_id = ".$params['agent_id']);
         }
 
         if(!empty($params['search'])){
-            $sql .= " and upper(t.TARIF_NAME) like ".mb_strtoupper(Oracle::quote('%'.$params['search'].'%'));
+            if (is_numeric($params['search'])) {
+                $sql
+                    ->whereStart()
+                    ->where('t.tarif_id = ' . (int)$params['search'])
+                    ->whereOr("upper(t.TARIF_NAME) like ".mb_strtoupper(Oracle::quoteLike('%'.$params['search'].'%')))
+                    ->whereEnd()
+                ;
+            } else {
+                $sql->where("upper(t.TARIF_NAME) like " . mb_strtoupper(Oracle::quoteLike('%' . $params['search'] . '%')));
+            }
         }
 
-        $sql .= ' order by t.TARIF_NAME asc';
+        if(!empty($params['tariff_id'])){
+            $sql->where('t.tarif_id = ' . (int)$params['tariff_id']);
+        }
 
-        $tariffs = $db->query($sql);
-
-        return $tariffs;
+        return $db->query($sql);
     }
 
     /**
@@ -312,5 +325,108 @@ class Model_Tariff extends Model
         }
 
         return true;
+    }
+
+    /**
+     * получаем доступные версии тарифов
+     *
+     * @param $tariffId
+     * @return array|bool
+     */
+    public static function getVersions($tariffId)
+    {
+        if (empty($tariffId)) {
+            return false;
+        }
+
+        $sql = (new Builder())->select()
+            ->from('V_WEB_TARIF_HISTORY')
+            ->where('tarif_id = ' . $tariffId)
+            ->orderBy('VERSION_ID desc')
+        ;
+
+        return Oracle::init()->query($sql);
+    }
+
+    /**
+     * редактирование статуса тарифа
+     *
+     * @param $tariffId
+     * @param $status
+     * @return bool
+     */
+    public static function changeTariffStatus($tariffId, $status)
+    {
+        if (empty($tariffId) || empty($status)) {
+            return false;
+        }
+
+        $data = [
+            'p_tarif_id' 	    => $tariffId,
+            'p_new_status' 	    => $status,
+            'p_manager_id' 	    => User::id(),
+            'p_error_code' 	    => 'out',
+        ];
+
+        $res = Oracle::init()->procedure('ctrl_tarif_status', $data, true);
+
+        if($res['p_error_code'] != Oracle::CODE_SUCCESS){
+            if($res['p_error_code'] == Oracle::CODE_ERROR_EXISTS) {
+                Messages::put('Тариф закреплен за договором');
+            }
+
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * ставим расчет тарифа в очередь
+     *
+     * @param $tariffId
+     * @param $contractId
+     * @param array $params
+     * @return bool
+     */
+    public static function calcTariff($tariffId, $contractId, $params = [])
+    {
+        if (empty($tariffId) || empty($contractId)) {
+            return false;
+        }
+
+        $data = [
+            'p_contract_id' 	=> $contractId,
+            'p_tarif_id' 	    => $tariffId,
+            'p_tarif_version' 	=> null,
+            'p_date_begin' 	    => !empty($params['start']) ? $params['start'] : date('01.m.Y'),
+            'p_date_end' 	    => !empty($params['end']) ? $params['end'] : date('d.m.Y'),
+            'p_manager_id' 	    => User::id(),
+            'p_error_code' 	    => 'out',
+        ];
+
+        $res = Oracle::init()->procedure('srv_ctr_tarif_calculate', $data);
+
+        if($res != Oracle::CODE_SUCCESS){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * получаем текущую очередь расчета тарифов
+     */
+    public static function getCalcQueue($params = [])
+    {
+        $sql = (new Builder())->select()
+            ->from('V_WEB_QUEUE_TARIF_CALC')
+            ->where('agent_id = ' . User::current()['AGENT_ID'])
+            ->orderBy('record_id')
+        ;
+
+        if (isset($params['RECORD_STATUS_ID'])) {
+            $sql->whereIn('RECORD_STATUS_ID', (array)$params['RECORD_STATUS_ID']);
+        }
+
+        return Oracle::init()->query($sql);
     }
 }

@@ -23,7 +23,7 @@
             <?foreach($tariffs as $tariff){?>
                 <div class="tab_v tab_v_small" tab="<?=$tariff['TARIF_ID']?>" version="<?=$tariff['LAST_VERSION']?>">
                     <div>
-                        <a href="#"><?=$tariff['TARIF_NAME']?></a>
+                        <a href="#">[<?=$tariff['TARIF_ID']?>] <?=$tariff['TARIF_NAME']?></a>
                     </div>
                 </div>
             <?}?>
@@ -62,17 +62,4 @@
             }
         });
     });
-
-    function loadTariff(tariff, force)
-    {
-        var block = $('.tariffs_block[tab_content='+ tariff +']');
-
-        if(block.text() == '' || force == true){
-            block.empty().addClass('block_loading');
-
-            $.post('/control/load_tariff/' + tariff, { version: $('[tab='+ tariff +']').attr('version') }, function(data){
-                block.html(data).removeClass('block_loading');
-            });
-        }
-    }
 </script>

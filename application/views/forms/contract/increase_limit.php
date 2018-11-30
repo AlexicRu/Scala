@@ -20,8 +20,7 @@
     function contractIncreaseLimit()
     {
         var params = {
-            contract_id:    increaseLimitContractId,
-            group_id:       increaseLimitGroupId,
+            limit_id:       increaseLimitId,
             amount:         $('[name=contract_increase_limit_name]').val()
         };
 
@@ -30,7 +29,7 @@
             return false;
         }
 
-        $.post('/clients/contract_increase_limit', params, function(data){
+        $.post('/clients/contract-increase-limit', params, function(data){
             if (data.success) {
                 message(1, 'Лимит успешно изменен');
                 loadContract('account');

@@ -2,9 +2,11 @@
 
 class Upload extends Kohana_Upload
 {
-    const MIME_TYPE_XLS = 'application/vnd.ms-excel';
-    const MIME_TYPE_XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    const MIME_TYPE_TXT = 'text/plain';
+    const MIME_TYPE_XLS     = 'application/vnd.ms-excel';
+    const MIME_TYPE_OFFICE  = 'application/vnd.ms-office';
+    const MIME_TYPE_XLSX    = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    const MIME_TYPE_TXT     = 'text/plain';
+    const MIME_TYPE_JSON    = 'application/json';
 
     /**
      * создаем структуру папок под файл
@@ -39,7 +41,10 @@ class Upload extends Kohana_Upload
             $directory = self::generateFileDirectory($filename, $component);
 
             if(self::save($_FILES['file'], $filename, $_SERVER["DOCUMENT_ROOT"].$directory)){
-                return $directory.$filename;
+                return [
+                    'name'  => str_replace(" ", "_", $_FILES['file']['name']),
+                    'file'  => $directory.$filename
+                ];
             }
         }
 
@@ -57,26 +62,45 @@ class Upload extends Kohana_Upload
         $mimeType = mime_content_type($file);
 
         switch ($mimeType) {
+            case self::MIME_TYPE_OFFICE:
             case self::MIME_TYPE_XLS:
             case self::MIME_TYPE_XLSX:
-                $objPHPExcel = PHPExcel_IOFactory::load($file);
+                $objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load($file);
 
                 foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
                     $data = $worksheet->toArray();
                     break;
                 }
                 break;
-            default:
+            case self::MIME_TYPE_TXT:
                 $text = file_get_contents($file);
 
                 if (!empty($text)) {
                     $bom = pack('H*','EFBBBF');
-                    $data = json_decode(preg_replace("/^$bom/", '', $text), true);
+                    $data = preg_replace("/^$bom/", '', $text);
 
-                    $data = !empty($data['ROWS']) ? $data['ROWS'] : [];
+                    if (Text::isJson($data)) {
+                        //json
+                        $data = json_decode($data, true);
+
+                        $data = !empty($data['ROWS']) ? $data['ROWS'] : [];
+                        
+                        $mimeType = self::MIME_TYPE_JSON; //немного костыль
+                    } else {
+                        //csv
+                        $data = explode("\n", $data);
+
+                        if (!empty($data)) {
+                            $data = array_filter($data);
+
+                            foreach ($data as &$row) {
+                                $row = explode(';', trim($row));
+                            }
+                        }
+                    }
                 }
 
-
+                break;
         }
 
         if (empty($data)) {

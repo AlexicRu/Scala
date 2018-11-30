@@ -6,13 +6,14 @@
         <tr>
             <td rowspan="2" class="gray right">Договор:</td>
             <td rowspan="2">
-                <?=Common::buildFormField('contract_choose_single', 'client_' . $iteration, false, [
-                    'depend_field_name' => 'contract_' . $iteration
+                <?=Form::buildField('contract_choose_single', 'contract_' . $iteration, false, [
+                    'depend_on' => ['name' => 'client_' . $iteration],
+                    'onSelect' => 'findTariffByContract'
                 ])?>
             </td>
             <td class="gray right">Текущий тариф:</td>
             <td>
-                Текущий тариф
+                <span class="current_tariff"></span>
             </td>
             <td rowspan="2" class="btns">
                 <span class="calc_tariffs_client_ok btn btn_small btn_green btn_reverse dn"><i class="icon-ok"></i> Ok</span>
@@ -23,9 +24,9 @@
         <tr>
             <td class="gray right">Период:</td>
             <td>
-                <input type="text" name="date_start_<?=$iteration?>" class="datepicker" readonly>
+                <input type="text" name="date_start_<?=$iteration?>" class="datepicker" readonly value="<?=date('01.m.Y')?>">
                 -
-                <input type="text" name="date_end_<?=$iteration?>" class="datepicker" readonly>
+                <input type="text" name="date_end_<?=$iteration?>" class="datepicker" readonly value="<?=date('d.m.Y')?>">
             </td>
         </tr>
     </table>
@@ -37,4 +38,19 @@
             renderDatePicker($(this));
         });
     });
+
+    function findTariffByContract(contractId)
+    {
+        var row = $('[value=' + contractId + ']').closest('fieldset');
+
+        $.post('/administration/get-tariff-by-contract', {contract_id: contractId}, function (data) {
+            if (data.success) {
+                row.find('.current_tariff').text(data.data.name);
+            } else {
+                message(0, 'Тариф не найден. Договор: ' +
+                    $('[value=' + contractId + ']').closest('.form_field').find('[type=text]').val()
+                );
+            }
+        });
+    }
 </script>

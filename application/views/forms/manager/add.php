@@ -3,7 +3,7 @@
         <td class="gray right" width="170">Роль<sup class="required">*</sup>:</td>
         <td>
             <select name="manager_add_role" class="select_big">
-                <?foreach(Access::$roles as $role => $name){?>
+                <?foreach(Access::getAvailableRoles() as $role => $name){?>
                     <option value="<?=$role?>"><?=$name?></option>
                 <?}?>
             </select>
@@ -67,6 +67,10 @@
 </table>
 
 <script>
+    $(function () {
+        renderPhoneInput($('[name=manager_add_phone]'));
+    });
+
     function managerAdd()
     {
         var params = {
@@ -91,7 +95,7 @@
             return false;
         }
 
-        $.post('/managers/add_manager', {params:params}, function (data) {
+        $.post('/managers/add-manager', {params:params}, function (data) {
             if(data.success){
                 message(1, 'Менеджер успешно добавлен');
                 $.fancybox.close();

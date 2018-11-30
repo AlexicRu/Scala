@@ -14,6 +14,9 @@ class Model_Report extends Model
     const REPORT_TYPE_BALANCE_SHEET = 'balance_sheet';
     const REPORT_TYPE_BILL          = 'bill';
 
+    const REPORT_GLOBAL_TYPE_CONTRACT = 1;
+    const REPORT_GLOBAL_TYPE_REPORT = 2;
+
     const REPORT_CONSTRUCTOR_TYPE_PERIOD     = 'period';
     const REPORT_CONSTRUCTOR_TYPE_ADDITIONAL = 'additional';
     const REPORT_CONSTRUCTOR_TYPE_FORMAT     = 'format';
@@ -28,14 +31,26 @@ class Model_Report extends Model
     ];
 
     public static $reportGroups = [
-        self::REPORT_GROUP_SUPPLIER => ['name' => 'Поставщики', 'icon' => 'icon-dailes'],
-        self::REPORT_GROUP_CLIENT   => ['name' => 'Клиентские', 'icon' => 'icon-dailes'],
         self::REPORT_GROUP_ANALYTIC => ['name' => 'Аналитические', 'icon' => 'icon-analytics'],
         self::REPORT_GROUP_CARDS    => ['name' => 'Карты', 'icon' => 'icon-dailes'],
+        self::REPORT_GROUP_CLIENT   => ['name' => 'Клиентские', 'icon' => 'icon-dailes'],
+        self::REPORT_GROUP_SUPPLIER => ['name' => 'Поставщики', 'icon' => 'icon-dailes'],
         self::REPORT_GROUP_OTHERS   => ['name' => 'Прочие', 'icon' => 'icon-summary'],
     ];
 
+    public static $reportGlobalTypesNames = [
+        self::REPORT_GLOBAL_TYPE_CONTRACT   => ['name' => 'Отчетность', 'label' => 'label_info'],
+        self::REPORT_GLOBAL_TYPE_REPORT     => ['name' => 'В договоре', 'label' => 'label_success'],
+    ];
+
     public static $formatHeaders = [
+        'xlsx' => [
+            'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition: attachment;filename=__NAME__',
+            'Cache-Control: must-revalidate',
+            'Content-Transfer-Encoding: binary',
+            'Pragma: public',
+        ],
         'xls' => [
             'Content-Type: application/vnd.ms-excel',
             'Content-Disposition: attachment;filename=__NAME__',
@@ -44,10 +59,8 @@ class Model_Report extends Model
         'pdf' => [
             'Cache-Control: must-revalidate',
             'Pragma: public',
-            'Content-Description: File Transfer',
             'Content-Disposition: attachment;filename=__NAME__',
             'Content-Transfer-Encoding: binary',
-            //'Content-Length: ' . strlen($report),
             'Content-Type: application/pdf',
         ]
     ];
@@ -152,16 +165,41 @@ class Model_Report extends Model
 
         $user = User::current();
 
-        if (empty($params['report_type_id'])) {
-            $params['report_type_id'] = self::REPORT_TYPE_DB_ALL;
+        if (empty($params['manager_id'])) {
+            $manager = $user;
+        } else {
+            $manager = Model_Manager::getManager($params['manager_id']);
         }
 
-        $sql = (new Builder())->select()
+        if (empty($params['report_type_id'])) {
+            if (in_array($manager['ROLE_ID'], array_keys(Access::$clientRoles))) {
+                $params['report_type_id'] = [self::REPORT_TYPE_DB_CLIENT];
+            }
+            if (in_array($manager['ROLE_ID'], array_keys(Access::$managerRoles))) {
+                $params['report_type_id'] = [
+                    self::REPORT_TYPE_DB_CLIENT,
+                    self::REPORT_TYPE_DB_ALL,
+                ];
+            }
+        }
+
+        if (empty($params['report_type_id'])) {
+            $params['report_type_id'] = [self::REPORT_TYPE_DB_ALL];
+        }
+
+        $sql = (new Builder())->select([
+            'REPORT_ID',
+            'REPORT_NAME',
+            'WEB_NAME',
+            'DESCRIPTION',
+            'REPORT_GROUP_ID',
+            'REPORT_TYPE_ID',
+        ])->distinct()
             ->from('V_WEB_REPORTS_AVAILABLE t')
-            ->where("t.agent_id in (0, {$user['AGENT_ID']})")
-            ->where("t.role_id in (0, {$user['role']})")
-            ->where("t.manager_id in (0, {$user['MANAGER_ID']})")
-            ->where("t.report_type_id in (0, {$params['report_type_id']})")
+            ->where("t.agent_id in (0, {$manager['AGENT_ID']})")
+            ->where("t.role_id in (0, {$manager['ROLE_ID']})")
+            ->where("t.manager_id in (0, {$manager['MANAGER_ID']})")
+            ->where("t.report_type_id in (0, ". implode(', ', array_map('intval', (array)$params['report_type_id'])) .")")
         ;
 
 		$reports = $db->query($sql);
@@ -330,57 +368,5 @@ class Model_Report extends Model
         }
 
         return $reports;
-    }
-
-    /**
-     * достаем данные для экспорта в 1с
-     *
-     * @param $params
-     */
-    public static function exportTo1c($params)
-    {
-        if (empty($params['date_from']) || empty($params['date_to'])) {
-            return false;
-        }
-
-        $user = User::current();
-
-        $sql = (new Builder())
-            ->select([
-                'v.contract_id as id',
-                'replace(v.client_name,\'"\', \'\') as name',
-                'pi.country_id as territory_id',
-                'v.supplier_contract as supplier_id',
-                'v.service_id as unit_type',
-                'decode(v.supplier_contract, 33, 18, decode(pi.country_id, 643, 18, 0)) as vat_rate',
-                '0 as recharge_vat',
-                'sum(v.service_amount) as volume',
-                'sum(v.sumprice_buy) as cost',
-                'sum(v.sumprice_discount) as sale'
-            ])
-            ->from('v_rep_transaction v')
-            ->joinLeft('v_web_pos_list pi', 'v.supplier_terminal = pi.pos_id and v.agent_id = pi.agent_id')
-            ->where('v.date_trn >= ' . Oracle::toDateOracle($params['date_from'], 'd.m.Y'))
-            ->where('v.date_trn <= ' . Oracle::toDateOracle($params['date_to'], 'd.m.Y'))
-            ->where('v.agent_id = ' . (int)$user['AGENT_ID'])
-            ->groupBy([
-                'v.contract_id',
-                'v.client_name',
-                'v.supplier_contract',
-                'v.service_id',
-                'pi.country_id',
-            ])
-            ->having('sum(v.service_amount) > 0')
-            ->orderBy('v.client_name')
-        ;
-
-
-        if (!empty($params['contracts'])) {
-            $contracts = array_map('intval', $params['contracts']);
-
-            $sql->where('v.contract_id in (' . implode(',', $contracts) . ')');
-        }
-
-        return Oracle::init()->query($sql);
     }
 }

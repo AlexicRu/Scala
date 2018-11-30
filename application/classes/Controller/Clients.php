@@ -11,19 +11,35 @@ class Controller_Clients extends Controller_Common {
 
 	/**
 	 * титульная страница со списком клиентов
+     *
+     * был запил под многостраничность, но принудительно отключили, так как не взлетело
 	 */
 	public function action_index()
 	{
-		$search = $this->request->post('search');
+        if ($this->request->is_ajax()) {
 
-		$clients = Model_Client::getClientsList($search);
+            $params = [
+                'search'        => $this->request->query('search'),
+                'offset' 		=> $this->request->post('offset'),
+                'pagination'	=> true
+            ];
 
-        $popupClientAdd = Common::popupForm('Добавление нового клиента', 'client/add');
+            list($clients, $more) = Model_Client::getFullClientsList($params);
 
-        $this->tpl
-            ->bind('clients', $clients)
-            ->bind('popupClientAdd', $popupClientAdd)
-        ;
+            if(empty($clients)){
+                $this->jsonResult(false);
+            }
+
+            $this->jsonResult(true, ['items' => $clients, 'more' => $more]);
+        } else {
+            $this->_initEnjoyHint();
+
+            $popupClientAdd = Form::popup('Добавление нового клиента', 'client/add');
+
+            $this->tpl
+                ->bind('popupClientAdd', $popupClientAdd)
+            ;
+        }
 	}
 
 	/**
@@ -43,8 +59,11 @@ class Controller_Clients extends Controller_Common {
 			throw new HTTP_Exception_404();
 		}
 
-		$popupContractAdd = Common::popupForm('Добавление нового договора', 'contract/add');
-		$popupCabinetCreate = Common::popupForm('Создание личного кабинета', 'client/cabinet_create');
+        $this->_initEnjoyHint();
+        $this->_initPhoneInputWithFlags();
+
+		$popupContractAdd = Form::popup('Добавление нового договора', 'contract/add');
+		$popupCabinetCreate = Form::popup('Создание личного кабинета', 'client/cabinet_create');
 
 		$this->tpl
 			->bind('client', $client)
@@ -58,7 +77,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * редактирование клиента
 	 */
-	public function action_client_edit()
+	public function action_clientEdit()
 	{
 		$clientId = $this->request->param('id');
 		$params = $this->request->post('params');
@@ -98,19 +117,30 @@ class Controller_Clients extends Controller_Common {
 				$contractSettings = Model_Contract::getContractSettings($contractId);
                 $contractTariffs = Model_Contract::getTariffs();
                 $noticeSettings = Model_Contract::getContractNoticeSettings($contractId);
-				$popupContractNoticeSettings = Common::popupForm('Настройка уведомлений', 'contract/notice_settings', ['settings' => $noticeSettings]);
-				$popupContractHistory = Common::popupForm('История по договору', 'contract/history');
+                $contractManagers = Model_Contract::getContractManagers($contractId);
+
+				$popupContractNoticeSettings = Form::popup('Настройка уведомлений', 'contract/notice_settings', [
+				    'settings'  => $noticeSettings,
+                    'manager'   => User::current()
+                ]);
+				$popupContractHistory = Form::popup('История по договору', 'contract/history');
+                $popupContractTariffEdit = Form::popup('Тариф по договору', 'contract/tariff_edit', [
+                    'tariffId' => $contractSettings['TARIF_OFFLINE'],
+                    'contractId' => $contractId,
+                ]);
 
 				$content = View::factory('ajax/clients/contract/contract')
 					->bind('contract', $contract)
 					->bind('contractSettings', $contractSettings)
 					->bind('contractTariffs', $contractTariffs)
+					->bind('contractManagers', $contractManagers)
 					->bind('popupContractNoticeSettings', $popupContractNoticeSettings)
 					->bind('popupContractHistory', $popupContractHistory)
+					->bind('popupContractTariffEdit', $popupContractTariffEdit)
 				;
 				break;
 			case 'cards':
-				$popupCardAdd = Common::popupForm('Добавление новой карты', 'card/add');
+				$popupCardAdd = Form::popup('Добавление новой карты', 'card/add');
 
 				$cardsCounter = Model_Contract::getCardsCounter($contractId);
 
@@ -126,12 +156,12 @@ class Controller_Clients extends Controller_Common {
                 Listing::$limit = 999;
                 $servicesList = Listing::getServices(['description' => 'LONG_DESC']);
 
-				$popupContractPaymentAdd = Common::popupForm('Добавление нового платежа', 'contract/payment_add');
-                $popupContractBillAdd = Common::popupForm('Выставление счета', 'contract/bill_add');
-                $popupContractBillPrint = Common::popupForm('Печать счетов', 'contract/bill_print');
-                $popupContractLimitIncrease = Common::popupForm('Изменение лимита', 'contract/increase_limit');
+				$popupContractPaymentAdd = Form::popup('Добавление нового платежа', 'contract/payment_add');
+                $popupContractBillAdd = Form::popup('Выставление счета', 'contract/bill_add');
+                $popupContractBillPrint = Form::popup('Печать счетов', 'contract/bill_print');
+                $popupContractLimitIncrease = Form::popup('Изменение лимита', 'contract/increase_limit');
 
-                $popupContractLimitsEdit = Common::popupForm('Редактирование лимитов договора', 'contract/limits_edit', [
+                $popupContractLimitsEdit = Form::popup('Редактирование лимитов договора', 'contract/limits_edit', [
                     'contractLimits' 	=> $contractLimits,
                     'servicesList'		=> $servicesList
                 ]);
@@ -173,7 +203,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * редактирование контракта
 	 */
-	public function action_contract_edit()
+	public function action_contractEdit()
 	{
 		$contractId = $this->request->param('id');
 		$params = $this->request->post('params');
@@ -183,7 +213,9 @@ class Controller_Clients extends Controller_Common {
 		if(empty($result)){
 			$this->jsonResult(false);
 		}
-		$this->jsonResult(true, $result);
+		$this->jsonResult(true, [
+		    'full_reload' => !empty($params['contract']['STATE_ID']) && $params['contract']['STATE_ID'] == Model_Contract::STATE_CONTRACT_DELETED ? true : false
+        ]);
 	}
 
     /**
@@ -201,23 +233,31 @@ class Controller_Clients extends Controller_Common {
         }
 
         $oilRestrictions = Model_Card::getOilRestrictions($cardId);
-        $lastFilling = Model_Card::getLastFilling($cardId, $contractId);
+        $transactions = Model_Transaction::getList($cardId, $contractId, ['limit' => 20]);
         Listing::$limit = 999;
-		$servicesList = Listing::getServices(['TUBE_ID' => $card['TUBE_ID']]);
+        $settings = Model_Card::getCardLimitSettings($cardId);
+        $cardInfo = Model_Card::getCardInfo($cardId, $contractId);
 
-		$popupCardHolderEdit = Common::popupForm('Редактирование держателя карты', 'card/edit_holder', [
+		$servicesList = Listing::getServices([
+		    'SYSTEM_SERVICE_CATEGORY' => true,
+		    'TUBE_ID' => $card['TUBE_ID']
+        ]);
+
+		$popupCardHolderEdit = Form::popup('Редактирование держателя карты', 'card/edit_holder', [
             'card' 				=> $card,
 		], 'card_edit_holder_'.$cardId);
-        $popupCardLimitsEdit = Common::popupForm('Редактирование лимитов карты', 'card/edit_limits', [
+        $popupCardLimitsEdit = Form::popup('Редактирование лимитов карты', 'card/edit_limits', [
             'card' 				=> $card,
             'oilRestrictions' 	=> $oilRestrictions,
-            'servicesList'		=> $servicesList
+            'servicesList'		=> $servicesList,
+            'settings'		    => $settings,
         ], 'card_edit_limits_'.$cardId);
 
         $html = View::factory('ajax/clients/card')
             ->bind('card', $card)
             ->bind('oilRestrictions', $oilRestrictions)
-            ->bind('lastFilling', $lastFilling)
+            ->bind('transactions', $transactions)
+            ->bind('cardInfo', $cardInfo)
             ->bind('popupCardHolderEdit', $popupCardHolderEdit)
             ->bind('popupCardLimitsEdit', $popupCardLimitsEdit)
         ;
@@ -228,7 +268,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * добавление нового клиента
 	 */
-	public function action_client_add()
+	public function action_clientAdd()
 	{
 		$params = $this->request->post('params');
 
@@ -242,9 +282,8 @@ class Controller_Clients extends Controller_Common {
 
 	/**
 	 * добавление контракта
-	 *
 	 */
-	public function action_contract_add()
+	public function action_contractAdd()
 	{
 		$params = $this->request->post('params');
 
@@ -264,7 +303,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * добавляем новую карту
 	 */
-	public function action_card_add()
+	public function action_cardAdd()
 	{
 		$params = $this->request->post('params');
 
@@ -291,11 +330,11 @@ class Controller_Clients extends Controller_Common {
     /**
      * редактирование лимитов карты
      */
-    public function action_card_edit_limits()
+    public function action_cardEditLimits()
     {
         $cardId     = $this->request->post('card_id');
         $contractId = $this->request->post('contract_id');
-        $limits     = $this->request->post('limits');
+        $limits     = $this->request->post('limits') ?: [];
 
         list($result, $error) = Model_Card::editCardLimits($cardId, $contractId, $limits);
 
@@ -305,7 +344,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * редактирование карты
 	 */
-	public function action_card_edit_holder()
+	public function action_cardEditHolder()
 	{
         $cardId     = $this->request->post('card_id');
         $contractId = $this->request->post('contract_id');
@@ -325,14 +364,14 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * добавление нового платежа по контракту
 	 */
-	public function action_contract_payment_add()
+	public function action_contractPaymentAdd()
 	{
         $payments = [$this->request->post('params')];
 		$multi = $this->request->post('multi') ?: 0;
         $message = '';
 
 		if(!empty($multi)){
-            $payments = $this->request->post('payments');
+            $payments = (array)$this->request->post('payments');
         }
 
         foreach($payments as $payment){
@@ -349,7 +388,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * удаляем платеж по контракту
 	 */
-	public function action_contract_payment_delete()
+	public function action_contractPaymentDelete()
 	{
 		$params = $this->request->post('params');
 
@@ -385,7 +424,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * блокируем/разблокируем карту
 	 */
-	public function action_card_toggle()
+	public function action_cardToggle()
 	{
 		$params = $this->request->post('params');
 
@@ -401,7 +440,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * аяксово+постранично получаем историю операций
 	 */
-	public function action_card_operations_history()
+	public function action_cardOperationsHistory()
 	{
 		$cardId = $this->request->param('id');
 		$contractId = $this->request->query('contract_id');
@@ -423,19 +462,24 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * аяксово+постранично получаем историю операций
 	 */
-	public function action_account_payments_history()
+	public function action_accountPaymentsHistory()
 	{
 		$contractId = $this->request->param('id');
 		$params = [
 			'offset' 		=> $this->request->post('offset'),
-			'pagination'	=> true
+			'pagination'	=> true,
+			'contract_id'	=> $contractId,
 		];
 
-		list($paymentsHistory, $more) = Model_Contract::getPaymentsHistory($contractId, $params);
+		list($paymentsHistory, $more) = Model_Contract::getPaymentsHistory($params);
 
 		if(empty($paymentsHistory)){
 			$this->jsonResult(false);
 		}
+
+		foreach ($paymentsHistory as &$elem) {
+		    $elem['PAY_COMMENT'] = Text::parseUrl($elem['PAY_COMMENT']);
+        }
 
 		$this->jsonResult(true, ['items' => $paymentsHistory, 'more' => $more]);
 	}
@@ -443,7 +487,7 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * создание ЛК для пользователя
 	 */
-	public function action_cabinet_create()
+	public function action_cabinetCreate()
 	{
 		$params = $this->request->post('params');
 
@@ -459,25 +503,25 @@ class Controller_Clients extends Controller_Common {
 	/**
 	 * изымаем новую карту
 	 */
-	public function action_card_withdraw()
+	public function action_cardWithdraw()
 	{
 		$params = $this->request->post('params');
 
 		$result = Model_Card::withdrawCard($params);
 
-		if($result === true){
-			$this->jsonResult(true);
+		if(empty($result)){
+			$this->jsonResult(false);
 		}
 
-		$this->jsonResult(false);
+		$this->jsonResult(true);
 	}
 
 	/**
 	 * список состояний контракта
 	 */
-	public function action_contract_history()
+	public function action_contractHistory()
 	{
-		if($this->_isPost()) {
+		if($this->isPost()) {
 			$params = [
 				'contract_id'	=> $this->request->post('contract_id'), 
 				'offset' 		=> $this->request->post('offset'),
@@ -497,7 +541,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * выставляем счет клиенту
      */
-	public function action_add_bill()
+	public function action_addBill()
     {
         $contractId = $this->request->query('contract_id');
         $sum = $this->request->query('sum');
@@ -528,7 +572,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * настройка уведомлений
      */
-    public function action_edit_contract_notices()
+    public function action_editContractNotices()
     {
         $params = $this->request->post('params');
         $contractId = $this->request->post('contract_id');
@@ -545,7 +589,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * список выставленных счетов по контракту
      */
-    public function action_bills_list()
+    public function action_billsList()
     {
         $params = [
             'contract_id'	=> $this->request->post('contract_id'),
@@ -565,7 +609,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * грузим список карт
      */
-    public function action_cards_list()
+    public function action_cardsList()
     {
         $contractId = $this->request->query('contract_id');
         $query = $this->request->post('query');
@@ -597,7 +641,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * редактируем логин пользователя
      */
-    public function action_edit_login()
+    public function action_editLogin()
     {
         $login = $this->request->post('login');
         $managerId = $this->request->post('manager_id');
@@ -613,12 +657,13 @@ class Controller_Clients extends Controller_Common {
     /**
      * редактирование лимитов договора
      */
-    public function action_contract_limits_edit()
+    public function action_contractLimitsEdit()
     {
         $limits = $this->request->post('limits');
         $contractId = $this->request->post('contract_id');
+        $recalc = $this->request->post('recalc');
 
-        $result = Model_Contract::editLimits($contractId, $limits);
+        $result = Model_Contract::editLimits($contractId, $limits, $recalc);
 
         if(empty($result)){
             $this->jsonResult(false);
@@ -636,13 +681,12 @@ class Controller_Clients extends Controller_Common {
     /**
      * изменяем лимит
      */
-    public function action_contract_increase_limit()
+    public function action_contractIncreaseLimit()
     {
         $amount = $this->request->post('amount');
-        $groupId = $this->request->post('group_id');
-        $contractId = $this->request->post('contract_id');
+        $limitId = $this->request->post('limit_id');
 
-        $result = Model_Contract::editLimit($contractId, $groupId, $amount);
+        $result = Model_Contract::editLimit($limitId, $amount);
 
         if(empty($result)){
             $this->jsonResult(false);
@@ -654,7 +698,7 @@ class Controller_Clients extends Controller_Common {
     /**
      * отрисовываем блок продукта для выставления счета
      */
-    public function action_add_bill_product_template()
+    public function action_addBillProductTemplate()
     {
         $iteration = $this->request->post('iteration');
 
@@ -663,5 +707,87 @@ class Controller_Clients extends Controller_Common {
         ;
 
         $this->html($html);
+    }
+
+    /**
+     * рендер шаблона лимита
+     */
+    public function action_cardLimitTemplate()
+    {
+        $cardId     = $this->request->query('cardId');
+        $postfix    = $this->request->query('postfix');
+
+        $html = Form::buildLimit($cardId, [], $postfix);
+
+        $this->html($html);
+    }
+
+    /**
+     * рендер шаблона сервиса лимита
+     */
+    public function action_cardLimitServiceTemplate()
+    {
+        $cardId         = $this->request->query('cardId');
+        $postfix        = $this->request->query('postfix');
+
+        $html = Form::buildLimitService($cardId, [], $postfix);
+
+        $this->html($html);
+    }
+
+    /**
+     * удаление клиента
+     */
+    public function action_clientDelete()
+    {
+        $clientId = $this->request->post('client_id');
+
+        $result = Model_Client::changeState($clientId, Model_Client::STATE_CLIENT_DELETED);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * редактирование тарифа по договору
+     */
+    public function action_contractTariffEdit()
+    {
+        $contractId = $this->request->post('contract_id');
+        $tariffId = $this->request->post('tariff_id');
+        $dateFrom = $this->request->post('date_from');
+
+        $result = Model_Contract::editTariff($tariffId, $contractId, $dateFrom);
+
+        if(empty($result)){
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true);
+    }
+
+    /**
+     * получаем историю редактирование тарифа
+     */
+    public function action_getContractTariffChangeHistory()
+    {
+        $contractId = $this->request->post('contract_id');
+
+        $params = [
+            'contract_id'   => $contractId,
+            'offset' 		=> $this->request->post('offset'),
+            'pagination'	=> true,
+        ];
+
+        list($items, $more) = Model_Contract::getContractTariffChangeHistory($contractId, $params);
+
+        if (empty($items)) {
+            $this->jsonResult(false);
+        }
+
+        $this->jsonResult(true, ['items' => $items, 'more' => $more]);
     }
 }

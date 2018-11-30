@@ -98,4 +98,83 @@ class Api
 
         return false;
     }
+
+    /**
+     * получаем json структуру апи
+     */
+    public static function getStructure()
+    {
+        $config = Common::getEnvironmentConfig()['api'];
+        $api = Kohana::$config->load('api')->as_array();
+
+        $api  = array_merge($api, $config);
+
+        $definitions = [];
+        $paths = [];
+
+        $apiConfigUrl = __DIR__ .
+            DIRECTORY_SEPARATOR . '..' .
+            DIRECTORY_SEPARATOR . 'config' .
+            DIRECTORY_SEPARATOR . 'api' .
+            DIRECTORY_SEPARATOR
+        ;
+
+        if (User::loggedIn()) {
+            //definitions
+            $definitionsFiles = scandir($apiConfigUrl . 'definitions');
+
+            //paths
+            $pathsFiles = scandir($apiConfigUrl . 'paths');
+        } else {
+            $pathsFiles = ['LoginPost.php'];
+            $definitionsFiles = ['ApiBadResponse.php', 'ApiResponse.php'];
+        }
+
+        foreach ($definitionsFiles as $file) {
+            if (is_file($apiConfigUrl . 'definitions' . DIRECTORY_SEPARATOR . $file)) {
+                $definition = explode('.', $file)[0];
+                $definitions[$definition] = Kohana::$config->load('api/definitions/' . $definition)->as_array();
+            }
+        }
+
+        foreach ($pathsFiles as $file) {
+            if (is_file($apiConfigUrl . 'paths' . DIRECTORY_SEPARATOR . $file)) {
+                $pathName = explode('.', $file)[0];
+                $path = Kohana::$config->load('api/paths/' . $pathName)->as_array();
+                $paths[$path['url']][$path['method']] = $path;
+
+                if (empty($paths[$path['url']]['sort'])) {
+                    $paths[$path['url']]['sort'] = $path['sort'];
+                }
+            }
+        }
+
+        uasort($paths, function ($a, $b) {
+            if ($a['sort'] == $b['sort']) {
+                return 0;
+            }
+
+            return $a['sort'] > $b['sort'] ? 1 : -1;
+        });
+
+        //сортируем
+        foreach ($paths as &$methods) {
+            unset($methods['sort']);
+
+            if (count($methods) > 1) {
+                uasort($methods, function ($a, $b) {
+                    if ($a['sort'] == $b['sort']) {
+                        return 0;
+                    }
+
+                    return $a['sort'] > $b['sort'] ? 1 : -1;
+                });
+            }
+        }
+
+        $api['definitions'] = $definitions;
+        $api['paths'] = $paths;
+
+        return json_encode($api);
+    }
 }

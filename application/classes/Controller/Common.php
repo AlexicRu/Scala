@@ -6,28 +6,38 @@ abstract class Controller_Common extends Controller_Template {
     public $title = [];
     public $errors = [];
     public $scripts = [];
+    public $scriptsRaw = [];
     public $styles = [];
+
+    /**
+     * @var View
+     */
     public $tpl = '';
     public $toXls = false;
 
     public function before()
     {
-        $controller = $this->request->controller();
-        $action = $this->request->action();
+        //force using HTTPS
+        $this->request->secure(true);
 
-        if(!Auth::instance()->logged_in()){
-            if(!in_array($action, ['login', 'logout']) && $_SERVER['REQUEST_URI'] != '/'){
+        View::set_global('js', []);
+        View::set_global('css', []);
+        View::set_global('customView', '');
+
+        $controller = Text::camelCaseToDashed($this->request->controller());
+        $action = Text::camelCaseToDashed($this->request->action());
+
+        $withoutAuth = Kohana::$config->load('access')['without_auth'];
+
+        if(!User::loggedIn()){
+            if(!in_array($controller . '_' . $action, $withoutAuth) && $_SERVER['REQUEST_URI'] != '/'){
                 $this->redirect('/');
             }
             $this->template = 'not_auth';
         }else{
-            if($controller == 'Index' && $action == 'index') {
-                $this->redirect('/clients');
-            }
-
             //подключаем меню
             $menu = Kohana::$config->load('menu');
-            $content = View::factory('includes/menu')
+            $content = View::factory('_includes/menu')
                 ->bind('menu', $menu);
 
             View::set_global('menu', $content);
@@ -42,22 +52,26 @@ abstract class Controller_Common extends Controller_Template {
         }
 
         //если не аяксовый запрос
-        if(!$this->request->is_ajax() && !$this->toXls) {
+        if(!$this->request->is_ajax() && !$this->toXls && !in_array($action, ['get-json'])) {
+            //проверяем кастомный дизайн
+            $this->_checkCustomDesign();
+
             if($allow == false){
                 throw new HTTP_Exception_403();
             }
 
             //рендерим шаблон страницы
-            if (!in_array($controller, ['Index'])) {
-                try {
-                    $this->tpl = View::factory('pages/' . strtolower($controller) . '/' . $action);
-                } catch (Exception $e) {
-                    throw new HTTP_Exception_404();
-                }
+            try {
+                $this->tpl = View::factory('pages/' . $controller . '/' . $action);
+            } catch (Exception $e) {
+                throw new HTTP_Exception_404();
             }
 
-            $this->_checkCustomDesign();
+            //прикрепляем файлы стилей и скриптов
             $this->_appendFilesBefore();
+
+            //выполняем различные функции, которые необходимо выполнить до загрузки страницы
+            $this->_actionsBefore();
         }
 
         //если все таки аякс
@@ -93,7 +107,14 @@ abstract class Controller_Common extends Controller_Template {
         View::set_global('errors', $this->errors);
 
         if(Auth::instance()->logged_in()) {
-            View::set_global('notices', Model_Message::getList(['status' => Model_Message::MESSAGE_STATUS_NOTREAD]));
+            $notices = Model_Note::getList([
+                'status' => Model_Note::NOTE_STATUS_NOTREAD,
+                'note_type' => Model_Note::NOTE_TYPE_MESSAGE
+            ]);
+
+            $notices = Model_Note::clearBBCodes($notices);
+
+            View::set_global('notices', $notices);
 
             if(!$this->request->is_ajax()) {
                 $this->_checkGlobalMessages();
@@ -105,16 +126,31 @@ abstract class Controller_Common extends Controller_Template {
         parent::after();
     }
 
-    protected function html($data){
+    public function html($data){
         echo $data;
         exit;
+    }
+
+    public function showFile($file)
+    {
+        $path = $_SERVER['DOCUMENT_ROOT'];
+        $directory = DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
+
+        if (!file_exists($path . $directory . $file)) {
+            throw new HTTP_Exception_404();
+        }
+
+        header("X-Accel-Redirect: " . $directory . $file);
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . basename($file));
+        die;
     }
 
     /**
      * show xml
      * @param $xml
      */
-    protected function _showXml($xml)
+    public function showXml($xml)
     {
         header('Content-type: text/xml');
         header('Content-Disposition: attachment; filename="export.xml"');
@@ -123,18 +159,18 @@ abstract class Controller_Common extends Controller_Template {
         exit;
     }
 
-    protected function json($data){
+    public function json($data){
         header('Content-Type: application/json');
         echo json_encode($data);
         exit;
     }
 
-    protected function jsonResult($result, $data = [])
+    public function jsonResult($result, $data = [])
     {
         self::json(['success' => $result, 'data' => $data, 'messages' => Messages::get()]);
     }
 
-    protected function _isPost()
+    public function isPost()
     {
         return HTTP_Request::POST == $this->request->method();
     }
@@ -149,12 +185,32 @@ abstract class Controller_Common extends Controller_Template {
         //опредеяем кастомный диазйн
         $design = Kohana::$config->load('design')->as_array();
 
-        if(!empty($_SERVER['SERVER_NAME'])){
-            $url = str_replace(['.', '-'], '', $_SERVER['SERVER_NAME']);
+        $url = str_replace(['.', '-'], '', !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '');
 
-            if(isset($design[$url])){
-                $customView = $design[$url]['class'];
-                $this->title[] = $design[$url]['title'];
+        if(isset($design['url'][$url])){
+            $customView = $design['url'][$url]['class'];
+            $this->title[] = $design['url'][$url]['title'];
+        }
+
+        $user = User::current();
+
+        if (!empty($design['user']['a_' . $user['AGENT_ID']])) {
+            if (
+                empty($design['user']['a_' . $user['MANAGER_ID']]['url']) ||
+                $design['user']['a_' . $user['MANAGER_ID']]['url'] == $url
+            ) {
+                $customView = $design['user']['a_' . $user['AGENT_ID']]['class'];
+                $this->title[] = $design['user']['a_' . $user['AGENT_ID']]['title'];
+            }
+        }
+
+        if (!empty($design['user']['u_' . $user['MANAGER_ID']])) {
+            if (
+                empty($design['user']['u_' . $user['MANAGER_ID']]['url']) ||
+                $design['user']['u_' . $user['MANAGER_ID']]['url'] == $url
+            ) {
+                $customView = $design['user']['u_' . $user['MANAGER_ID']]['class'];
+                $this->title[] = $design['user']['u_' . $user['MANAGER_ID']]['title'];
             }
         }
 
@@ -176,50 +232,64 @@ abstract class Controller_Common extends Controller_Template {
     {
         if(Auth::instance()->logged_in()) {
             $this->template->styles = [
-                '/js/plugins/jGrowl/jGrowl.css',
-                '/js/plugins/fancy/jquery.fancybox.css',
+                '/assets/plugins/jGrowl/jGrowl.css',
+                '/assets/plugins/fancy/jquery.fancybox.css',
             ];
             $this->template->scripts = [
-                '/js/plugins/jquery.2.1.3.min.js',
-                '/js/plugins/jquery-ui.1.11.2.min.js',
-                '/js/plugins/jGrowl/jGrowl.js',
-                '/js/plugins/fancy/jquery.fancybox.js',
-                '/js/ui.js',
-                '/js/functions.js',
-                '/js/common.js',
+                '/assets/plugins/jquery.2.1.3.min.js',
+                '/assets/plugins/jquery-ui.1.11.2.min.js',
+                '/assets/plugins/jGrowl/jGrowl.js',
+                '/assets/plugins/fancy/jquery.fancybox.js',
+                '/assets/plugins/jquery.maskMoney.min.js',
             ];
         }else{
             $this->template->styles = [];
             $this->template->scripts = [
-                '/js/plugins/jquery.2.1.3.min.js',
-                '/js/common.js',
+                //'https://www.google.com/recaptcha/api.js',
+                '/assets/plugins/jquery.2.1.3.min.js',
             ];
         }
-
-        $this->template->favicon = Common::getFaviconRawData();
+        $this->template->scriptsRaw = [];
     }
 
     private function _appendFiles()
     {
-        foreach($this->styles as $style){
+        $styles = array_merge(
+            $this->styles,
+            (array)(new View())->css
+        );
+
+        $scripts = array_merge(
+            $this->scripts,
+            (array)(new View())->js
+        );
+
+        foreach($styles as $style){
             $this->template->styles[] =  $style;
         }
-        foreach($this->scripts as $script){
+        foreach($scripts as $script){
             $this->template->scripts[] =  $script;
+        }
+        foreach($this->scriptsRaw as $script){
+            $this->template->scriptsRaw[] =  $script;
         }
     }
 
     private function _appendFilesAfter()
     {
         if(Auth::instance()->logged_in()) {
-            $this->template->styles[] = '/css/ui.css';
-            $this->template->styles[] = '/css/style.css';
-            $this->template->styles[] = '/css/design.css';
+            $this->_initTooltipster();
 
-            $this->template->scripts[] = '/js/site.js';
+            $this->template->styles[] = Common::getAssetsLink() . 'css/ui.css';
+            $this->template->styles[] = Common::getAssetsLink() . 'css/style.css';
+            $this->template->styles[] = Common::getAssetsLink() . 'css/design.css';
+
+            $this->template->scripts[] = Common::getAssetsLink() . 'js/ui.js';
+            $this->template->scripts[] = Common::getAssetsLink() . 'js/common.js';
+            $this->template->scripts[] = Common::getAssetsLink() . 'js/site.js';
         }else{
-            $this->template->styles[] = '/css/style.css';
-            $this->template->styles[] = '/css/design.css';
+            $this->template->styles[] = Common::getAssetsLink() . 'css/style.css';
+            $this->template->styles[] = Common::getAssetsLink() . 'css/design.css';
         }
     }
 
@@ -228,12 +298,12 @@ abstract class Controller_Common extends Controller_Template {
      */
     protected function _initWYSIWYG()
     {
-        $this->template->styles[] = '/js/plugins/trumbowyg/ui/trumbowyg.min.css';
-        $this->template->styles[] = '/js/plugins/trumbowyg/plugins/colors/ui/trumbowyg.colors.min.css';
-        $this->template->scripts[] = '/js/plugins/trumbowyg/trumbowyg.min.js';
-        $this->template->scripts[] = '/js/plugins/trumbowyg/plugins/colors/trumbowyg.colors.min.js';
-        $this->template->scripts[] = '/js/plugins/trumbowyg/plugins/noembed/trumbowyg.noembed.min.js';
-        $this->template->scripts[] = '/js/plugins/trumbowyg/plugins/upload/trumbowyg.upload.min.js';
+        $this->template->styles[] = '/assets/plugins/trumbowyg/ui/trumbowyg.min.css';
+        $this->template->styles[] = '/assets/plugins/trumbowyg/plugins/colors/ui/trumbowyg.colors.min.css';
+        $this->template->scripts[] = '/assets/plugins/trumbowyg/trumbowyg.min.js';
+        $this->template->scripts[] = '/assets/plugins/trumbowyg/plugins/colors/trumbowyg.colors.min.js';
+        $this->template->scripts[] = '/assets/plugins/trumbowyg/plugins/noembed/trumbowyg.noembed.min.js';
+        $this->template->scripts[] = '/assets/plugins/trumbowyg/plugins/upload/trumbowyg.upload.min.js';
     }
 
     /**
@@ -241,8 +311,8 @@ abstract class Controller_Common extends Controller_Template {
      */
     protected function _initDropZone()
     {
-        $this->template->styles[] = '/js/plugins/dropzone/dropzone.css';
-        $this->template->scripts[] = '/js/plugins/dropzone/dropzone.js';
+        $this->template->styles[] = '/assets/plugins/dropzone/dropzone.css';
+        $this->template->scripts[] = '/assets/plugins/dropzone/dropzone.5.3.0.js';
     }
 
     /**
@@ -250,9 +320,78 @@ abstract class Controller_Common extends Controller_Template {
      */
     protected function _initJsGrid()
     {
-        $this->template->styles[] = '/js/plugins/jsgrid/jsgrid.min.css';
-        $this->template->styles[] = '/js/plugins/jsgrid/jsgrid-theme.min.css';
-        $this->template->scripts[] = '/js/plugins/jsgrid/jsgrid.min.js';
+        $this->template->styles[] = '/assets/plugins/jsgrid/jsgrid.min.css';
+        $this->template->styles[] = '/assets/plugins/jsgrid/jsgrid-theme.min.css';
+        $this->template->scripts[] = '/assets/plugins/jsgrid/jsgrid.js';
+    }
+
+    /**
+     * подключаем скрипты и стили EnjoyHint
+     */
+    protected function _initEnjoyHint()
+    {
+        $this->template->styles[] = '/assets/plugins/enjoyhint/enjoyhint.css';
+        $this->template->scripts[] = '/assets/plugins/enjoyhint/enjoyhint.js';
+        $this->template->scripts[] = '/assets/js/scenarios.js';
+
+        $webtours = Kohana::$config->load('access')['webtours'];
+
+        $user = User::current();
+
+        $script = [];
+
+        foreach ($webtours as $key => $webtour) {
+            if (in_array($user['ROLE_ID'], $webtour['roles'])) {
+                $script[$key] = $webtour['scenario'];
+            }
+        }
+
+        $this->template->scriptsRaw[] = 'var scenarios = ' . json_encode($script) . ' ;';
+
+        if (!isset($user['tours'])) {
+            $user['tours'] = User::getWebTours();
+
+            Auth::instance()->saveSession($user);
+        }
+    }
+
+    /**
+     * подключаем VueJs
+     */
+    protected function _initVueJs()
+    {
+        $this->template->scripts[] = 'https://cdn.jsdelivr.net/npm/vue';
+    }
+
+    /**
+     * подключаем ChartJs
+     */
+    protected function _initChart()
+    {
+        $this->template->scripts[] = '/assets/plugins/palette.js';
+        $this->template->scripts[] = '//www.amcharts.com/lib/3/amcharts.js';
+        $this->template->scripts[] = '//www.amcharts.com/lib/3/serial.js';
+        $this->template->scripts[] = '//www.amcharts.com/lib/3/pie.js';
+        $this->template->scripts[] = '//www.amcharts.com/lib/3/themes/light.js';
+    }
+
+    /**
+     * подключаем Tooltipster
+     */
+    protected function _initTooltipster()
+    {
+        $this->template->styles[] = '/assets/plugins/tooltipster/css/tooltipster.bundle.min.css';
+        $this->template->styles[] = '/assets/plugins/tooltipster/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css';
+        $this->template->scripts[] = '/assets/plugins/tooltipster/js/tooltipster.bundle.min.js';
+    }
+
+    /**
+     * подключаем флаги
+     */
+    protected function _initPhoneInputWithFlags()
+    {
+        $this->template->styles[] = '/assets/plugins/intl-tel-input/css/intlTelInput.min.css';
+        $this->template->scripts[] = '/assets/plugins/intl-tel-input/js/intlTelInput.min.js';
     }
 
     /**
@@ -312,7 +451,7 @@ abstract class Controller_Common extends Controller_Template {
         }
 
         $PHPToExcel = new PHPToExcel();
-        $PHPToExcel->dispay($filename . '_'.date('Ymd'), $rows, $headers);
+        $PHPToExcel->display($filename . '_'.date('Ymd'), $rows, $headers);
     }
 
     /**
@@ -320,19 +459,37 @@ abstract class Controller_Common extends Controller_Template {
      */
     private function _checkGlobalMessages()
     {
-        $globalMessages = Model_Message::getList([
-            'note_type' => Model_Message::MESSAGE_TYPE_GLOBAL,
-            'status' => Model_Message::MESSAGE_STATUS_NOTREAD
+        $globalMessages = Model_Note::getList([
+            'note_type' => Model_Note::NOTE_TYPE_POPUP,
+            'status' => Model_Note::NOTE_STATUS_NOTREAD
         ]);
 
         if (!empty($globalMessages)) {
-            $popupGlobalMessages = Common::popupForm('ВАЖНО!', 'common/global_messages', [
+            $globalMessages = Model_Note::parseBBCodes($globalMessages, false);
+
+            $popupGlobalMessages = Form::popup('ВАЖНО!', 'common/global_messages', [
                 'globalMessages' => $globalMessages
             ]);
 
             View::set_global('popupGlobalMessages', $popupGlobalMessages);
 
-            Model_Message::makeRead(['note_type' => Model_Message::MESSAGE_TYPE_GLOBAL]);
+            Model_Note::makeRead(['note_type' => Model_Note::NOTE_TYPE_POPUP]);
+        }
+    }
+
+    /**
+     * выполняем функции перед загрузкой страницы
+     */
+    private function _actionsBefore()
+    {
+        //проверка флага установки прочитанности сообщения
+        $noteId = $this->request->query('read');
+
+        if (!empty($noteId)) {
+            Model_Note::makeRead([
+                'note_id'   => $noteId,
+                'note_type' => Model_Note::NOTE_TYPE_MESSAGE
+            ]);
         }
     }
 } // End Common

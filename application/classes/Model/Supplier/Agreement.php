@@ -20,10 +20,10 @@ class Model_Supplier_Agreement extends Model
         $sql = "select * from " . Oracle::$prefix . "V_WEB_SUPLS_AGREEMENTS  t where 1=1 ";
 
         if (!empty($params['contract_id'])) {
-            $sql .= " and t.contract_id = " . Oracle::toInt($params['contract_id']);
+            $sql .= " and t.contract_id = " . Num::toInt($params['contract_id']);
         }
         if (!empty($params['agreement_id'])) {
-            $sql .= " and t.agreement_id = " . Oracle::toInt($params['agreement_id']);
+            $sql .= " and t.agreement_id = " . Num::toInt($params['agreement_id']);
         }
 
         $sql .= ' order by t.DATE_BEGIN desc';
@@ -74,7 +74,7 @@ class Model_Supplier_Agreement extends Model
             'p_agreement_id' 	=> $params['agreement_id'],
             'p_agreement_name' 	=> $params['agreement_name'],
             'p_date_begin' 		=> $params['date_begin'],
-            'p_date_end' 	    => !empty($params['date_end']) ? $params['date_end'] : Model_Contract::DEFAULT_DATE_END,
+            'p_date_end' 	    => !empty($params['date_end']) ? $params['date_end'] : Date::DATE_MAX,
             'p_discount_type' 	=> $params['discount_type'],
             'p_tarif_id' 		=> $params['tarif_id'] ?: -1,
             'p_manager_id' 		=> $user['MANAGER_ID'],
@@ -83,11 +83,17 @@ class Model_Supplier_Agreement extends Model
 
         $res = $db->procedure('splrs_cntr_agreement_edit', $data);
 
-        if($res == Oracle::CODE_SUCCESS){
-            return true;
+        switch ($res) {
+            case Oracle::CODE_SUCCESS:
+                $result = true;
+                break;
+            case Oracle::CODE_ERROR_EXISTS:
+                Messages::put('Уже есть соглашение на данный период');
+            default:
+                $result = false;
         }
 
-        return false;
+        return $result;
     }
 
     /**

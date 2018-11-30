@@ -24,7 +24,7 @@ class Model_Supplier extends Model
         ;
 
         if (!empty($params['supplier_id'])) {
-            $sql->where('t.id = '.Oracle::toInt($params['supplier_id']));
+            $sql->where('t.id = '.Num::toInt($params['supplier_id']));
         }
 
         if (!empty($params['pagination'])) {
@@ -74,8 +74,8 @@ class Model_Supplier extends Model
 
         $data = [
             'p_supplier_id'     => $supplierId,
-            'p_supplier_name'   => $params['NAME'],
-            'p_long_name'       => $params['LONG_NAME'] ?: $params['NAME'],
+            'p_supplier_name'   => $params['SUPPLIER_NAME'],
+            'p_long_name'       => $params['LONG_NAME'] ?: $params['SUPPLIER_NAME'],
             'p_tin'             => $params['INN'],
             'p_iec'             => $params['KPP'],
             'p_psrn'            => $params['OGRN'],
@@ -83,7 +83,7 @@ class Model_Supplier extends Model
             'p_y_address'       => $params['Y_ADDRESS'],
             'p_f_address'       => $params['F_ADDRESS'],
             'p_p_address'       => $params['P_ADDRESS'],
-            'p_email'           => $params['EMAIL'],
+            'p_email'           => !empty($params['EMAIL']) ? Text::checkEmailMulti($params['EMAIL']) : '',
             'p_phone'           => $params['PHONE'],
             'p_comments'        => $params['COMMENTS'],
             'p_okonh'           => $params['OKONH'],

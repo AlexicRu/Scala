@@ -19,28 +19,39 @@ class Controller_Managers extends Controller_Common {
      */
 	public function action_settings()
 	{
-		$this->title[] = 'Настройки';
+        if ($this->request->is_ajax()) {
+            $params = $this->request->post();
 
-		$params = $this->request->post();
-		if(!empty($params) && $params['form_type'] == 'settings'){
-		    $user = false;
+            $result = false;
 
-            if(!empty($params['manager_settings_id'])){
-                $user = [
-                    'MANAGER_ID' => $params['manager_settings_id'],
-                    'role' => $params['manager_settings_role'],
-                ];
+            if(!empty($params)){
+                //форма сабмититься обычным способом, и чек бокс приходит вот так
+                $params['manager_settings_limit'] = isset($params['manager_settings_limit']) && $params['manager_settings_limit'] == 'on' ? 1 : 0;
+                $params['manager_sms_is_on'] = isset($params['manager_sms_is_on']) && $params['manager_sms_is_on'] == 'on' ? 1 : 0;
+                $params['manager_telegram_is_on'] = isset($params['manager_telegram_is_on']) && $params['manager_telegram_is_on'] == 'on' ? 1 : 0;
+
+                $result = Model_Manager::edit(!empty($params['manager_settings_id']) ? $params['manager_settings_id'] : User::id(), $params);
             }
-			$result = Model_Manager::edit($params, $user);
 
             $this->jsonResult($result);
-		}
+        } else {
+            $this->title[] = 'Настройки';
 
-		if(!empty($params) && $params['form_type'] == 'settings_notices'){
+            $this->_initPhoneInputWithFlags();
+        }
 
-		}
+        $user = User::current();
 
 		$managerSettingsForm = View::factory('forms/manager/settings');
+        $popupManagerInform = Form::popup('Подключение информирования', 'manager/inform', [
+            'manager' => $user
+        ]);
+
+        $managerSettingsForm
+            ->set('manager', $user)
+            ->set('selfEdit', true)
+            ->set('popupManagerInform', $popupManagerInform)
+        ;
 
 		$this->tpl
 			->bind('managerSettingsForm', $managerSettingsForm)
@@ -50,13 +61,13 @@ class Controller_Managers extends Controller_Common {
     /**
      * блокируем/разблокируем
      */
-    public function action_manager_toggle()
+    public function action_managerToggle()
     {
         $params = $this->request->post('params');
 
         $result = Model_Manager::toggleStatus($params);
 
-        if(!empty($result)){
+        if(empty($result)){
             $this->jsonResult(false);
         }
 
@@ -66,14 +77,14 @@ class Controller_Managers extends Controller_Common {
     /**
      * грузим список клиентов по менеджеру
      */
-    public function action_load_clients()
+    public function action_loadClients()
     {
         $managerId = $this->request->post('manager_id');
         $params = $this->request->post('params');
 
         $search = !empty($params['search']) ? $params['search'] : null;
 
-        $clients = Model_Client::getClientsList($search, ['manager_id' => $managerId]);
+        $clients = Model_Manager::getClientsList(['search' => $search, 'manager_id' => $managerId]);
 
         $contractsTree = Model_Manager::getContractsTree($managerId);
 
@@ -86,10 +97,47 @@ class Controller_Managers extends Controller_Common {
         $this->html($html);
     }
 
+
     /**
-     * удаляем кдинта у менеджера
+     * грузим список отчетов по менеджеру
      */
-    public function action_del_client()
+    public function action_loadReports()
+    {
+        $managerId = $this->request->post('manager_id');
+        $params = $this->request->post('params');
+
+        $params['manager_id'] = $managerId;
+
+        $reports = Model_Report::getAvailableReports($params);
+
+        $html = View::factory('ajax/managers/reports')
+            ->bind('reports', $reports)
+            ->bind('managerId', $managerId)
+        ;
+
+        $this->html($html);
+    }
+
+    /**
+     * удаляем отчет у менеджера
+     */
+    public function action_delReport()
+    {
+        $managerId = $this->request->post('manager_id');
+        $reportId = $this->request->post('report_id');
+
+        $error = Model_Manager::delReport($managerId, $reportId);
+
+        if(!empty($error)){
+            $this->jsonResult(false, $error);
+        }
+        $this->jsonResult(true);
+    }
+
+    /**
+     * удаляем клиента у менеджера
+     */
+    public function action_delClient()
     {
         $managerId = $this->request->post('manager_id');
         $clientId = $this->request->post('client_id');
@@ -105,7 +153,7 @@ class Controller_Managers extends Controller_Common {
     /**
      * добавление менеджера
      */
-    public function action_add_manager()
+    public function action_addManager()
     {
         $params = $this->request->post('params');
 
@@ -120,7 +168,7 @@ class Controller_Managers extends Controller_Common {
     /**
      * добавление клиентов
      */
-    public function action_add_clients()
+    public function action_addClients()
     {
         $params = $this->request->post('params');
 
@@ -133,11 +181,28 @@ class Controller_Managers extends Controller_Common {
     }
 
     /**
-     * список доступный клиентов
+     * добавление отчетов
      */
-    public function action_managers_clients()
+    public function action_addReports()
     {
         $params = $this->request->post('params');
+
+        $result = Model_Manager::editReports($params);
+
+        if($result == Oracle::CODE_SUCCESS){
+            $this->jsonResult(true);
+        }
+        $this->jsonResult(false, $result);
+    }
+
+    /**
+     * список доступный клиентов
+     */
+    public function action_managersClients()
+    {
+        $params = $this->request->post('params');
+
+        $params['only_available_to_add'] = true;
 
         $clients = Model_Manager::getClientsList($params);
 
@@ -145,9 +210,33 @@ class Controller_Managers extends Controller_Common {
     }
 
     /**
+     * список доступный отчетов
+     */
+    public function action_managersReports()
+    {
+        $params = $this->request->post('params');
+
+        $reportsExist = Model_Report::getAvailableReports($params);
+        $reportsExistIds = array_column($reportsExist, 'REPORT_ID');
+
+        $reports = Model_Manager::getReportsList($params);
+
+        foreach ($reports as $key => &$report) {
+            if (in_array($report['REPORT_ID'], $reportsExistIds)) {
+                unset($reports[$key]);
+                continue;
+            }
+            $report['global_type_label'] = Model_Report::$reportGlobalTypesNames[$report['REPORT_TYPE_ID']]['label'];
+            $report['global_type_name'] = Model_Report::$reportGlobalTypesNames[$report['REPORT_TYPE_ID']]['name'];
+        }
+
+        $this->jsonResult(true, $reports);
+    }
+
+    /**
      * редактируем доступы менеджера к контрактам конкретного клиента
      */
-    public function action_edit_manager_clients_contract_binds()
+    public function action_editManagerClientsContractBinds()
     {
         $clientId = $this->request->post('client_id');
         $managerId = $this->request->post('manager_id');

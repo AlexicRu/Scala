@@ -2,7 +2,7 @@
     <tr>
         <td class="gray right" width="170">Номер карты:</td>
         <td>
-            <?=Common::buildFormField('card_available_choose_single', 'add_card_id', false, ['classes' => 'input_big'])?>
+            <?=Form::buildField('card_available_choose_single', 'add_card_id', false, ['classes' => 'input_big'])?>
         </td>
     </tr>
     <tr>
@@ -41,7 +41,7 @@
                 return false;
             }
 
-            $.post('/clients/card_add', {params:params}, function(data){
+            $.post('/clients/card-add', {params:params}, function(data){
                 if(data.success){
                     message(1, 'Карта успешно добавлена');
                     loadContract('cards');

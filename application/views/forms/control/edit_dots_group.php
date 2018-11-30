@@ -39,7 +39,7 @@
                 return false;
             }
 
-            $.post('/control/edit_dots_group', {params:params}, function(data){
+            $.post('/control/edit-dots-group', {params:params}, function(data){
                 if(data.success){
                     message(1, 'Группа успешно обновлена');
                     setTimeout(function () {
